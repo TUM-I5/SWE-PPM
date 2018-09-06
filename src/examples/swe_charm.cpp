@@ -1,4 +1,3 @@
-
 /**
  * @file
  * This file is part of SWE.
@@ -30,10 +29,13 @@
  *  - resolution
  */
 
+#include "main.decl.h"
+#include "hello.decl.h"
+
 #include <cassert>
 #include <string>
 
-#include "blocks/SWE_DimensionalSplittingMpi.hh"
+#include "blocks/SWE_DimensionalSplittingUpcxx.hh"
 
 #ifdef WRITENETCDF
 #include "writer/NetCdfWriter.hh"
@@ -41,19 +43,35 @@
 #include "writer/VtkWriter.hh"
 #endif
 
-#ifdef ASAGI
-#include "scenarios/SWE_AsagiScenario.hh"
-#else
-#include "scenarios/SWE_simple_scenarios.hh"
-#endif
-
 #include "tools/args.hh"
+#include "tools/Float2D.hh"
 #include "tools/Logger.hh"
 #include "tools/ProgressBar.hh"
+#include "scenarios/SWE_simple_scenarios.hh"
 
-#include <mpi.h>
+#include <upcxx/upcxx.hpp>
 
-int main(int argc, char** argv) {
+/**
+ * Compute the number of block rows from the total number of processes.
+ *
+ * The number of rows is determined as the square root of the
+ * number of processes, if this is a square number;
+ * otherwise, we use the largest number that is smaller than the square
+ * root and still a divisor of the number of processes.
+ *
+ *
+ * @param numProcs number of process.
+ * @return number of block rows
+ */
+int computeNumberOfBlockRows(int i_numberOfProcesses) {
+	int l_numberOfRows = std::sqrt(i_numberOfProcesses);
+	while (i_numberOfProcesses % l_numberOfRows != 0) l_numberOfRows--;
+	return l_numberOfRows;
+};
+
+Main::Main(CkMigrateMessage *msg) {}
+
+Main::Main(CkArgMsg *msg) {
 
 
 	/**************
@@ -64,10 +82,6 @@ int main(int argc, char** argv) {
 	// Define command line arguments
 	tools::Args args;
 
-#ifdef ASAGI
-	args.addOption("bathymetry-file", 'b', "File containing the bathymetry");
-	args.addOption("displacement-file", 'd', "File containing the displacement");
-#endif
 	args.addOption("simulation-duration", 't', "Time in seconds to simulate");
 	args.addOption("checkpoint-count", 'n', "Number of simulation snapshots to be written");
 	args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
@@ -87,7 +101,7 @@ int main(int argc, char** argv) {
 	float t = 0.;
 
 	// Parse command line arguments
-	tools::Args::Result ret = args.parse(argc, argv);
+	tools::Args::Result ret = args.parse(msg->argc, msg->argv);
 	switch (ret)
 	{
 		case tools::Args::Error:
@@ -105,12 +119,8 @@ int main(int argc, char** argv) {
 	nyRequested = args.getArgument<int>("resolution-vertical");
 	outputBaseName = args.getArgument<std::string>("output-basepath");
 
-	// Initialize scenario
-#ifdef ASAGI
-	SWE_AsagiScenario scenario(args.getArgument<std::string>("bathymetry-file"), args.getArgument<std::string>("displacement-file"));
-#else
+	// Initialize netCDF scenario which reads the input files
 	SWE_RadialDamBreakScenario scenario;
-#endif
 
 	// Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
 	float* checkpointInstantOfTime = new float[numberOfCheckPoints];
@@ -123,9 +133,9 @@ int main(int argc, char** argv) {
 	}
 
 
-	/**********************************
-	 * INIT MPI & SIMULATION BLOCKS *
-	 **********************************/
+	/****************************************
+	 * INIT WORK CHARES / SIMULATION BLOCKS *
+	 ****************************************/
 
 
 	/*
@@ -134,15 +144,14 @@ int main(int argc, char** argv) {
 	 *
 	 * We use simple scenarios for testing, so we assume the position of BND_BOTTOM and BND_LEFT are at 0 respectively
 	 */
-	int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
-	int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
-	float dxSimulation = (float) widthScenario / nxRequested;
-	float dySimulation = (float) heightScenario/ nyRequested;
-
-	// initialize MPI
-	if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {
-		std::cerr << "MPI_Init failed." << std::endl;
-	}
+	assert(scenario.getBoundaryPos(BND_BOTTOM) == 0);
+	assert(scenario.getBoundaryPos(BND_LEFT) == 0);
+	int nxScenario = scenario.getBoundaryPos(BND_RIGHT);
+	int nyScenario = scenario.getBoundaryPos(BND_TOP);
+	//float dxSimulation = nxScenario / nxRequested;
+	//float dySimulation = nyScenario/ nyRequested;
+	float dxSimulation = 1;
+	float dySimulation = 1;
 
 	/*
 	 * determine the layout of UPC++ ranks:
@@ -150,58 +159,76 @@ int main(int argc, char** argv) {
 	 * if the number of processes is a square number, l_blockCountX = l_blockCountY,
 	 * else l_blockCountX > l_blockCountY
 	 */
-	int myMpiRank;
-	int totalMpiRanks;
-	MPI_Comm_rank(MPI_COMM_WORLD, &myMpiRank);
-	MPI_Comm_size(MPI_COMM_WORLD, &totalMpiRanks);
+	auto myUpcxxRank = upcxx::rank_me();
+	auto totalUpcxxRanks = upcxx::rank_n();
 
 	// number of SWE-Blocks in x- and y-direction
-	int blockCountY = std::sqrt(totalMpiRanks);
-	while (totalMpiRanks % blockCountY != 0) blockCountY--;
-	int blockCountX = totalMpiRanks / blockCountY;
+	int blockCountY = computeNumberOfBlockRows(totalUpcxxRanks);
+	int blockCountX = totalUpcxxRanks / blockCountY;
 
 	// determine the local block coordinates of each SWE_Block
-	int localBlockPositionX = myMpiRank / blockCountY;
-	int localBlockPositionY = myMpiRank % blockCountY;
+	int localBlockPositionX = myUpcxxRank / blockCountY;
+	int localBlockPositionY = myUpcxxRank % blockCountY;
 
-	// compute local number of cells for each SWE_Block w.r.t. the simulation domain
-	// (particularly not the original scenario domain, which might be finer in resolution)
+	// compute local number of cells for each SWE_Block w.r.t. to the original scenario domain
+	// (particularly not the simulation domain, which might be smaller in resolution)
 	// (blocks at the domain boundary are assigned the "remainder" of cells)
-	int nxBlockSimulation = nxRequested / blockCountX;
-	int nxRemainderSimulation = nxRequested - (blockCountX - 1) * (nxRequested / blockCountX);
-	int nyBlockSimulation = nyRequested / blockCountY;
-	int nyRemainderSimulation = nyRequested - (blockCountY - 1) * (nyRequested / blockCountY);
+	int nxBlock = nxScenario / blockCountX;
+	int nxRemainder = nxScenario - (blockCountX - 1) * (nxScenario / blockCountX);
+	int nyBlock = nyScenario / blockCountY;
+	int nyRemainder = nyScenario - (blockCountY - 1) * (nyScenario / blockCountY);
 
-	int nxLocal = (localBlockPositionX < blockCountX - 1) ? nxBlockSimulation : nxRemainderSimulation;
-	int nyLocal = (localBlockPositionY < blockCountY - 1) ? nyBlockSimulation : nyRemainderSimulation;
-
-	// Compute the origin of the local simulation block w.r.t. the original scenario domain.
-	float localOriginX = scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX * dxSimulation * nxBlockSimulation;
-	float localOriginY = scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY * dySimulation * nyBlockSimulation;
-
-	// Determine the boundary types for the SWE_Block:
-	// block boundaries bordering other blocks have a CONNECT boundary,
-	// block boundaries bordering the entire scenario have the respective scenario boundary type
-	BoundaryType boundaries[4];
-
-	boundaries[BND_LEFT] = (localBlockPositionX > 0) ? CONNECT : scenario.getBoundaryType(BND_LEFT);
-	boundaries[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? CONNECT : scenario.getBoundaryType(BND_RIGHT);
-	boundaries[BND_BOTTOM] = (localBlockPositionY > 0) ? CONNECT : scenario.getBoundaryType(BND_BOTTOM);
-	boundaries[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? CONNECT : scenario.getBoundaryType(BND_TOP);
+	int nxLocal = (localBlockPositionX < blockCountX - 1) ? nxBlock : nxRemainder;
+	int nyLocal = (localBlockPositionY < blockCountY - 1) ? nyBlock : nyRemainder;
 
 	// Initialize the simulation block according to the scenario
-	SWE_DimensionalSplittingMpi simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY);
-	simulation.initScenario(scenario, boundaries);
+	SWE_DimensionalSplittingUpcxx simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localBlockPositionX * nxBlock, localBlockPositionY * nyBlock);
+	simulation.initScenario(scenario);
 
 	// calculate neighbours to the current ranks simulation block
-	int myNeighbours[4];
-	myNeighbours[BND_LEFT] = (localBlockPositionX > 0) ? myMpiRank - blockCountY : -1;
-	myNeighbours[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? myMpiRank + blockCountY : -1;
-	myNeighbours[BND_BOTTOM] = (localBlockPositionY > 0) ? myMpiRank - 1 : -1;
-	myNeighbours[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? myMpiRank + 1 : -1;
-	simulation.connectNeighbours(myNeighbours);
+	int leftNeighborRank = (localBlockPositionX > 0) ? myUpcxxRank - blockCountY : -1;
+	int rightNeighborRank = (localBlockPositionX < blockCountX - 1) ? myUpcxxRank + blockCountY : -1;
+	int bottomNeighborRank = (localBlockPositionY > 0) ? myUpcxxRank - 1 : -1;
+	int topNeighborRank = (localBlockPositionY < blockCountY - 1) ? myUpcxxRank + 1 : -1;
 
-	simulation.exchangeBathymetry();
+
+	/****************************************
+	 * BROADCAST COPY LAYER GLOBAL POINTERS *
+	 ****************************************/
+
+	typedef upcxx::global_ptr<BlockConnectInterface<upcxx::global_ptr<float>>> InterfaceRegistry;
+	typedef BlockConnectInterface<upcxx::global_ptr<float>> Interface;
+
+	InterfaceRegistry leftInterfaceRegistry = nullptr;
+	InterfaceRegistry rightInterfaceRegistry = nullptr;
+	InterfaceRegistry bottomInterfaceRegistry = nullptr;
+	InterfaceRegistry topInterfaceRegistry = nullptr;
+
+	if (myUpcxxRank == 0) {
+		leftInterfaceRegistry = upcxx::new_array<Interface>(totalUpcxxRanks);
+		rightInterfaceRegistry = upcxx::new_array<Interface>(totalUpcxxRanks);
+		bottomInterfaceRegistry = upcxx::new_array<Interface>(totalUpcxxRanks);
+		topInterfaceRegistry = upcxx::new_array<Interface>(totalUpcxxRanks);
+	}
+
+	leftInterfaceRegistry = upcxx::broadcast(leftInterfaceRegistry, 0).wait();
+	rightInterfaceRegistry = upcxx::broadcast(rightInterfaceRegistry, 0).wait();
+	bottomInterfaceRegistry = upcxx::broadcast(bottomInterfaceRegistry, 0).wait();
+	topInterfaceRegistry = upcxx::broadcast(topInterfaceRegistry, 0).wait();
+
+	upcxx::rput(simulation.getCopyLayer(BND_LEFT), leftInterfaceRegistry + myUpcxxRank).wait();
+	upcxx::rput(simulation.getCopyLayer(BND_RIGHT), rightInterfaceRegistry + myUpcxxRank).wait();
+	upcxx::rput(simulation.getCopyLayer(BND_TOP), topInterfaceRegistry + myUpcxxRank).wait();
+	upcxx::rput(simulation.getCopyLayer(BND_BOTTOM), bottomInterfaceRegistry + myUpcxxRank).wait();
+	upcxx::barrier();
+
+	Interface interfaces[4];
+	interfaces[BND_LEFT] = upcxx::rget(leftInterfaceRegistry + leftNeighborRank).wait();
+	interfaces[BND_RIGHT] = upcxx::rget(rightInterfaceRegistry + rightNeighborRank).wait();
+	interfaces[BND_BOTTOM] = upcxx::rget(bottomInterfaceRegistry + bottomNeighborRank).wait();
+	interfaces[BND_TOP] = upcxx::rget(topInterfaceRegistry + topNeighborRank).wait();
+
+	simulation.connectBoundaries(interfaces);
 
 
 	/***************
@@ -210,11 +237,11 @@ int main(int argc, char** argv) {
 
 
 	// Initialize boundary size of the ghost layers
-	BoundarySize boundarySize = {{1, 1, 1, 1}};
+	io::BoundarySize boundarySize = {{1, 1, 1, 1}};
 	outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
 #ifdef WRITENETCDF
 	// Construct a netCDF writer
-	NetCdfWriter writer(
+	io::NetCdfWriter writer(
 			outputFileName,
 			simulation.getBathymetry(),
 			boundarySize,
@@ -226,7 +253,7 @@ int main(int argc, char** argv) {
 			simulation.getOriginY());
 #else
 	// Construct a vtk writer
-	VtkWriter writer(
+	io::VtkWriter writer(
 			outputFileName,
 			simulation.getBathymetry(),
 			boundarySize,
@@ -241,9 +268,7 @@ int main(int argc, char** argv) {
 
 	// Write the output at t = 0
 	tools::Logger::logger.printOutputTime((float) 0.);
-	if (myMpiRank == 0) {
-		progressBar.update(0.);
-	}
+	progressBar.update(0.);
 	writer.writeTimeStep(
 			simulation.getWaterHeight(),
 			simulation.getMomentumHorizontal(),
@@ -258,16 +283,14 @@ int main(int argc, char** argv) {
 
 	// print the start message and reset the wall clock time
 	progressBar.clear();
-	if (myMpiRank == 0) {
+	if (upcxx::rank_me() == 0) {
 		tools::Logger::logger.printStartMessage();
 	}
-	tools::Logger::logger.initWallClockTime(MPI_Wtime());
+	tools::Logger::logger.initWallClockTime(time(NULL));
 
 	//! simulation time.
 	t = 0.0;
-	if (myMpiRank == 0) {
-		progressBar.update(t);
-	}
+	progressBar.update(t);
 
 	float timestep;
 	unsigned int iterations = 0;
@@ -279,8 +302,9 @@ int main(int argc, char** argv) {
 			tools::Logger::logger.resetClockToCurrentTime("CpuCommunication");
 
 			// set values in ghost cells.
-			// this is an implicit block (mpi send/recv in setGhostLayer()
+			// we need to sync here since block boundaries get exchanged over ranks
 			// TODO: what can we do if this becomes a bottleneck?
+			upcxx::barrier();
 			simulation.setGhostLayer();
 
 			// reset the cpu clock
@@ -310,7 +334,7 @@ int main(int argc, char** argv) {
 			iterations++;
 
 			// print the current simulation time
-			if (myMpiRank == 0) {
+			if (upcxx::rank_me() == 0) {
 				progressBar.clear();
 				tools::Logger::logger.printSimulationTime(t);
 				progressBar.update(t);
@@ -318,7 +342,7 @@ int main(int argc, char** argv) {
 		}
 
 		// print the time elapsed until this output
-		if (myMpiRank == 0) {
+		if (upcxx::rank_me() == 0) {
 			progressBar.clear();
 			tools::Logger::logger.printOutputTime(t);
 			progressBar.update(t);
@@ -337,39 +361,28 @@ int main(int argc, char** argv) {
 	 ************/
 
 
-	MPI_Barrier(MPI_COMM_WORLD);
-
 	// write the statistics message
-	if (myMpiRank == 0) {
-		progressBar.clear();
-		tools::Logger::logger.printStatisticsMessage();
-	}
+	progressBar.clear();
+	tools::Logger::logger.printStatisticsMessage();
 
-	for (int i = 0; i < totalMpiRanks; i++) {
-		if (myMpiRank == i) {
-			printf("\n");
-			// print the cpu time
-			tools::Logger::logger.printTime("Cpu", "CPU time");
+	// print the cpu time
+	tools::Logger::logger.printTime("Cpu", "CPU time");
 
-			// print CPU + Communication time
-			tools::Logger::logger.printTime("CpuCommunication", "CPU + Communication time");
+	// print CPU + Communication time
+	tools::Logger::logger.printTime("CpuCommunication", "CPU + Communication time");
 
-			// print the wall clock time (includes plotting)
-			tools::Logger::logger.printWallClockTime(time(NULL));
-			printf("\n");
-		}
-		MPI_Barrier(MPI_COMM_WORLD);
-	}
+	// print the wall clock time (includes plotting)
+	tools::Logger::logger.printWallClockTime(time(NULL));
 
-	if (myMpiRank == 0) {
-		// printer iteration counter
-		tools::Logger::logger.printIterationsDone(iterations);
+	// printer iteration counter
+	tools::Logger::logger.printIterationsDone(iterations);
 
-		// print the finish message
-		tools::Logger::logger.printFinishMessage();
-	}
+	// print the finish message
+	tools::Logger::logger.printFinishMessage();
 
-	MPI_Finalize();
+	upcxx::finalize();
 
 	return 0;
 }
+
+#include "main.def.h"

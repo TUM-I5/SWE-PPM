@@ -1,0 +1,8 @@
+module dimsplit {
+	array [2D] DimensionalSplittingCharm {
+		entry DimensionalSplittingCharm();
+		entry computeNumericalFluxes();
+
+		entry [reductiontarget] void ySweep(float maxWaveSpeed);
+	};
+};

@@ -41,6 +41,8 @@
 namespace tools
 {
 
+using namespace std;
+
 class ProgressBar
 {
 private:

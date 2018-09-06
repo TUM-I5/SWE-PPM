@@ -3,8 +3,12 @@
 # @file
 # This file is part of SWE.
 #
-# @author Alexander Breuer (breuera AT in.tum.de, http://www5.in.tum.de/wiki/index.php/Dipl.-Math._Alexander_Breuer)
-# @author Sebastian Rettenberger (rettenbs AT in.tum.de, http://www5.in.tum.de/wiki/index.php/Sebastian_Rettenberger,_M.Sc.)
+# @author Alexander Breuer
+#  (breuera AT in.tum.de,
+#   http://www5.in.tum.de/wiki/index.php/Dipl.-Math._Alexander_Breuer)
+# @author Sebastian Rettenberger
+#  (rettenbs AT in.tum.de,
+#   http://www5.in.tum.de/wiki/index.php/Sebastian_Rettenberger,_M.Sc.)
 #
 # @section LICENSE
 #
@@ -28,84 +32,100 @@
 #
 
 import sys
+# Explicitly import SCons symbols for proper linting
+# from SCons.Script import (env, Exit, Export, Import)
+from SCons.Script import (Exit, Export, Import)
 
 Import('env')
 
+# MPI
+if env['parallelization'] in ['mpi', 'ampi']:
+    sourceFiles = ['blocks/SWE_DimensionalSplittingMpi.cpp']
+# UPCXX
+elif env['parallelization'] in ['upcxx']:
+    # TODO works with which solvers?
+    sourceFiles = ['blocks/SWE_DimensionalSplittingUpcxx.cpp']
 # Code without CUDA
-if env['parallelization'] not in ['cuda', 'mpi_with_cuda']:
-  if env['solver'] == 'rusanov':
-    sourceFiles = ['blocks/rusanov/SWE_RusanovBlock.cpp']
-  elif env['solver'] == 'augrie_simd' or env['simdExtensions'] != 'NONE':
-    sourceFiles = ['blocks/SWE_WavePropagationBlockSIMD.cpp']
-  elif env['solver'] == 'augriefun' or env['solver'] == 'fwavevec':
-    sourceFiles = ['blocks/SWE_WaveAccumulationBlock.cpp']
-  else:
-    sourceFiles = ['blocks/SWE_WavePropagationBlock.cpp']
-
+elif env['parallelization'] not in ['cuda', 'mpi_with_cuda', 'upcxx']:
+    if env['solver'] == 'rusanov':
+        sourceFiles = ['blocks/rusanov/SWE_RusanovBlock.cpp']
+    elif env['solver'] == 'augrie_simd' or env['simdExtensions'] != 'NONE':
+        sourceFiles = ['blocks/SWE_WavePropagationBlockSIMD.cpp']
+    elif env['solver'] == 'augriefun' or env['solver'] == 'fwavevec':
+        sourceFiles = ['blocks/SWE_WaveAccumulationBlock.cpp']
+    else:
+        # TODO custom block in use here, maybe refactor this (merge these two)
+        sourceFiles = ['blocks/SWE_DimensionalSplitting.cpp']
+        # sourceFiles = ['blocks/SWE_WavePropagationBlock.cpp']
 # Code with CUDA
 else:
-  sourceFiles = [ 'blocks/cuda/SWE_BlockCUDA.cu',
-                  'blocks/cuda/SWE_BlockCUDA_kernels.cu']
-  if env['solver'] == 'rusanov':
-    sourceFiles.append( [ 'blocks/rusanov/SWE_RusanovBlockCUDA.cu',
-                          'blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu']
-                      )
-  elif env['solver'] == 'fwave' or env['solver'] == 'augrie':
-    sourceFiles.append( [ 'blocks/cuda/SWE_WavePropagationBlockCuda.cu',
-                          'blocks/cuda/SWE_WavePropagationBlockCuda_kernels.cu']
-                      )
-  if env['openGL'] == True:
-    sourceFiles.append( ['opengl/simulation.cu'] )
-  
-# compile the files defined so far, important step because of possible different compilers                  
-for i in sourceFiles:
-  env.src_files.append(env.Object(i))
+    sourceFiles = ['blocks/cuda/SWE_BlockCUDA.cu',
+                   'blocks/cuda/SWE_BlockCUDA_kernels.cu']
+    if env['solver'] == 'rusanov':
+        sourceFiles.append(['blocks/rusanov/SWE_RusanovBlockCUDA.cu',
+                            'blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu']
+                           )
+    elif env['solver'] == 'fwave' or env['solver'] == 'augrie':
+        sourceFiles.append(['blocks/cuda/SWE_WavePropagationBlockCuda.cu',
+                            'blocks/cuda/SWE_WavePropagationBlockCuda_kernels.cu']
+                           )
+    if env['openGL']:
+        sourceFiles.append(['opengl/simulation.cu'])
 
-# SWE_Block and Logger is used in every implementation
-sourceFiles = ['blocks/SWE_Block.cpp', 'tools/Logger.cpp']
+# compile the files defined so far,
+# this is an important step because of possibly different compilers
+for i in sourceFiles:
+    env.src_files.append(env.Object(i))
+
+# Logger is used in every implementation
+sourceFiles = ['tools/Logger.cpp']
 
 # OpenGL CPU-files
-if env['openGL'] == True:
-  sourceFiles.append( ['opengl/camera.cpp'] )
-  sourceFiles.append( ['opengl/controller.cpp'] )
-  sourceFiles.append( ['opengl/shader.cpp'] )
-  sourceFiles.append( ['opengl/visualization.cpp'] )
-  sourceFiles.append( ['opengl/vbo.cpp'] )
-  if env['openGL_instr'] == True:
-    sourceFiles.append( ['opengl/text.cpp'] )
-
-# Asagi scenario
-if env['asagi'] == True:
-  sourceFiles.append( ['scenarios/SWE_AsagiScenario.cpp'] )
+if env['openGL']:
+    sourceFiles.append(['opengl/camera.cpp'])
+    sourceFiles.append(['opengl/controller.cpp'])
+    sourceFiles.append(['opengl/shader.cpp'])
+    sourceFiles.append(['opengl/visualization.cpp'])
+    sourceFiles.append(['opengl/vbo.cpp'])
+    if env['openGL_instr']:
+        sourceFiles.append(['opengl/text.cpp'])
 
 # netCDF writer
-if env['writeNetCDF'] == True:
-  sourceFiles.append( ['writer/NetCdfWriter.cpp'] )
+if env['writeNetCDF']:
+    sourceFiles.append(['writer/NetCdfWriter.cpp'])
 else:
-  sourceFiles.append( ['writer/VtkWriter.cpp'] )
+    sourceFiles.append(['writer/VtkWriter.cpp'])
 
 # xml reader
-if env['xmlRuntime'] == True:
-  sourceFiles.append( ['tools/CXMLConfig.cpp'] )
+if env['xmlRuntime']:
+    sourceFiles.append(['tools/CXMLConfig.cpp'])
 
 # file containing the main-function
 if env['parallelization'] in ['none', 'cuda']:
-  if env['solver'] != 'rusanov':
-    if env['openGL'] == False:
-      sourceFiles.append( ['examples/swe_simple.cpp'] )
+    if env['solver'] != 'rusanov':
+        if not env['openGL']:
+            # If netCDF input files are used
+            # TODO appending of the netCdfReader has to be done
+            # elsewhere if this is supposed to work as a lib
+            sourceFiles.append(['examples/swe_simple.cpp'])
+        else:
+            sourceFiles.append(['examples/swe_opengl.cpp'])
     else:
-      sourceFiles.append( ['examples/swe_opengl.cpp'] )
-  else:
-   print >> sys.stderr, '** The selected configuration is not implemented.'
-   Exit(1)
-elif env['parallelization'] in ['mpi_with_cuda', 'mpi']:
-    sourceFiles.append( ['examples/swe_mpi.cpp'] )
+        print(sys.stderr,
+              '** The selected configuration is not implemented.')
+        Exit(1)
+elif env['parallelization'] in ['mpi', 'ampi']:
+    sourceFiles.append(['examples/swe_mpi.cpp'])
+elif env['parallelization'] in ['mpi_with_cuda']:
+    sourceFiles.append(['examples/swe_mpi_legacy.cpp'])
+elif env['parallelization'] in ['upcxx']:
+    sourceFiles.append(['examples/swe_upcxx.cpp'])
 else:
-  print >> sys.stderr, '** The selected configuration is not implemented.'
-  Exit(1)
+    print(sys.stderr, '** The selected configuration is not implemented.')
+    Exit(1)
 
 # CPU compilation for sure
 for i in sourceFiles:
-  env.src_files.append(env.Object(i))
+    env.src_files.append(env.Object(i))
 
 Export('env')

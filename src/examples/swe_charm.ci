@@ -1,0 +1,9 @@
+mainmodule main {
+	readonly CProxy_Main mainProxy;
+
+	extern module dimsplit;
+
+	mainchare Main {
+		entry Main(CkArgMsg *msg);
+	};
+};

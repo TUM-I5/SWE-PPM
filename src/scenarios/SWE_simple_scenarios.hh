@@ -46,24 +46,24 @@ class SWE_RadialDamBreakScenario : public SWE_Scenario {
     };
 
     float getWaterHeight(float x, float y) { 
-       return ( sqrt( (x-500.f)*(x-500.f) + (y-500.f)*(y-500.f) ) < 100.f ) ? 15.f: 10.0f;
+       return ( sqrt( (x-250.f)*(x-250.f) + (y-250.f)*(y-250.f) ) < 100.f ) ? 15.f: 10.0f;
     };
 
 	virtual float endSimulation() { return (float) 15; };
 
-    virtual BoundaryType getBoundaryType(BoundaryEdge edge) { return OUTFLOW; };
+    virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; };
 
     /** Get the boundary positions
      *
-     * @param i_edge which edge
+     * @param boundary which edge
      * @return value in the corresponding dimension
      */
-    float getBoundaryPos(BoundaryEdge i_edge) {
-       if ( i_edge == BND_LEFT )
+    float getBoundaryPos(Boundary boundary) {
+       if ( boundary == BND_LEFT )
          return (float)0;
-       else if ( i_edge == BND_RIGHT)
+       else if ( boundary == BND_RIGHT)
          return (float)1000;
-       else if ( i_edge == BND_BOTTOM )
+       else if ( boundary == BND_BOTTOM )
          return (float)0;
        else
          return (float)1000;
@@ -84,19 +84,19 @@ class SWE_BathymetryDamBreakScenario : public SWE_Scenario {
     
 	virtual float endSimulation() { return (float) 15; };
 
-    virtual BoundaryType getBoundaryType(BoundaryEdge edge) { return OUTFLOW; };
+    virtual BoundaryType getBoundaryType(Boundary edge) { return OUTFLOW; };
 
     /** Get the boundary positions
      *
-     * @param i_edge which edge
+     * @param boundary which edge
      * @return value in the corresponding dimension
      */
-    float getBoundaryPos(BoundaryEdge i_edge) {
-       if ( i_edge == BND_LEFT )
+    float getBoundaryPos(Boundary boundary) {
+       if ( boundary == BND_LEFT )
          return (float)0;
-       else if ( i_edge == BND_RIGHT)
+       else if ( boundary == BND_RIGHT)
          return (float)1000;
-       else if ( i_edge == BND_BOTTOM )
+       else if ( boundary == BND_BOTTOM )
          return (float)0;
        else
          return (float)1000;
@@ -154,15 +154,15 @@ class SWE_SplashingPoolScenario : public SWE_Scenario {
 
     /** Get the boundary positions
      *
-     * @param i_edge which edge
+     * @param boundary which edge
      * @return value in the corresponding dimension
      */
-    float getBoundaryPos(BoundaryEdge i_edge) {
-       if ( i_edge == BND_LEFT )
+    float getBoundaryPos(Boundary boundary) {
+       if ( boundary == BND_LEFT )
          return (float)0;
-       else if ( i_edge == BND_RIGHT)
+       else if ( boundary == BND_RIGHT)
          return (float)1000;
-       else if ( i_edge == BND_BOTTOM )
+       else if ( boundary == BND_BOTTOM )
          return (float)0;
        else
          return (float)1000;
@@ -197,7 +197,7 @@ class SWE_SplashingConeScenario : public SWE_Scenario {
     float waterHeightAtRest() { return 4.0f; };
     float endSimulation() { return 0.5f; };
 
-    virtual BoundaryType getBoundaryType(BoundaryEdge edge) { return OUTFLOW; };
+    virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; };
 };
 
 #endif

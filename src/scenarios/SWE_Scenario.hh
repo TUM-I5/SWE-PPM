@@ -25,22 +25,10 @@
  * TODO
  */
 
-#ifndef __SWE_SCENARIO_H
-#define __SWE_SCENARIO_H
+#ifndef __SWE_SCENARIO_HH
+#define __SWE_SCENARIO_HH
 
-/**
- * enum type: available types of boundary conditions
- */
-typedef enum BoundaryType {
-   OUTFLOW, WALL, INFLOW, CONNECT, PASSIVE
-} BoundaryType;
-
-/**
- * enum type: numbering of the boundary edges
- */
-typedef enum BoundaryEdge {
-   BND_LEFT, BND_RIGHT, BND_BOTTOM, BND_TOP
-} BoundaryEdge;
+#include "types/Boundary.hh"
 
 /**
  * SWE_Scenario defines an interface to initialise the unknowns of a 
@@ -52,29 +40,20 @@ typedef enum BoundaryEdge {
  * for more interesting scenarios.
  */
 class SWE_Scenario {
-
- public:
-
-    virtual float getWaterHeight(float x, float y) { return 10.0f; };
-    virtual float getVeloc_u(float x, float y) { return 0.0f; };
-    virtual float getVeloc_v(float x, float y) { return 0.0f; };
-    virtual float getBathymetry(float x, float y) { return 0.0f; };
-    
-    virtual float waterHeightAtRest() { return 10.0f; };
-
-    virtual float endSimulation() { return 0.1f; };
-    
-    virtual BoundaryType getBoundaryType(BoundaryEdge edge) { return WALL; };
-    virtual float getBoundaryPos(BoundaryEdge edge) {
-       if (edge==BND_LEFT || edge==BND_BOTTOM)
-          return 0.0f;
-       else
-          return 1.0f; 
-    };
-    
-    virtual ~SWE_Scenario() {};
-
+	public :
+		virtual ~SWE_Scenario() {}
+		virtual float getWaterHeight(float x, float y) { return 0; }
+		virtual float getBathymetry(float x, float y) { return 0; }
+		virtual float getVeloc_u(float x, float y) { return 0; }
+		virtual float getVeloc_v(float x, float y) { return 0; }
+		virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; }
+		virtual float getBoundaryPos(Boundary boundary) {
+			if (boundary == BND_LEFT || boundary == BND_BOTTOM)
+				return 0.0f;
+			else
+				return 1.0f; 
+		}
+		virtual float waterHeightAtRest() { return 0; };
+		virtual float endSimulation() { return 0; };
 };
-
-
-#endif
+#endif // _SWE_SCENARIO_HH

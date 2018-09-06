@@ -46,30 +46,30 @@
  * @param i_flush If > 0, flush data to disk every i_flush write operation
  * @param i_dynamicBathymetry
  */
-io::NetCdfWriter::NetCdfWriter( const std::string &i_baseName,
+NetCdfWriter::NetCdfWriter( const std::string &i_baseName,
 		const Float2D &i_b,
 		const BoundarySize &i_boundarySize,
 		int i_nX, int i_nY,
 		float i_dX, float i_dY,
 		float i_originX, float i_originY,
 		unsigned int i_flush) :
-		//const bool  &i_dynamicBathymetry) : //!TODO
-  io::Writer(i_baseName + ".nc", i_b, i_boundarySize, i_nX, i_nY),
-  flush(i_flush)
+	//const bool  &i_dynamicBathymetry) : //!TODO
+	Writer(i_baseName + ".nc", i_b, i_boundarySize, i_nX, i_nY),
+	flush(i_flush)
 {
 	int status;
 
 	//create a netCDF-file, an existing file will be replaced
 	status = nc_create(fileName.c_str(), NC_NETCDF4, &dataFile);
 
-  //check if the netCDF-file creation constructor succeeded.
+	//check if the netCDF-file creation constructor succeeded.
 	if (status != NC_NOERR) {
 		assert(false);
 		return;
 	}
 
 #ifdef PRINT_NETCDFWRITER_INFORMATION
-	std::cout << "   *** io::NetCdfWriter::createNetCdfFile" << std::endl;
+	std::cout << "   *** NetCdfWriter::createNetCdfFile" << std::endl;
 	std::cout << "     created/replaced: " << fileName << std::endl;
 	std::cout << "     dimensions(nx, ny): " << nX << ", " << nY << std::endl;
 	std::cout << "     cell width(dx,dy): " << i_dX << ", " << i_dY << std::endl;
@@ -120,14 +120,14 @@ io::NetCdfWriter::NetCdfWriter( const std::string &i_baseName,
 	for(size_t j = 0; j < nY; j++) {
 		nc_put_var1_float(dataFile, l_yVar, &j, &gridPosition);
 
-    	gridPosition += i_dY;
+		gridPosition += i_dY;
 	}
 }
 
 /**
  * Destructor of a netCDF-writer.
  */
-io::NetCdfWriter::~NetCdfWriter() {
+NetCdfWriter::~NetCdfWriter() {
 	nc_close(dataFile);
 }
 
@@ -143,8 +143,8 @@ io::NetCdfWriter::~NetCdfWriter() {
  * @param i_boundarySize size of the boundaries.
  * @param i_ncVariable time dependent netCDF-variable to which the output is written to.
  */
-void io::NetCdfWriter::writeVarTimeDependent( const Float2D &i_matrix,
-                                              int i_ncVariable ) {
+void NetCdfWriter::writeVarTimeDependent( const Float2D &i_matrix,
+		int i_ncVariable ) {
 	//write col wise, necessary to get rid of the boundary
 	//storage in Float2D is col wise
 	//read carefully, the dimensions are confusing
@@ -154,7 +154,7 @@ void io::NetCdfWriter::writeVarTimeDependent( const Float2D &i_matrix,
 		start[2] = col; //select col (dim "x")
 		nc_put_vara_float(dataFile, i_ncVariable, start, count,
 				&i_matrix[col+boundarySize[0]][boundarySize[2]]); //write col
-  }
+	}
 }
 
 /**
@@ -169,8 +169,8 @@ void io::NetCdfWriter::writeVarTimeDependent( const Float2D &i_matrix,
  * @param i_boundarySize size of the boundaries.
  * @param i_ncVariable time independent netCDF-variable to which the output is written to.
  */
-void io::NetCdfWriter::writeVarTimeIndependent( const Float2D &i_matrix,
-                                                int i_ncVariable ) {
+void NetCdfWriter::writeVarTimeIndependent( const Float2D &i_matrix,
+		int i_ncVariable ) {
 	//write col wise, necessary to get rid of the boundary
 	//storage in Float2D is col wise
 	//read carefully, the dimensions are confusing
@@ -180,7 +180,7 @@ void io::NetCdfWriter::writeVarTimeIndependent( const Float2D &i_matrix,
 		start[1] = col; //select col (dim "x")
 		nc_put_vara_float(dataFile, i_ncVariable, start, count,
 				&i_matrix[col+boundarySize[0]][boundarySize[2]]); //write col
-  }
+	}
 }
 
 /**
@@ -197,13 +197,15 @@ void io::NetCdfWriter::writeVarTimeIndependent( const Float2D &i_matrix,
  * @param i_boundarySize size of the boundaries.
  * @param i_time simulation time of the time step.
  */
-void io::NetCdfWriter::writeTimeStep( const Float2D &i_h,
-                                      const Float2D &i_hu,
-                                      const Float2D &i_hv,
-                                      float i_time) {
-	if (timeStep == 0)
+void NetCdfWriter::writeTimeStep(const Float2D &i_h,
+		const Float2D &i_hu,
+		const Float2D &i_hv,
+		float i_time) {
+
+	if (timeStep == 0) {
 		// Write bathymetry
 		writeVarTimeIndependent(b, bVar);
+	}
 
 	//write i_time
 	nc_put_var1_float(dataFile, timeVar, &timeStep, &i_time);
@@ -220,6 +222,6 @@ void io::NetCdfWriter::writeTimeStep( const Float2D &i_h,
 	// Increment timeStep for next call
 	timeStep++;
 
-	if (flush > 0 && timeStep % flush == 0)
+	//if (flush > 0 && timeStep % flush == 0)
 		nc_sync(dataFile);
 }

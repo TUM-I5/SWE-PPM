@@ -1,0 +1,1015 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/0d560136/
+Args	src/tools/args.hh	/^	Args(const std::string &description = "", bool addHelp = true)$/;"	f	class:tools::Args
+Args	src/tools/args.hh	/^class Args$/;"	c	namespace:tools
+Argument	src/tools/args.hh	/^	enum Argument$/;"	g	class:tools::Args
+BND_BOTTOM	src/types/Boundary.hh	/^	BND_BOTTOM,$/;"	e	enum:Boundary
+BND_LEFT	src/types/Boundary.hh	/^	BND_LEFT,$/;"	e	enum:Boundary
+BND_RIGHT	src/types/Boundary.hh	/^	BND_RIGHT,$/;"	e	enum:Boundary
+BND_TOP	src/types/Boundary.hh	/^	BND_TOP$/;"	e	enum:Boundary
+BlockConnectInterface	src/types/BlockConnectInterface.hh	/^struct BlockConnectInterface {$/;"	s
+Boundary	src/types/Boundary.hh	/^typedef enum Boundary {$/;"	g
+Boundary	src/types/Boundary.hh	/^} Boundary;$/;"	t	typeref:enum:Boundary
+BoundarySize	src/writer/Writer.hh	/^struct BoundarySize {$/;"	s
+BoundaryType	src/types/Boundary.hh	/^typedef enum BoundaryType {$/;"	g
+BoundaryType	src/types/Boundary.hh	/^} BoundaryType;$/;"	t	typeref:enum:BoundaryType
+Bx	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    Float2D Bx;$/;"	m	class:SWE_RusanovBlock	typeref:typename:Float2D
+Bxd	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* Bxd;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+By	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    Float2D By;$/;"	m	class:SWE_RusanovBlock	typeref:typename:Float2D
+Byd	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* Byd;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+CAMERA_H	src/opengl/camera.h	/^#define CAMERA_H$/;"	d
+CONNECT	src/types/Boundary.hh	/^	CONNECT,$/;"	e	enum:BoundaryType
+CONTROLLER_H	src/opengl/controller.h	/^#define CONTROLLER_H$/;"	d
+CUDANVCCSharedObjectEmitter	CudaTool.py	/^def CUDANVCCSharedObjectEmitter(target, source, env):$/;"	f
+CUDANVCCStaticObjectEmitter	CudaTool.py	/^def CUDANVCCStaticObjectEmitter(target, source, env):$/;"	f
+CUDAScanner	CudaTool.py	/^CUDAScanner = SCons.Scanner.C.CScanner()$/;"	v
+Camera	src/opengl/camera.cpp	/^Camera::Camera(const char* window_title)$/;"	f	class:Camera
+Camera	src/opengl/camera.h	/^class Camera {$/;"	c
+Controller	src/opengl/controller.cpp	/^Controller::Controller(Simulation* sim, Visualization* vis) {$/;"	f	class:Controller
+Controller	src/opengl/controller.h	/^class Controller {$/;"	c
+DEFAULT_NX	src/opengl/simulation.cu	/^#define DEFAULT_NX /;"	d	file:
+DEFAULT_NY	src/opengl/simulation.cu	/^#define DEFAULT_NY /;"	d	file:
+Documentation	README.md	/^Documentation$/;"	s
+DrawBathymetry	src/opengl/visualization.cpp	/^void Visualization::DrawBathymetry() {$/;"	f	class:Visualization	typeref:typename:void
+DrawWaterSurface	src/opengl/visualization.cpp	/^void Visualization::DrawWaterSurface()$/;"	f	class:Visualization	typeref:typename:void
+Error	src/tools/args.hh	/^		Error,$/;"	e	enum:tools::Args::Result
+Fh	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    Float2D Fh;$/;"	m	class:SWE_RusanovBlock	typeref:typename:Float2D
+Fh	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    Float2D Fh; $/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:Float2D
+Fhd	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* Fhd;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+Fhu	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    Float2D Fhu;$/;"	m	class:SWE_RusanovBlock	typeref:typename:Float2D
+Fhu	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    Float2D Fhu;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:Float2D
+Fhud	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* Fhud;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+Fhv	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    Float2D Fhv;$/;"	m	class:SWE_RusanovBlock	typeref:typename:Float2D
+Fhv	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    Float2D Fhv;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:Float2D
+Fhvd	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* Fhvd;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+Float1D	src/tools/Float1D.hh	/^Float1D::Float1D() {}$/;"	f	class:Float1D
+Float1D	src/tools/Float1D.hh	/^Float1D::Float1D(float* rawData, int size, int stride) :$/;"	f	class:Float1D
+Float1D	src/tools/Float1D.hh	/^class Float1D {$/;"	c
+Float2D	src/tools/Float2D.hh	/^		Float2D() {}$/;"	f	class:Float2D
+Float2D	src/tools/Float2D.hh	/^		Float2D(int cols, int rows) :$/;"	f	class:Float2D
+Float2D	src/tools/Float2D.hh	/^class Float2D {$/;"	c
+Float2DNative	src/tools/Float2DNative.hh	/^		Float2DNative(int cols, int rows) :$/;"	f	class:Float2DNative
+Float2DNative	src/tools/Float2DNative.hh	/^class Float2DNative : public Float2D {$/;"	c
+Float2DUpcxx	src/tools/Float2DUpcxx.hh	/^		Float2DUpcxx(int cols, int rows) :$/;"	f	class:Float2DUpcxx
+Float2DUpcxx	src/tools/Float2DUpcxx.hh	/^class Float2DUpcxx : public Float2D {$/;"	c
+GRID_XSIZE	src/examples/swe_opengl.cpp	/^#define GRID_XSIZE /;"	d	file:
+GRID_YSIZE	src/examples/swe_opengl.cpp	/^#define GRID_YSIZE /;"	d	file:
+Gh	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    Float2D Gh;$/;"	m	class:SWE_RusanovBlock	typeref:typename:Float2D
+Gh	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    Float2D Gh; $/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:Float2D
+Ghd	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* Ghd;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+Ghu	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    Float2D Ghu;$/;"	m	class:SWE_RusanovBlock	typeref:typename:Float2D
+Ghu	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    Float2D Ghu;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:Float2D
+Ghud	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* Ghud;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+Ghv	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    Float2D Ghv;$/;"	m	class:SWE_RusanovBlock	typeref:typename:Float2D
+Ghv	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    Float2D Ghv;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:Float2D
+Ghvd	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* Ghvd;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+Help	src/tools/args.hh	/^		Help$/;"	e	enum:tools::Args::Result
+INFLOW	src/types/Boundary.hh	/^	INFLOW,$/;"	e	enum:BoundaryType
+Interface	src/examples/swe_charm.cpp	/^	typedef BlockConnectInterface<upcxx::global_ptr<float>> Interface;$/;"	t	function:Main::Main	typeref:typename:BlockConnectInterface<upcxx::global_ptr<float>>	file:
+Interface	src/examples/swe_upcxx.cpp	/^	typedef BlockConnectInterface<upcxx::global_ptr<float>> Interface;$/;"	t	function:main	typeref:typename:BlockConnectInterface<upcxx::global_ptr<float>>	file:
+InterfaceRegistry	src/examples/swe_charm.cpp	/^	typedef upcxx::global_ptr<BlockConnectInterface<upcxx::global_ptr<float>>> InterfaceRegistry;$/;"	t	function:Main::Main	typeref:typename:upcxx::global_ptr<BlockConnectInterface<upcxx::global_ptr<float>>>	file:
+InterfaceRegistry	src/examples/swe_upcxx.cpp	/^	typedef upcxx::global_ptr<BlockConnectInterface<upcxx::global_ptr<float>>> InterfaceRegistry;$/;"	t	function:main	typeref:typename:upcxx::global_ptr<BlockConnectInterface<upcxx::global_ptr<float>>>	file:
+LOGGER_HPP_	src/tools/Logger.hh	/^#define LOGGER_HPP_$/;"	d
+License	README.md	/^License$/;"	s
+Logger	src/tools/Logger.hh	/^    Logger( const int i_processRank = 0,$/;"	f	class:tools::Logger
+Logger	src/tools/Logger.hh	/^class tools::Logger {$/;"	c	class:tools
+MIN_TERM_SIZE	src/tools/ProgressBar.hh	/^	static const unsigned int MIN_TERM_SIZE = 80;$/;"	m	class:tools::ProgressBar	typeref:typename:const unsigned int
+MPI_INCLUDED	src/writer/NetCdfWriter.hh	/^#define MPI_INCLUDED$/;"	d
+MPI_INCLUDED_NETCDF	src/writer/NetCdfWriter.hh	/^#define MPI_INCLUDED_NETCDF$/;"	d
+MPI_TAG_OUT_B_BOTTOM	src/Constants.hh	/^const int MPI_TAG_OUT_B_BOTTOM = 31;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_B_LEFT	src/Constants.hh	/^const int MPI_TAG_OUT_B_LEFT = 11;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_B_RIGHT	src/Constants.hh	/^const int MPI_TAG_OUT_B_RIGHT = 21;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_B_TOP	src/Constants.hh	/^const int MPI_TAG_OUT_B_TOP = 41;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_HU_BOTTOM	src/Constants.hh	/^const int MPI_TAG_OUT_HU_BOTTOM = 32;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_HU_LEFT	src/Constants.hh	/^const int MPI_TAG_OUT_HU_LEFT = 12;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_HU_RIGHT	src/Constants.hh	/^const int MPI_TAG_OUT_HU_RIGHT = 22;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_HU_TOP	src/Constants.hh	/^const int MPI_TAG_OUT_HU_TOP = 42;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_HV_BOTTOM	src/Constants.hh	/^const int MPI_TAG_OUT_HV_BOTTOM = 33;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_HV_LEFT	src/Constants.hh	/^const int MPI_TAG_OUT_HV_LEFT = 13;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_HV_RIGHT	src/Constants.hh	/^const int MPI_TAG_OUT_HV_RIGHT = 23;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_HV_TOP	src/Constants.hh	/^const int MPI_TAG_OUT_HV_TOP = 43;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_H_BOTTOM	src/Constants.hh	/^const int MPI_TAG_OUT_H_BOTTOM = 30;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_H_LEFT	src/Constants.hh	/^const int MPI_TAG_OUT_H_LEFT = 10;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_H_RIGHT	src/Constants.hh	/^const int MPI_TAG_OUT_H_RIGHT = 20;$/;"	v	typeref:typename:const int
+MPI_TAG_OUT_H_TOP	src/Constants.hh	/^const int MPI_TAG_OUT_H_TOP = 40;$/;"	v	typeref:typename:const int
+Main	src/examples/swe_charm.cpp	/^Main::Main(CkArgMsg *msg) {$/;"	f	class:Main
+Main	src/examples/swe_charm.cpp	/^Main::Main(CkMigrateMessage *msg) {}$/;"	f	class:Main
+Main	src/examples/swe_charm.hh	/^class Main : public CBase_Main {$/;"	c
+NETCDFWRITER_HH_	src/writer/NetCdfWriter.hh	/^#define NETCDFWRITER_HH_$/;"	d
+NetCdfWriter	src/writer/NetCdfWriter.cpp	/^NetCdfWriter::NetCdfWriter( const std::string &i_baseName,$/;"	f	class:NetCdfWriter
+NetCdfWriter	src/writer/NetCdfWriter.hh	/^class NetCdfWriter : public Writer {$/;"	c
+No	src/tools/args.hh	/^		No = no_argument,$/;"	e	enum:tools::Args::Argument
+OUTFLOW	src/types/Boundary.hh	/^	OUTFLOW,$/;"	e	enum:BoundaryType
+Optional	src/tools/args.hh	/^		Optional = optional_argument$/;"	e	enum:tools::Args::Argument
+PASSIVE	src/types/Boundary.hh	/^	PASSIVE$/;"	e	enum:BoundaryType
+PROGRESSBAR_H	src/tools/ProgressBar.hh	/^#define PROGRESSBAR_H$/;"	d
+ProgressBar	src/tools/ProgressBar.hh	/^	ProgressBar(float totalWork = 1., int rank = 0)$/;"	f	class:tools::ProgressBar
+ProgressBar	src/tools/ProgressBar.hh	/^class ProgressBar$/;"	c	namespace:tools
+RenderMode	src/opengl/visualization.h	/^typedef enum RenderMode {$/;"	g
+RenderMode	src/opengl/visualization.h	/^} RenderMode;$/;"	t	typeref:enum:RenderMode
+Required	src/tools/args.hh	/^		Required = required_argument,$/;"	e	enum:tools::Args::Argument
+Result	src/tools/args.hh	/^	enum Result$/;"	g	class:tools::Args
+SCENARIO_COUNT	src/opengl/controller.h	/^#define SCENARIO_COUNT /;"	d
+SCREEN_HEIGHT	src/examples/swe_opengl.cpp	/^#define SCREEN_HEIGHT /;"	d	file:
+SCREEN_WIDTH	src/examples/swe_opengl.cpp	/^#define SCREEN_WIDTH /;"	d	file:
+SHADED	src/opengl/visualization.h	/^   SHADED, WIREFRAME, WATERSHADER$/;"	e	enum:RenderMode
+SHADER_H	src/opengl/shader.h	/^#define SHADER_H$/;"	d
+SIMULATION_H	src/opengl/simulation.h	/^#define SIMULATION_H$/;"	d
+SWE	README.md	/^SWE$/;"	c
+SWE/src/examples	src/examples/README.md	/^SWE\/src\/examples$/;"	c
+SWEASAGISCENARIO_VIS_HPP_	src/scenarios/SWE_AsagiScenario_vis.hh	/^#define SWEASAGISCENARIO_VIS_HPP_$/;"	d
+SWEDIMENSIONALSPLITTINGMPI_HH_	src/blocks/SWE_DimensionalSplittingMpi.hh	/^#define SWEDIMENSIONALSPLITTINGMPI_HH_$/;"	d
+SWEDIMENSIONALSPLITTINGUPCXX_HH_	src/blocks/SWE_DimensionalSplittingCharm.hh	/^#define SWEDIMENSIONALSPLITTINGUPCXX_HH_$/;"	d
+SWEDIMENSIONALSPLITTINGUPCXX_HH_	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^#define SWEDIMENSIONALSPLITTINGUPCXX_HH_$/;"	d
+SWEDIMENSIONALSPLITTING_HH_	src/blocks/SWE_DimensionalSplitting.hh	/^#define SWEDIMENSIONALSPLITTING_HH_$/;"	d
+SWEWAVEPROPAGATIONBLOCKCUDAKERNELS_HH_	src/blocks/cuda/SWE_WavePropagationBlockCuda_kernels.hh	/^#define SWEWAVEPROPAGATIONBLOCKCUDAKERNELS_HH_$/;"	d
+SWEWAVEPROPAGATIONBLOCKCUDA_HH_	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^#define SWEWAVEPROPAGATIONBLOCKCUDA_HH_$/;"	d
+SWEWAVEPROPAGATIONBLOCK_HH_	src/blocks/SWE_WavePropagationBlock.hh	/^#define SWEWAVEPROPAGATIONBLOCK_HH_$/;"	d
+SWEWAVEPROPAGATIONBLOCK_SIMD_HH_	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^#define SWEWAVEPROPAGATIONBLOCK_SIMD_HH_$/;"	d
+SWE_AsagiJapanSmallVisInfo	src/scenarios/SWE_AsagiScenario_vis.hh	/^class SWE_AsagiJapanSmallVisInfo : public SWE_VisInfo$/;"	c
+SWE_AsagiScenario	src/scenarios/SWE_AsagiScenario.hh	/^		SWE_AsagiScenario ($/;"	f	class:SWE_AsagiScenario
+SWE_AsagiScenario	src/scenarios/SWE_AsagiScenario.hh	/^class SWE_AsagiScenario: public SWE_Scenario {$/;"	c
+SWE_BathymetryDamBreakScenario	src/scenarios/SWE_simple_scenarios.hh	/^class SWE_BathymetryDamBreakScenario : public SWE_Scenario {$/;"	c
+SWE_BathymetryDamBreakVisInfo	src/scenarios/SWE_simple_scenarios_vis.hh	/^class SWE_BathymetryDamBreakVisInfo : public SWE_VisInfo {$/;"	c
+SWE_Block	src/blocks/SWE_Block.hh	/^SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float originY) :$/;"	f	class:SWE_Block
+SWE_Block	src/blocks/SWE_Block.hh	/^class SWE_Block {$/;"	c
+SWE_Block	src/blocks/SWE_Block_common.cpp	/^SWE_Block::SWE_Block(int l_nx, int l_ny, float l_dx, float l_dy) :$/;"	f	class:SWE_Block
+SWE_Block	src/blocks/SWE_Block_common.hh	/^class SWE_Block {$/;"	c
+SWE_Block1D	src/blocks/SWE_Block_common.hh	/^	SWE_Block1D(const Float1D& _h, const Float1D& _hu, const Float1D& _hv) :$/;"	f	struct:SWE_Block1D
+SWE_Block1D	src/blocks/SWE_Block_common.hh	/^	SWE_Block1D(float* _h, float* _hu, float* _hv, int _size, int _stride=1) :$/;"	f	struct:SWE_Block1D
+SWE_Block1D	src/blocks/SWE_Block_common.hh	/^struct SWE_Block1D {$/;"	s
+SWE_Block1D	src/types/SWE_Block1D.hh	/^	SWE_Block1D(const Float1D& _h, const Float1D& _hu, const Float1D& _hv) :$/;"	f	struct:SWE_Block1D
+SWE_Block1D	src/types/SWE_Block1D.hh	/^	SWE_Block1D(float* _h, float* _hu, float* _hv, int _size, int _stride=1) :$/;"	f	struct:SWE_Block1D
+SWE_Block1D	src/types/SWE_Block1D.hh	/^struct SWE_Block1D {$/;"	s
+SWE_Block1D	src/types/SWE_Block1DUpcxx.hh	/^struct SWE_Block1D {$/;"	s
+SWE_Block1DUpcxx	src/types/SWE_Block1DUpcxx.hh	/^	SWE_Block1DUpcxx(const Float1D& h, const Float1D& hu, const Float1D& hv) :$/;"	f	struct:SWE_Block1D
+SWE_Block1DUpcxx	src/types/SWE_Block1DUpcxx.hh	/^	SWE_Block1DUpcxx(float* _h, float* _hu, float* _hv, int _size, int _stride=1) :$/;"	f	struct:SWE_Block1D
+SWE_BlockCUDA	src/blocks/cuda/SWE_BlockCUDA.cu	/^SWE_BlockCUDA::SWE_BlockCUDA($/;"	f	typeref:typename:SWE_BlockCUDA::
+SWE_BlockCUDA	src/blocks/cuda/SWE_BlockCUDA.hh	/^class SWE_BlockCUDA : public SWE_Block {$/;"	c
+SWE_DimensionalSplitting	src/blocks/SWE_DimensionalSplitting.cpp	/^SWE_DimensionalSplitting::SWE_DimensionalSplitting (int nx, int ny, float dx, float dy) :$/;"	f	class:SWE_DimensionalSplitting
+SWE_DimensionalSplitting	src/blocks/SWE_DimensionalSplitting.hh	/^class SWE_DimensionalSplitting: public SWE_Block {$/;"	c
+SWE_DimensionalSplittingMpi	src/blocks/SWE_DimensionalSplittingMpi.cpp	/^SWE_DimensionalSplittingMpi::SWE_DimensionalSplittingMpi(int nx, int ny, float dx, float dy, flo/;"	f	class:SWE_DimensionalSplittingMpi
+SWE_DimensionalSplittingMpi	src/blocks/SWE_DimensionalSplittingMpi.hh	/^class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {$/;"	c
+SWE_DimensionalSplittingUpcxx	src/blocks/SWE_DimensionalSplittingCharm.cpp	/^SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, float dx, float dy,/;"	f	class:SWE_DimensionalSplittingUpcxx
+SWE_DimensionalSplittingUpcxx	src/blocks/SWE_DimensionalSplittingCharm.hh	/^class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {$/;"	c
+SWE_DimensionalSplittingUpcxx	src/blocks/SWE_DimensionalSplittingUpcxx.cpp	/^SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, float dx, float dy,/;"	f	class:SWE_DimensionalSplittingUpcxx
+SWE_DimensionalSplittingUpcxx	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {$/;"	c
+SWE_RadialDamBreakScenario	src/scenarios/SWE_simple_scenarios.hh	/^class SWE_RadialDamBreakScenario : public SWE_Scenario {$/;"	c
+SWE_RusanovBlock	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^SWE_RusanovBlock::SWE_RusanovBlock(float _offsetX, float _offsetY) $/;"	f	class:SWE_RusanovBlock
+SWE_RusanovBlock	src/blocks/rusanov/SWE_RusanovBlock.hh	/^class SWE_RusanovBlock : public SWE_Block {$/;"	c
+SWE_RusanovBlockCUDA	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^SWE_RusanovBlockCUDA::SWE_RusanovBlockCUDA(float _offsetX, float _offsetY, const int i_cudaDevic/;"	f	typeref:typename:SWE_RusanovBlockCUDA::
+SWE_RusanovBlockCUDA	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^class SWE_RusanovBlockCUDA : public SWE_BlockCUDA {$/;"	c
+SWE_Scenario	src/scenarios/SWE_Scenario.hh	/^class SWE_Scenario {$/;"	c
+SWE_SeaAtRestScenario	src/scenarios/SWE_simple_scenarios.hh	/^class SWE_SeaAtRestScenario : public SWE_Scenario {$/;"	c
+SWE_SplashingConeScenario	src/scenarios/SWE_simple_scenarios.hh	/^class SWE_SplashingConeScenario : public SWE_Scenario {$/;"	c
+SWE_SplashingPoolScenario	src/scenarios/SWE_simple_scenarios.hh	/^class SWE_SplashingPoolScenario : public SWE_Scenario {$/;"	c
+SWE_TsunamiScenario	src/scenarios/SWE_TsunamiScenario.hh	/^		SWE_TsunamiScenario() {}$/;"	f	class:SWE_TsunamiScenario
+SWE_TsunamiScenario	src/scenarios/SWE_TsunamiScenario.hh	/^		SWE_TsunamiScenario(const char* inputFileName, const char* displacementFileName) {$/;"	f	class:SWE_TsunamiScenario
+SWE_TsunamiScenario	src/scenarios/SWE_TsunamiScenario.hh	/^class SWE_TsunamiScenario : public SWE_Scenario {$/;"	c
+SWE_VisInfo	src/scenarios/SWE_VisInfo.hh	/^class SWE_VisInfo {$/;"	c
+SWE_WAVEACCUMULATION_BLOCK_HH_	src/blocks/SWE_WaveAccumulationBlock.hh	/^#define SWE_WAVEACCUMULATION_BLOCK_HH_$/;"	d
+SWE_WaveAccumulationBlock	src/blocks/SWE_WaveAccumulationBlock.cpp	/^SWE_WaveAccumulationBlock::SWE_WaveAccumulationBlock($/;"	f	class:SWE_WaveAccumulationBlock
+SWE_WaveAccumulationBlock	src/blocks/SWE_WaveAccumulationBlock.hh	/^class SWE_WaveAccumulationBlock: public SWE_Block {$/;"	c
+SWE_WavePropagationBlock	src/blocks/SWE_WavePropagationBlock.cpp	/^SWE_WavePropagationBlock::SWE_WavePropagationBlock (int l_nx, int l_ny, float l_dx, float l_dy) /;"	f	class:SWE_WavePropagationBlock
+SWE_WavePropagationBlock	src/blocks/SWE_WavePropagationBlock.hh	/^class SWE_WavePropagationBlock: public SWE_Block {$/;"	c
+SWE_WavePropagationBlockCuda	src/blocks/cuda/SWE_WavePropagationBlockCuda.cu	/^SWE_WavePropagationBlockCuda::SWE_WavePropagationBlockCuda($/;"	f	typeref:typename:SWE_WavePropagationBlockCuda::
+SWE_WavePropagationBlockCuda	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^class SWE_WavePropagationBlockCuda: public SWE_BlockCUDA {$/;"	c
+SWE_WavePropagationBlockSIMD	src/blocks/SWE_WavePropagationBlockSIMD.cpp	/^SWE_WavePropagationBlockSIMD::SWE_WavePropagationBlockSIMD (int l_nx, int l_ny, float l_dx, floa/;"	f	class:SWE_WavePropagationBlockSIMD
+SWE_WavePropagationBlockSIMD	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^class SWE_WavePropagationBlockSIMD : public SWE_Block {$/;"	c
+Shader	src/opengl/shader.cpp	/^Shader::Shader(char const * vertexShaderFile, char const * fragmentShaderFile)$/;"	f	class:Shader
+Shader	src/opengl/shader.h	/^class Shader {$/;"	c
+Simulation	src/opengl/simulation.cu	/^Simulation::Simulation ()$/;"	f	typeref:typename:Simulation::
+Simulation	src/opengl/simulation.h	/^class Simulation {$/;"	c
+Success	src/tools/args.hh	/^		Success = 0,$/;"	e	enum:tools::Args::Result
+TEXT_H	src/opengl/text.h	/^#define TEXT_H$/;"	d
+TILE_SIZE	src/blocks/cuda/SWE_BlockCUDA.hh	/^const int TILE_SIZE=16;$/;"	v	typeref:typename:const int
+TIME_SIZE	src/tools/ProgressBar.hh	/^	static const int TIME_SIZE = 8;$/;"	m	class:tools::ProgressBar	typeref:typename:const int
+TOOLS_ARGS_H	src/tools/args.hh	/^#define TOOLS_ARGS_H$/;"	d
+Text	src/opengl/text.h	/^	Text()$/;"	f	class:Text
+Text	src/opengl/text.h	/^class Text$/;"	c
+VBO	src/opengl/vbo.h	/^	VBO()$/;"	f	class:VBO
+VBO	src/opengl/vbo.h	/^class VBO$/;"	c
+VBO_H	src/opengl/vbo.h	/^#define VBO_H$/;"	d
+VISUALIZATION_H	src/opengl/visualization.h	/^#define VISUALIZATION_H$/;"	d
+VTKWRITER_HH_	src/writer/VtkWriter.hh	/^#define VTKWRITER_HH_$/;"	d
+Visualization	src/opengl/visualization.cpp	/^Visualization::Visualization(int windowWidth, int windowHeight, const char* window_title)$/;"	f	class:Visualization
+Visualization	src/opengl/visualization.h	/^class Visualization {$/;"	c
+VtkWriter	src/writer/VtkWriter.cpp	/^io::VtkWriter::VtkWriter( const std::string &i_baseName,$/;"	f	class:io::VtkWriter
+VtkWriter	src/writer/VtkWriter.hh	/^class io::VtkWriter : public io::Writer$/;"	c	class:io
+WALL	src/types/Boundary.hh	/^	WALL,$/;"	e	enum:BoundaryType
+WATERSHADER	src/opengl/visualization.h	/^   SHADED, WIREFRAME, WATERSHADER$/;"	e	enum:RenderMode
+WINDOW_TITLE	src/examples/swe_opengl.cpp	/^#define WINDOW_TITLE /;"	d	file:
+WIREFRAME	src/opengl/visualization.h	/^   SHADED, WIREFRAME, WATERSHADER$/;"	e	enum:RenderMode
+WRITER_HH_	src/writer/Writer.hh	/^#define WRITER_HH_$/;"	d
+Writer	src/writer/Writer.hh	/^		Writer(const std::string &i_fileName,$/;"	f	class:Writer
+Writer	src/writer/Writer.hh	/^class Writer {$/;"	c
+_	buildAll.py	/^    _, errmsg = p.communicate()$/;"	v
+__BLOCKCONNECTINTERFACE_HH	src/types/BlockConnectInterface.hh	/^#define __BLOCKCONNECTINTERFACE_HH$/;"	d
+__BOUNDARY_HH	src/types/Boundary.hh	/^#define __BOUNDARY_HH$/;"	d
+__CONSTANTS_HH	src/Constants.hh	/^#define __CONSTANTS_HH$/;"	d
+__FLOAT1D_HH	src/tools/Float1D.hh	/^#define __FLOAT1D_HH$/;"	d
+__FLOAT2DNATIVE_HH	src/tools/Float2DNative.hh	/^#define __FLOAT2DNATIVE_HH$/;"	d
+__FLOAT2DUPCXX_HH	src/tools/Float2DUpcxx.hh	/^#define __FLOAT2DUPCXX_HH$/;"	d
+__FLOAT2D_HH	src/tools/Float2D.hh	/^#define __FLOAT2D_HH$/;"	d
+__HELP_HH	src/tools/help.hh	/^#define __HELP_HH$/;"	d
+__MAIN_HH	src/examples/swe_charm.hh	/^#define __MAIN_HH$/;"	d
+__SWE_ASAGISCENARIO_HH	src/scenarios/SWE_AsagiScenario.hh	/^#define __SWE_ASAGISCENARIO_HH$/;"	d
+__SWE_BLOCK1DUPCXX_HH	src/types/SWE_Block1DUpcxx.hh	/^#define __SWE_BLOCK1DUPCXX_HH$/;"	d
+__SWE_BLOCK1D_HH	src/types/SWE_Block1D.hh	/^#define __SWE_BLOCK1D_HH$/;"	d
+__SWE_BLOCKCUDAKERNELS_HH	src/blocks/cuda/SWE_BlockCUDA_kernels.hh	/^#define __SWE_BLOCKCUDAKERNELS_HH$/;"	d
+__SWE_BLOCKCUDA_HH	src/blocks/cuda/SWE_BlockCUDA.hh	/^#define __SWE_BLOCKCUDA_HH$/;"	d
+__SWE_BLOCK_HH	src/blocks/SWE_Block.hh	/^#define __SWE_BLOCK_HH$/;"	d
+__SWE_BLOCK_HH	src/blocks/SWE_Block_common.hh	/^#define __SWE_BLOCK_HH$/;"	d
+__SWE_RUSANOVBLOCKCUDAKERNELS_HH	src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.hh	/^#define __SWE_RUSANOVBLOCKCUDAKERNELS_HH$/;"	d
+__SWE_RUSANOVBLOCKCUDA_HH	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^#define __SWE_RUSANOVBLOCKCUDA_HH$/;"	d
+__SWE_RUSANOVBLOCK_HH	src/blocks/rusanov/SWE_RusanovBlock.hh	/^#define __SWE_RUSANOVBLOCK_HH$/;"	d
+__SWE_SCENARIO_HH	src/scenarios/SWE_Scenario.hh	/^#define __SWE_SCENARIO_HH$/;"	d
+__SWE_SIMPLE_SCENARIOS_H	src/scenarios/SWE_simple_scenarios.hh	/^#define __SWE_SIMPLE_SCENARIOS_H$/;"	d
+__SWE_SIMPLE_SCENARIOS_VIS_H	src/scenarios/SWE_simple_scenarios_vis.hh	/^#define __SWE_SIMPLE_SCENARIOS_VIS_H$/;"	d
+__SWE_TSUNAMISCENARIO_HH	src/scenarios/SWE_TsunamiScenario.hh	/^#define __SWE_TSUNAMISCENARIO_HH$/;"	d
+__SWE_VISINFO_H	src/scenarios/SWE_VisInfo.hh	/^#define __SWE_VISINFO_H$/;"	d
+__anon0a32b7e40102	src/blocks/SWE_DimensionalSplittingCharm.cpp	/^			maxTimestepGlobal = upcxx::allreduce(maxTimestep, [](float a, float b) {return std::min(a, b)/;"	f	function:SWE_DimensionalSplittingUpcxx::computeNumericalFluxes	file:
+__anon0c947de60102	src/tools/Float2D.hh	/^		inline const float* operator[](int index) const {$/;"	f	class:Float2D	file:
+__anon45bbcbd10102	src/blocks/SWE_DimensionalSplittingUpcxx.cpp	/^			maxTimestepGlobal = upcxx::allreduce(maxTimestep, [](float a, float b) {return std::min(a, b)/;"	f	function:SWE_DimensionalSplittingUpcxx::computeNumericalFluxes	file:
+__anonb198b0830102	src/writer/Writer.hh	/^	int operator[](unsigned int i) const {$/;"	f	struct:BoundarySize	file:
+addOption	src/tools/args.hh	/^	void addOption(const std::string &longOption,$/;"	f	class:tools::Args	typeref:typename:void
+addText	src/opengl/text.h	/^	void addText(const char* text)$/;"	f	class:Text	typeref:typename:void
+all	Makefile	/^all: test clean$/;"	t
+allowStep	src/opengl/controller.h	/^	bool allowStep;$/;"	m	class:Controller	typeref:typename:bool
+ampi	Makefile	/^ampi:$/;"	t
+angleX	src/opengl/camera.h	/^	float angleX, angleY;$/;"	m	class:Camera	typeref:typename:float
+angleY	src/opengl/camera.h	/^	float angleX, angleY;$/;"	m	class:Camera	typeref:typename:float
+applyBoundaryBathymetry	src/blocks/SWE_Block.hh	/^void SWE_Block<T>::applyBoundaryBathymetry() {$/;"	f	class:SWE_Block	typeref:typename:void
+applyBoundaryConditions	src/blocks/SWE_Block.hh	/^void SWE_Block<T>::applyBoundaryConditions() {$/;"	f	class:SWE_Block	typeref:typename:void
+applyBoundaryConditions	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::applyBoundaryConditions() {$/;"	f	class:SWE_Block	typeref:typename:void
+argumentInfo	src/tools/args.hh	/^	size_t argumentInfo(size_t i, std::ostream &out)$/;"	f	class:tools::Args	typeref:typename:size_t
+asagi	build/options/SWE_gnu_cuda_asagi_openGL.py	/^asagi='yes'$/;"	v
+asagi	build/options/SWE_gnu_mpi_asagi.py	/^asagi='yes'$/;"	v
+asagiInputDir	build/options/SWE_gnu_cuda_asagi_openGL.py	/^asagiInputDir=''$/;"	v
+asagiInputDir	build/options/SWE_gnu_mpi_asagi.py	/^asagiInputDir=''$/;"	v
+b	src/blocks/SWE_Block.hh	/^		T b;$/;"	m	class:SWE_Block	typeref:typename:T
+b	src/blocks/SWE_Block_common.hh	/^		Float2D b;$/;"	m	class:SWE_Block	typeref:typename:Float2D
+b	src/writer/Writer.hh	/^		const Float2D &b;$/;"	m	class:Writer	typeref:typename:const Float2D &
+bOffset	src/opengl/visualization.h	/^	float wScale, bScale, bOffset;$/;"	m	class:Visualization	typeref:typename:float
+bScale	src/opengl/visualization.h	/^	float wScale, bScale, bOffset;$/;"	m	class:Visualization	typeref:typename:float
+bVar	src/writer/NetCdfWriter.hh	/^		int timeVar, hVar, huVar, hvVar, bVar;$/;"	m	class:NetCdfWriter	typeref:typename:int
+baseline	Makefile	/^baseline:$/;"	t
+bathyVerticalOffset	src/scenarios/SWE_VisInfo.hh	/^    virtual float bathyVerticalOffset() { return 0.0f; };$/;"	f	class:SWE_VisInfo	typeref:typename:float
+bathyVerticalOffset	src/scenarios/SWE_simple_scenarios_vis.hh	/^	float bathyVerticalOffset() { return 245.0f; };$/;"	f	class:SWE_BathymetryDamBreakVisInfo	typeref:typename:float
+bathyVerticalScaling	src/scenarios/SWE_AsagiScenario_vis.hh	/^    virtual float bathyVerticalScaling() { return 0.010313f; };$/;"	f	class:SWE_AsagiJapanSmallVisInfo	typeref:typename:float
+bathyVerticalScaling	src/scenarios/SWE_VisInfo.hh	/^    virtual float bathyVerticalScaling() { return 10.0f; };$/;"	f	class:SWE_VisInfo	typeref:typename:float
+bathymetryGrid	src/scenarios/SWE_AsagiScenario.hh	/^		Grid* bathymetryGrid;$/;"	m	class:SWE_AsagiScenario	typeref:typename:Grid *
+bathymetryGrid	src/scenarios/SWE_TsunamiScenario.hh	/^		InputGridSpecification bathymetryGrid;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:InputGridSpecification
+bathymetryRange	src/scenarios/SWE_AsagiScenario.hh	/^		float bathymetryRange[4];$/;"	m	class:SWE_AsagiScenario	typeref:typename:float[4]
+bd	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* bd;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+bindBuffer	src/opengl/vbo.h	/^	void bindBuffer(GLenum target = GL_ARRAY_BUFFER)$/;"	f	class:VBO	typeref:typename:void
+block	src/opengl/simulation.h	/^    SWE_BlockCUDA* block;$/;"	m	class:Simulation	typeref:typename:SWE_BlockCUDA *
+bottomCopyLayer	src/blocks/cuda/SWE_BlockCUDA.hh	/^    SWE_Block1D* bottomCopyLayer;$/;"	m	class:SWE_BlockCUDA	typeref:typename:SWE_Block1D *
+bottomGhostLayer	src/blocks/cuda/SWE_BlockCUDA.hh	/^    SWE_Block1D* bottomGhostLayer;$/;"	m	class:SWE_BlockCUDA	typeref:typename:SWE_Block1D *
+bottomLayer	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* bottomLayer;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+bottomLayerDevice	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* bottomLayerDevice;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+boundary	src/blocks/SWE_Block_common.hh	/^		BoundaryType boundary[4];$/;"	m	class:SWE_Block	typeref:typename:BoundaryType[4]
+boundary	src/types/BlockConnectInterface.hh	/^	Boundary boundary;$/;"	m	struct:BlockConnectInterface	typeref:typename:Boundary
+boundarySize	src/writer/Writer.hh	/^		const BoundarySize boundarySize;$/;"	m	class:Writer	typeref:typename:const BoundarySize
+boundarySize	src/writer/Writer.hh	/^	int boundarySize[4];$/;"	m	struct:BoundarySize	typeref:typename:int[4]
+boundaryType	src/blocks/SWE_Block.hh	/^		BoundaryType boundaryType[4];$/;"	m	class:SWE_Block	typeref:typename:BoundaryType[4]
+calc	paraview/netcdf_swe.py	/^calc = Calculator( Input=group )$/;"	v
+calculateNormal	src/opengl/simulation.cu	/^float3 calculateNormal(float3 fVert1, float3 fVert2,$/;"	f	typeref:typename:float3
+calculateNormal	src/opengl/simulation.cu	/^void Simulation::calculateNormal(float fVert1[], float fVert2[],$/;"	f	typeref:typename:void Simulation::
+calculateNormals	src/opengl/simulation.cu	/^void Simulation::calculateNormals(float3* vertexBuffer, float3* destBuffer) {$/;"	f	typeref:typename:void Simulation::
+calculateWaterSurface	src/opengl/simulation.cu	/^void Simulation::calculateWaterSurface(float3* destBuffer) {$/;"	f	typeref:typename:void Simulation::
+camera	src/opengl/visualization.h	/^	Camera* camera;$/;"	m	class:Visualization	typeref:typename:Camera *
+cameraX	src/opengl/camera.h	/^	float cameraX;$/;"	m	class:Camera	typeref:typename:float
+cameraY	src/opengl/camera.h	/^	float cameraY;$/;"	m	class:Camera	typeref:typename:float
+cameraZ	src/opengl/camera.h	/^	float cameraZ;$/;"	m	class:Camera	typeref:typename:float
+checkCUDAError	src/blocks/cuda/SWE_BlockCUDA.cu	/^void checkCUDAError(const char *msg)$/;"	f	typeref:typename:void
+clean	Makefile	/^clean:$/;"	t
+cleanUp	src/opengl/visualization.cpp	/^void Visualization::cleanUp() {$/;"	f	class:Visualization	typeref:typename:void
+clear	src/tools/ProgressBar.hh	/^	void clear()$/;"	f	class:tools::ProgressBar	typeref:typename:void
+clocks	src/tools/Logger.hh	/^  std::map<std::string, clock_t> clocks;$/;"	m	class:tools::Logger	typeref:typename:std::map<std::string,clock_t>
+cmd	buildAll.py	/^    cmd = ['scons']$/;"	v
+cols	src/tools/Float2D.hh	/^		int cols;$/;"	m	class:Float2D	typeref:typename:int
+compiler	build/options/SWE_intel_mpi.py	/^compiler='intel'$/;"	v
+compiler	build/options/SWE_intel_mpi_vectorized.py	/^compiler='intel'$/;"	v
+computeBathymetrySources	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^void SWE_RusanovBlock::computeBathymetrySources() {$/;"	f	class:SWE_RusanovBlock	typeref:typename:void
+computeBathymetrySources	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^void SWE_RusanovBlockCUDA::computeBathymetrySources() {$/;"	f	typeref:typename:void SWE_RusanovBlockCUDA::
+computeCapability	build/options/SWE_gnu_cuda.py	/^computeCapability='sm_21'$/;"	v
+computeCapability	build/options/SWE_gnu_cuda_openGL.py	/^computeCapability='sm_21'$/;"	v
+computeCapability	build/options/SWE_gnu_mpi_asagi.py	/^computeCapability='sm_21'$/;"	v
+computeCapability	build/options/SWE_gnu_mpi_with_cuda.py	/^computeCapability='sm_21'$/;"	v
+computeFlux	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^float SWE_RusanovBlock::computeFlux(float fLow, float fHigh, float xiLow, float xiHigh,$/;"	f	class:SWE_RusanovBlock	typeref:typename:float
+computeFlux	src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu	/^float computeFlux(float fLow, float fHigh, float xiLow, float xiHigh, float llf) {$/;"	f	typeref:typename:float
+computeLocalSV	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^float SWE_RusanovBlock::computeLocalSV(int i, int j, char dir) {$/;"	f	class:SWE_RusanovBlock	typeref:typename:float
+computeMaxTimestep	src/blocks/SWE_Block.hh	/^void SWE_Block<T>::computeMaxTimestep( const float dryTol, const float cflNumber) {$/;"	f	class:SWE_Block	typeref:typename:void
+computeMaxTimestep	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::computeMaxTimestep( const float i_dryTol,$/;"	f	class:SWE_Block	typeref:typename:void
+computeMaxTimestep	src/blocks/rusanov/SWE_RusanovBlock.hh	/^    virtual void computeMaxTimestep() {$/;"	f	class:SWE_RusanovBlock	typeref:typename:void
+computeMaxTimestepCUDA	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^void SWE_RusanovBlockCUDA::computeMaxTimestepCUDA() {$/;"	f	typeref:typename:void SWE_RusanovBlockCUDA::
+computeNetUpdatesKernel	src/blocks/cuda/SWE_WavePropagationBlockCuda_kernels.cu	/^void computeNetUpdatesKernel($/;"	f	typeref:typename:void
+computeNumberOfBlockRows	src/examples/netCdf_mpi.cpp	/^int computeNumberOfBlockRows(int i_numberOfProcesses) {$/;"	f	typeref:typename:int
+computeNumberOfBlockRows	src/examples/swe_charm.cpp	/^int computeNumberOfBlockRows(int i_numberOfProcesses) {$/;"	f	typeref:typename:int
+computeNumberOfBlockRows	src/examples/swe_mpi_legacy.cpp	/^int computeNumberOfBlockRows(int i_numberOfProcesses) {$/;"	f	typeref:typename:int
+computeNumericalFluxes	src/blocks/SWE_DimensionalSplitting.cpp	/^void SWE_DimensionalSplitting::computeNumericalFluxes () {$/;"	f	class:SWE_DimensionalSplitting	typeref:typename:void
+computeNumericalFluxes	src/blocks/SWE_DimensionalSplittingCharm.cpp	/^void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {$/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+computeNumericalFluxes	src/blocks/SWE_DimensionalSplittingMpi.cpp	/^void SWE_DimensionalSplittingMpi::computeNumericalFluxes () {$/;"	f	class:SWE_DimensionalSplittingMpi	typeref:typename:void
+computeNumericalFluxes	src/blocks/SWE_DimensionalSplittingUpcxx.cpp	/^void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {$/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+computeNumericalFluxes	src/blocks/SWE_WaveAccumulationBlock.cpp	/^void SWE_WaveAccumulationBlock::computeNumericalFluxes() {$/;"	f	class:SWE_WaveAccumulationBlock	typeref:typename:void
+computeNumericalFluxes	src/blocks/SWE_WavePropagationBlock.cpp	/^SWE_WavePropagationBlock::computeNumericalFluxes ()$/;"	f	class:SWE_WavePropagationBlock	typeref:typename:void
+computeNumericalFluxes	src/blocks/SWE_WavePropagationBlockSIMD.cpp	/^SWE_WavePropagationBlockSIMD::computeNumericalFluxes ()$/;"	f	class:SWE_WavePropagationBlockSIMD	typeref:typename:void
+computeNumericalFluxes	src/blocks/cuda/SWE_WavePropagationBlockCuda.cu	/^void SWE_WavePropagationBlockCuda::computeNumericalFluxes() {$/;"	f	typeref:typename:void SWE_WavePropagationBlockCuda::
+computeNumericalFluxes	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^void SWE_RusanovBlock::computeNumericalFluxes() {$/;"	f	class:SWE_RusanovBlock	typeref:typename:void
+computeNumericalFluxes	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^void SWE_RusanovBlockCUDA::computeNumericalFluxes() {$/;"	f	typeref:typename:void SWE_RusanovBlockCUDA::
+computeOneDPositionKernel	src/blocks/cuda/SWE_WavePropagationBlockCuda_kernels.cu	/^inline int computeOneDPositionKernel(const int i_i, const int i_j, const int i_ny) {$/;"	f	typeref:typename:int
+connectBoundaries	src/blocks/SWE_DimensionalSplittingCharm.cpp	/^void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<fl/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+connectBoundaries	src/blocks/SWE_DimensionalSplittingUpcxx.cpp	/^void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<fl/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+connectNeighbours	src/blocks/SWE_DimensionalSplittingMpi.cpp	/^void SWE_DimensionalSplittingMpi::connectNeighbours(int p_neighbourRankId[]) {$/;"	f	class:SWE_DimensionalSplittingMpi	typeref:typename:void
+coord	src/opengl/visualization.cpp	/^int Visualization::coord(int x, int y, int width) {$/;"	f	class:Visualization	typeref:typename:int
+copyRights	src/tools/Logger.hh	/^  const std::string copyRights;$/;"	m	class:tools::Logger	typeref:typename:const std::string
+cout	src/tools/Logger.hh	/^    std::ostream& cout() {$/;"	f	class:tools::Logger	typeref:typename:std::ostream &
+createIndicesVBO	src/opengl/visualization.cpp	/^void Visualization::createIndicesVBO(int xsize, int ysize)$/;"	f	class:Visualization	typeref:typename:void
+createVertexVBO	src/opengl/visualization.cpp	/^void Visualization::createVertexVBO(VBO &vbo, struct cudaGraphicsResource *&vbo_res,$/;"	f	class:Visualization	typeref:typename:void
+cuda_vbo_normals	src/opengl/visualization.h	/^	struct cudaGraphicsResource* cuda_vbo_normals;$/;"	m	class:Visualization	typeref:struct:cudaGraphicsResource *
+cuda_vbo_watersurface	src/opengl/visualization.h	/^	struct cudaGraphicsResource* cuda_vbo_watersurface;$/;"	m	class:Visualization	typeref:struct:cudaGraphicsResource *
+curTime	src/opengl/simulation.h	/^    float curTime;$/;"	m	class:Simulation	typeref:typename:float
+currentTime	src/scenarios/SWE_TsunamiScenario.hh	/^		float currentTime;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:float
+dX	src/writer/VtkWriter.hh	/^	float dX, dY;$/;"	m	class:io::VtkWriter	typeref:typename:float
+dY	src/writer/VtkWriter.hh	/^	float dX, dY;$/;"	m	class:io::VtkWriter	typeref:typename:float
+data	src/tools/Float2DNative.hh	/^		std::shared_ptr<float> data;$/;"	m	class:Float2DNative	typeref:typename:std::shared_ptr<float>
+data	src/tools/Float2DUpcxx.hh	/^		upcxx::global_ptr<float> data;$/;"	m	class:Float2DUpcxx	typeref:typename:upcxx::global_ptr<float>
+dataFile	src/writer/NetCdfWriter.hh	/^		int dataFile;$/;"	m	class:NetCdfWriter	typeref:typename:int
+debugVisBuffer	src/opengl/simulation.cu	/^void Simulation::debugVisBuffer(float3* _visBuffer) {$/;"	f	typeref:typename:void Simulation::
+defaultCflNumber	src/Constants.hh	/^const float defaultCflNumber = 0.4;$/;"	v	typeref:typename:const float
+defaultDryTol	src/Constants.hh	/^const float defaultDryTol = 0.1;$/;"	v	typeref:typename:const float
+defaultScenario	src/opengl/simulation.h	/^    SWE_SplashingPoolScenario defaultScenario;$/;"	m	class:Simulation	typeref:typename:SWE_SplashingPoolScenario
+deleteCudaResource	src/opengl/visualization.cpp	/^void Visualization::deleteCudaResource(struct cudaGraphicsResource *&vbo_res)$/;"	f	class:Visualization	typeref:typename:void
+description	src/tools/args.hh	/^		std::string description;$/;"	m	struct:tools::Args::optionInfo	typeref:typename:std::string
+disableShader	src/opengl/shader.cpp	/^void Shader::disableShader() {$/;"	f	class:Shader	typeref:typename:void
+displacementGrid	src/scenarios/SWE_AsagiScenario.hh	/^		Grid* displacementGrid;$/;"	m	class:SWE_AsagiScenario	typeref:typename:Grid *
+displacementGrid	src/scenarios/SWE_TsunamiScenario.hh	/^		InputGridSpecification displacementGrid;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:InputGridSpecification
+displacementRange	src/scenarios/SWE_AsagiScenario.hh	/^		float displacementRange[4];$/;"	m	class:SWE_AsagiScenario	typeref:typename:float[4]
+displayImage	src/opengl/camera.cpp	/^void Camera::displayImage() {$/;"	f	class:Camera	typeref:typename:void
+done	src/opengl/controller.h	/^	bool done;$/;"	m	class:Controller	typeref:typename:bool
+dryTol	src/opengl/simulation.cu	/^const float dryTol = 100.;$/;"	v	typeref:typename:const float
+dx	src/blocks/SWE_Block.hh	/^		float dx;$/;"	m	class:SWE_Block	typeref:typename:float
+dx	src/blocks/SWE_Block_common.hh	/^		float dx;$/;"	m	class:SWE_Block	typeref:typename:float
+dx	src/scenarios/SWE_TsunamiScenario.hh	/^		float dx;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:float
+dy	src/blocks/SWE_Block.hh	/^		float dy;$/;"	m	class:SWE_Block	typeref:typename:float
+dy	src/blocks/SWE_Block_common.hh	/^		float dy;$/;"	m	class:SWE_Block	typeref:typename:float
+dy	src/scenarios/SWE_TsunamiScenario.hh	/^		float dy;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:float
+enableShader	src/opengl/shader.cpp	/^void Shader::enableShader() {$/;"	f	class:Shader	typeref:typename:void
+endSimulation	src/scenarios/SWE_Scenario.hh	/^		virtual float endSimulation() { return 0; };$/;"	f	class:SWE_Scenario	typeref:typename:float
+endSimulation	src/scenarios/SWE_simple_scenarios.hh	/^	virtual float endSimulation() { return (float) 15; };$/;"	f	class:SWE_BathymetryDamBreakScenario	typeref:typename:float
+endSimulation	src/scenarios/SWE_simple_scenarios.hh	/^	virtual float endSimulation() { return (float) 15; };$/;"	f	class:SWE_RadialDamBreakScenario	typeref:typename:float
+endSimulation	src/scenarios/SWE_simple_scenarios.hh	/^	virtual float endSimulation() { return (float) 15; };$/;"	f	class:SWE_SplashingPoolScenario	typeref:typename:float
+endSimulation	src/scenarios/SWE_simple_scenarios.hh	/^    float endSimulation() { return 0.5f; };$/;"	f	class:SWE_SplashingConeScenario	typeref:typename:float
+endTextMode	src/opengl/text.h	/^	void endTextMode()$/;"	f	class:Text	typeref:typename:void
+errmsg	buildAll.py	/^    _, errmsg = p.communicate()$/;"	v
+exchangeBathymetry	src/blocks/SWE_DimensionalSplittingMpi.cpp	/^void SWE_DimensionalSplittingMpi::exchangeBathymetry() {$/;"	f	class:SWE_DimensionalSplittingMpi	typeref:typename:void
+exchangeBathymetry	src/blocks/SWE_DimensionalSplittingUpcxx.cpp	/^void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {$/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+exchangeBottomTopGhostLayers	src/examples/netCdf_mpi.cpp	/^void exchangeBottomTopGhostLayers( const int i_bottomNeighborRank, SWE_Block1D* o_bottomNeighbor/;"	f	typeref:typename:void
+exchangeBottomTopGhostLayers	src/examples/swe_mpi_legacy.cpp	/^void exchangeBottomTopGhostLayers( const int i_bottomNeighborRank, SWE_Block1D* o_bottomNeighbor/;"	f	typeref:typename:void
+exchangeLeftRightGhostLayers	src/examples/netCdf_mpi.cpp	/^void exchangeLeftRightGhostLayers( const int i_leftNeighborRank,  SWE_Block1D* o_leftInflow,  SW/;"	f	typeref:typename:void
+exchangeLeftRightGhostLayers	src/examples/swe_mpi_legacy.cpp	/^void exchangeLeftRightGhostLayers( const int i_leftNeighborRank,  SWE_Block1D* o_leftInflow,  SW/;"	f	typeref:typename:void
+exists	CudaTool.py	/^def exists(env):$/;"	f
+fileName	src/writer/Writer.hh	/^		const std::string fileName;$/;"	m	class:Writer	typeref:typename:const std::string
+files	paraview/netcdf_swe.py	/^files = QtGui.QFileDialog.getOpenFileNames(None, 'Select SWE output files ...', QtCore.QString()/;"	v
+finalize	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::finalize()$/;"	f	typeref:typename:void SWE_BlockCUDA::
+finialize	src/opengl/vbo.h	/^	void finialize()$/;"	f	class:VBO	typeref:typename:void
+finishMessage	src/tools/Logger.hh	/^  const std::string finishMessage;$/;"	m	class:tools::Logger	typeref:typename:const std::string
+flops	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	size_t flops;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:size_t
+flush	src/writer/NetCdfWriter.hh	/^		unsigned int flush;$/;"	m	class:NetCdfWriter	typeref:typename:unsigned int
+font	src/opengl/text.cpp	/^TTF_Font* Text::font = 0L;$/;"	m	class:Text	typeref:typename:TTF_Font *
+font	src/opengl/text.h	/^	static TTF_Font* font;$/;"	m	class:Text	typeref:typename:TTF_Font *
+fragmentShader	src/opengl/shader.h	/^	GLuint   fragmentShader;$/;"	m	class:Shader	typeref:typename:GLuint
+fragmentShaderLength	src/opengl/shader.h	/^	GLint    fragmentShaderLength;$/;"	m	class:Shader	typeref:typename:GLint
+fragmentShaderSource	src/opengl/shader.h	/^	GLchar * fragmentShaderSource;$/;"	m	class:Shader	typeref:typename:GLchar *
+frames	src/opengl/camera.h	/^	unsigned int frames;$/;"	m	class:Camera	typeref:typename:unsigned int
+g	src/Constants.hh	/^const float g = 9.81;$/;"	v	typeref:typename:const float
+g	src/blocks/SWE_Block_common.cpp	/^const float SWE_Block::g = 9.81f;$/;"	m	class:SWE_Block	typeref:typename:const float
+g	src/blocks/SWE_Block_common.hh	/^		static const float g;$/;"	m	class:SWE_Block	typeref:typename:const float
+gdb	Makefile	/^gdb: test\/runner.cpp$/;"	t
+generate	CudaTool.py	/^def generate(env):$/;"	f
+generateBaseFileName	src/tools/help.hh	/^std::string generateBaseFileName(std::string &i_baseName, int i_blockPositionX , int i_blockPosi/;"	f	typeref:typename:std::string
+generateContainerFileName	src/tools/help.hh	/^inline std::string generateContainerFileName(std::string baseName, int timeStep) {$/;"	f	typeref:typename:std::string
+generateFileName	src/tools/help.hh	/^inline std::string generateFileName( std::string i_baseName,$/;"	f	typeref:typename:std::string
+generateFileName	src/tools/help.hh	/^inline std::string generateFileName(std::string baseName, int timeStep) {$/;"	f	typeref:typename:std::string
+generateFileName	src/tools/help.hh	/^inline std::string generateFileName(std::string baseName, int timeStep, int block_X, int block_Y/;"	f	typeref:typename:std::string
+generateFileName	src/writer/VtkWriter.hh	/^    std::string generateFileName()$/;"	f	class:io::VtkWriter	typeref:typename:std::string
+getArgument	src/tools/args.hh	/^	T getArgument(const std::string &option)$/;"	f	class:tools::Args	typeref:typename:T
+getArgument	src/tools/args.hh	/^	T getArgument(const std::string &option, T defaultArgument)$/;"	f	class:tools::Args	typeref:typename:T
+getArgument	src/tools/args.hh	/^std::string tools::Args::getArgument(const std::string &option)$/;"	f	class:tools::tools::Args	typeref:typename:std::string
+getBathyCoord	src/blocks/cuda/SWE_BlockCUDA.hh	/^int getBathyCoord(int x, int y, int ny) {$/;"	f	typeref:typename:__device__ int
+getBathymetry	src/blocks/SWE_Block.hh	/^const T& SWE_Block<T>::getBathymetry() {$/;"	f	class:SWE_Block	typeref:typename:const T &
+getBathymetry	src/blocks/SWE_Block_common.cpp	/^const Float2D& SWE_Block::getBathymetry() {$/;"	f	class:SWE_Block	typeref:typename:const Float2D &
+getBathymetry	src/opengl/simulation.h	/^    const Float2D& getBathymetry() { return block->getBathymetry(); }$/;"	f	class:Simulation	typeref:typename:const Float2D &
+getBathymetry	src/scenarios/SWE_AsagiScenario.hh	/^		float getBathymetry(float x, float y) {$/;"	f	class:SWE_AsagiScenario	typeref:typename:float
+getBathymetry	src/scenarios/SWE_Scenario.hh	/^		virtual float getBathymetry(float x, float y) { return 0; }$/;"	f	class:SWE_Scenario	typeref:typename:float
+getBathymetry	src/scenarios/SWE_TsunamiScenario.hh	/^		virtual float getBathymetry(float x, float y) {$/;"	f	class:SWE_TsunamiScenario	typeref:typename:float
+getBathymetry	src/scenarios/SWE_simple_scenarios.hh	/^    float getBathymetry(float x, float y) { $/;"	f	class:SWE_BathymetryDamBreakScenario	typeref:typename:float
+getBathymetry	src/scenarios/SWE_simple_scenarios.hh	/^    float getBathymetry(float x, float y) { $/;"	f	class:SWE_SeaAtRestScenario	typeref:typename:float
+getBathymetry	src/scenarios/SWE_simple_scenarios.hh	/^    float getBathymetry(float x, float y) { $/;"	f	class:SWE_SplashingConeScenario	typeref:typename:float
+getBathymetry	src/scenarios/SWE_simple_scenarios.hh	/^    float getBathymetry(float x, float y) {$/;"	f	class:SWE_RadialDamBreakScenario	typeref:typename:float
+getBathymetry	src/scenarios/SWE_simple_scenarios.hh	/^    float getBathymetry(float x, float y) {$/;"	f	class:SWE_SplashingPoolScenario	typeref:typename:float
+getBoundary	src/scenarios/SWE_TsunamiScenario.hh	/^		float getBoundary(BoundaryEdge edge) {$/;"	f	class:SWE_TsunamiScenario	typeref:typename:float
+getBoundaryPos	src/scenarios/SWE_AsagiScenario.hh	/^		float getBoundaryPos(Boundary boundary) {$/;"	f	class:SWE_AsagiScenario	typeref:typename:float
+getBoundaryPos	src/scenarios/SWE_Scenario.hh	/^		virtual float getBoundaryPos(Boundary boundary) {$/;"	f	class:SWE_Scenario	typeref:typename:float
+getBoundaryPos	src/scenarios/SWE_simple_scenarios.hh	/^    float getBoundaryPos(Boundary boundary) {$/;"	f	class:SWE_BathymetryDamBreakScenario	typeref:typename:float
+getBoundaryPos	src/scenarios/SWE_simple_scenarios.hh	/^    float getBoundaryPos(Boundary boundary) {$/;"	f	class:SWE_RadialDamBreakScenario	typeref:typename:float
+getBoundaryPos	src/scenarios/SWE_simple_scenarios.hh	/^    float getBoundaryPos(Boundary boundary) {$/;"	f	class:SWE_SplashingPoolScenario	typeref:typename:float
+getBoundaryType	src/scenarios/SWE_AsagiScenario.hh	/^		BoundaryType getBoundaryType(Boundary boundary) {$/;"	f	class:SWE_AsagiScenario	typeref:typename:BoundaryType
+getBoundaryType	src/scenarios/SWE_Scenario.hh	/^		virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; }$/;"	f	class:SWE_Scenario	typeref:typename:BoundaryType
+getBoundaryType	src/scenarios/SWE_simple_scenarios.hh	/^    virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; };$/;"	f	class:SWE_RadialDamBreakScenario	typeref:typename:BoundaryType
+getBoundaryType	src/scenarios/SWE_simple_scenarios.hh	/^    virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; };$/;"	f	class:SWE_SplashingConeScenario	typeref:typename:BoundaryType
+getBoundaryType	src/scenarios/SWE_simple_scenarios.hh	/^    virtual BoundaryType getBoundaryType(Boundary edge) { return OUTFLOW; };$/;"	f	class:SWE_BathymetryDamBreakScenario	typeref:typename:BoundaryType
+getCUDA_bathymetry	src/blocks/cuda/SWE_BlockCUDA.hh	/^    const float* getCUDA_bathymetry() { return bd; };$/;"	f	class:SWE_BlockCUDA	typeref:typename:const float *
+getCUDA_waterHeight	src/blocks/cuda/SWE_BlockCUDA.hh	/^    const float* getCUDA_waterHeight() { return hd; };$/;"	f	class:SWE_BlockCUDA	typeref:typename:const float *
+getCellCoord	src/blocks/cuda/SWE_BlockCUDA.hh	/^int getCellCoord(int x, int y, int ny) {$/;"	f	typeref:typename:__device__ int
+getCellCountHorizontal	src/blocks/SWE_Block.hh	/^int SWE_Block<T>::getCellCountHorizontal() {$/;"	f	class:SWE_Block	typeref:typename:int
+getCellCountVertical	src/blocks/SWE_Block.hh	/^int SWE_Block<T>::getCellCountVertical() {$/;"	f	class:SWE_Block	typeref:typename:int
+getCellSizeHorizontal	src/blocks/SWE_Block.hh	/^float SWE_Block<T>::getCellSizeHorizontal() {$/;"	f	class:SWE_Block	typeref:typename:float
+getCellSizeVertical	src/blocks/SWE_Block.hh	/^float SWE_Block<T>::getCellSizeVertical() {$/;"	f	class:SWE_Block	typeref:typename:float
+getCols	src/tools/Float2D.hh	/^		int getCols() const {$/;"	f	class:Float2D	typeref:typename:int
+getCopyLayer	src/blocks/SWE_DimensionalSplittingCharm.cpp	/^BlockConnectInterface<upcxx::global_ptr<float>> SWE_DimensionalSplittingUpcxx::getCopyLayer(Boun/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:BlockConnectInterface<upcxx::global_ptr<float>>
+getCopyLayer	src/blocks/SWE_DimensionalSplittingUpcxx.cpp	/^BlockConnectInterface<upcxx::global_ptr<float>> SWE_DimensionalSplittingUpcxx::getCopyLayer(Boun/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:BlockConnectInterface<upcxx::global_ptr<float>>
+getCudaNormalsPtr	src/opengl/visualization.cpp	/^cudaGraphicsResource** Visualization::getCudaNormalsPtr() {$/;"	f	class:Visualization	typeref:typename:cudaGraphicsResource **
+getCudaWaterSurfacePtr	src/opengl/visualization.cpp	/^cudaGraphicsResource** Visualization::getCudaWaterSurfacePtr() {$/;"	f	class:Visualization	typeref:typename:cudaGraphicsResource **
+getDischarge_hu	src/blocks/SWE_Block_common.cpp	/^const Float2D& SWE_Block::getDischarge_hu() {$/;"	f	class:SWE_Block	typeref:typename:const Float2D &
+getDischarge_hv	src/blocks/SWE_Block_common.cpp	/^const Float2D& SWE_Block::getDischarge_hv() {$/;"	f	class:SWE_Block	typeref:typename:const Float2D &
+getDx	src/scenarios/SWE_TsunamiScenario.hh	/^		float getDx() { return dx; };$/;"	f	class:SWE_TsunamiScenario	typeref:typename:float
+getDy	src/scenarios/SWE_TsunamiScenario.hh	/^		float getDy() { return dy; } ;$/;"	f	class:SWE_TsunamiScenario	typeref:typename:float
+getEdgeCoord	src/blocks/cuda/SWE_BlockCUDA.hh	/^int getEdgeCoord(int x, int y, int ny) {$/;"	f	typeref:typename:__device__ int
+getMaxTimestep	src/blocks/SWE_Block.hh	/^float SWE_Block<T>::getMaxTimestep() {$/;"	f	class:SWE_Block	typeref:typename:float
+getMaxTimestep	src/blocks/SWE_Block_common.hh	/^		float getMaxTimestep(){$/;"	f	class:SWE_Block	typeref:typename:float
+getMomentumHorizontal	src/blocks/SWE_Block.hh	/^const T& SWE_Block<T>::getMomentumHorizontal() {$/;"	f	class:SWE_Block	typeref:typename:const T &
+getMomentumVertical	src/blocks/SWE_Block.hh	/^const T& SWE_Block<T>::getMomentumVertical() {$/;"	f	class:SWE_Block	typeref:typename:const T &
+getName	src/opengl/vbo.h	/^	GLuint getName()$/;"	f	class:VBO	typeref:typename:GLuint
+getNearestIndex	src/scenarios/SWE_TsunamiScenario.hh	/^		int getNearestIndex(float position, float origin, float width) {$/;"	f	class:SWE_TsunamiScenario	typeref:typename:int
+getNx	src/blocks/SWE_Block_common.hh	/^		int getNx(){$/;"	f	class:SWE_Block	typeref:typename:int
+getNx	src/opengl/simulation.h	/^    int getNx() { return nx; }$/;"	f	class:Simulation	typeref:typename:int
+getNx	src/scenarios/SWE_TsunamiScenario.hh	/^		size_t getNx() { return nx; };$/;"	f	class:SWE_TsunamiScenario	typeref:typename:size_t
+getNy	src/blocks/SWE_Block_common.hh	/^		int getNy(){$/;"	f	class:SWE_Block	typeref:typename:int
+getNy	src/opengl/simulation.h	/^    int getNy() { return ny; }$/;"	f	class:Simulation	typeref:typename:int
+getNy	src/scenarios/SWE_TsunamiScenario.hh	/^		size_t getNy() { return ny; };$/;"	f	class:SWE_TsunamiScenario	typeref:typename:size_t
+getOriginX	src/blocks/SWE_Block.hh	/^int SWE_Block<T>::getOriginX() {$/;"	f	class:SWE_Block	typeref:typename:int
+getOriginX	src/scenarios/SWE_TsunamiScenario.hh	/^		float getOriginX() { return originX; };$/;"	f	class:SWE_TsunamiScenario	typeref:typename:float
+getOriginY	src/blocks/SWE_Block.hh	/^int SWE_Block<T>::getOriginY() {$/;"	f	class:SWE_Block	typeref:typename:int
+getOriginY	src/scenarios/SWE_TsunamiScenario.hh	/^		float getOriginY() { return originY; } ;$/;"	f	class:SWE_TsunamiScenario	typeref:typename:float
+getPointer	src/tools/Float2DNative.hh	/^		std::shared_ptr<float> getPointer() {$/;"	f	class:Float2DNative	typeref:typename:std::shared_ptr<float>
+getPointer	src/tools/Float2DUpcxx.hh	/^		upcxx::global_ptr<float> getPointer() const {$/;"	f	class:Float2DUpcxx	typeref:typename:upcxx::global_ptr<float>
+getRawPointer	src/tools/Float1D.hh	/^float* Float1D::getRawPointer() const {$/;"	f	class:Float1D	typeref:typename:float *
+getRawPointer	src/tools/Float2D.hh	/^		float* getRawPointer() const {$/;"	f	class:Float2D	typeref:typename:float *
+getRows	src/tools/Float2D.hh	/^		int getRows() const {$/;"	f	class:Float2D	typeref:typename:int
+getScalingApproximation	src/opengl/simulation.cu	/^void Simulation::getScalingApproximation(float &bScale, float &bOffset, float &wScale)$/;"	f	typeref:typename:void Simulation::
+getSimulatedTimesteps	src/scenarios/SWE_TsunamiScenario.hh	/^		int getSimulatedTimesteps() { return simulatedTimesteps; }$/;"	f	class:SWE_TsunamiScenario	typeref:typename:int
+getSimulationTime	src/scenarios/SWE_TsunamiScenario.hh	/^		float getSimulationTime() { return currentTime; }$/;"	f	class:SWE_TsunamiScenario	typeref:typename:float
+getSize	src/tools/Float1D.hh	/^int Float1D::getSize() const {$/;"	f	class:Float1D	typeref:typename:int
+getTime	src/tools/Logger.hh	/^    double getTime(const std::string &i_name) {$/;"	f	class:tools::Logger	typeref:typename:double
+getUniformLocation	src/opengl/shader.h	/^	GLint getUniformLocation(const char* name)$/;"	f	class:Shader	typeref:typename:GLint
+getVeloc_u	src/scenarios/SWE_Scenario.hh	/^		virtual float getVeloc_u(float x, float y) { return 0; }$/;"	f	class:SWE_Scenario	typeref:typename:float
+getVeloc_v	src/scenarios/SWE_Scenario.hh	/^		virtual float getVeloc_v(float x, float y) { return 0; }$/;"	f	class:SWE_Scenario	typeref:typename:float
+getWaterHeight	src/blocks/SWE_Block.hh	/^const T& SWE_Block<T>::getWaterHeight() {$/;"	f	class:SWE_Block	typeref:typename:const T &
+getWaterHeight	src/blocks/SWE_Block_common.cpp	/^const Float2D& SWE_Block::getWaterHeight() {$/;"	f	class:SWE_Block	typeref:typename:const Float2D &
+getWaterHeight	src/scenarios/SWE_AsagiScenario.hh	/^		float getWaterHeight(float x, float y) {$/;"	f	class:SWE_AsagiScenario	typeref:typename:float
+getWaterHeight	src/scenarios/SWE_Scenario.hh	/^		virtual float getWaterHeight(float x, float y) { return 0; }$/;"	f	class:SWE_Scenario	typeref:typename:float
+getWaterHeight	src/scenarios/SWE_TsunamiScenario.hh	/^		virtual float getWaterHeight(float x, float y) {$/;"	f	class:SWE_TsunamiScenario	typeref:typename:float
+getWaterHeight	src/scenarios/SWE_simple_scenarios.hh	/^    float getWaterHeight( float i_positionX,$/;"	f	class:SWE_BathymetryDamBreakScenario	typeref:typename:float
+getWaterHeight	src/scenarios/SWE_simple_scenarios.hh	/^    float getWaterHeight(float x, float y) { $/;"	f	class:SWE_RadialDamBreakScenario	typeref:typename:float
+getWaterHeight	src/scenarios/SWE_simple_scenarios.hh	/^    float getWaterHeight(float x, float y) { $/;"	f	class:SWE_SeaAtRestScenario	typeref:typename:float
+getWaterHeight	src/scenarios/SWE_simple_scenarios.hh	/^    float getWaterHeight(float x, float y) { $/;"	f	class:SWE_SplashingConeScenario	typeref:typename:float
+getWaterHeight	src/scenarios/SWE_simple_scenarios.hh	/^    float getWaterHeight(float x, float y) {$/;"	f	class:SWE_SplashingPoolScenario	typeref:typename:float
+glAttachShader	src/opengl/shader.cpp	/^PFNGLATTACHSHADERPROC Shader::glAttachShader;$/;"	m	class:Shader	typeref:typename:PFNGLATTACHSHADERPROC
+glAttachShader	src/opengl/shader.h	/^	static PFNGLATTACHSHADERPROC glAttachShader;$/;"	m	class:Shader	typeref:typename:PFNGLATTACHSHADERPROC
+glBindBuffer	src/opengl/vbo.cpp	/^PFNGLBINDBUFFERARBPROC VBO::glBindBuffer = 0L;$/;"	m	class:VBO	typeref:typename:PFNGLBINDBUFFERARBPROC
+glBindBuffer	src/opengl/vbo.h	/^	static PFNGLBINDBUFFERARBPROC glBindBuffer;					\/\/ VBO Bind Procedure$/;"	m	class:VBO	typeref:typename:PFNGLBINDBUFFERARBPROC
+glBufferData	src/opengl/vbo.cpp	/^PFNGLBUFFERDATAARBPROC VBO::glBufferData = 0L;$/;"	m	class:VBO	typeref:typename:PFNGLBUFFERDATAARBPROC
+glBufferData	src/opengl/vbo.h	/^	static PFNGLBUFFERDATAARBPROC glBufferData;					\/\/ VBO Data Loading Procedure$/;"	m	class:VBO	typeref:typename:PFNGLBUFFERDATAARBPROC
+glCompileShader	src/opengl/shader.cpp	/^PFNGLCOMPILESHADERPROC Shader::glCompileShader;$/;"	m	class:Shader	typeref:typename:PFNGLCOMPILESHADERPROC
+glCompileShader	src/opengl/shader.h	/^	static PFNGLCOMPILESHADERPROC glCompileShader;$/;"	m	class:Shader	typeref:typename:PFNGLCOMPILESHADERPROC
+glCreateProgram	src/opengl/shader.cpp	/^PFNGLCREATEPROGRAMPROC Shader::glCreateProgram;$/;"	m	class:Shader	typeref:typename:PFNGLCREATEPROGRAMPROC
+glCreateProgram	src/opengl/shader.h	/^	static PFNGLCREATEPROGRAMPROC glCreateProgram;$/;"	m	class:Shader	typeref:typename:PFNGLCREATEPROGRAMPROC
+glCreateShader	src/opengl/shader.cpp	/^PFNGLCREATESHADERPROC Shader::glCreateShader;$/;"	m	class:Shader	typeref:typename:PFNGLCREATESHADERPROC
+glCreateShader	src/opengl/shader.h	/^	static PFNGLCREATESHADERPROC glCreateShader;$/;"	m	class:Shader	typeref:typename:PFNGLCREATESHADERPROC
+glDeleteBuffers	src/opengl/vbo.cpp	/^PFNGLDELETEBUFFERSARBPROC VBO::glDeleteBuffers = 0L;$/;"	m	class:VBO	typeref:typename:PFNGLDELETEBUFFERSARBPROC
+glDeleteBuffers	src/opengl/vbo.h	/^	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffers;			\/\/ VBO Deletion Procedure$/;"	m	class:VBO	typeref:typename:PFNGLDELETEBUFFERSARBPROC
+glDeleteProgram	src/opengl/shader.cpp	/^PFNGLDELETEPROGRAMPROC Shader::glDeleteProgram;$/;"	m	class:Shader	typeref:typename:PFNGLDELETEPROGRAMPROC
+glDeleteProgram	src/opengl/shader.h	/^	static PFNGLDELETEPROGRAMPROC glDeleteProgram;$/;"	m	class:Shader	typeref:typename:PFNGLDELETEPROGRAMPROC
+glDeleteShader	src/opengl/shader.cpp	/^PFNGLDELETESHADERPROC Shader::glDeleteShader;$/;"	m	class:Shader	typeref:typename:PFNGLDELETESHADERPROC
+glDeleteShader	src/opengl/shader.h	/^	static PFNGLDELETESHADERPROC glDeleteShader;$/;"	m	class:Shader	typeref:typename:PFNGLDELETESHADERPROC
+glDetachShader	src/opengl/shader.cpp	/^PFNGLDETACHSHADERPROC Shader::glDetachShader;$/;"	m	class:Shader	typeref:typename:PFNGLDETACHSHADERPROC
+glDetachShader	src/opengl/shader.h	/^	static PFNGLDETACHSHADERPROC glDetachShader;$/;"	m	class:Shader	typeref:typename:PFNGLDETACHSHADERPROC
+glGenBuffers	src/opengl/vbo.cpp	/^PFNGLGENBUFFERSARBPROC VBO::glGenBuffers = 0L;$/;"	m	class:VBO	typeref:typename:PFNGLGENBUFFERSARBPROC
+glGenBuffers	src/opengl/vbo.h	/^	static PFNGLGENBUFFERSARBPROC glGenBuffers;					\/\/ VBO Name Generation Procedure$/;"	m	class:VBO	typeref:typename:PFNGLGENBUFFERSARBPROC
+glGetObjectParameterivARB	src/opengl/shader.cpp	/^PFNGLGETOBJECTPARAMETERIVARBPROC Shader::glGetObjectParameterivARB;$/;"	m	class:Shader	typeref:typename:PFNGLGETOBJECTPARAMETERIVARBPROC
+glGetObjectParameterivARB	src/opengl/shader.h	/^	static PFNGLGETOBJECTPARAMETERIVARBPROC glGetObjectParameterivARB;$/;"	m	class:Shader	typeref:typename:PFNGLGETOBJECTPARAMETERIVARBPROC
+glGetProgramInfoLog	src/opengl/shader.cpp	/^PFNGLGETPROGRAMINFOLOGPROC Shader::glGetProgramInfoLog;$/;"	m	class:Shader	typeref:typename:PFNGLGETPROGRAMINFOLOGPROC
+glGetProgramInfoLog	src/opengl/shader.h	/^	static PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;$/;"	m	class:Shader	typeref:typename:PFNGLGETPROGRAMINFOLOGPROC
+glGetShaderInfoLog	src/opengl/shader.cpp	/^PFNGLGETSHADERINFOLOGPROC Shader::glGetShaderInfoLog;$/;"	m	class:Shader	typeref:typename:PFNGLGETSHADERINFOLOGPROC
+glGetShaderInfoLog	src/opengl/shader.h	/^	static PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;$/;"	m	class:Shader	typeref:typename:PFNGLGETSHADERINFOLOGPROC
+glGetShaderiv	src/opengl/shader.cpp	/^PFNGLGETSHADERIVPROC Shader::glGetShaderiv;$/;"	m	class:Shader	typeref:typename:PFNGLGETSHADERIVPROC
+glGetShaderiv	src/opengl/shader.h	/^	static PFNGLGETSHADERIVPROC glGetShaderiv;$/;"	m	class:Shader	typeref:typename:PFNGLGETSHADERIVPROC
+glGetUniformLocation	src/opengl/shader.cpp	/^PFNGLGETUNIFORMLOCATIONPROC Shader::glGetUniformLocation;$/;"	m	class:Shader	typeref:typename:PFNGLGETUNIFORMLOCATIONPROC
+glGetUniformLocation	src/opengl/shader.h	/^	static PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;$/;"	m	class:Shader	typeref:typename:PFNGLGETUNIFORMLOCATIONPROC
+glLinkProgram	src/opengl/shader.cpp	/^PFNGLLINKPROGRAMPROC Shader::glLinkProgram;$/;"	m	class:Shader	typeref:typename:PFNGLLINKPROGRAMPROC
+glLinkProgram	src/opengl/shader.h	/^	static PFNGLLINKPROGRAMPROC glLinkProgram;$/;"	m	class:Shader	typeref:typename:PFNGLLINKPROGRAMPROC
+glPrimitiveRestartIndexNV	src/opengl/visualization.cpp	/^PFNGLPRIMITIVERESTARTINDEXNVPROC Visualization::glPrimitiveRestartIndexNV;$/;"	m	class:Visualization	typeref:typename:PFNGLPRIMITIVERESTARTINDEXNVPROC
+glPrimitiveRestartIndexNV	src/opengl/visualization.h	/^	static PFNGLPRIMITIVERESTARTINDEXNVPROC glPrimitiveRestartIndexNV;$/;"	m	class:Visualization	typeref:typename:PFNGLPRIMITIVERESTARTINDEXNVPROC
+glShaderSource	src/opengl/shader.cpp	/^PFNGLSHADERSOURCEPROC Shader::glShaderSource;$/;"	m	class:Shader	typeref:typename:PFNGLSHADERSOURCEPROC
+glShaderSource	src/opengl/shader.h	/^	static PFNGLSHADERSOURCEPROC glShaderSource;$/;"	m	class:Shader	typeref:typename:PFNGLSHADERSOURCEPROC
+glUniform1f	src/opengl/shader.cpp	/^PFNGLUNIFORM1FPROC Shader::glUniform1f;$/;"	m	class:Shader	typeref:typename:PFNGLUNIFORM1FPROC
+glUniform1f	src/opengl/shader.h	/^	static PFNGLUNIFORM1FPROC glUniform1f;$/;"	m	class:Shader	typeref:typename:PFNGLUNIFORM1FPROC
+glUseProgram	src/opengl/shader.cpp	/^PFNGLUSEPROGRAMPROC Shader::glUseProgram;$/;"	m	class:Shader	typeref:typename:PFNGLUSEPROGRAMPROC
+glUseProgram	src/opengl/shader.h	/^	static PFNGLUSEPROGRAMPROC glUseProgram;$/;"	m	class:Shader	typeref:typename:PFNGLUSEPROGRAMPROC
+grabGhostLayer	src/blocks/SWE_Block_common.cpp	/^SWE_Block1D* SWE_Block::grabGhostLayer(BoundaryEdge edge) {$/;"	f	class:SWE_Block	typeref:typename:SWE_Block1D *
+grabGhostLayer	src/blocks/cuda/SWE_BlockCUDA.cu	/^SWE_Block1D* SWE_BlockCUDA::grabGhostLayer(BoundaryEdge edge){$/;"	f	typeref:typename:SWE_Block1D * SWE_BlockCUDA::
+grid_xsize	src/opengl/visualization.h	/^	int grid_xsize;$/;"	m	class:Visualization	typeref:typename:int
+grid_ysize	src/opengl/visualization.h	/^	int grid_ysize;$/;"	m	class:Visualization	typeref:typename:int
+group	paraview/netcdf_swe.py	/^	group = GroupDatasets( Input=sources )$/;"	v
+h	src/blocks/SWE_Block.hh	/^		T h;$/;"	m	class:SWE_Block	typeref:typename:T
+h	src/blocks/SWE_Block_common.hh	/^		Float2D h;$/;"	m	class:SWE_Block	typeref:typename:Float2D
+h	src/blocks/SWE_Block_common.hh	/^	Float1D h;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1D
+h	src/types/SWE_Block1D.hh	/^	Float1D h;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1D
+h	src/types/SWE_Block1DUpcxx.hh	/^	Float1DUpcxx h;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1DUpcxx
+hNetUpdates	src/blocks/SWE_WaveAccumulationBlock.hh	/^    Float2D hNetUpdates;$/;"	m	class:SWE_WaveAccumulationBlock	typeref:typename:Float2D
+hNetUpdatesAbove	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D hNetUpdatesAbove;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+hNetUpdatesAbove	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx hNetUpdatesAbove;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hNetUpdatesAbove	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative hNetUpdatesAbove;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+hNetUpdatesAbove	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx hNetUpdatesAbove;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hNetUpdatesAbove	src/blocks/SWE_WavePropagationBlock.hh	/^    Float2D hNetUpdatesAbove;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:Float2D
+hNetUpdatesAbove	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D hNetUpdatesAbove;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+hNetUpdatesAboveD	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^    float* hNetUpdatesAboveD;$/;"	m	class:SWE_WavePropagationBlockCuda	typeref:typename:float *
+hNetUpdatesBelow	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D hNetUpdatesBelow;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+hNetUpdatesBelow	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx hNetUpdatesBelow;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hNetUpdatesBelow	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative hNetUpdatesBelow;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+hNetUpdatesBelow	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx hNetUpdatesBelow;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hNetUpdatesBelow	src/blocks/SWE_WavePropagationBlock.hh	/^    Float2D hNetUpdatesBelow;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:Float2D
+hNetUpdatesBelow	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D hNetUpdatesBelow;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+hNetUpdatesBelowD	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^    float* hNetUpdatesBelowD;$/;"	m	class:SWE_WavePropagationBlockCuda	typeref:typename:float *
+hNetUpdatesLeft	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D hNetUpdatesLeft;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+hNetUpdatesLeft	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx hNetUpdatesLeft;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hNetUpdatesLeft	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative hNetUpdatesLeft;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+hNetUpdatesLeft	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx hNetUpdatesLeft;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hNetUpdatesLeft	src/blocks/SWE_WavePropagationBlock.hh	/^    Float2D hNetUpdatesLeft;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:Float2D
+hNetUpdatesLeft	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D hNetUpdatesLeft;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+hNetUpdatesLeftD	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^    float* hNetUpdatesLeftD;$/;"	m	class:SWE_WavePropagationBlockCuda	typeref:typename:float *
+hNetUpdatesRight	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D hNetUpdatesRight;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+hNetUpdatesRight	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx hNetUpdatesRight;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hNetUpdatesRight	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative hNetUpdatesRight;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+hNetUpdatesRight	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx hNetUpdatesRight;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hNetUpdatesRight	src/blocks/SWE_WavePropagationBlock.hh	/^    Float2D hNetUpdatesRight;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:Float2D
+hNetUpdatesRight	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D hNetUpdatesRight;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+hNetUpdatesRightD	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^    float* hNetUpdatesRightD;$/;"	m	class:SWE_WavePropagationBlockCuda	typeref:typename:float *
+hStar	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D hStar;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+hStar	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx hStar;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hStar	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative hStar;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+hStar	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx hStar;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hVar	src/writer/NetCdfWriter.hh	/^		int timeVar, hVar, huVar, hvVar, bVar;$/;"	m	class:NetCdfWriter	typeref:typename:int
+handleEvents	src/opengl/controller.cpp	/^bool Controller::handleEvents() {$/;"	f	class:Controller	typeref:typename:bool
+handleKeyPress	src/opengl/controller.cpp	/^bool Controller::handleKeyPress( SDL_keysym *keysym) {$/;"	f	class:Controller	typeref:typename:bool
+hasFocus	src/opengl/controller.cpp	/^bool Controller::hasFocus() {$/;"	f	class:Controller	typeref:typename:bool
+hd	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* hd;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+height	src/opengl/text.h	/^	std::vector<int> height;$/;"	m	class:Text	typeref:typename:std::vector<int>
+height2Color	src/opengl/visualization.cpp	/^void Visualization::height2Color(float height, GLfloat *color)$/;"	f	class:Visualization	typeref:typename:void
+helpMessage	src/tools/args.hh	/^	void helpMessage(const char* prog, std::ostream &out = std::cout)$/;"	f	class:tools::Args	typeref:typename:void
+hu	src/blocks/SWE_Block.hh	/^		T hu;$/;"	m	class:SWE_Block	typeref:typename:T
+hu	src/blocks/SWE_Block_common.hh	/^		Float2D hu;$/;"	m	class:SWE_Block	typeref:typename:Float2D
+hu	src/blocks/SWE_Block_common.hh	/^	Float1D hu;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1D
+hu	src/types/SWE_Block1D.hh	/^	Float1D hu;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1D
+hu	src/types/SWE_Block1DUpcxx.hh	/^	Float1DUpcxx hu;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1DUpcxx
+huNetUpdates	src/blocks/SWE_WaveAccumulationBlock.hh	/^    Float2D huNetUpdates;$/;"	m	class:SWE_WaveAccumulationBlock	typeref:typename:Float2D
+huNetUpdatesAbove	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D huNetUpdatesAbove;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+huNetUpdatesBelow	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D huNetUpdatesBelow;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+huNetUpdatesLeft	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D huNetUpdatesLeft;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+huNetUpdatesLeft	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx huNetUpdatesLeft;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+huNetUpdatesLeft	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative huNetUpdatesLeft;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+huNetUpdatesLeft	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx huNetUpdatesLeft;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+huNetUpdatesLeft	src/blocks/SWE_WavePropagationBlock.hh	/^    Float2D huNetUpdatesLeft;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:Float2D
+huNetUpdatesLeft	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D huNetUpdatesLeft;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+huNetUpdatesLeftD	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^    float* huNetUpdatesLeftD;$/;"	m	class:SWE_WavePropagationBlockCuda	typeref:typename:float *
+huNetUpdatesRight	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D huNetUpdatesRight;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+huNetUpdatesRight	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx huNetUpdatesRight;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+huNetUpdatesRight	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative huNetUpdatesRight;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+huNetUpdatesRight	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx huNetUpdatesRight;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+huNetUpdatesRight	src/blocks/SWE_WavePropagationBlock.hh	/^    Float2D huNetUpdatesRight;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:Float2D
+huNetUpdatesRight	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D huNetUpdatesRight;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+huNetUpdatesRightD	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^    float* huNetUpdatesRightD;$/;"	m	class:SWE_WavePropagationBlockCuda	typeref:typename:float *
+huStar	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D huStar;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+huStar	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx huStar;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+huStar	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative huStar;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+huStar	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx huStar;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+huVar	src/writer/NetCdfWriter.hh	/^		int timeVar, hVar, huVar, hvVar, bVar;$/;"	m	class:NetCdfWriter	typeref:typename:int
+hud	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* hud;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+hv	src/blocks/SWE_Block.hh	/^		T hv;$/;"	m	class:SWE_Block	typeref:typename:T
+hv	src/blocks/SWE_Block_common.hh	/^		Float2D hv;$/;"	m	class:SWE_Block	typeref:typename:Float2D
+hv	src/blocks/SWE_Block_common.hh	/^	Float1D hv;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1D
+hv	src/types/SWE_Block1D.hh	/^	Float1D hv;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1D
+hv	src/types/SWE_Block1DUpcxx.hh	/^	Float1DUpcxx hv;$/;"	m	struct:SWE_Block1D	typeref:typename:Float1DUpcxx
+hvNetUpdates	src/blocks/SWE_WaveAccumulationBlock.hh	/^    Float2D hvNetUpdates;$/;"	m	class:SWE_WaveAccumulationBlock	typeref:typename:Float2D
+hvNetUpdatesAbove	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D hvNetUpdatesAbove;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+hvNetUpdatesAbove	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx hvNetUpdatesAbove;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hvNetUpdatesAbove	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative hvNetUpdatesAbove;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+hvNetUpdatesAbove	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx hvNetUpdatesAbove;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hvNetUpdatesAbove	src/blocks/SWE_WavePropagationBlock.hh	/^    Float2D hvNetUpdatesAbove;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:Float2D
+hvNetUpdatesAbove	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D hvNetUpdatesAbove;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+hvNetUpdatesAboveD	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^    float* hvNetUpdatesAboveD;$/;"	m	class:SWE_WavePropagationBlockCuda	typeref:typename:float *
+hvNetUpdatesBelow	src/blocks/SWE_DimensionalSplitting.hh	/^		Float2D hvNetUpdatesBelow;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:Float2D
+hvNetUpdatesBelow	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		Float2DUpcxx hvNetUpdatesBelow;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hvNetUpdatesBelow	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		Float2DNative hvNetUpdatesBelow;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:Float2DNative
+hvNetUpdatesBelow	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		Float2DUpcxx hvNetUpdatesBelow;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:Float2DUpcxx
+hvNetUpdatesBelow	src/blocks/SWE_WavePropagationBlock.hh	/^    Float2D hvNetUpdatesBelow;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:Float2D
+hvNetUpdatesBelow	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D hvNetUpdatesBelow;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+hvNetUpdatesBelowD	src/blocks/cuda/SWE_WavePropagationBlockCuda.hh	/^    float* hvNetUpdatesBelowD;$/;"	m	class:SWE_WavePropagationBlockCuda	typeref:typename:float *
+hvNetUpdatesLeft	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D hvNetUpdatesLeft;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+hvNetUpdatesRight	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	Float2D hvNetUpdatesRight;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:Float2D
+hvVar	src/writer/NetCdfWriter.hh	/^		int timeVar, hVar, huVar, hvVar, bVar;$/;"	m	class:NetCdfWriter	typeref:typename:int
+hvd	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* hvd;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+i	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^     for(int i=0; i<=swe.nx+1; i++) {$/;"	v	typeref:typename:int
+i	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^    for(int i=0; i<=swe.nx+1; i++) {$/;"	v	typeref:typename:int
+indentation	src/tools/Logger.hh	/^  const std::string indentation;$/;"	m	class:tools::Logger	typeref:typename:const std::string
+indicesCount	src/opengl/visualization.h	/^	GLsizei* indicesCount;$/;"	m	class:Visualization	typeref:typename:GLsizei *
+indicesOffset	src/opengl/visualization.h	/^	GLvoid** indicesOffset;$/;"	m	class:Visualization	typeref:typename:GLvoid **
+init	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::init(int i_cudaDevice)$/;"	f	typeref:typename:void SWE_BlockCUDA::
+init	src/opengl/vbo.cpp	/^void VBO::init()$/;"	f	class:VBO	typeref:typename:void
+init	src/opengl/visualization.cpp	/^void Visualization::init(Simulation &sim, SWE_VisInfo *visInfo)$/;"	f	class:Visualization	typeref:typename:void
+initCUDA	src/opengl/visualization.cpp	/^void Visualization::initCUDA() {$/;"	f	class:Visualization	typeref:typename:void
+initGLDefaults	src/opengl/visualization.cpp	/^void Visualization::initGLDefaults() {$/;"	f	class:Visualization	typeref:typename:void
+initSDL	src/opengl/visualization.cpp	/^void Visualization::initSDL() {$/;"	f	class:Visualization	typeref:typename:void
+initScenario	src/blocks/SWE_Block.hh	/^void SWE_Block<T>::initScenario(SWE_Scenario &scenario, BoundaryType boundaries[]) {$/;"	f	class:SWE_Block	typeref:typename:void
+initScenario	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::initScenario( float _offsetX, float _offsetY,$/;"	f	class:SWE_Block	typeref:typename:void
+initScenario	src/blocks/SWE_DimensionalSplittingCharm.cpp	/^void SWE_DimensionalSplittingUpcxx::initScenario(SWE_Scenario &scenario) {$/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+initScenarioImplicit	src/blocks/SWE_DimensionalSplitting.cpp	/^void SWE_DimensionalSplitting::initScenarioImplicit (SWE_Scenario &scenario) {$/;"	f	class:SWE_DimensionalSplitting	typeref:typename:void
+initWallClockTime	src/tools/Logger.hh	/^    void initWallClockTime( const double i_wallClockTime ) {$/;"	f	class:tools::Logger	typeref:typename:void
+instances	src/opengl/text.cpp	/^unsigned int Text::instances = 0;$/;"	m	class:Text	typeref:typename:unsigned int
+instances	src/opengl/text.h	/^	static unsigned int instances;$/;"	m	class:Text	typeref:typename:unsigned int
+io	src/writer/NetCdfWriter.hh	/^namespace io {$/;"	n
+io	src/writer/VtkWriter.hh	/^namespace io {$/;"	n
+isActive	src/opengl/controller.h	/^	bool isActive;$/;"	m	class:Controller	typeref:typename:bool
+isExtensionSupported	src/opengl/shader.cpp	/^bool Shader::isExtensionSupported(const char* szTargetExtension )$/;"	f	class:Shader	typeref:typename:bool
+isExtensionSupported	src/opengl/visualization.cpp	/^bool Visualization::isExtensionSupported(const char* szTargetExtension )$/;"	f	class:Visualization	typeref:typename:bool
+isFirstStep	src/opengl/simulation.h	/^    int isFirstStep;$/;"	m	class:Simulation	typeref:typename:int
+isPaused	src/opengl/controller.cpp	/^bool Controller::isPaused() {$/;"	f	class:Controller	typeref:typename:bool
+isProgramLinked	src/opengl/shader.cpp	/^bool Shader::isProgramLinked(GLuint program, char const * prefix)$/;"	f	class:Shader	typeref:typename:bool
+isSet	src/tools/args.hh	/^	bool isSet(const std::string &option)$/;"	f	class:tools::Args	typeref:typename:bool
+isShaderCompiled	src/opengl/shader.cpp	/^bool Shader::isShaderCompiled(GLuint shader, char const * prefix)$/;"	f	class:Shader	typeref:typename:bool
+j	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^  for(int j=swe.ny+1; j>=0; j--) {$/;"	v	typeref:typename:int
+kernelBottomBoundary	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelBottomBoundary(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelBottomCopyLayer	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelBottomCopyLayer(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelBottomGhostBoundary	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelBottomGhostBoundary(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelCalcNormals	src/opengl/simulation.cu	/^void kernelCalcNormals(float3* visBuffer, float3* normalBuffer, int nx, int ny)$/;"	f	typeref:typename:void
+kernelCalcVisBuffer	src/opengl/simulation.cu	/^void kernelCalcVisBuffer(float3* visBuffer, const float* hd, const float* bd, $/;"	f	typeref:typename:void
+kernelComputeBathymetrySources	src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu	/^void kernelComputeBathymetrySources(float* hd, float* bd, float* Bxd, float* Byd, $/;"	f	typeref:typename:void
+kernelComputeFluxesF	src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu	/^void kernelComputeFluxesF(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelComputeFluxesG	src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu	/^void kernelComputeFluxesG(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelEulerTimestep	src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu	/^void kernelEulerTimestep(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelHdBufferEdges	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelHdBufferEdges(float* hd, int nx, int ny)$/;"	f	typeref:typename:void
+kernelLeftBoundary	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelLeftBoundary(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelMaximum	src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu	/^void kernelMaximum(float* maxhd, float* maxvd, int start, int size) {$/;"	f	typeref:typename:void
+kernelRightBoundary	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelRightBoundary(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelTopBoundary	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelTopBoundary(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelTopCopyLayer	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelTopCopyLayer(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+kernelTopGhostBoundary	src/blocks/cuda/SWE_BlockCUDA_kernels.cu	/^void kernelTopGhostBoundary(float* hd, float* hud, float* hvd,$/;"	f	typeref:typename:void
+largeDelimiter	src/tools/Logger.hh	/^  const std::string largeDelimiter;$/;"	m	class:tools::Logger	typeref:typename:const std::string
+lastTime	src/opengl/camera.h	/^	unsigned int lastTime;$/;"	m	class:Camera	typeref:typename:unsigned int
+loadNewScenario	src/opengl/simulation.cu	/^void Simulation::loadNewScenario(SWE_Scenario* scene)$/;"	f	typeref:typename:void Simulation::
+logger	src/tools/Logger.cpp	/^tools::Logger tools::Logger::logger;$/;"	m	class:tools::Logger	typeref:typename:tools::Logger
+logger	src/tools/Logger.hh	/^    static Logger logger;$/;"	m	class:tools::Logger	typeref:typename:Logger
+longOption	src/tools/args.hh	/^		std::string longOption;		\/\/ We need a copy here to get the const char* correct$/;"	m	struct:tools::Args::optionInfo	typeref:typename:std::string
+loop	src/opengl/simulation.h	/^    bool loop;$/;"	m	class:Simulation	typeref:typename:bool
+m_addHelp	src/tools/args.hh	/^	const bool m_addHelp;$/;"	m	class:tools::Args	typeref:typename:const bool
+m_arguments	src/tools/args.hh	/^	std::map<std::string, std::string> m_arguments;$/;"	m	class:tools::Args	typeref:typename:std::map<std::string,std::string>
+m_description	src/tools/args.hh	/^	const std::string m_description;$/;"	m	class:tools::Args	typeref:typename:const std::string
+m_optionInfo	src/tools/args.hh	/^	std::vector<optionInfo> m_optionInfo;$/;"	m	class:tools::Args	typeref:typename:std::vector<optionInfo>
+m_rank	src/tools/ProgressBar.hh	/^	int m_rank;$/;"	m	class:tools::ProgressBar	typeref:typename:int
+m_rotatingBar	src/tools/ProgressBar.hh	/^	unsigned char m_rotatingBar;$/;"	m	class:tools::ProgressBar	typeref:typename:unsigned char
+m_short2option	src/tools/args.hh	/^	std::map<char, size_t> m_short2option;$/;"	m	class:tools::Args	typeref:typename:std::map<char,size_t>
+m_startTime	src/tools/ProgressBar.hh	/^	time_t m_startTime;$/;"	m	class:tools::ProgressBar	typeref:typename:time_t
+m_terminalSize	src/tools/ProgressBar.hh	/^	unsigned int m_terminalSize;$/;"	m	class:tools::ProgressBar	typeref:typename:unsigned int
+m_totalWork	src/tools/ProgressBar.hh	/^	float m_totalWork;$/;"	m	class:tools::ProgressBar	typeref:typename:float
+main	src/examples/netCdf_mpi.cpp	/^int main( int argc, char** argv ) {$/;"	f	typeref:typename:int
+main	src/examples/netCdf_simple.cpp	/^int main(int argc, char** argv) {$/;"	f	typeref:typename:int
+main	src/examples/swe_mpi.cpp	/^int main(int argc, char** argv) {$/;"	f	typeref:typename:int
+main	src/examples/swe_mpi_legacy.cpp	/^int main( int argc, char** argv ) {$/;"	f	typeref:typename:int
+main	src/examples/swe_opengl.cpp	/^int main(int argc, char *argv[])$/;"	f	typeref:typename:int
+main	src/examples/swe_simple.cpp	/^int main( int argc, char** argv ) {$/;"	f	typeref:typename:int
+main	src/examples/swe_upcxx.cpp	/^int main(int argc, char** argv) {$/;"	f	typeref:typename:int
+maxTimestep	src/blocks/SWE_Block.hh	/^		float maxTimestep;$/;"	m	class:SWE_Block	typeref:typename:float
+maxTimestep	src/blocks/SWE_Block_common.hh	/^		float maxTimestep;$/;"	m	class:SWE_Block	typeref:typename:float
+maxTimestepGlobal	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		float maxTimestepGlobal;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:float
+maxTimestepGlobal	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		float maxTimestepGlobal;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:float
+maxTimestepGlobal	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		float maxTimestepGlobal;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:float
+maxhd	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* maxhd;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+maxhd	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* maxhd;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+maxvd	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* maxvd;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+maxvd	src/blocks/rusanov/SWE_RusanovBlockCUDA.hh	/^    float* maxvd;$/;"	m	class:SWE_RusanovBlockCUDA	typeref:typename:float *
+midDelimiter	src/tools/Logger.hh	/^  const std::string midDelimiter;$/;"	m	class:tools::Logger	typeref:typename:const std::string
+mix	src/opengl/visualization.h	/^	static GLfloat mix(GLfloat a, GLfloat b, float factor)$/;"	f	class:Visualization	typeref:typename:GLfloat
+modifyWaterScaling	src/opengl/visualization.cpp	/^void Visualization::modifyWaterScaling(float factor)$/;"	f	class:Visualization	typeref:typename:void
+mpi	Makefile	/^mpi:$/;"	t
+nX	src/writer/Writer.hh	/^		const unsigned int nX, nY;$/;"	m	class:Writer	typeref:typename:const unsigned int
+nY	src/writer/Writer.hh	/^		const unsigned int nX, nY;$/;"	m	class:Writer	typeref:typename:const unsigned int
+name	src/opengl/vbo.h	/^	GLuint name;$/;"	m	class:VBO	typeref:typename:GLuint
+ncPutAttText	src/writer/NetCdfWriter.hh	/^		void ncPutAttText(int varid, const char* name, const char *value) {$/;"	f	class:NetCdfWriter	typeref:typename:void
+ncgen_test	Makefile	/^ncgen_test:$/;"	t
+neighbour	src/blocks/SWE_Block_common.hh	/^		const SWE_Block1D* neighbour[4];$/;"	m	class:SWE_Block	typeref:typename:const SWE_Block1D * [4]
+neighbourCopyLayer	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[4];$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:BlockConnectInterface<upcxx::global_ptr<float>>[4]
+neighbourCopyLayer	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[4];$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:BlockConnectInterface<upcxx::global_ptr<float>>[4]
+neighbourRankId	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		int neighbourRankId[4];$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:int[4]
+netcdf_cluster_upcxx	Makefile	/^netcdf_cluster_upcxx:$/;"	t
+newMouseX	src/opengl/camera.h	/^	unsigned int newMouseX, newMouseY;$/;"	m	class:Camera	typeref:typename:unsigned int
+newMouseY	src/opengl/camera.h	/^	unsigned int newMouseX, newMouseY;$/;"	m	class:Camera	typeref:typename:unsigned int
+nextText	src/opengl/text.h	/^	unsigned int nextText;$/;"	m	class:Text	typeref:typename:unsigned int
+nullMessageOutput	paraview/netcdf_swe.py	/^def nullMessageOutput(type, msg):$/;"	f
+nx	src/blocks/SWE_Block.hh	/^		int nx;$/;"	m	class:SWE_Block	typeref:typename:int
+nx	src/blocks/SWE_Block_common.hh	/^		int nx;$/;"	m	class:SWE_Block	typeref:typename:int
+nx	src/opengl/simulation.h	/^    int nx;$/;"	m	class:Simulation	typeref:typename:int
+nx	src/scenarios/SWE_TsunamiScenario.hh	/^		size_t nx;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:size_t
+ny	src/blocks/SWE_Block.hh	/^		int ny;$/;"	m	class:SWE_Block	typeref:typename:int
+ny	src/blocks/SWE_Block_common.hh	/^		int ny;$/;"	m	class:SWE_Block	typeref:typename:int
+ny	src/opengl/simulation.h	/^    int ny;$/;"	m	class:Simulation	typeref:typename:int
+ny	src/scenarios/SWE_TsunamiScenario.hh	/^		size_t ny;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:size_t
+objectX	src/opengl/camera.h	/^	GLdouble objectX;$/;"	m	class:Camera	typeref:typename:GLdouble
+objectY	src/opengl/camera.h	/^	GLdouble objectY;$/;"	m	class:Camera	typeref:typename:GLdouble
+objectZ	src/opengl/camera.h	/^	GLdouble objectZ;$/;"	m	class:Camera	typeref:typename:GLdouble
+offsetX	src/blocks/SWE_Block_common.hh	/^		float offsetX;	\/\/\/< x-coordinate of the origin (left-bottom corner) of the Cartesian grid$/;"	m	class:SWE_Block	typeref:typename:float
+offsetX	src/writer/VtkWriter.hh	/^	float offsetX, offsetY;$/;"	m	class:io::VtkWriter	typeref:typename:float
+offsetY	src/blocks/SWE_Block_common.hh	/^		float offsetY;	\/\/\/< y-coordinate of the origin (left-bottom corner) of the Cartesian grid$/;"	m	class:SWE_Block	typeref:typename:float
+offsetY	src/writer/VtkWriter.hh	/^	float offsetX, offsetY;$/;"	m	class:io::VtkWriter	typeref:typename:float
+oldMouseX	src/opengl/camera.h	/^	unsigned int oldMouseX, oldMouseY;$/;"	m	class:Camera	typeref:typename:unsigned int
+oldMouseY	src/opengl/camera.h	/^	unsigned int oldMouseX, oldMouseY;$/;"	m	class:Camera	typeref:typename:unsigned int
+openFont	src/opengl/text.h	/^	static void openFont()$/;"	f	class:Text	typeref:typename:void
+openGL	build/options/SWE_gnu_cuda_asagi_openGL.py	/^openGL='yes'$/;"	v
+openGL	build/options/SWE_gnu_cuda_openGL.py	/^openGL='yes'$/;"	v
+openGL	build/options/SWE_gnu_mpi_asagi.py	/^openGL='yes'$/;"	v
+openGL_instr	build/options/SWE_gnu_cuda_asagi_openGL.py	/^openGL_instr='yes'$/;"	v
+openGL_instr	build/options/SWE_gnu_mpi_asagi.py	/^openGL_instr='yes'$/;"	v
+operator ()	src/tools/args.hh	/^		void operator()(char& c)$/;"	f	struct:tools::Args::valueConvert	typeref:typename:void
+operator <<	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^ostream& operator<<(ostream& os, const SWE_RusanovBlock& swe) {$/;"	f	typeref:typename:ostream &
+operator []	src/tools/Float1D.hh	/^inline float& Float1D::operator[](int index) { $/;"	f	class:Float1D	typeref:typename:float &
+operator []	src/tools/Float2D.hh	/^		inline float* operator[](int index) {$/;"	f	class:Float2D	typeref:typename:float *
+operator []	src/writer/Writer.hh	/^	int& operator[](unsigned int i) {$/;"	f	struct:BoundarySize	typeref:typename:int &
+optionInfo	src/tools/args.hh	/^	struct optionInfo {$/;"	s	class:tools::Args
+orient	src/opengl/camera.cpp	/^void Camera::orient( float angle_dX, float angle_dY ) $/;"	f	class:Camera	typeref:typename:void
+originX	src/blocks/SWE_Block.hh	/^		float originX;	\/\/\/< x-coordinate of the origin (left-bottom corner) of the Cartesian grid$/;"	m	class:SWE_Block	typeref:typename:float
+originX	src/scenarios/SWE_TsunamiScenario.hh	/^		float originX;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:float
+originY	src/blocks/SWE_Block.hh	/^		float originY;	\/\/\/< y-coordinate of the origin (left-bottom corner) of the Cartesian grid$/;"	m	class:SWE_Block	typeref:typename:float
+originY	src/scenarios/SWE_TsunamiScenario.hh	/^		float originY;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:float
+p	buildAll.py	/^    p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)$/;"	v
+panning	src/opengl/camera.cpp	/^void Camera::panning(int newX, int newY) {$/;"	f	class:Camera	typeref:typename:void
+parallelization	build/options/SWE_gnu_cuda.py	/^parallelization='cuda'$/;"	v
+parallelization	build/options/SWE_gnu_cuda_asagi_openGL.py	/^parallelization='cuda'$/;"	v
+parallelization	build/options/SWE_gnu_cuda_openGL.py	/^parallelization='cuda'$/;"	v
+parallelization	build/options/SWE_gnu_mpi.py	/^parallelization='mpi'$/;"	v
+parallelization	build/options/SWE_gnu_mpi_asagi.py	/^parallelization='cuda'$/;"	v
+parallelization	build/options/SWE_gnu_mpi_with_cuda.py	/^parallelization='mpi_with_cuda'$/;"	v
+parallelization	build/options/SWE_intel_mpi.py	/^parallelization='mpi'$/;"	v
+parallelization	build/options/SWE_intel_mpi_vectorized.py	/^parallelization='mpi'$/;"	v
+parse	src/tools/args.hh	/^	Result parse(int argc, char* const* argv, bool printHelp = true)$/;"	f	class:tools::Args	typeref:typename:Result
+paused	src/opengl/controller.h	/^	bool paused;$/;"	m	class:Controller	typeref:typename:bool
+pointerB	src/types/BlockConnectInterface.hh	/^	T pointerB;$/;"	m	struct:BlockConnectInterface	typeref:typename:T
+pointerH	src/types/BlockConnectInterface.hh	/^	T pointerH;$/;"	m	struct:BlockConnectInterface	typeref:typename:T
+pointerHu	src/types/BlockConnectInterface.hh	/^	T pointerHu;$/;"	m	struct:BlockConnectInterface	typeref:typename:T
+pointerHv	src/types/BlockConnectInterface.hh	/^	T pointerHv;$/;"	m	struct:BlockConnectInterface	typeref:typename:T
+printCellSize	src/tools/Logger.hh	/^    void printCellSize( const float i_dX, const float i_dY, const std::string i_unit="m" ) {$/;"	f	class:tools::Logger	typeref:typename:void
+printDeviceInformation	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::printDeviceInformation()$/;"	f	typeref:typename:void SWE_BlockCUDA::
+printElementUpdatesDone	src/tools/Logger.hh	/^    void printElementUpdatesDone(unsigned int i_iterations, const int i_nX, const int i_nY, $/;"	f	class:tools::Logger	typeref:typename:void
+printFinishMessage	src/tools/Logger.hh	/^    void printFinishMessage() {$/;"	f	class:tools::Logger	typeref:typename:void
+printIterationsDone	src/tools/Logger.hh	/^    void printIterationsDone(unsigned int i_iterations, std::string i_iterationMessage = "iterat/;"	f	class:tools::Logger	typeref:typename:void
+printNumber1d	src/tools/Logger.hh	/^  void printNumber1d( const int i_nX,$/;"	f	class:tools::Logger	typeref:typename:void
+printNumber2d	src/tools/Logger.hh	/^  void printNumber2d( const int i_nX,$/;"	f	class:tools::Logger	typeref:typename:void
+printNumberOfBlocks	src/tools/Logger.hh	/^    void printNumberOfBlocks( const int i_nX, const int i_nY ) {$/;"	f	class:tools::Logger	typeref:typename:void
+printNumberOfCells	src/tools/Logger.hh	/^    void printNumberOfCells( const int i_nX,$/;"	f	class:tools::Logger	typeref:typename:void
+printNumberOfCellsPerProcess	src/tools/Logger.hh	/^    void printNumberOfCellsPerProcess( const int i_nX, const int i_nY ) {$/;"	f	class:tools::Logger	typeref:typename:void
+printNumberOfProcesses	src/tools/Logger.hh	/^    void printNumberOfProcesses( const int i_numberOfProcesses,$/;"	f	class:tools::Logger	typeref:typename:void
+printOutputFileCreation	src/tools/Logger.hh	/^    void printOutputFileCreation( const std::string i_fileName,$/;"	f	class:tools::Logger	typeref:typename:void
+printOutputTime	src/tools/Logger.hh	/^    void printOutputTime( const float i_time,$/;"	f	class:tools::Logger	typeref:typename:void
+printPercentage	src/tools/ProgressBar.hh	/^	unsigned int printPercentage(float done)$/;"	f	class:tools::ProgressBar	typeref:typename:unsigned int
+printProgressBar	src/tools/ProgressBar.hh	/^	void printProgressBar(float done, unsigned int size)$/;"	f	class:tools::ProgressBar	typeref:typename:void
+printRotatingBar	src/tools/ProgressBar.hh	/^	void printRotatingBar()$/;"	f	class:tools::ProgressBar	typeref:typename:void
+printSimulationTime	src/tools/Logger.hh	/^    void printSimulationTime( const float i_time,$/;"	f	class:tools::Logger	typeref:typename:void
+printSolverStatistics	src/tools/Logger.hh	/^    void printSolverStatistics( const long i_firstSolverCounter,$/;"	f	class:tools::Logger	typeref:typename:void
+printStartMessage	src/tools/Logger.hh	/^    void printStartMessage( const std::string i_startMessage = "Everything is set up, starting t/;"	f	class:tools::Logger	typeref:typename:void
+printStatisticsMessage	src/tools/Logger.hh	/^    void printStatisticsMessage( const std::string i_statisticsMessage="Simulation finished. Pri/;"	f	class:tools::Logger	typeref:typename:void
+printString	src/tools/Logger.hh	/^    void printString(const std::string i_string) {$/;"	f	class:tools::Logger	typeref:typename:void
+printTime	src/tools/Logger.hh	/^    void printTime(const std::string &i_name, const std::string &i_message ) {$/;"	f	class:tools::Logger	typeref:typename:void
+printTimeLeft	src/tools/ProgressBar.hh	/^	unsigned int printTimeLeft(float done)$/;"	f	class:tools::ProgressBar	typeref:typename:unsigned int
+printWallClockTime	src/tools/Logger.hh	/^    void printWallClockTime( const double i_wallClockTime,$/;"	f	class:tools::Logger	typeref:typename:void
+printWelcomeMessage	src/tools/Logger.hh	/^    void printWelcomeMessage() {$/;"	f	class:tools::Logger	typeref:typename:void
+processRank	src/tools/Logger.hh	/^  int processRank;$/;"	m	class:tools::Logger	typeref:typename:int
+program	src/opengl/shader.h	/^	GLuint program;$/;"	m	class:Shader	typeref:typename:GLuint
+programName	src/tools/Logger.hh	/^  const std::string programName;$/;"	m	class:tools::Logger	typeref:typename:const std::string
+rawData	src/tools/Float1D.hh	/^		float* rawData;$/;"	m	class:Float1D	typeref:typename:float *
+rawData	src/tools/Float2D.hh	/^		float *rawData;$/;"	m	class:Float2D	typeref:typename:float *
+readShaderFile	src/opengl/shader.cpp	/^bool Shader::readShaderFile(char const * filename, GLchar * & shaderSource, GLint & length)$/;"	f	class:Shader	typeref:typename:bool
+reader	paraview/netcdf_swe.py	/^	reader = NetCDFReader( FileName=[str(file)] )$/;"	v
+registerCopyLayer	src/blocks/SWE_Block_common.cpp	/^SWE_Block1D* SWE_Block::registerCopyLayer(BoundaryEdge edge){$/;"	f	class:SWE_Block	typeref:typename:SWE_Block1D *
+registerCopyLayer	src/blocks/cuda/SWE_BlockCUDA.cu	/^SWE_Block1D* SWE_BlockCUDA::registerCopyLayer(BoundaryEdge edge){$/;"	f	typeref:typename:SWE_Block1D * SWE_BlockCUDA::
+renderDisplay	src/opengl/visualization.cpp	/^void Visualization::renderDisplay() {$/;"	f	class:Visualization	typeref:typename:void
+renderMode	src/opengl/visualization.h	/^	RenderMode renderMode;$/;"	m	class:Visualization	typeref:typename:RenderMode
+representation	paraview/netcdf_swe.py	/^representation = Show()$/;"	v
+required	src/tools/args.hh	/^		bool required;$/;"	m	struct:tools::Args::optionInfo	typeref:typename:bool
+reset	src/opengl/camera.cpp	/^void Camera::reset()$/;"	f	class:Camera	typeref:typename:void
+resetClockToCurrentTime	src/tools/Logger.hh	/^    void resetClockToCurrentTime(const std::string &i_name) {$/;"	f	class:tools::Logger	typeref:typename:void
+resize	src/opengl/simulation.cu	/^void Simulation::resize(float factor)$/;"	f	typeref:typename:void Simulation::
+resizeWindow	src/opengl/visualization.cpp	/^int Visualization::resizeWindow(int newWidth, int newHeight)$/;"	f	class:Visualization	typeref:typename:int
+restart	src/opengl/simulation.cu	/^void Simulation::restart()$/;"	f	typeref:typename:void Simulation::
+rotateObject	src/opengl/camera.cpp	/^void Camera::rotateObject() {$/;"	f	class:Camera	typeref:typename:void
+rows	src/tools/Float2D.hh	/^		int rows;$/;"	m	class:Float2D	typeref:typename:int
+runCuda	src/opengl/simulation.cu	/^void Simulation::runCuda(struct cudaGraphicsResource **vbo_resource, struct cudaGraphicsResource/;"	f	typeref:typename:void Simulation::
+scaleFunction	src/opengl/simulation.cu	/^float scaleFunction(float val, float scale) {$/;"	f	typeref:typename:float
+scenario	src/opengl/simulation.h	/^    SWE_Scenario* scenario;$/;"	m	class:Simulation	typeref:typename:SWE_Scenario *
+scenarios	src/opengl/controller.h	/^	SWE_Scenario *scenarios[SCENARIO_COUNT];$/;"	m	class:Controller	typeref:typename:SWE_Scenario * []
+setBathBuffer	src/opengl/simulation.cu	/^void Simulation::setBathBuffer(float* bath) {$/;"	f	typeref:typename:void Simulation::
+setBathymetry	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::setBathymetry(float (*_b)(float, float)) {$/;"	f	class:SWE_Block	typeref:typename:void
+setBathymetry	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::setBathymetry(float _b) {$/;"	f	class:SWE_Block	typeref:typename:void
+setBoundaryBathymetry	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::setBoundaryBathymetry()$/;"	f	class:SWE_Block	typeref:typename:void
+setBoundaryConditions	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::setBoundaryConditions() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+setBoundaryType	src/blocks/SWE_Block.hh	/^void SWE_Block<T>::setBoundaryType(Boundary boundary, BoundaryType type) {$/;"	f	class:SWE_Block	typeref:typename:void
+setBoundaryType	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::setBoundaryType($/;"	f	class:SWE_Block	typeref:typename:void
+setBufferData	src/opengl/vbo.h	/^	void setBufferData(GLsizei size, const void* data,$/;"	f	class:VBO	typeref:typename:void
+setCamera	src/opengl/camera.cpp	/^void Camera::setCamera() {$/;"	f	class:Camera	typeref:typename:void
+setDischarge	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::setDischarge(float (*_u)(float, float), float (*_v)(float, float)) {$/;"	f	class:SWE_Block	typeref:typename:void
+setGhostLayer	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::setGhostLayer() {$/;"	f	class:SWE_Block	typeref:typename:void
+setGhostLayer	src/blocks/SWE_DimensionalSplittingCharm.cpp	/^void SWE_DimensionalSplittingUpcxx::setGhostLayer() {$/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+setGhostLayer	src/blocks/SWE_DimensionalSplittingMpi.cpp	/^void SWE_DimensionalSplittingMpi::setGhostLayer() {$/;"	f	class:SWE_DimensionalSplittingMpi	typeref:typename:void
+setGhostLayer	src/blocks/SWE_DimensionalSplittingUpcxx.cpp	/^void SWE_DimensionalSplittingUpcxx::setGhostLayer() {$/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+setProcessRank	src/tools/Logger.hh	/^    void setProcessRank( const int i_processRank ) {$/;"	f	class:tools::Logger	typeref:typename:void
+setProjection	src/opengl/visualization.cpp	/^void Visualization::setProjection()$/;"	f	class:Visualization	typeref:typename:void
+setRenderingMode	src/opengl/visualization.cpp	/^void Visualization::setRenderingMode(RenderMode mode) {$/;"	f	class:Visualization	typeref:typename:void
+setUniform	src/opengl/shader.h	/^	void setUniform(GLint location, GLfloat value)$/;"	f	class:Shader	typeref:typename:void
+setWaterHeight	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::setWaterHeight(float (*_h)(float, float)) {$/;"	f	class:SWE_Block	typeref:typename:void
+shadersLoaded	src/opengl/shader.cpp	/^bool Shader::shadersLoaded() {$/;"	f	class:Shader	typeref:typename:bool
+shdrLoaded	src/opengl/shader.h	/^	bool shdrLoaded;$/;"	m	class:Shader	typeref:typename:bool
+shdrSupport	src/opengl/shader.cpp	/^bool Shader::shdrSupport = false;$/;"	m	class:Shader	typeref:typename:bool
+shdrSupport	src/opengl/shader.h	/^	static bool shdrSupport;$/;"	m	class:Shader	typeref:typename:bool
+showNextText	src/opengl/text.h	/^	bool showNextText(SDL_Rect &location)$/;"	f	class:Text	typeref:typename:bool
+simulate	Makefile	/^simulate:$/;"	t
+simulate	src/blocks/SWE_WavePropagationBlockSIMD.cpp	/^SWE_WavePropagationBlockSIMD::simulate (float i_tStart, float i_tEnd)$/;"	f	class:SWE_WavePropagationBlockSIMD	typeref:typename:float
+simulate	src/blocks/cuda/SWE_WavePropagationBlockCuda.cu	/^float SWE_WavePropagationBlockCuda::simulate(float tStart, float tEnd) {$/;"	f	typeref:typename:float SWE_WavePropagationBlockCuda::
+simulate	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^float SWE_RusanovBlock::simulate(float tStart, float tEnd) {$/;"	f	class:SWE_RusanovBlock	typeref:typename:float
+simulate	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^float SWE_RusanovBlockCUDA::simulate(float tStart, float tEnd) {$/;"	f	typeref:typename:float SWE_RusanovBlockCUDA::
+simulateTimestep	src/blocks/SWE_WavePropagationBlockSIMD.cpp	/^SWE_WavePropagationBlockSIMD::simulateTimestep (float dt)$/;"	f	class:SWE_WavePropagationBlockSIMD	typeref:typename:void
+simulateTimestep	src/blocks/cuda/SWE_WavePropagationBlockCuda.cu	/^void SWE_WavePropagationBlockCuda::simulateTimestep(float i_dT) {$/;"	f	typeref:typename:void SWE_WavePropagationBlockCuda::
+simulateTimestep	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^void SWE_RusanovBlock::simulateTimestep(float dt) {$/;"	f	class:SWE_RusanovBlock	typeref:typename:void
+simulateTimestep	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^void SWE_RusanovBlockCUDA::simulateTimestep(float dt) {$/;"	f	typeref:typename:void SWE_RusanovBlockCUDA::
+simulate_ampi	Makefile	/^simulate_ampi:$/;"	t
+simulate_mpi	Makefile	/^simulate_mpi:$/;"	t
+simulate_upcxx	Makefile	/^simulate_upcxx:$/;"	t
+simulatedTimesteps	src/scenarios/SWE_TsunamiScenario.hh	/^		int simulatedTimesteps;$/;"	m	class:SWE_TsunamiScenario	typeref:typename:int
+simulation	src/opengl/controller.h	/^	Simulation* simulation;$/;"	m	class:Controller	typeref:typename:Simulation *
+size	src/tools/Float1D.hh	/^		int size;$/;"	m	class:Float1D	typeref:typename:int
+size	src/types/BlockConnectInterface.hh	/^	int size;$/;"	m	struct:BlockConnectInterface	typeref:typename:int
+solver	build/options/SWE_gnu.py	/^solver='fwave'$/;"	v
+solver	build/options/SWE_gnu_cuda.py	/^solver='fwave'$/;"	v
+solver	build/options/SWE_gnu_cuda_asagi_openGL.py	/^solver='augrie'$/;"	v
+solver	build/options/SWE_gnu_cuda_openGL.py	/^solver='fwave'$/;"	v
+solver	build/options/SWE_gnu_mpi.py	/^solver='fwave'$/;"	v
+solver	build/options/SWE_gnu_mpi_asagi.py	/^solver='fwave'$/;"	v
+solver	build/options/SWE_gnu_mpi_with_cuda.py	/^solver='fwave'$/;"	v
+solver	build/options/SWE_intel_mpi.py	/^solver='fwave'$/;"	v
+solver	build/options/SWE_intel_mpi_vectorized.py	/^solver='fwavevec'$/;"	v
+solver	src/blocks/SWE_DimensionalSplitting.hh	/^		solver::Hybrid<float> solver;$/;"	m	class:SWE_DimensionalSplitting	typeref:typename:solver::Hybrid<float>
+solver	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		solver::Hybrid<float> solver;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:solver::Hybrid<float>
+solver	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		solver::Hybrid<float> solver;$/;"	m	class:SWE_DimensionalSplittingMpi	typeref:typename:solver::Hybrid<float>
+solver	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		solver::Hybrid<float> solver;$/;"	m	class:SWE_DimensionalSplittingUpcxx	typeref:typename:solver::Hybrid<float>
+sources	paraview/netcdf_swe.py	/^sources = []$/;"	v
+startIndex	src/types/BlockConnectInterface.hh	/^	int startIndex;$/;"	m	struct:BlockConnectInterface	typeref:typename:int
+startPanning	src/opengl/camera.cpp	/^void Camera::startPanning(int xPos, int yPos) {$/;"	f	class:Camera	typeref:typename:void
+startTextMode	src/opengl/text.h	/^	void startTextMode()$/;"	f	class:Text	typeref:typename:void
+stride	src/tools/Float1D.hh	/^		int stride;$/;"	m	class:Float1D	typeref:typename:int
+stride	src/types/BlockConnectInterface.hh	/^	int stride;$/;"	m	struct:BlockConnectInterface	typeref:typename:int
+synchAfterWrite	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchAfterWrite() {$/;"	f	class:SWE_Block	typeref:typename:void
+synchAfterWrite	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchAfterWrite() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchBathymetryAfterWrite	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchBathymetryAfterWrite() {}$/;"	f	class:SWE_Block	typeref:typename:void
+synchBathymetryAfterWrite	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchBathymetryAfterWrite() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchBathymetryBeforeRead	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchBathymetryBeforeRead() {}$/;"	f	class:SWE_Block	typeref:typename:void
+synchBathymetryBeforeRead	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchBathymetryBeforeRead() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchBeforeRead	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchBeforeRead() {$/;"	f	class:SWE_Block	typeref:typename:void
+synchBeforeRead	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchBeforeRead() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchCopyLayerBeforeRead	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchCopyLayerBeforeRead() {}$/;"	f	class:SWE_Block	typeref:typename:void
+synchCopyLayerBeforeRead	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchCopyLayerBeforeRead() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchDischargeAfterWrite	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchDischargeAfterWrite() {}$/;"	f	class:SWE_Block	typeref:typename:void
+synchDischargeAfterWrite	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchDischargeAfterWrite() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchDischargeBeforeRead	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchDischargeBeforeRead() {}$/;"	f	class:SWE_Block	typeref:typename:void
+synchDischargeBeforeRead	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchDischargeBeforeRead() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchGhostLayerAfterWrite	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchGhostLayerAfterWrite() {}$/;"	f	class:SWE_Block	typeref:typename:void
+synchGhostLayerAfterWrite	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchGhostLayerAfterWrite() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchWaterHeightAfterWrite	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchWaterHeightAfterWrite() {}$/;"	f	class:SWE_Block	typeref:typename:void
+synchWaterHeightAfterWrite	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchWaterHeightAfterWrite() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+synchWaterHeightBeforeRead	src/blocks/SWE_Block_common.cpp	/^void SWE_Block::synchWaterHeightBeforeRead() {}$/;"	f	class:SWE_Block	typeref:typename:void
+synchWaterHeightBeforeRead	src/blocks/cuda/SWE_BlockCUDA.cu	/^void SWE_BlockCUDA::synchWaterHeightBeforeRead() {$/;"	f	typeref:typename:void SWE_BlockCUDA::
+table	paraview/netcdf_swe.py	/^table = GetLookupTableForArray( "Result", 1, RGBPoints=[-1.0, 0.23, 0.299, 0.754, 2.0, 0.706, 0./;"	v
+test	Makefile	/^test: test\/runner ncgen_test$/;"	t
+test/runner	Makefile	/^test\/runner: test\/runner.cpp$/;"	t
+test/runner.cpp	Makefile	/^test\/runner.cpp: test\/*.h$/;"	t
+text	src/opengl/visualization.h	/^	Text* text;$/;"	m	class:Visualization	typeref:typename:Text *
+textures	src/opengl/text.h	/^	std::vector<GLuint> textures;$/;"	m	class:Text	typeref:typename:std::vector<GLuint>
+timeCout	src/tools/Logger.hh	/^  std::ostream& timeCout() {$/;"	f	class:tools::Logger	typeref:typename:std::ostream &
+timeStep	src/writer/Writer.hh	/^		size_t timeStep;$/;"	m	class:Writer	typeref:typename:size_t
+timeVar	src/writer/NetCdfWriter.hh	/^		int timeVar, hVar, huVar, hvVar, bVar;$/;"	m	class:NetCdfWriter	typeref:typename:int
+time_needed	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	double time_needed;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:double
+timer	src/tools/Logger.hh	/^  std::map<std::string, double> timer;$/;"	m	class:tools::Logger	typeref:typename:std::map<std::string,double>
+toggleRenderingMode	src/opengl/visualization.cpp	/^void Visualization::toggleRenderingMode() {$/;"	f	class:Visualization	typeref:typename:void
+toogleLoop	src/opengl/simulation.h	/^    void toogleLoop() { loop = !loop; }$/;"	f	class:Simulation	typeref:typename:void
+tools	src/tools/Logger.hh	/^namespace tools {$/;"	n
+tools	src/tools/ProgressBar.hh	/^namespace tools$/;"	n
+tools	src/tools/args.hh	/^namespace tools$/;"	n
+topCopyLayer	src/blocks/cuda/SWE_BlockCUDA.hh	/^    SWE_Block1D* topCopyLayer;$/;"	m	class:SWE_BlockCUDA	typeref:typename:SWE_Block1D *
+topGhostLayer	src/blocks/cuda/SWE_BlockCUDA.hh	/^    SWE_Block1D* topGhostLayer;$/;"	m	class:SWE_BlockCUDA	typeref:typename:SWE_Block1D *
+topLayer	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* topLayer;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+topLayerDevice	src/blocks/cuda/SWE_BlockCUDA.hh	/^    float* topLayerDevice;$/;"	m	class:SWE_BlockCUDA	typeref:typename:float *
+tryCUDA	src/blocks/cuda/SWE_BlockCUDA.cu	/^void tryCUDA(cudaError_t err, const char *msg)$/;"	f	typeref:typename:void
+upcxx	Makefile	/^upcxx:$/;"	t
+update	src/tools/ProgressBar.hh	/^	void update(float done)$/;"	f	class:tools::ProgressBar	typeref:typename:void
+updateBathymetryVBO	src/opengl/visualization.cpp	/^void Visualization::updateBathymetryVBO(Simulation &sim) {$/;"	f	class:Visualization	typeref:typename:void
+updateBathymetryWithDynamicDisplacement	src/blocks/SWE_WaveAccumulationBlock.cpp	/^bool SWE_WaveAccumulationBlock::updateBathymetryWithDynamicDisplacement(scenarios::Asagi &i_asag/;"	f	class:SWE_WaveAccumulationBlock	typeref:typename:bool
+updateBathymetryWithDynamicDisplacement	src/blocks/SWE_WavePropagationBlockSIMD.cpp	/^SWE_WavePropagationBlockSIMD::updateBathymetryWithDynamicDisplacement (scenarios::Asagi &i_asagi/;"	f	class:SWE_WavePropagationBlockSIMD	typeref:typename:bool
+updateTime	src/tools/Logger.hh	/^    void updateTime(const std::string &i_name) {$/;"	f	class:tools::Logger	typeref:typename:void
+updateUnknowns	src/blocks/SWE_DimensionalSplitting.cpp	/^void SWE_DimensionalSplitting::updateUnknowns (float dt) {$/;"	f	class:SWE_DimensionalSplitting	typeref:typename:void
+updateUnknowns	src/blocks/SWE_DimensionalSplittingCharm.cpp	/^void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {$/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+updateUnknowns	src/blocks/SWE_DimensionalSplittingMpi.cpp	/^void SWE_DimensionalSplittingMpi::updateUnknowns (float dt) {$/;"	f	class:SWE_DimensionalSplittingMpi	typeref:typename:void
+updateUnknowns	src/blocks/SWE_DimensionalSplittingUpcxx.cpp	/^void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {$/;"	f	class:SWE_DimensionalSplittingUpcxx	typeref:typename:void
+updateUnknowns	src/blocks/SWE_WaveAccumulationBlock.cpp	/^void SWE_WaveAccumulationBlock::updateUnknowns(float dt) {$/;"	f	class:SWE_WaveAccumulationBlock	typeref:typename:void
+updateUnknowns	src/blocks/SWE_WavePropagationBlock.cpp	/^SWE_WavePropagationBlock::updateUnknowns (float dt)$/;"	f	class:SWE_WavePropagationBlock	typeref:typename:void
+updateUnknowns	src/blocks/SWE_WavePropagationBlockSIMD.cpp	/^SWE_WavePropagationBlockSIMD::updateUnknowns (float dt)$/;"	f	class:SWE_WavePropagationBlockSIMD	typeref:typename:void
+updateUnknowns	src/blocks/cuda/SWE_WavePropagationBlockCuda.cu	/^void SWE_WavePropagationBlockCuda::updateUnknowns(const float i_deltaT) {$/;"	f	typeref:typename:void SWE_WavePropagationBlockCuda::
+updateUnknowns	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^void SWE_RusanovBlock::updateUnknowns(float dt) {$/;"	f	class:SWE_RusanovBlock	typeref:typename:void
+updateUnknowns	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^void SWE_RusanovBlockCUDA::updateUnknowns(float dt) {$/;"	f	typeref:typename:void SWE_RusanovBlockCUDA::
+updateUnknownsKernel	src/blocks/cuda/SWE_WavePropagationBlockCuda_kernels.cu	/^void updateUnknownsKernel($/;"	f	typeref:typename:void
+updateVisBuffer	src/opengl/simulation.cu	/^void Simulation::updateVisBuffer(float3* _visBuffer) {$/;"	f	typeref:typename:void Simulation::
+valgrind	Makefile	/^valgrind: test\/runner.cpp$/;"	t
+value	src/tools/args.hh	/^		std::string value;$/;"	m	struct:tools::Args::optionInfo	typeref:typename:std::string
+valueConvert	src/tools/args.hh	/^	struct valueConvert {$/;"	s	class:tools::Args
+vars	buildAll.py	/^vars = collections.OrderedDict({$/;"	v
+vboBathColor	src/opengl/visualization.h	/^	VBO vboBathColor;$/;"	m	class:Visualization	typeref:typename:VBO
+vboBathymetry	src/opengl/visualization.h	/^	VBO vboBathymetry;$/;"	m	class:Visualization	typeref:typename:VBO
+vboNormals	src/opengl/visualization.h	/^	VBO vboNormals;$/;"	m	class:Visualization	typeref:typename:VBO
+vboVerticesIndex	src/opengl/visualization.h	/^	VBO vboVerticesIndex;$/;"	m	class:Visualization	typeref:typename:VBO
+vboWaterSurface	src/opengl/visualization.h	/^	VBO vboWaterSurface;$/;"	m	class:Visualization	typeref:typename:VBO
+vectorize	build/options/SWE_intel_mpi_vectorized.py	/^vectorize='on'$/;"	v
+vertexShader	src/opengl/shader.h	/^	GLuint   vertexShader;$/;"	m	class:Shader	typeref:typename:GLuint
+vertexShaderLength	src/opengl/shader.h	/^	GLint    vertexShaderLength;$/;"	m	class:Shader	typeref:typename:GLint
+vertexShaderSource	src/opengl/shader.h	/^	GLchar * vertexShaderSource;$/;"	m	class:Shader	typeref:typename:GLchar *
+viewDistance	src/opengl/camera.cpp	/^void Camera::viewDistance( float viewDistance )$/;"	f	class:Camera	typeref:typename:void
+view_distance	src/opengl/camera.h	/^	float view_distance;$/;"	m	class:Camera	typeref:typename:float
+visInfos	src/opengl/controller.h	/^	SWE_VisInfo *visInfos[SCENARIO_COUNT];$/;"	m	class:Controller	typeref:typename:SWE_VisInfo * []
+visualization	src/opengl/controller.h	/^	Visualization* visualization;$/;"	m	class:Controller	typeref:typename:Visualization *
+wScale	src/opengl/visualization.h	/^	float wScale, bScale, bOffset;$/;"	m	class:Visualization	typeref:typename:float
+wScaleLocation	src/opengl/visualization.h	/^	GLint wScaleLocation;$/;"	m	class:Visualization	typeref:typename:GLint
+wallClockTime	src/tools/Logger.hh	/^  double wallClockTime;$/;"	m	class:tools::Logger	typeref:typename:double
+waterHeightAtRest	src/scenarios/SWE_Scenario.hh	/^		virtual float waterHeightAtRest() { return 0; };$/;"	f	class:SWE_Scenario	typeref:typename:float
+waterHeightAtRest	src/scenarios/SWE_simple_scenarios.hh	/^    float waterHeightAtRest() { return 4.0f; };$/;"	f	class:SWE_SplashingConeScenario	typeref:typename:float
+waterShader	src/opengl/visualization.h	/^	Shader* waterShader;$/;"	m	class:Visualization	typeref:typename:Shader *
+waterVerticalScaling	src/scenarios/SWE_AsagiScenario_vis.hh	/^    virtual float waterVerticalScaling() { return 4.0f; };$/;"	f	class:SWE_AsagiJapanSmallVisInfo	typeref:typename:float
+waterVerticalScaling	src/scenarios/SWE_VisInfo.hh	/^    virtual float waterVerticalScaling() { return 10.0f; };$/;"	f	class:SWE_VisInfo	typeref:typename:float
+wavePropagationSolver	src/blocks/SWE_WaveAccumulationBlock.hh	/^    solver::AugRieFun<float> wavePropagationSolver;$/;"	m	class:SWE_WaveAccumulationBlock	typeref:typename:solver::AugRieFun<float>
+wavePropagationSolver	src/blocks/SWE_WavePropagationBlock.hh	/^    solver::Hybrid<float> wavePropagationSolver;$/;"	m	class:SWE_WavePropagationBlock	typeref:typename:solver::Hybrid<float>
+wavePropagationSolver	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	solver::FWave<float> wavePropagationSolver;$/;"	m	class:SWE_WavePropagationBlockSIMD	typeref:typename:solver::FWave<float>
+welcomeMessage	src/tools/Logger.hh	/^  const std::string welcomeMessage;$/;"	m	class:tools::Logger	typeref:typename:const std::string
+width	src/opengl/text.h	/^	std::vector<int> width;$/;"	m	class:Text	typeref:typename:std::vector<int>
+win_title	src/opengl/camera.h	/^	const char* win_title;$/;"	m	class:Camera	typeref:typename:const char *
+windowHeight	src/opengl/visualization.h	/^	int windowHeight;$/;"	m	class:Visualization	typeref:typename:int
+windowWidth	src/opengl/visualization.h	/^	int windowWidth;$/;"	m	class:Visualization	typeref:typename:int
+writeNetCDF	build/options/SWE_gnu_cuda_asagi_openGL.py	/^writeNetCDF='yes'$/;"	v
+writeNetCDF	build/options/SWE_gnu_mpi.py	/^writeNetCDF='yes'$/;"	v
+writeNetCDF	build/options/SWE_gnu_mpi_with_cuda.py	/^writeNetCDF='yes'$/;"	v
+writeNetCDF	build/options/SWE_intel_mpi.py	/^writeNetCDF='yes'$/;"	v
+writeNetCDF	build/options/SWE_intel_mpi_vectorized.py	/^writeNetCDF='yes'$/;"	v
+writeTimeStep	src/writer/NetCdfWriter.cpp	/^void NetCdfWriter::writeTimeStep(const Float2D &i_h,$/;"	f	class:NetCdfWriter	typeref:typename:void
+writeTimeStep	src/writer/VtkWriter.cpp	/^void io::VtkWriter::writeTimeStep($/;"	f	class:io::VtkWriter	typeref:typename:void
+writeVarTimeDependent	src/writer/NetCdfWriter.cpp	/^void NetCdfWriter::writeVarTimeDependent( const Float2D &i_matrix,$/;"	f	class:NetCdfWriter	typeref:typename:void
+writeVarTimeIndependent	src/writer/NetCdfWriter.cpp	/^void NetCdfWriter::writeVarTimeIndependent( const Float2D &i_matrix,$/;"	f	class:NetCdfWriter	typeref:typename:void
+zoomIn	src/opengl/camera.cpp	/^void Camera::zoomIn( float scaleFactor ) $/;"	f	class:Camera	typeref:typename:void
+zoomOut	src/opengl/camera.cpp	/^void Camera::zoomOut( float scaleFactor ) $/;"	f	class:Camera	typeref:typename:void
+zoomfactor	src/opengl/camera.h	/^	float zoomfactor;$/;"	m	class:Camera	typeref:typename:float
+~Controller	src/opengl/controller.cpp	/^Controller::~Controller()$/;"	f	class:Controller
+~Float1D	src/tools/Float1D.hh	/^Float1D::~Float1D() {}$/;"	f	class:Float1D
+~Float2D	src/tools/Float2D.hh	/^		~Float2D() {}$/;"	f	class:Float2D
+~Float2DNative	src/tools/Float2DNative.hh	/^		~Float2DNative() {}$/;"	f	class:Float2DNative
+~Float2DUpcxx	src/tools/Float2DUpcxx.hh	/^		~Float2DUpcxx() {}$/;"	f	class:Float2DUpcxx
+~Logger	src/tools/Logger.hh	/^    virtual ~Logger() {$/;"	f	class:tools::Logger
+~NetCdfWriter	src/writer/NetCdfWriter.cpp	/^NetCdfWriter::~NetCdfWriter() {$/;"	f	class:NetCdfWriter
+~SWE_AsagiScenario	src/scenarios/SWE_AsagiScenario.hh	/^		virtual ~SWE_AsagiScenario() {$/;"	f	class:SWE_AsagiScenario
+~SWE_Block	src/blocks/SWE_Block.hh	/^SWE_Block<T>::~SWE_Block() {$/;"	f	class:SWE_Block
+~SWE_Block	src/blocks/SWE_Block_common.cpp	/^SWE_Block::~SWE_Block() {$/;"	f	class:SWE_Block
+~SWE_BlockCUDA	src/blocks/cuda/SWE_BlockCUDA.cu	/^SWE_BlockCUDA::~SWE_BlockCUDA() {$/;"	f	typeref:typename:SWE_BlockCUDA::
+~SWE_DimensionalSplitting	src/blocks/SWE_DimensionalSplitting.hh	/^		virtual ~SWE_DimensionalSplitting() {}$/;"	f	class:SWE_DimensionalSplitting
+~SWE_DimensionalSplittingMpi	src/blocks/SWE_DimensionalSplittingMpi.hh	/^		~SWE_DimensionalSplittingMpi() {};$/;"	f	class:SWE_DimensionalSplittingMpi
+~SWE_DimensionalSplittingUpcxx	src/blocks/SWE_DimensionalSplittingCharm.hh	/^		~SWE_DimensionalSplittingUpcxx() {};$/;"	f	class:SWE_DimensionalSplittingUpcxx
+~SWE_DimensionalSplittingUpcxx	src/blocks/SWE_DimensionalSplittingUpcxx.hh	/^		~SWE_DimensionalSplittingUpcxx() {};$/;"	f	class:SWE_DimensionalSplittingUpcxx
+~SWE_RusanovBlock	src/blocks/rusanov/SWE_RusanovBlock.cpp	/^SWE_RusanovBlock::~SWE_RusanovBlock() {$/;"	f	class:SWE_RusanovBlock
+~SWE_RusanovBlockCUDA	src/blocks/rusanov/SWE_RusanovBlockCUDA.cu	/^SWE_RusanovBlockCUDA::~SWE_RusanovBlockCUDA() {$/;"	f	typeref:typename:SWE_RusanovBlockCUDA::
+~SWE_Scenario	src/scenarios/SWE_Scenario.hh	/^		virtual ~SWE_Scenario() {}$/;"	f	class:SWE_Scenario
+~SWE_TsunamiScenario	src/scenarios/SWE_TsunamiScenario.hh	/^		~SWE_TsunamiScenario() {$/;"	f	class:SWE_TsunamiScenario
+~SWE_VisInfo	src/scenarios/SWE_VisInfo.hh	/^	virtual ~SWE_VisInfo() {};$/;"	f	class:SWE_VisInfo
+~SWE_WaveAccumulationBlock	src/blocks/SWE_WaveAccumulationBlock.hh	/^    virtual ~SWE_WaveAccumulationBlock() {}$/;"	f	class:SWE_WaveAccumulationBlock
+~SWE_WavePropagationBlock	src/blocks/SWE_WavePropagationBlock.hh	/^    virtual ~SWE_WavePropagationBlock() {}$/;"	f	class:SWE_WavePropagationBlock
+~SWE_WavePropagationBlockCuda	src/blocks/cuda/SWE_WavePropagationBlockCuda.cu	/^SWE_WavePropagationBlockCuda::~SWE_WavePropagationBlockCuda() {$/;"	f	typeref:typename:SWE_WavePropagationBlockCuda::
+~SWE_WavePropagationBlockSIMD	src/blocks/SWE_WavePropagationBlockSIMD.hh	/^	~SWE_WavePropagationBlockSIMD ()$/;"	f	class:SWE_WavePropagationBlockSIMD
+~Shader	src/opengl/shader.cpp	/^Shader::~Shader() {$/;"	f	class:Shader
+~Simulation	src/opengl/simulation.cu	/^Simulation::~Simulation () {$/;"	f	typeref:typename:Simulation::
+~Text	src/opengl/text.h	/^	~Text()$/;"	f	class:Text
+~Visualization	src/opengl/visualization.cpp	/^Visualization::~Visualization() {$/;"	f	class:Visualization
+~Writer	src/writer/Writer.hh	/^		virtual ~Writer() {}$/;"	f	class:Writer

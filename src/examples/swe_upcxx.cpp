@@ -1,4 +1,3 @@
-
 /**
  * @file
  * This file is part of SWE.
@@ -33,7 +32,7 @@
 #include <cassert>
 #include <string>
 
-#include "blocks/SWE_DimensionalSplittingMpi.hh"
+#include "blocks/SWE_DimensionalSplittingUpcxx.hh"
 
 #ifdef WRITENETCDF
 #include "writer/NetCdfWriter.hh"
@@ -51,7 +50,7 @@
 #include "tools/Logger.hh"
 #include "tools/ProgressBar.hh"
 
-#include <mpi.h>
+#include <upcxx/upcxx.hpp>
 
 int main(int argc, char** argv) {
 
@@ -105,7 +104,7 @@ int main(int argc, char** argv) {
 	nyRequested = args.getArgument<int>("resolution-vertical");
 	outputBaseName = args.getArgument<std::string>("output-basepath");
 
-	// Initialize scenario
+	// Initialize Scenario
 #ifdef ASAGI
 	SWE_AsagiScenario scenario(args.getArgument<std::string>("bathymetry-file"), args.getArgument<std::string>("displacement-file"));
 #else
@@ -124,25 +123,22 @@ int main(int argc, char** argv) {
 
 
 	/**********************************
-	 * INIT MPI & SIMULATION BLOCKS *
+	 * INIT UPCXX & SIMULATION BLOCKS *
 	 **********************************/
 
 
 	/*
-	 * Calculate the cell widths of the grid used by the simulation:
+	 * Calculate the simulation grid layout.
+	 * The cell count of the scenario as well as the scenario size is fixed, 
 	 * Get the size of the actual domain and divide it by the requested resolution.
-	 *
-	 * We use simple scenarios for testing, so we assume the position of BND_BOTTOM and BND_LEFT are at 0 respectively
 	 */
 	int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
 	int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
 	float dxSimulation = (float) widthScenario / nxRequested;
-	float dySimulation = (float) heightScenario/ nyRequested;
+	float dySimulation = (float) heightScenario / nyRequested;
 
-	// initialize MPI
-	if (MPI_Init(&argc, &argv) != MPI_SUCCESS) {
-		std::cerr << "MPI_Init failed." << std::endl;
-	}
+	// start parallel runtime (all global inits are done at this point)
+	upcxx::init();
 
 	/*
 	 * determine the layout of UPC++ ranks:
@@ -150,19 +146,17 @@ int main(int argc, char** argv) {
 	 * if the number of processes is a square number, l_blockCountX = l_blockCountY,
 	 * else l_blockCountX > l_blockCountY
 	 */
-	int myMpiRank;
-	int totalMpiRanks;
-	MPI_Comm_rank(MPI_COMM_WORLD, &myMpiRank);
-	MPI_Comm_size(MPI_COMM_WORLD, &totalMpiRanks);
+	auto myUpcxxRank = upcxx::rank_me();
+	auto totalUpcxxRanks = upcxx::rank_n();
 
 	// number of SWE-Blocks in x- and y-direction
-	int blockCountY = std::sqrt(totalMpiRanks);
-	while (totalMpiRanks % blockCountY != 0) blockCountY--;
-	int blockCountX = totalMpiRanks / blockCountY;
+	int blockCountY = std::sqrt(totalUpcxxRanks);
+	while (totalUpcxxRanks % blockCountY != 0) blockCountY--;
+	int blockCountX = totalUpcxxRanks / blockCountY;
 
 	// determine the local block coordinates of each SWE_Block
-	int localBlockPositionX = myMpiRank / blockCountY;
-	int localBlockPositionY = myMpiRank % blockCountY;
+	int localBlockPositionX = myUpcxxRank / blockCountY;
+	int localBlockPositionY = myUpcxxRank % blockCountY;
 
 	// compute local number of cells for each SWE_Block w.r.t. the simulation domain
 	// (particularly not the original scenario domain, which might be finer in resolution)
@@ -174,7 +168,7 @@ int main(int argc, char** argv) {
 
 	int nxLocal = (localBlockPositionX < blockCountX - 1) ? nxBlockSimulation : nxRemainderSimulation;
 	int nyLocal = (localBlockPositionY < blockCountY - 1) ? nyBlockSimulation : nyRemainderSimulation;
-
+	
 	// Compute the origin of the local simulation block w.r.t. the original scenario domain.
 	float localOriginX = scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX * dxSimulation * nxBlockSimulation;
 	float localOriginY = scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY * dySimulation * nyBlockSimulation;
@@ -190,17 +184,58 @@ int main(int argc, char** argv) {
 	boundaries[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? CONNECT : scenario.getBoundaryType(BND_TOP);
 
 	// Initialize the simulation block according to the scenario
-	SWE_DimensionalSplittingMpi simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY);
+	SWE_DimensionalSplittingUpcxx simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY);
 	simulation.initScenario(scenario, boundaries);
 
 	// calculate neighbours to the current ranks simulation block
-	int myNeighbours[4];
-	myNeighbours[BND_LEFT] = (localBlockPositionX > 0) ? myMpiRank - blockCountY : -1;
-	myNeighbours[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? myMpiRank + blockCountY : -1;
-	myNeighbours[BND_BOTTOM] = (localBlockPositionY > 0) ? myMpiRank - 1 : -1;
-	myNeighbours[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? myMpiRank + 1 : -1;
-	simulation.connectNeighbours(myNeighbours);
+	int leftNeighborRank = (localBlockPositionX > 0) ? myUpcxxRank - blockCountY : -1;
+	int rightNeighborRank = (localBlockPositionX < blockCountX - 1) ? myUpcxxRank + blockCountY : -1;
+	int bottomNeighborRank = (localBlockPositionY > 0) ? myUpcxxRank - 1 : -1;
+	int topNeighborRank = (localBlockPositionY < blockCountY - 1) ? myUpcxxRank + 1 : -1;
 
+
+	/****************************************
+	 * BROADCAST COPY LAYER GLOBAL POINTERS *
+	 ****************************************/
+
+
+	typedef upcxx::global_ptr<BlockConnectInterface<upcxx::global_ptr<float>>> InterfaceRegistry;
+	typedef BlockConnectInterface<upcxx::global_ptr<float>> Interface;
+
+	InterfaceRegistry leftInterfaceRegistry = nullptr;
+	InterfaceRegistry rightInterfaceRegistry = nullptr;
+	InterfaceRegistry bottomInterfaceRegistry = nullptr;
+	InterfaceRegistry topInterfaceRegistry = nullptr;
+
+	if (myUpcxxRank == 0) {
+		leftInterfaceRegistry = upcxx::new_array<Interface>(totalUpcxxRanks);
+		rightInterfaceRegistry = upcxx::new_array<Interface>(totalUpcxxRanks);
+		bottomInterfaceRegistry = upcxx::new_array<Interface>(totalUpcxxRanks);
+		topInterfaceRegistry = upcxx::new_array<Interface>(totalUpcxxRanks);
+	}
+
+	leftInterfaceRegistry = upcxx::broadcast(leftInterfaceRegistry, 0).wait();
+	rightInterfaceRegistry = upcxx::broadcast(rightInterfaceRegistry, 0).wait();
+	bottomInterfaceRegistry = upcxx::broadcast(bottomInterfaceRegistry, 0).wait();
+	topInterfaceRegistry = upcxx::broadcast(topInterfaceRegistry, 0).wait();
+
+	upcxx::rput(simulation.getCopyLayer(BND_RIGHT), leftInterfaceRegistry + myUpcxxRank).wait();
+	upcxx::rput(simulation.getCopyLayer(BND_LEFT), rightInterfaceRegistry + myUpcxxRank).wait();
+	upcxx::rput(simulation.getCopyLayer(BND_TOP), bottomInterfaceRegistry + myUpcxxRank).wait();
+	upcxx::rput(simulation.getCopyLayer(BND_BOTTOM), topInterfaceRegistry + myUpcxxRank).wait();
+	upcxx::barrier();
+
+	Interface interfaces[4];
+	if (leftNeighborRank > -1)
+		interfaces[BND_LEFT] = upcxx::rget(leftInterfaceRegistry + leftNeighborRank).wait();
+	if (rightNeighborRank > -1)
+		interfaces[BND_RIGHT] = upcxx::rget(rightInterfaceRegistry + rightNeighborRank).wait();
+	if (bottomNeighborRank > -1)
+		interfaces[BND_BOTTOM] = upcxx::rget(bottomInterfaceRegistry + bottomNeighborRank).wait();
+	if (topNeighborRank > -1)
+		interfaces[BND_TOP] = upcxx::rget(topInterfaceRegistry + topNeighborRank).wait();
+
+	simulation.connectBoundaries(interfaces);
 	simulation.exchangeBathymetry();
 
 
@@ -226,7 +261,7 @@ int main(int argc, char** argv) {
 			simulation.getOriginY());
 #else
 	// Construct a vtk writer
-	VtkWriter writer(
+	io::VtkWriter writer(
 			outputFileName,
 			simulation.getBathymetry(),
 			boundarySize,
@@ -241,7 +276,7 @@ int main(int argc, char** argv) {
 
 	// Write the output at t = 0
 	tools::Logger::logger.printOutputTime((float) 0.);
-	if (myMpiRank == 0) {
+	if(upcxx::rank_me() == 0){
 		progressBar.update(0.);
 	}
 	writer.writeTimeStep(
@@ -257,15 +292,15 @@ int main(int argc, char** argv) {
 
 
 	// print the start message and reset the wall clock time
-	progressBar.clear();
-	if (myMpiRank == 0) {
+	if (upcxx::rank_me() == 0) {
+		progressBar.clear();
 		tools::Logger::logger.printStartMessage();
 	}
-	tools::Logger::logger.initWallClockTime(MPI_Wtime());
+	tools::Logger::logger.initWallClockTime(time(NULL));
 
 	//! simulation time.
 	t = 0.0;
-	if (myMpiRank == 0) {
+	if (upcxx::rank_me() == 0) {
 		progressBar.update(t);
 	}
 
@@ -279,8 +314,9 @@ int main(int argc, char** argv) {
 			tools::Logger::logger.resetClockToCurrentTime("CpuCommunication");
 
 			// set values in ghost cells.
-			// this is an implicit block (mpi send/recv in setGhostLayer()
+			// we need to sync here since block boundaries get exchanged over ranks
 			// TODO: what can we do if this becomes a bottleneck?
+			upcxx::barrier();
 			simulation.setGhostLayer();
 
 			// reset the cpu clock
@@ -310,7 +346,7 @@ int main(int argc, char** argv) {
 			iterations++;
 
 			// print the current simulation time
-			if (myMpiRank == 0) {
+			if (upcxx::rank_me() == 0) {
 				progressBar.clear();
 				tools::Logger::logger.printSimulationTime(t);
 				progressBar.update(t);
@@ -318,7 +354,7 @@ int main(int argc, char** argv) {
 		}
 
 		// print the time elapsed until this output
-		if (myMpiRank == 0) {
+		if (upcxx::rank_me() == 0) {
 			progressBar.clear();
 			tools::Logger::logger.printOutputTime(t);
 			progressBar.update(t);
@@ -336,17 +372,16 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-
-	MPI_Barrier(MPI_COMM_WORLD);
+	upcxx::barrier();
 
 	// write the statistics message
-	if (myMpiRank == 0) {
+	if (upcxx::rank_me() == 0) {
 		progressBar.clear();
 		tools::Logger::logger.printStatisticsMessage();
 	}
 
-	for (int i = 0; i < totalMpiRanks; i++) {
-		if (myMpiRank == i) {
+	for (int i = 0; i < totalUpcxxRanks; i++) {
+		if (myUpcxxRank == i) {
 			printf("\n");
 			// print the cpu time
 			tools::Logger::logger.printTime("Cpu", "CPU time");
@@ -358,10 +393,10 @@ int main(int argc, char** argv) {
 			tools::Logger::logger.printWallClockTime(time(NULL));
 			printf("\n");
 		}
-		MPI_Barrier(MPI_COMM_WORLD);
+		upcxx::barrier();
 	}
 
-	if (myMpiRank == 0) {
+	if (upcxx::rank_me() == 0) {
 		// printer iteration counter
 		tools::Logger::logger.printIterationsDone(iterations);
 
@@ -369,7 +404,7 @@ int main(int argc, char** argv) {
 		tools::Logger::logger.printFinishMessage();
 	}
 
-	MPI_Finalize();
+	upcxx::finalize();
 
 	return 0;
 }
