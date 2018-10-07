@@ -31,8 +31,12 @@
 
 #include <cassert>
 #include <string>
+#include <ctime>
+#include <time.h>
+#include <unistd.h>
+#include <limits.h>
 
-#include "blocks/SWE_DimensionalSplittingUpcxx.hh"
+#include "tools/args.hh"
 
 #ifdef WRITENETCDF
 #include "writer/NetCdfWriter.hh"
@@ -46,10 +50,7 @@
 #include "scenarios/SWE_simple_scenarios.hh"
 #endif
 
-#include "tools/args.hh"
-#include "tools/Logger.hh"
-#include "tools/ProgressBar.hh"
-
+#include "blocks/SWE_DimensionalSplittingUpcxx.hh"
 #include <upcxx/upcxx.hpp>
 
 int main(int argc, char** argv) {
@@ -140,21 +141,27 @@ int main(int argc, char** argv) {
 	// start parallel runtime (all global inits are done at this point)
 	upcxx::init();
 
+	auto myUpcxxRank = upcxx::rank_me();
+	auto totalUpcxxRanks = upcxx::rank_n();
+
+	// Print status
+	char hostname[HOST_NAME_MAX];
+        gethostname(hostname, HOST_NAME_MAX);
+
+	printf("%i Spawned at %s\n", myUpcxxRank, hostname);
+
 	/*
 	 * determine the layout of UPC++ ranks:
 	 * one block per process;
 	 * if the number of processes is a square number, l_blockCountX = l_blockCountY,
 	 * else l_blockCountX > l_blockCountY
 	 */
-	auto myUpcxxRank = upcxx::rank_me();
-	auto totalUpcxxRanks = upcxx::rank_n();
-
 	// number of SWE-Blocks in x- and y-direction
 	int blockCountY = std::sqrt(totalUpcxxRanks);
 	while (totalUpcxxRanks % blockCountY != 0) blockCountY--;
 	int blockCountX = totalUpcxxRanks / blockCountY;
 
-	// determine the local block coordinates of each SWE_Block
+	// determine the local block position of each SWE_Block
 	int localBlockPositionX = myUpcxxRank / blockCountY;
 	int localBlockPositionY = myUpcxxRank % blockCountY;
 
@@ -237,6 +244,7 @@ int main(int argc, char** argv) {
 
 	simulation.connectBoundaries(interfaces);
 	simulation.exchangeBathymetry();
+	upcxx::barrier();
 
 
 	/***************
@@ -261,7 +269,7 @@ int main(int argc, char** argv) {
 			simulation.getOriginY());
 #else
 	// Construct a vtk writer
-	io::VtkWriter writer(
+	VtkWriter writer(
 			outputFileName,
 			simulation.getBathymetry(),
 			boundarySize,
@@ -271,14 +279,7 @@ int main(int argc, char** argv) {
 			dySimulation);
 #endif // WRITENETCDF
 
-	// Init fancy progressbar
-	tools::ProgressBar progressBar(simulationDuration);
-
 	// Write the output at t = 0
-	tools::Logger::logger.printOutputTime((float) 0.);
-	if(upcxx::rank_me() == 0){
-		progressBar.update(0.);
-	}
 	writer.writeTimeStep(
 			simulation.getWaterHeight(),
 			simulation.getMomentumHorizontal(),
@@ -291,18 +292,13 @@ int main(int argc, char** argv) {
 	 ********************/
 
 
-	// print the start message and reset the wall clock time
-	if (upcxx::rank_me() == 0) {
-		progressBar.clear();
-		tools::Logger::logger.printStartMessage();
-	}
-	tools::Logger::logger.initWallClockTime(time(NULL));
+	// Initialize wall timer
+	struct timespec startTime;
+	struct timespec endTime;
 
-	//! simulation time.
+	float wallTime = 0.;
+
 	t = 0.0;
-	if (upcxx::rank_me() == 0) {
-		progressBar.update(t);
-	}
 
 	float timestep;
 	unsigned int iterations = 0;
@@ -310,55 +306,37 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < numberOfCheckPoints; i++) {
 		// Simulate until the checkpoint is reached
 		while(t < checkpointInstantOfTime[i]) {
-			// reset CPU-Communication clock
-			tools::Logger::logger.resetClockToCurrentTime("CpuCommunication");
+			// Start measurement
+			clock_gettime(CLOCK_MONOTONIC, &startTime);
 
 			// set values in ghost cells.
-			// we need to sync here since block boundaries get exchanged over ranks
-			// TODO: what can we do if this becomes a bottleneck?
-			upcxx::barrier();
+			// this function blocks until everything has been received
 			simulation.setGhostLayer();
-
-			// reset the cpu clock
-			tools::Logger::logger.resetClockToCurrentTime("Cpu");
 
 			// compute numerical flux on each edge
 			simulation.computeNumericalFluxes();
 
-			// update the cpu time in the logger
-			tools::Logger::logger.updateTime("Cpu");
-
 			// max timestep has been reduced over all ranks in computeNumericalFluxes()
 			timestep = simulation.getMaxTimestep();
-
-			// reset the cpu time
-			tools::Logger::logger.resetClockToCurrentTime("Cpu");
 
 			// update the cell values
 			simulation.updateUnknowns(timestep);
 
-			// update the cpu and CPU-communication time in the logger
-			tools::Logger::logger.updateTime("Cpu");
-			tools::Logger::logger.updateTime("CpuCommunication");
+			// Accumulate wall time
+			clock_gettime(CLOCK_MONOTONIC, &endTime);
+			wallTime += (endTime.tv_sec - startTime.tv_sec);
+			wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
 			// update simulation time with time step width.
 			t += timestep;
 			iterations++;
-
-			// print the current simulation time
-			if (upcxx::rank_me() == 0) {
-				progressBar.clear();
-				tools::Logger::logger.printSimulationTime(t);
-				progressBar.update(t);
-			}
+			upcxx::barrier();
 		}
 
-		// print the time elapsed until this output
-		if (upcxx::rank_me() == 0) {
-			progressBar.clear();
-			tools::Logger::logger.printOutputTime(t);
-			progressBar.update(t);
+		if(myUpcxxRank == 0) {
+			printf("Write timestep (%fs)\n", t);
 		}
+
 		// write output
 		writer.writeTimeStep(
 				simulation.getWaterHeight(),
@@ -372,37 +350,7 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-	upcxx::barrier();
-
-	// write the statistics message
-	if (upcxx::rank_me() == 0) {
-		progressBar.clear();
-		tools::Logger::logger.printStatisticsMessage();
-	}
-
-	for (int i = 0; i < totalUpcxxRanks; i++) {
-		if (myUpcxxRank == i) {
-			printf("\n");
-			// print the cpu time
-			tools::Logger::logger.printTime("Cpu", "CPU time");
-
-			// print CPU + Communication time
-			tools::Logger::logger.printTime("CpuCommunication", "CPU + Communication time");
-
-			// print the wall clock time (includes plotting)
-			tools::Logger::logger.printWallClockTime(time(NULL));
-			printf("\n");
-		}
-		upcxx::barrier();
-	}
-
-	if (upcxx::rank_me() == 0) {
-		// printer iteration counter
-		tools::Logger::logger.printIterationsDone(iterations);
-
-		// print the finish message
-		tools::Logger::logger.printFinishMessage();
-	}
+	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime); 
 
 	upcxx::finalize();
 

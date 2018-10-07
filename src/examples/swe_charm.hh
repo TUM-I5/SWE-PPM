@@ -1,10 +1,17 @@
-#ifndef __MAIN_HH
-#define __MAIN_HH
+#ifndef __SWE_CHARM_HH
+#define __SWE_CHARM_HH
 
-class Main : public CBase_Main {
+#include "swe_charm.decl.h"
+
+class swe_charm : public CBase_swe_charm {
 	public:
-		Main(CkArgMsg *msg);
-		Main(CkMigrateMessage *msg);
+		swe_charm(CkArgMsg *msg);
+		swe_charm(CkMigrateMessage *msg);
 
+		void done(int index);
+		void exit();
+
+	private:
+		int chareCount;
 };
-#endif // __MAIN_HH
+#endif // __SWE_CHARM_HH

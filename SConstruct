@@ -37,7 +37,7 @@ from subprocess import check_output
 # Explicitly import SCons symbols for proper linting
 from SCons.Script import (Environment, Variables, PathVariable,
                           EnumVariable, BoolVariable, Help, Exit,
-                          Export, Import, SConscript)
+                          Export, Import, Builder, SConscript)
 ########
 # INIT #
 ########
@@ -237,6 +237,7 @@ if env['copyenv']:
 #######################
 
 if env['parallelization'] == 'upcxx':
+    env.Append(CCFLAGS=['-std=c++11'])
     # get the upcxx folder
     upcxxInstall = os.environ['UPCXX_PATH']
     if upcxxInstall == '':
@@ -265,7 +266,8 @@ if env['parallelization'] == 'upcxx':
 # Charm++ / AMPI specific Init #
 ################################
 
-if env['parallelization'] == 'ampi':
+if env['parallelization'] in ['charm', 'ampi']:
+    # Path to the compiler
     charmInstall = os.environ['CHARM_PATH']
     if charmInstall == '':
         print(sys.stderr,
@@ -273,6 +275,16 @@ if env['parallelization'] == 'ampi':
         Exit(3)
     else:
         print("Found Charm++ install at: " + charmInstall)
+
+    # Custom builder for *.def.h and *.decl.h / Charm++ specific files
+
+    def modifyTargets(target, source, env):
+        target.append('${SOURCE.basename}.def.h')
+        return target, source
+    charmBuilder = Builder(action=charmInstall + '/bin/charmc ' + '$SOURCE',
+                           suffix='.decl.h',
+                           src_suffix='.ci')
+    env.Append(BUILDERS={'charmBuilder': charmBuilder})
 
 #####################################
 # Precompiler/Compiler/Linker flags #
@@ -301,6 +313,8 @@ if env['parallelization'] in ['mpi', 'mpi_with_cuda']:
             env['ENV'][var] = 'icpc'
 elif env['parallelization'] == 'ampi':
     env['CXX'] = charmInstall + '/bin/ampicc'
+elif env['parallelization'] == 'charm':
+    env['CXX'] = charmInstall + '/bin/charmc'
 else:
     if env['compiler'] == 'intel':
         env['CXX'] = 'icpc'
@@ -391,6 +405,9 @@ if env['parallelization'] == 'upcxx':
     env.Append(LIBS=upcxxLibs)
     env.Append(LIBPATH=upcxxLibPaths)
 
+if env['parallelization'] == 'charm':
+    env.Append(CPPDEFINES=['CHARM'])
+
 # set the precompiler variables for the solver
 if env['solver'] == 'fwave':
     env.Append(CPPDEFINES=['WAVE_PROPAGATION_SOLVER=1'])
@@ -435,7 +452,7 @@ if env['parallelization'] == 'mpi_with_cuda':
     env.Append(NVCCFLAGS=['-DUSEMPI'])
 
 # set the precompiler flags for MPI (C++)
-if env['parallelization'] in ['mpi_with_cuda', 'mpi']:
+if env['parallelization'] in ['mpi_with_cuda', 'mpi', 'ampi']:
     env.Append(CPPDEFINES=['USEMPI'])
 
 if env['openGL']:
@@ -512,6 +529,10 @@ program_name += '_' + env['compileMode']
 # parallelization
 program_name += '_' + env['parallelization']
 
+# using openmp?
+if env['openmp']:
+	program_name += '_omp'
+
 # solver
 program_name += '_' + env['solver']
 
@@ -520,13 +541,14 @@ if env['vectorize']:
     program_name += '_vec'
 
 # build directory
-build_dir = env['buildDir']+'/build_'+program_name
+build_dir = env['buildDir'] + '/build_' + program_name
 
-# get the src-code files
-env.src_files = []
+# get the static object files
+env.objects = []
+
 Export('env')
 SConscript('src/SConscript', variant_dir=build_dir, duplicate=0)
 Import('env')
 
 # build the program
-env.Program('build/'+program_name, env.src_files)
+env.Program('build/' + program_name, env.objects)

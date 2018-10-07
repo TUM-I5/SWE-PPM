@@ -27,16 +27,13 @@
  */
 
 #include <cassert>
-#include <cstdlib>
 #include <string>
-#include <iostream>
+#include <ctime>
+#include <time.h>
+#include <unistd.h>
+#include <limits.h>
 
-#ifndef CUDA
-//#include "blocks/SWE_WavePropagationBlock.hh"
-#include "blocks/SWE_DimensionalSplitting.hh"
-#else
-#include "blocks/cuda/SWE_WavePropagationBlockCuda.hh"
-#endif
+#include "tools/args.hh"
 
 #ifdef WRITENETCDF
 #include "writer/NetCdfWriter.hh"
@@ -50,248 +47,224 @@
 #include "scenarios/SWE_simple_scenarios.hh"
 #endif
 
-#ifdef READXML
-#include "tools/CXMLConfig.hpp"
-#endif
+#include "blocks/SWE_DimensionalSplitting.hh"
 
-#include "tools/args.hh"
-#include "tools/help.hh"
-#include "tools/Logger.hh"
-#include "tools/ProgressBar.hh"
+int main(int argc, char** argv) {
 
-/**
- * Main program for the simulation on a single SWE_WavePropagationBlock.
- */
-int main( int argc, char** argv ) {
-	/**
-	 * Initialization.
-	 */
-	// Parse command line parameters
+
+
+	/**************
+	 * INIT INPUT *
+	 **************/
+
+
+	// Define command line arguments
 	tools::Args args;
-#ifndef READXML
-	args.addOption("grid-size-x", 'x', "Number of cells in x direction");
-	args.addOption("grid-size-y", 'y', "Number of cells in y direction");
-	args.addOption("output-basepath", 'o', "Output base file name");
+
+#ifdef ASAGI
+	args.addOption("bathymetry-file", 'b', "File containing the bathymetry");
+	args.addOption("displacement-file", 'd', "File containing the displacement");
 #endif
+	args.addOption("simulation-duration", 't', "Time in seconds to simulate");
+	args.addOption("checkpoint-count", 'n', "Number of simulation snapshots to be written");
+	args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
+	args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
+	args.addOption("output-basepath", 'o', "Output base file name");
 
+
+	// Declare the variables needed to hold command line input
+	float simulationDuration;
+	int numberOfCheckPoints;
+	int nxRequested;
+	int nyRequested;
+	std::string outputBaseName;
+
+	// Declare variables for the output and the simulation time
+	std::string outputFileName;
+	float t = 0.;
+
+	// Parse command line arguments
 	tools::Args::Result ret = args.parse(argc, argv);
-
 	switch (ret)
 	{
 		case tools::Args::Error:
 			return 1;
 		case tools::Args::Help:
 			return 0;
+		case tools::Args::Success:
+			break;
 	}
 
-	//! number of grid cells in x- and y-direction.
-	int l_nX, l_nY;
+	// Read in command line arguments
+	simulationDuration = args.getArgument<float>("simulation-duration");
+	numberOfCheckPoints = args.getArgument<int>("checkpoint-count");
+	nxRequested = args.getArgument<int>("resolution-horizontal");
+	nyRequested = args.getArgument<int>("resolution-vertical");
+	outputBaseName = args.getArgument<std::string>("output-basepath");
 
-	//! l_baseName of the plots.
-	std::string l_baseName;
-
-	// read command line parameters
-#ifndef READXML
-	l_nX = args.getArgument<int>("grid-size-x");
-	l_nY = args.getArgument<int>("grid-size-y");
-	l_baseName = args.getArgument<std::string>("output-basepath");
-#endif
-
-	// read xml file
-#ifdef READXML
-	assert(false); //TODO: not implemented.
-	if(argc != 2) {
-		s_sweLogger.printString("Aborting. Please provide a proper input file.");
-		s_sweLogger.printString("Example: ./SWE_gnu_debug_none_augrie config.xml");
-		return 1;
-	}
-	s_sweLogger.printString("Reading xml-file.");
-
-	std::string l_xmlFile = std::string(argv[1]);
-	s_sweLogger.printString(l_xmlFile);
-
-	CXMLConfig l_xmlConfig;
-	l_xmlConfig.loadConfig(l_xmlFile.c_str());
-#endif
-
+	// Initialize Scenario
 #ifdef ASAGI
-	/* Information about the example bathymetry grid (tohoku_gebco_ucsb3_500m_hawaii_bath.nc):
-	 *
-	 * Pixel node registration used [Cartesian grid]
-	 * Grid file format: nf = GMT netCDF format (float)  (COARDS-compliant)
-	 * x_min: -500000 x_max: 6500000 x_inc: 500 name: x nx: 14000
-	 * y_min: -2500000 y_max: 1500000 y_inc: 500 name: y ny: 8000
-	 * z_min: -6.48760175705 z_max: 16.1780223846 name: z
-	 * scale_factor: 1 add_offset: 0
-	 * mean: 0.00217145586762 stdev: 0.245563641735 rms: 0.245573241263
-	 */
-
-	//simulation area
-	float simulationArea[4];
-	simulationArea[0] = -450000;
-	simulationArea[1] = 6450000;
-	simulationArea[2] = -2450000;
-	simulationArea[3] = 1450000;
-
-	SWE_AsagiScenario l_scenario( ASAGI_INPUT_DIR "tohoku_gebco_ucsb3_500m_hawaii_bath.nc",
-			ASAGI_INPUT_DIR "tohoku_gebco_ucsb3_500m_hawaii_displ.nc",
-			(float) 28800., simulationArea);
+	SWE_AsagiScenario scenario(args.getArgument<std::string>("bathymetry-file"), args.getArgument<std::string>("displacement-file"));
 #else
-	// create a simple artificial scenario
-	SWE_RadialDamBreakScenario l_scenario;
+	SWE_RadialDamBreakScenario scenario;
 #endif
 
-	//! number of checkpoints for visualization (at each checkpoint in time, an output file is written).
-	int l_numberOfCheckPoints = 20;
-
-	//! size of a single cell in x- and y-direction
-	float l_dX, l_dY;
-
-	// compute the size of a single cell
-	l_dX = (l_scenario.getBoundaryPos(BND_RIGHT) - l_scenario.getBoundaryPos(BND_LEFT) )/l_nX;
-	l_dY = (l_scenario.getBoundaryPos(BND_TOP) - l_scenario.getBoundaryPos(BND_BOTTOM) )/l_nY;
-
-	// create a single wave propagation block
-#ifndef CUDA
-	SWE_WavePropagationBlock l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
-#else
-	SWE_WavePropagationBlockCuda l_wavePropgationBlock(l_nX,l_nY,l_dX,l_dY);
-#endif
-
-	//! origin of the simulation domain in x- and y-direction
-	float l_originX, l_originY;
-
-	// get the origin from the scenario
-	l_originX = l_scenario.getBoundaryPos(BND_LEFT);
-	l_originY = l_scenario.getBoundaryPos(BND_BOTTOM);
-
-	// initialize the wave propagation block
-	l_wavePropgationBlock.initScenario(l_originX, l_originY, l_scenario);
-
-
-	//! time when the simulation ends.
-	float l_endSimulation = l_scenario.endSimulation();
-
-	//! checkpoints when output files are written.
-	float* l_checkPoints = new float[l_numberOfCheckPoints+1];
-
-	// compute the checkpoints in time
-	for(int cp = 0; cp <= l_numberOfCheckPoints; cp++) {
-		l_checkPoints[cp] = cp*(l_endSimulation/l_numberOfCheckPoints);
+	// Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
+	float* checkpointInstantOfTime = new float[numberOfCheckPoints];
+	// Time delta is the time between any two checkpoints
+	float checkpointTimeDelta = simulationDuration / numberOfCheckPoints;
+	// The first checkpoint is reached after 0 + delta t
+	checkpointInstantOfTime[0] = checkpointTimeDelta;
+	for(int i = 1; i < numberOfCheckPoints; i++) {
+		checkpointInstantOfTime[i] = checkpointInstantOfTime[i - 1] + checkpointTimeDelta;
 	}
 
-	// Init fancy progressbar
-	tools::ProgressBar progressBar(l_endSimulation);
 
-	// write the output at time zero
-	tools::Logger::logger.printOutputTime((float) 0.);
-	progressBar.update(0.);
+	/**************
+	 * INIT BLOCK *
+	 **************/
 
-	std::string l_fileName = generateBaseFileName(l_baseName,0,0);
-	//boundary size of the ghost layers
-	io::BoundarySize l_boundarySize = {{1, 1, 1, 1}};
+
+	/*
+	 * Calculate the simulation grid layout.
+	 * The cell count of the scenario as well as the scenario size is fixed, 
+	 * Get the size of the actual domain and divide it by the requested resolution.
+	 */
+	int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
+	int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
+	float dxSimulation = (float) widthScenario / nxRequested;
+	float dySimulation = (float) heightScenario / nyRequested;
+	float originX = scenario.getBoundaryPos(BND_LEFT);
+	float originY = scenario.getBoundaryPos(BND_BOTTOM);
+
+	BoundaryType boundaries[4];
+
+	boundaries[BND_LEFT] = scenario.getBoundaryType(BND_LEFT);
+	boundaries[BND_RIGHT] = scenario.getBoundaryType(BND_RIGHT);
+	boundaries[BND_BOTTOM] = scenario.getBoundaryType(BND_BOTTOM);
+	boundaries[BND_TOP] = scenario.getBoundaryType(BND_TOP);
+
+	SWE_DimensionalSplitting simulation(nxRequested, nyRequested, dxSimulation, dySimulation, originX, originY);
+	simulation.initScenario(scenario, boundaries);
+
+
+	/***************
+	 * INIT OUTPUT *
+	 ***************/
+
+
+	// Initialize boundary size of the ghost layers
+	BoundarySize boundarySize = {{1, 1, 1, 1}};
+	outputFileName = outputBaseName;
 #ifdef WRITENETCDF
-	//construct a NetCdfWriter
-	io::NetCdfWriter l_writer( l_fileName,
-			l_wavePropgationBlock.getBathymetry(),
-			l_boundarySize,
-			l_nX, l_nY,
-			l_dX, l_dY,
-			l_originX, l_originY);
+	// Construct a netCDF writer
+	NetCdfWriter writer(
+			outputFileName,
+			simulation.getBathymetry(),
+			boundarySize,
+			nxRequested,
+			nyRequested,
+			dxSimulation,
+			dySimulation,
+			simulation.getOriginX(),
+			simulation.getOriginY());
 #else
-	// consturct a VtkWriter
-	io::VtkWriter l_writer( l_fileName,
-			l_wavePropgationBlock.getBathymetry(),
-			l_boundarySize,
-			l_nX, l_nY,
-			l_dX, l_dY );
-#endif
-	// Write zero time step
-	l_writer.writeTimeStep( l_wavePropgationBlock.getWaterHeight(),
-			l_wavePropgationBlock.getDischarge_hu(),
-			l_wavePropgationBlock.getDischarge_hv(),
+	// Construct a vtk writer
+	VtkWriter writer(
+			outputFileName,
+			simulation.getBathymetry(),
+			boundarySize,
+			nxRequested,
+			nyRequested,
+			dxSimulation,
+			dySimulation);
+#endif // WRITENETCDF
+
+	// Write the output at t = 0
+	writer.writeTimeStep(
+			simulation.getWaterHeight(),
+			simulation.getMomentumHorizontal(),
+			simulation.getMomentumVertical(),
 			(float) 0.);
 
 
-	/**
-	 * Simulation.
-	 */
-	// print the start message and reset the wall clock time
-	progressBar.clear();
-	tools::Logger::logger.printStartMessage();
-	tools::Logger::logger.initWallClockTime(time(NULL));
+	/********************
+	 * START SIMULATION *
+	 ********************/
 
-	//! simulation time.
-	float l_t = 0.0;
-	progressBar.update(l_t);
 
-	unsigned int l_iterations = 0;
+	// Initialize timers
+	std::clock_t computeClock;
+	std::clock_t commClock;
 
-	// loop over checkpoints
-	for(int c=1; c<=l_numberOfCheckPoints; c++) {
+	struct timespec startTime;
+	struct timespec endTime;
 
-		// do time steps until next checkpoint is reached
-		while( l_t < l_checkPoints[c] ) {
-			// set values in ghost cells:
-			l_wavePropgationBlock.setGhostLayer();
+	float computeTime = 0.;
+	float commTime = 0.;
+	float wallTime = 0.;
 
-			// reset the cpu clock
-			tools::Logger::logger.resetClockToCurrentTime("Cpu");
+	t = 0.0;
 
-			// approximate the maximum time step
-			// TODO: This calculation should be replaced by the usage of the wave speeds occuring during the flux computation
-			// Remark: The code is executed on the CPU, therefore a "valid result" depends on the CPU-GPU-synchronization.
-			//      l_wavePropgationBlock.computeMaxTimestep();
+	float timestep;
+	unsigned int iterations = 0;
+	// loop over the count of requested checkpoints
+	for(int i = 0; i < numberOfCheckPoints; i++) {
+		// Simulate until the checkpoint is reached
+		while(t < checkpointInstantOfTime[i]) {
+			// Start measurement
+			clock_gettime(CLOCK_MONOTONIC, &startTime);
+			commClock = clock();
+
+			// set values in ghost cells.
+			// we need to sync here since block boundaries get exchanged over ranks
+			// TODO: what can we do if this becomes a bottleneck?
+			simulation.setGhostLayer();
+
+			// Accumulate comm time and start compute clock
+			commClock = clock() - commClock;
+			commTime += (float) commClock / CLOCKS_PER_SEC;
+			computeClock = clock();
 
 			// compute numerical flux on each edge
-			l_wavePropgationBlock.computeNumericalFluxes();
+			simulation.computeNumericalFluxes();
 
-			//! maximum allowed time step width.
-			float l_maxTimeStepWidth = l_wavePropgationBlock.getMaxTimestep();
+			// max timestep has been reduced over all ranks in computeNumericalFluxes()
+			timestep = simulation.getMaxTimestep();
 
 			// update the cell values
-			l_wavePropgationBlock.updateUnknowns(l_maxTimeStepWidth);
+			simulation.updateUnknowns(timestep);
 
-			// update the cpu time in the logger
-			tools::Logger::logger.updateTime("Cpu");
+			// Accumulate compute time
+			computeClock = clock() - computeClock;
+			computeTime += (float) computeClock / CLOCKS_PER_SEC;
 
+			// Accumulate wall time
+			clock_gettime(CLOCK_MONOTONIC, &endTime);
+			wallTime += (endTime.tv_sec - startTime.tv_sec);
+			wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 			// update simulation time with time step width.
-			l_t += l_maxTimeStepWidth;
-			l_iterations++;
-
-			// print the current simulation time
-			progressBar.clear();
-			tools::Logger::logger.printSimulationTime(l_t);
-			progressBar.update(l_t);
+			t += timestep;
+			iterations++;
 		}
 
-		// print current simulation time of the output
-		progressBar.clear();
-		tools::Logger::logger.printOutputTime(l_t);
-		progressBar.update(l_t);
+		printf("Write timestep (%fs)\n", t);
 
 		// write output
-		l_writer.writeTimeStep( l_wavePropgationBlock.getWaterHeight(),
-				l_wavePropgationBlock.getDischarge_hu(),
-				l_wavePropgationBlock.getDischarge_hv(),
-				l_t);
+		writer.writeTimeStep(
+				simulation.getWaterHeight(),
+				simulation.getMomentumHorizontal(),
+				simulation.getMomentumVertical(),
+				t);
 	}
 
-	/**
-	 * Finalize.
-	 */
-	// write the statistics message
-	progressBar.clear();
-	tools::Logger::logger.printStatisticsMessage();
 
-	// print the cpu time
-	tools::Logger::logger.printTime("Cpu", "CPU time");
+	/************
+	 * FINALIZE *
+	 ************/
 
-	// print the wall clock time (includes plotting)
-	tools::Logger::logger.printWallClockTime(time(NULL));
 
-	// printer iteration counter
-	tools::Logger::logger.printIterationsDone(l_iterations);
+	printf("SMP : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", simulation.computeTime, simulation.computeTimeWall, wallTime); 
 
 	return 0;
 }

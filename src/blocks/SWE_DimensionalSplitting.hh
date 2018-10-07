@@ -31,49 +31,50 @@
 #define SWEDIMENSIONALSPLITTING_HH_
 
 #include "blocks/SWE_Block.hh"
-#include "scenarios/SWE_TsunamiScenario.hh"
-#include "tools/Float2D.hh"
-
-#include <string>
+#include "scenarios/SWE_Scenario.hh"
+#include "tools/Float2DNative.hh"
+#include <ctime>
+#include <time.h>
 
 #include "solvers/Hybrid.hpp"
 
-class SWE_DimensionalSplitting: public SWE_Block {
+class SWE_DimensionalSplitting : public SWE_Block<Float2DNative> {
+	public:
+		// Constructor/Destructor
+		SWE_DimensionalSplitting(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY);
+		~SWE_DimensionalSplitting() {};
+
+		// Interface methods
+		void setGhostLayer();
+		void computeNumericalFluxes();
+		void updateUnknowns(float dt);
+
+		float computeTime;
+		float computeTimeWall;
+
 	private:
 		solver::Hybrid<float> solver;
 
 		// Temporary values after x-sweep and before y-sweep
-		Float2D hStar;
-		Float2D huStar;
+		Float2DNative hStar;
+		Float2DNative huStar;
 
 		// net updates per cell
-		Float2D hNetUpdatesLeft;
-		Float2D hNetUpdatesRight;
+		Float2DNative hNetUpdatesLeft;
+		Float2DNative hNetUpdatesRight;
 
-		Float2D huNetUpdatesLeft;
-		Float2D huNetUpdatesRight;
+		Float2DNative huNetUpdatesLeft;
+		Float2DNative huNetUpdatesRight;
 
-		Float2D hNetUpdatesBelow;
-		Float2D hNetUpdatesAbove;
+		Float2DNative hNetUpdatesBelow;
+		Float2DNative hNetUpdatesAbove;
 
-		Float2D hvNetUpdatesBelow;
-		Float2D hvNetUpdatesAbove;
+		Float2DNative hvNetUpdatesBelow;
+		Float2DNative hvNetUpdatesAbove;
 
-	public:
-		// Constructor: Initialize data needed for the simulation according to a preset scenario
-		SWE_DimensionalSplitting(int l_nx, int l_ny, float dx, float dy);
-
-		void initScenarioImplicit(SWE_Scenario &scenario);
-
-		// Computes net updates on the entire simulation domain
-		void computeNumericalFluxes();
-
-		// Update the cells in the simulation domain w.r.t. to the net updates and some timestep
-		void updateUnknowns(float dt);
-		void updateUnknownsRow(float dt, int i);
-
-		virtual ~SWE_DimensionalSplitting() {}
-		};
-
-
+		// timer
+		std::clock_t computeClock;
+		struct timespec startTime;
+		struct timespec endTime;
+};
 #endif /* SWEDIMENSIONALSPLITTING_HH_ */

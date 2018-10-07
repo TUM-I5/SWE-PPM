@@ -3,7 +3,9 @@
 
 #include "types/Boundary.hh"
 
+#ifdef UPCXX
 #include <upcxx/upcxx.hpp>
+#endif
 
 template <typename T>
 struct BlockConnectInterface {

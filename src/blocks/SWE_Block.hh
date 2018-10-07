@@ -129,6 +129,7 @@ class SWE_Block {
 		
 	protected:
 		// Constructor/Destructor
+		SWE_Block<T>();
 		SWE_Block<T>(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX = 0, float originY = 0);
 		virtual ~SWE_Block() = 0;
 
@@ -182,6 +183,10 @@ class SWE_Block {
  * -> computational domain is [1,..,nx]*[1,..,ny]
  * -> plus ghost cell layer
  */
+template <typename T>
+SWE_Block<T>::SWE_Block() {
+}
+
 template <typename T>
 SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float originY) :
 		nx(nx),

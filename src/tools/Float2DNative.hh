@@ -7,6 +7,8 @@
 
 class Float2DNative : public Float2D {
 	public:
+		Float2DNative() :
+				Float2D(0, 0) {}; 
 		Float2DNative(int cols, int rows) :
 				Float2D(cols, rows) {
 			std::shared_ptr<float> tmp(new float[rows * cols], std::default_delete<float[]>());

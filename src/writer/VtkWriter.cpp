@@ -42,19 +42,19 @@
  *
  * @todo This version can only handle a boundary layer of size 1
  */
-io::VtkWriter::VtkWriter( const std::string &i_baseName,
+VtkWriter::VtkWriter( const std::string &i_baseName,
 		const Float2D &i_b,
 		const BoundarySize &i_boundarySize,
 		int i_nX, int i_nY,
 		float i_dX, float i_dY,
 		int i_offsetX, int i_offsetY) :
-  io::Writer(i_baseName, i_b, i_boundarySize, i_nX, i_nY),
+  Writer(i_baseName, i_b, i_boundarySize, i_nX, i_nY),
   dX(i_dX), dY(i_dY),
   offsetX(i_offsetX), offsetY(i_offsetY)
 {
 }
 
-void io::VtkWriter::writeTimeStep(
+void VtkWriter::writeTimeStep(
 		const Float2D &i_h,
         const Float2D &i_hu,
         const Float2D &i_hv,

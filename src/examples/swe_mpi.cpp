@@ -32,8 +32,12 @@
 
 #include <cassert>
 #include <string>
+#include <ctime>
+#include <time.h>
+#include <unistd.h>
+#include <limits.h>
 
-#include "blocks/SWE_DimensionalSplittingMpi.hh"
+#include "tools/args.hh"
 
 #ifdef WRITENETCDF
 #include "writer/NetCdfWriter.hh"
@@ -47,10 +51,7 @@
 #include "scenarios/SWE_simple_scenarios.hh"
 #endif
 
-#include "tools/args.hh"
-#include "tools/Logger.hh"
-#include "tools/ProgressBar.hh"
-
+#include "blocks/SWE_DimensionalSplittingMpi.hh"
 #include <mpi.h>
 
 int main(int argc, char** argv) {
@@ -144,23 +145,29 @@ int main(int argc, char** argv) {
 		std::cerr << "MPI_Init failed." << std::endl;
 	}
 
+	int myMpiRank;
+	int totalMpiRanks;
+	MPI_Comm_rank(MPI_COMM_WORLD, &myMpiRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &totalMpiRanks);
+
+	// Print status
+	char hostname[HOST_NAME_MAX];
+        gethostname(hostname, HOST_NAME_MAX);
+
+	printf("%i Spawned at %s\n", myMpiRank, hostname);
+
 	/*
 	 * determine the layout of UPC++ ranks:
 	 * one block per process;
 	 * if the number of processes is a square number, l_blockCountX = l_blockCountY,
 	 * else l_blockCountX > l_blockCountY
 	 */
-	int myMpiRank;
-	int totalMpiRanks;
-	MPI_Comm_rank(MPI_COMM_WORLD, &myMpiRank);
-	MPI_Comm_size(MPI_COMM_WORLD, &totalMpiRanks);
-
 	// number of SWE-Blocks in x- and y-direction
 	int blockCountY = std::sqrt(totalMpiRanks);
 	while (totalMpiRanks % blockCountY != 0) blockCountY--;
 	int blockCountX = totalMpiRanks / blockCountY;
 
-	// determine the local block coordinates of each SWE_Block
+	// determine the local block position of each SWE_Block
 	int localBlockPositionX = myMpiRank / blockCountY;
 	int localBlockPositionY = myMpiRank % blockCountY;
 
@@ -236,14 +243,7 @@ int main(int argc, char** argv) {
 			dySimulation);
 #endif // WRITENETCDF
 
-	// Init fancy progressbar
-	tools::ProgressBar progressBar(simulationDuration);
-
 	// Write the output at t = 0
-	tools::Logger::logger.printOutputTime((float) 0.);
-	if (myMpiRank == 0) {
-		progressBar.update(0.);
-	}
 	writer.writeTimeStep(
 			simulation.getWaterHeight(),
 			simulation.getMomentumHorizontal(),
@@ -256,18 +256,13 @@ int main(int argc, char** argv) {
 	 ********************/
 
 
-	// print the start message and reset the wall clock time
-	progressBar.clear();
-	if (myMpiRank == 0) {
-		tools::Logger::logger.printStartMessage();
-	}
-	tools::Logger::logger.initWallClockTime(MPI_Wtime());
+	// Initialize wall timer
+	struct timespec startTime;
+	struct timespec endTime;
 
-	//! simulation time.
+	float wallTime = 0.;
+
 	t = 0.0;
-	if (myMpiRank == 0) {
-		progressBar.update(t);
-	}
 
 	float timestep;
 	unsigned int iterations = 0;
@@ -275,54 +270,37 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < numberOfCheckPoints; i++) {
 		// Simulate until the checkpoint is reached
 		while(t < checkpointInstantOfTime[i]) {
-			// reset CPU-Communication clock
-			tools::Logger::logger.resetClockToCurrentTime("CpuCommunication");
+			// Start measurement
+			clock_gettime(CLOCK_MONOTONIC, &startTime);
 
 			// set values in ghost cells.
-			// this is an implicit block (mpi send/recv in setGhostLayer()
-			// TODO: what can we do if this becomes a bottleneck?
+			// this is an implicit block (mpi recv in setGhostLayer()
 			simulation.setGhostLayer();
-
-			// reset the cpu clock
-			tools::Logger::logger.resetClockToCurrentTime("Cpu");
 
 			// compute numerical flux on each edge
 			simulation.computeNumericalFluxes();
 
-			// update the cpu time in the logger
-			tools::Logger::logger.updateTime("Cpu");
-
 			// max timestep has been reduced over all ranks in computeNumericalFluxes()
 			timestep = simulation.getMaxTimestep();
-
-			// reset the cpu time
-			tools::Logger::logger.resetClockToCurrentTime("Cpu");
 
 			// update the cell values
 			simulation.updateUnknowns(timestep);
 
-			// update the cpu and CPU-communication time in the logger
-			tools::Logger::logger.updateTime("Cpu");
-			tools::Logger::logger.updateTime("CpuCommunication");
+			// Accumulate wall time
+			clock_gettime(CLOCK_MONOTONIC, &endTime);
+			wallTime += (endTime.tv_sec - startTime.tv_sec);
+			wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
 			// update simulation time with time step width.
 			t += timestep;
 			iterations++;
-
-			// print the current simulation time
-			if (myMpiRank == 0) {
-				progressBar.clear();
-				tools::Logger::logger.printSimulationTime(t);
-				progressBar.update(t);
-			}
+			MPI_Barrier(MPI_COMM_WORLD);
 		}
 
-		// print the time elapsed until this output
-		if (myMpiRank == 0) {
-			progressBar.clear();
-			tools::Logger::logger.printOutputTime(t);
-			progressBar.update(t);
+		if(myMpiRank == 0) {
+			printf("Write timestep (%fs)\n", t);
 		}
+
 		// write output
 		writer.writeTimeStep(
 				simulation.getWaterHeight(),
@@ -336,39 +314,9 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
+	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myMpiRank, simulation.computeTime, simulation.computeTimeWall, wallTime); 
 
-	MPI_Barrier(MPI_COMM_WORLD);
-
-	// write the statistics message
-	if (myMpiRank == 0) {
-		progressBar.clear();
-		tools::Logger::logger.printStatisticsMessage();
-	}
-
-	for (int i = 0; i < totalMpiRanks; i++) {
-		if (myMpiRank == i) {
-			printf("\n");
-			// print the cpu time
-			tools::Logger::logger.printTime("Cpu", "CPU time");
-
-			// print CPU + Communication time
-			tools::Logger::logger.printTime("CpuCommunication", "CPU + Communication time");
-
-			// print the wall clock time (includes plotting)
-			tools::Logger::logger.printWallClockTime(time(NULL));
-			printf("\n");
-		}
-		MPI_Barrier(MPI_COMM_WORLD);
-	}
-
-	if (myMpiRank == 0) {
-		// printer iteration counter
-		tools::Logger::logger.printIterationsDone(iterations);
-
-		// print the finish message
-		tools::Logger::logger.printFinishMessage();
-	}
-
+	simulation.freeMpiType();
 	MPI_Finalize();
 
 	return 0;

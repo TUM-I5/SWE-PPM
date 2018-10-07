@@ -1,8 +1,105 @@
-module dimsplit {
-	array [2D] DimensionalSplittingCharm {
-		entry DimensionalSplittingCharm();
-		entry computeNumericalFluxes();
+module SWE_DimensionalSplittingCharm {
+	include "types/BlockConnectInterface.hh";
+	include "types/Boundary.hh";
+	include "scenarios/SWE_Scenario.hh";
+	include "tools/Float2DNative.hh";
 
-		entry [reductiontarget] void ySweep(float maxWaveSpeed);
+	message copyLayer {
+		Boundary boundary;
+		bool containsBathymetry;
+		float b[];
+		float h[];
+		float hu[];
+		float hv[];
+	};
+
+	array [1D] SWE_DimensionalSplittingCharm {
+		entry SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY,
+							BoundaryType boundaries[4], std::string outputFilename, std::string bathymetryFile, std::string displacementFile);
+
+		entry void compute() {
+			serial {
+				// Start the wall clock
+				clock_gettime(CLOCK_MONOTONIC, &startTime);
+			}
+			while(currentCheckpoint < checkpointCount) {
+				serial {
+					sendCopyLayers(true);
+					setGhostLayer();
+				}
+				overlap {
+					when receiveGhostLeft(copyLayer *msg)
+						if (!msg->isDummy) {
+							serial { processCopyLayer(msg); }
+						}
+					when receiveGhostRight(copyLayer *msg)
+						if (!msg->isDummy) {
+							serial { processCopyLayer(msg); }
+						}
+					when receiveGhostBottom(copyLayer *msg)
+						if (!msg->isDummy) {
+							serial { processCopyLayer(msg); }
+						}
+					when receiveGhostTop(copyLayer *msg)
+						if (!msg->isDummy) {
+							serial { processCopyLayer(msg); }
+						}
+				}
+				serial {
+					// The xSweep will trigger the reduction and accumulate compute time
+					xSweep();
+				}
+				when reductionTrigger()
+				serial {
+					// Complete iteration
+					ySweep();
+					updateUnknowns(maxTimestep);
+
+					// Once the simulation state progressed one iteration, increase the simulation time accordingly
+					currentSimulationTime += maxTimestep;
+					// If a checkpoint was reached after the last step, write current state
+					if (currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
+						// Exclude I/O from the time measurement, therefore accumulate now
+						clock_gettime(CLOCK_MONOTONIC, &endTime);
+						wallTime += (endTime.tv_sec - startTime.tv_sec);
+						wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+
+						if(thisIndex == 0) {
+							CkPrintf("Write timestep (%fs)\n", currentSimulationTime);
+						}
+						writeTimestep();
+						currentCheckpoint++;
+
+						// Restart wall clock
+						clock_gettime(CLOCK_MONOTONIC, &startTime);
+					}
+
+					// If there is an iteration to go, propagate copy layers anew
+					if (currentSimulationTime < simulationDuration) {
+						sendCopyLayers(false);
+						setGhostLayer();
+					} else {
+						// Accumulate wall time
+						clock_gettime(CLOCK_MONOTONIC, &endTime);
+						wallTime += (endTime.tv_sec - startTime.tv_sec);
+						wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+
+						CkPrintf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", thisIndex, computeTime, computeTimeWall, wallTime); 
+						mainProxy.done(thisIndex);
+					}
+				}
+			}
+		};
+
+		// SDAG entry methods
+		entry void receiveGhostLeft(copyLayer *msg);
+		entry void receiveGhostRight(copyLayer *msg);
+		entry void receiveGhostBottom(copyLayer *msg);
+		entry void receiveGhostTop(copyLayer *msg);
+
+		entry void reductionTrigger();
+
+		// entry methods
+		entry [reductiontarget] void reduceWaveSpeed(float maxWaveSpeed);
 	};
 };

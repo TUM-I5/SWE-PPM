@@ -28,6 +28,7 @@
 #ifndef TOOLS_ARGS_H
 #define TOOLS_ARGS_H
 
+#include <iostream>
 #include <getopt.h>
 #include <algorithm>
 #include <map>

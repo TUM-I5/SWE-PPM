@@ -1,87 +1,107 @@
-/**
- * @file
- * This file is part of SWE.
- *
- * @author Jurek Olden (jurek.olden AT in.tum.de)
- *
- * @section LICENSE
- *
- * SWE is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * SWE is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with SWE.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
- * @section DESCRIPTION
- * Implementation of the SWE_Block abstract class that uses dimensional splitting.
- * It extends the computational domain to two dimensions by decomposing 2D updates
- * to updates on the x- and y-axis.
- *
- */
+#ifndef SWE_DIMENSIONALSPLITTINGCHARM_HH
+#define SWE_DIMENSIONALSPLITTINGCHARM_HH
 
-#ifndef SWEDIMENSIONALSPLITTINGUPCXX_HH_
-#define SWEDIMENSIONALSPLITTINGUPCXX_HH_
+#include "SWE_DimensionalSplittingCharm.decl.h"
 
+#include <unistd.h>
+#include <limits.h>
+#include <ctime>
+#include <time.h>
 #include "blocks/SWE_Block.hh"
-#include "scenarios/SWE_Scenario.hh"
-#include "tools/Float2DUpcxx.hh"
-#include "types/BlockConnectInterface.hh"
-
-#include <upcxx/upcxx.hpp>
-
+#ifdef ASAGI
+#include "scenarios/SWE_AsagiScenario.hh"
+#else
+#include "scenarios/SWE_simple_scenarios.hh"
+#endif
+#include "examples/swe_charm.decl.h"
+#include "types/Boundary.hh"
+#include "writer/NetCdfWriter.hh"
+#include "tools/Float2DNative.hh"
 #include "solvers/Hybrid.hpp"
 
-class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
+extern CProxy_swe_charm mainProxy;
+extern int blockCountX;
+extern int blockCountY;
+extern float simulationDuration;
+extern int checkpointCount;
+
+class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm, public SWE_Block<Float2DNative>  {
+
+	SWE_DimensionalSplittingCharm_SDAG_CODE
+
 	public:
-		// Constructor/Destructor
-		SWE_DimensionalSplittingUpcxx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, int originX, int originY);
-		~SWE_DimensionalSplittingUpcxx() {};
+		// Charm++ specific constructor needed for object migration
+		SWE_DimensionalSplittingCharm(CkMigrateMessage *msg);
+		SWE_DimensionalSplittingCharm(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical,
+						float originX, float originY, int posX, int posY, BoundaryType boundaries[],
+						std::string outputFileName, std::string bathymetryFileName = "", std::string displacementFileName = "");
+		~SWE_DimensionalSplittingCharm();
 
-		// Overwrite (set boundaries by ourselves)
-		void initScenario(SWE_Scenario &scenario);
+		// Charm++ entry methods
+		void reduceWaveSpeed(float maxWaveSpeed);
 
-		// Interface methods
-		void setGhostLayer();
-		void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
-		void computeNumericalFluxes();
-		void updateUnknowns(float dt);
-
-		// Upcxx specific
-		void connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[]);
-		BlockConnectInterface<upcxx::global_ptr<float>> getCopyLayer(Boundary boundary);
+		// Unused pure virtual interface methods
+		void computeNumericalFluxes() {}
 
 	private:
-		solver::Hybrid<float> solver;
+		void writeTimestep();
+		void sendCopyLayers(bool sendBathymetry = false);
+		void processCopyLayer(copyLayer *msg);
+		void xSweep();
+		void ySweep();
+		void updateUnknowns(float dt);
+		// Interface implementation
+		void setGhostLayer();
 
-		// Max timestep reduced over all upcxx ranks
-		float maxTimestepGlobal;
+		solver::Hybrid<float> solver;
+		float *checkpointInstantOfTime;
+		NetCdfWriter *writer;
+		float currentSimulationTime;
+		int currentCheckpoint;
 
 		// Temporary values after x-sweep and before y-sweep
-		Float2DUpcxx hStar;
-		Float2DUpcxx huStar;
+		Float2DNative hStar;
+		Float2DNative huStar;
 
 		// net updates per cell
-		Float2DUpcxx hNetUpdatesLeft;
-		Float2DUpcxx hNetUpdatesRight;
+		Float2DNative hNetUpdatesLeft;
+		Float2DNative hNetUpdatesRight;
 
-		Float2DUpcxx huNetUpdatesLeft;
-		Float2DUpcxx huNetUpdatesRight;
+		Float2DNative huNetUpdatesLeft;
+		Float2DNative huNetUpdatesRight;
 
-		Float2DUpcxx hNetUpdatesBelow;
-		Float2DUpcxx hNetUpdatesAbove;
+		Float2DNative hNetUpdatesBelow;
+		Float2DNative hNetUpdatesAbove;
 
-		Float2DUpcxx hvNetUpdatesBelow;
-		Float2DUpcxx hvNetUpdatesAbove;
+		Float2DNative hvNetUpdatesBelow;
+		Float2DNative hvNetUpdatesAbove;
 
 		// Interfaces to neighbouring block copy layers, indexed by Boundary
-		BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[4];
+		int neighbourIndex[4];
+
+		// timer
+		std::clock_t computeClock;
+
+		struct timespec startTime;
+		struct timespec endTime;
+
+		struct timespec startTimeCompute;
+		struct timespec endTimeCompute;
+
+		float computeTime;
+		float computeTimeWall;
+		float wallTime;
 };
-#endif /* SWEDIMENSIONALSPLITTINGUPCXX_HH_ */
+
+class copyLayer : public CMessage_copyLayer {
+	public:
+		Boundary boundary;
+		bool containsBathymetry;
+		bool isDummy;
+		float *b;
+		float *h;
+		float *hu;
+		float *hv;
+};
+
+#endif // SWE_DIMENSIONALSPLITTINGCHARM_HH

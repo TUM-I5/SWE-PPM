@@ -22,7 +22,7 @@
  *
  *
  * @section DESCRIPTION
- *
+ 
  * Access to bathymetry and displacement files with ASAGI.
  */
 
@@ -41,7 +41,7 @@ using namespace asagi;
 
 class SWE_AsagiScenario: public SWE_Scenario {
 	public:
-		SWE_AsagiScenario (
+		SWE_AsagiScenario(
 				const std::string bathymetryFilename,
 				const std::string displacementFilename) {
 

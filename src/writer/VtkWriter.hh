@@ -29,12 +29,7 @@
 #include <sstream>
 #include "writer/Writer.hh"
 
-namespace io {
-	class VtkWriter;
-}
-
-class io::VtkWriter : public io::Writer
-{
+class VtkWriter : public Writer {
 private:
 	//! cell size
 	float dX, dY;

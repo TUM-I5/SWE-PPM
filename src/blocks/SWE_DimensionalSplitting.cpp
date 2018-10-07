@@ -50,7 +50,7 @@
  * @param l_dx Cell width
  * @param l_dy Cell height
  */
-SWE_DimensionalSplitting::SWE_DimensionalSplitting (int nx, int ny, float dx, float dy) :
+SWE_DimensionalSplitting::SWE_DimensionalSplitting (int nx, int ny, float dx, float dy, float originX, float originY) :
 	/*
 	 * Important note concerning grid allocations:
 	 * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -62,7 +62,7 @@ SWE_DimensionalSplitting::SWE_DimensionalSplitting (int nx, int ny, float dx, fl
 	 */
 
 	// Initialize grid metadata using the base class constructor
-	SWE_Block (nx, ny, dx, dy),
+	SWE_Block(nx, ny, dx, dy, originX, originY),
 
 	// intermediate state Q after x-sweep
 	hStar (nx + 1, ny + 2),
@@ -87,39 +87,14 @@ SWE_DimensionalSplitting::SWE_DimensionalSplitting (int nx, int ny, float dx, fl
 	hNetUpdatesAbove(nx + 1, ny + 2),
 
 	hvNetUpdatesBelow(nx + 1, ny + 2),
-	hvNetUpdatesAbove(nx + 1, ny + 2) {}
+	hvNetUpdatesAbove(nx + 1, ny + 2) {
 
-/*
- * This function initializes the simulation data by obtaining all values from a given scenario.
- * It also sets the boundary conditions according to the given input parameter.
- *
- * @param scenario Scenario from which to read the data.
- * @param boundary Boundary conditions for all four edges.
- */
-void SWE_DimensionalSplitting::initScenarioImplicit (SWE_Scenario &scenario) {
-	// Initialize bathymetry and water height
-	float x = 0;
-	float y = 0;
-	for (int i = 1; i < ny + 1; i++) {
-		for (int j = 1; j < nx + 1; j++) {
-			/*
-			 * Map the indices to actual points, shift by one because the ghost layer
-			 * is inserted at indices [0][*], [*][0], [nx + 1][*], [*][ny + 1].
-			 * Therefore, index [1][1], not [0][0], has to map to (originX, originY).
-			 */
-			x = (j - 0.5) * dx;
-			y = (i - 0.5) * dy;
-			b[j][i] = scenario.getBathymetry(x, y);
-			h[j][i] = scenario.getWaterHeight(x, y);
-			hu[j][i] = scenario.getVeloc_u(x, y) * h[j][i];
-			hv[j][i] = scenario.getVeloc_v(x, y) * h[j][i];
-		}
+		computeTime = 0.;
+		computeTimeWall = 0.;
 	}
 
-	SWE_Block::setBoundaryType(BND_LEFT, scenario.getBoundaryType(BND_LEFT));
-	SWE_Block::setBoundaryType(BND_RIGHT, scenario.getBoundaryType(BND_RIGHT));
-	SWE_Block::setBoundaryType(BND_TOP, scenario.getBoundaryType(BND_TOP));
-	SWE_Block::setBoundaryType(BND_BOTTOM, scenario.getBoundaryType(BND_BOTTOM));
+void SWE_DimensionalSplitting::setGhostLayer() {
+	SWE_Block::applyBoundaryConditions();
 }
 
 /**
@@ -127,7 +102,11 @@ void SWE_DimensionalSplitting::initScenarioImplicit (SWE_Scenario &scenario) {
  * The member variable #maxTimestep will be updated with the
  * maximum allowed time step size
  */
-void SWE_DimensionalSplitting::computeNumericalFluxes () {
+void SWE_DimensionalSplitting::computeNumericalFluxes() {
+	// Start compute clocks
+	computeClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &startTime);
+
 	//maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
 	float maxVerticalWaveSpeed = (float) 0.;
@@ -189,6 +168,14 @@ void SWE_DimensionalSplitting::computeNumericalFluxes () {
 		}
 		#endif // NDEBUG
 	}
+
+	// Accumulate compute time
+	computeClock = clock() - computeClock;
+	computeTime += (float) computeClock / CLOCKS_PER_SEC;
+
+	clock_gettime(CLOCK_MONOTONIC, &endTime);
+	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
+	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }
 
 /**
@@ -198,6 +185,10 @@ void SWE_DimensionalSplitting::computeNumericalFluxes () {
  * since this is the step width used for the intermediary updates after the x-sweep.
  */
 void SWE_DimensionalSplitting::updateUnknowns (float dt) {
+	// Start compute clocks
+	computeClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &startTime);
+
 	// this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
 	assert(std::abs(dt - maxTimestep) < 0.00001);
 	//update cell averages with the net-updates
@@ -208,4 +199,12 @@ void SWE_DimensionalSplitting::updateUnknowns (float dt) {
 			hv[x][y] = hv[x][y] - (maxTimestep / dx) * (hvNetUpdatesBelow[x][y] + hvNetUpdatesAbove[x][y]);
 		}
 	}
+
+	// Accumulate compute time
+	computeClock = clock() - computeClock;
+	computeTime += (float) computeClock / CLOCKS_PER_SEC;
+
+	clock_gettime(CLOCK_MONOTONIC, &endTime);
+	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
+	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }

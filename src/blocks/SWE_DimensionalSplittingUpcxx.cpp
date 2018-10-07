@@ -87,6 +87,9 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 
 		hvNetUpdatesBelow(nx + 1, ny + 2),
 		hvNetUpdatesAbove(nx + 1, ny + 2) {
+
+	computeTime = 0.;
+	computeTimeWall = 0.;
 }
 
 void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> p_neighbourCopyLayer[]) {
@@ -139,8 +142,6 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 		for (int i = 0; i < ny; i++) {
 			b[0][i + 1] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
 		}
-		b[0][0] = b[0][1];
-		b[0][ny + 1] = b[0][ny];
 	}
 	if (boundaryType[BND_RIGHT] == CONNECT) {
 		assert(neighbourCopyLayer[BND_RIGHT].size == ny);
@@ -148,8 +149,6 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 		for (int i = 0; i < ny; i++) {
 			b[nx + 1][i + 1] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
 		}
-		b[nx + 1][0] = b[nx + 1][1];
-		b[nx + 1][ny + 1] = b[nx + 1][ny];
 	}
 	if (boundaryType[BND_BOTTOM] == CONNECT) {
 		assert(neighbourCopyLayer[BND_BOTTOM].size == nx);
@@ -157,8 +156,6 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 		for (int i = 0; i < nx; i++) {
 			b[i + 1][0] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
 		}
-		b[0][0] = b[1][0];
-		b[nx + 1][0] = b[nx][0];
 	}
 	if (boundaryType[BND_TOP] == CONNECT) {
 		assert(neighbourCopyLayer[BND_TOP].size == nx);
@@ -166,77 +163,103 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 		for (int i = 0; i < nx; i++) {
 			b[i + 1][ny + 1] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
 		}
-		b[0][ny + 1] = b[1][ny + 1];
-		b[nx + 1][ny + 1] = b[nx][ny + 1];
 	}
-	upcxx::barrier();
 }
 
+/*
+ * The UPCXX version of setGhostLayer() will use the BlockConnectInterfaces of its neighbours
+ * to receive the ghost layers at CONNECT boundaries.
+ * The function will use rget/rget_strided and will block until all values have been received
+ * and processed.
+ */
 void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
 	SWE_Block::applyBoundaryConditions();
 
+	upcxx::future<> leftFuture;
+	upcxx::future<> rightFuture;
+	upcxx::future<> bottomFuture;
+	upcxx::future<> topFuture;
+
 	if (boundaryType[BND_LEFT] == CONNECT) {
 		assert(neighbourCopyLayer[BND_LEFT].size == ny);
+		assert(neighbourCopyLayer[BND_LEFT].stride == 1);
+
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_LEFT];
-		for (int i = 0; i < ny; i++) {
-			h[0][i + 1] = rget(iface.pointerH + iface.startIndex + iface.stride * i).wait();
-			hu[0][i + 1] = rget(iface.pointerHu + iface.startIndex + iface.stride * i).wait();
-			hv[0][i + 1] = rget(iface.pointerHv + iface.startIndex + iface.stride * i).wait();
-		}
-		h[0][0] = h[0][1];
-		hu[0][0] = hu[0][1];
-		hv[0][0] = hv[0][1];
-		h[0][ny + 1] = h[0][ny];
-		hu[0][ny + 1] = hu[0][ny];
-		hv[0][ny + 1] = hv[0][ny];
+
+		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
+		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
+		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+
+		auto leftFutH = upcxx::rget(srcBaseH, &h[0][1], ny);
+		auto leftFutHu = upcxx::rget(srcBaseHu, &hu[0][1], ny);
+		auto leftFutHv = upcxx::rget(srcBaseHv, &hv[0][1], ny);
+		leftFuture = upcxx::when_all(leftFutH, leftFutHu, leftFutHv);
+	} else {
+		leftFuture = upcxx::make_future<>();
 	}
+
 	if (boundaryType[BND_RIGHT] == CONNECT) {
 		assert(neighbourCopyLayer[BND_RIGHT].size == ny);
+		assert(neighbourCopyLayer[BND_RIGHT].stride == 1);
+
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_RIGHT];
-		for (int i = 0; i < ny; i++) {
-			h[nx + 1][i + 1] = rget(iface.pointerH + iface.startIndex + iface.stride * i).wait();
-			hu[nx + 1][i + 1] = rget(iface.pointerHu + iface.startIndex + iface.stride * i).wait();
-			hv[nx + 1][i + 1] = rget(iface.pointerHv + iface.startIndex + iface.stride * i).wait();
-		}
-		h[nx + 1][0] = h[nx + 1][1];
-		hu[nx + 1][0] = hu[nx + 1][1];
-		hv[nx + 1][0] = hv[nx + 1][1];
-		h[nx + 1][ny + 1] = h[nx + 1][ny];
-		hu[nx + 1][ny + 1] = hu[nx + 1][ny];
-		hv[nx + 1][ny + 1] = hv[nx + 1][ny];
+
+		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
+		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
+		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+
+		auto rightFutH = upcxx::rget(srcBaseH, &h[nx + 1][1], ny);
+		auto rightFutHu = upcxx::rget(srcBaseHu, &hu[nx + 1][1], ny);
+		auto rightFutHv = upcxx::rget(srcBaseHv, &hv[nx + 1][1], ny);
+		rightFuture = upcxx::when_all(rightFutH, rightFutHu, rightFutHv);
+	} else {
+		rightFuture = upcxx::make_future<>();
 	}
+
 	if (boundaryType[BND_BOTTOM] == CONNECT) {
 		assert(neighbourCopyLayer[BND_BOTTOM].size == nx);
+
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_BOTTOM];
-		for (int i = 0; i < nx; i++) {
-			h[i + 1][0] = rget(iface.pointerH + iface.startIndex + iface.stride * i).wait();
-			hu[i + 1][0] = rget(iface.pointerHu + iface.startIndex + iface.stride * i).wait();
-			hv[i + 1][0] = rget(iface.pointerHv + iface.startIndex + iface.stride * i).wait();
-		}
-		h[0][0] = h[1][0];
-		hu[0][0] = hu[1][0];
-		hv[0][0] = hv[1][0];
-		h[nx + 1][0] = h[nx][0];
-		hu[nx + 1][0] = hu[nx][0];
-		hv[nx + 1][0] = hv[nx][0];
+
+		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
+		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
+		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+
+		auto bottomFutH = upcxx::rget_strided<1>(srcBaseH, {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&h[1][0], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							{{(size_t) nx}});
+		auto bottomFutHu = upcxx::rget_strided<1>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hu[1][0], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							{{(size_t) nx}});
+		auto bottomFutHv = upcxx::rget_strided<1>(srcBaseHv, {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hv[1][0], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							{{(size_t) nx}});
+		bottomFuture = upcxx::when_all(bottomFutH, bottomFutHu, bottomFutHv);
+	} else {
+		bottomFuture = upcxx::make_future<>(); 
 	}
+
 	if (boundaryType[BND_TOP] == CONNECT) {
 		assert(neighbourCopyLayer[BND_TOP].size == nx);
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_TOP];
-		for (int i = 0; i < nx; i++) {
-			h[i + 1][ny + 1] = rget(iface.pointerH + iface.startIndex + iface.stride * i).wait();
-			hu[i + 1][ny + 1] = rget(iface.pointerHu + iface.startIndex + iface.stride * i).wait();
-			hv[i + 1][ny + 1] = rget(iface.pointerHv + iface.startIndex + iface.stride * i).wait();
-		}
-		h[0][ny + 1] = h[1][ny + 1];
-		hu[0][ny + 1] = hu[1][ny + 1];
-		hv[0][ny + 1] = hv[1][ny + 1];
-		h[nx + 1][ny + 1] = h[nx][ny + 1];
-		hu[nx + 1][ny + 1] = hu[nx][ny + 1];
-		hv[nx + 1][ny + 1] = hv[nx][ny + 1];
+		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
+		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
+		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+		auto topFutH = upcxx::rget_strided<1>(srcBaseH, {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&h[1][ny + 1], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							{{(size_t) nx}});
+		auto topFutHu = upcxx::rget_strided<1>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hu[1][ny + 1], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							{{(size_t) nx}});
+		auto topFutHv = upcxx::rget_strided<1>(srcBaseHv, {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hv[1][ny + 1], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							{{(size_t) nx}});
+		topFuture = upcxx::when_all(topFutH, topFutHu, topFutHv);
+	} else {
+		topFuture = upcxx::make_future<>();
 	}
-	upcxx::barrier();
+	upcxx::when_all(leftFuture, rightFuture, bottomFuture, topFuture).wait();
 }
 
 /**
@@ -245,6 +268,10 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
  * maximum allowed time step size
  */
 void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
+	// Start compute clocks
+	computeClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &startTime);
+
 	//maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
 	float maxVerticalWaveSpeed = (float) 0.;
@@ -267,16 +294,28 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 						);
 			}
 		}
+	}
 
-		#pragma omp single
-		{
-			// compute max timestep according to cautious CFL-condition
-			maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-			maxTimestepGlobal = upcxx::allreduce(maxTimestep, [](float a, float b) {return std::min(a, b);}).wait();
-			maxTimestep = maxTimestepGlobal;
-			upcxx::barrier();
-		}
+	// Accumulate compute time -> exclude the reduction
+	computeClock = clock() - computeClock;
+	computeTime += (float) computeClock / CLOCKS_PER_SEC;
 
+	clock_gettime(CLOCK_MONOTONIC, &endTime);
+	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
+	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+
+	// compute max timestep according to cautious CFL-condition
+	maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+	maxTimestepGlobal = upcxx::reduce_all(maxTimestep, [](float a, float b) {return std::min(a, b);}).wait();
+	maxTimestep = maxTimestepGlobal;
+	upcxx::barrier();
+
+	// restart compute clocks
+	computeClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &startTime);
+
+	#pragma omp parallel private(solver)
+	{
 		// set intermediary Q* states
 		#pragma omp for collapse(2)
 		for (int x = 1; x < nx + 1; x++) {
@@ -313,6 +352,14 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		}
 		#endif // NDEBUG
 	}
+	
+	// Accumulate compute time
+	computeClock = clock() - computeClock;
+	computeTime += (float) computeClock / CLOCKS_PER_SEC;
+
+	clock_gettime(CLOCK_MONOTONIC, &endTime);
+	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
+	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }
 
 /**
@@ -322,6 +369,10 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
  * since this is the step width used for the intermediary updates after the x-sweep.
  */
 void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
+	// Start compute clocks
+	computeClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &startTime);
+
 	// this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
 	assert(std::abs(dt - maxTimestep) < 0.00001);
 	//update cell averages with the net-updates
@@ -332,4 +383,12 @@ void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
 			hv[x][y] = hv[x][y] - (maxTimestep / dx) * (hvNetUpdatesBelow[x][y] + hvNetUpdatesAbove[x][y]);
 		}
 	}
+
+	// Accumulate compute time
+	computeClock = clock() - computeClock;
+	computeTime += (float) computeClock / CLOCKS_PER_SEC;
+
+	clock_gettime(CLOCK_MONOTONIC, &endTime);
+	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
+	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }

@@ -1,9 +1,16 @@
-mainmodule main {
-	readonly CProxy_Main mainProxy;
+mainmodule swe_charm {
+	readonly CProxy_swe_charm mainProxy;
+	readonly int blockCountX;
+	readonly int blockCountY;
+	readonly float simulationDuration;
+	readonly int checkpointCount;
 
-	extern module dimsplit;
+	extern module SWE_DimensionalSplittingCharm;
 
-	mainchare Main {
-		entry Main(CkArgMsg *msg);
+	mainchare swe_charm {
+		entry swe_charm(CkArgMsg *msg);
+
+		entry void done(int index);
+		entry void exit();
 	};
 };

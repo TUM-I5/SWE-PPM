@@ -1,56 +1,11 @@
-/**
- * @file
- * This file is part of an SWE fork created for the Tsunami-Simulation Bachelor Lab Course.
- *
- * @author Jurek Olden (jurek.olden AT in.tum.de)
- *
- * @section LICENSE
- *
- * SWE is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * SWE is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with SWE.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
- * @section DESCRIPTION
- *
- * Implementation of SWE_DimensionalSplitting.hh
- *
- */
-#include "SWE_DimensionalSplittingUpcxx.hh"
+#include "SWE_DimensionalSplittingCharm.hh"
 
-#include <cassert>
-#include <algorithm>
-#include <omp.h>
+#include "examples/swe_charm.decl.h"
 
-/*
- * Constructor of a SWE_DimensionalSplitting Block.
- * Computational domain is [1,...,nx]*[1,...,ny]
- * Ghost layer consists of two additional rows and columns
- *
- * State variables h, hu, hv and b are defined on the whole grid (including ghost layer)
- * Net updates coming from above/below/left/right are defined for each cell.
- *
- * Net updates are computed on all rows first, then on all columns, the total net updates are then composed
- * from the two 1D solutions.
- *
- * This strategy only works, if the timestep chosen w.r.t. to the maximum horizontal wave speeds
- * also satisfies the CFL-condition in y-direction.
- *
- * @param l_nx Size of the computational domain in x-direction
- * @param l_ny Size of the computational domain in y-direction
- * @param l_dx Cell width
- * @param l_dy Cell height
- */
-SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, float dx, float dy, int originX, int originY) :
+SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(CkMigrateMessage *msg) {}
+
+SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, float dx, float dy, float originX, float originY, int posX, int posY,
+							BoundaryType boundaries[], std::string outputFilename, std::string bathymetryFilename, std::string displacementFilename) :
 		/*
 		 * Important note concerning grid allocations:
 		 * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -87,109 +42,57 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 
 		hvNetUpdatesBelow(nx + 1, ny + 2),
 		hvNetUpdatesAbove(nx + 1, ny + 2) {
+
+	currentSimulationTime = 0.;
+	currentCheckpoint = 0;
+
+	computeTime = 0.;
+	wallTime = 0.;
+
+	neighbourIndex[BND_LEFT] = (posX > 0) ? thisIndex - blockCountY : -1;
+	neighbourIndex[BND_RIGHT] = (posX < blockCountX - 1) ? thisIndex + blockCountY : -1;
+	neighbourIndex[BND_BOTTOM] = (posY > 0) ? thisIndex - 1 : -1;
+	neighbourIndex[BND_TOP] = (posY < blockCountY - 1) ? thisIndex + 1 : -1;
+
+	// Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
+	checkpointInstantOfTime = new float[checkpointCount];
+	// Time delta is the time between any two checkpoints
+	float checkpointTimeDelta = simulationDuration / checkpointCount;
+	// The first checkpoint is reached after 0 + delta t
+	checkpointInstantOfTime[0] = checkpointTimeDelta;
+	for(int i = 1; i < checkpointCount; i++) {
+		checkpointInstantOfTime[i] = checkpointInstantOfTime[i - 1] + checkpointTimeDelta;
+	}
+
+#ifdef ASAGI
+	SWE_AsagiScenario scenario(bathymetryFilename, displacementFilename);
+#else
+	SWE_RadialDamBreakScenario scenario = SWE_RadialDamBreakScenario();
+#endif
+	initScenario(scenario, boundaries);
+
+	// Initialize writer
+	BoundarySize boundarySize = {{1, 1, 1, 1}};
+	writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY);
+
+	// output at t=0
+	writeTimestep();
+
+	char hostname[HOST_NAME_MAX];
+        gethostname(hostname, HOST_NAME_MAX);
+
+	CkPrintf("%i Spawned at %s\n", thisIndex, hostname);
 }
 
-void SWE_DimensionalSplittingUpcxx::initScenario(SWE_Scenario &scenario) {
-	SWE_Block::initScenario(scenario);
+SWE_DimensionalSplittingCharm::~SWE_DimensionalSplittingCharm() {}
 
-	// check if this block is bounding the domain - if yes, set boundary to scenario boundary
-	// if not, set boundary to CONNECT
-	// TODO: what if simulation resolution != scenario resolution
-	if (originX == scenario.getBoundaryPos(BND_LEFT)) {
-		SWE_Block::setBoundaryType(BND_LEFT, scenario.getBoundaryType(BND_LEFT));
-		} 
-	else {
-		SWE_Block::setBoundaryType(BND_LEFT, CONNECT);
-	}
-	if (originY == scenario.getBoundaryPos(BND_BOTTOM)) {
-		SWE_Block::setBoundaryType(BND_BOTTOM, scenario.getBoundaryType(BND_BOTTOM));
-	}
-	else {
-		SWE_Block::setBoundaryType(BND_TOP, CONNECT);
-	}
-	if (originX + nx == scenario.getBoundaryPos(BND_RIGHT)) {
-		SWE_Block::setBoundaryType(BND_RIGHT, scenario.getBoundaryType(BND_RIGHT));
-	}
-	else {
-		SWE_Block::setBoundaryType(BND_RIGHT, CONNECT);
-	}
-	if (originY + ny == scenario.getBoundaryPos(BND_TOP)) {
-		SWE_Block::setBoundaryType(BND_TOP, scenario.getBoundaryType(BND_TOP));
-	}
-	else {
-		SWE_Block::setBoundaryType(BND_TOP, CONNECT);
-	}
-}
-
-void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> p_neighbourCopyLayer[]) {
-	for (int i = 0; i < 4; i++) {
-		neighbourCopyLayer[i] = p_neighbourCopyLayer[i];
-	}
-}
-
-/**
- * register the row or column layer next to a boundary as a "copy layer",
- * from which values will be copied into the ghost layer or a neighbour;
- * @return	a BlockConnectInterface object that contains row variables h, hu, and hv
- */
-BlockConnectInterface<upcxx::global_ptr<float>> SWE_DimensionalSplittingUpcxx::getCopyLayer(Boundary boundary) {
-	struct BlockConnectInterface<upcxx::global_ptr<float>> interface;
-	interface.boundary = boundary;
-	switch (boundary) {
-		case BND_LEFT:
-			interface.size = ny;
-			interface.pointerH = h.getColProxy(1).getGlobalPointer();
-			interface.pointerHu = hu.getColProxy(1).getGlobalPointer(); 
-			interface.pointerHv = hv.getColProxy(1).getGlobalPointer();
-		case BND_RIGHT:
-			interface.size = ny;
-			interface.pointerH = h.getColProxy(nx).getGlobalPointer();
-			interface.pointerHu = hu.getColProxy(nx).getGlobalPointer(); 
-			interface.pointerHv = hv.getColProxy(nx).getGlobalPointer();
-		case BND_BOTTOM:
-			interface.size = nx;
-			interface.pointerH = h.getRowProxy(1).getGlobalPointer();
-			interface.pointerHu = hu.getRowProxy(1).getGlobalPointer();
-			interface.pointerHv = hv.getRowProxy(1).getGlobalPointer();
-		case BND_TOP:
-			interface.size = nx;
-			interface.pointerH = h.getRowProxy(ny).getGlobalPointer();
-			interface.pointerHu = hu.getRowProxy(ny).getGlobalPointer();
-			interface.pointerHv = hv.getRowProxy(ny).getGlobalPointer();
-	};
-	return interface;
-}
-
-void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
-	// Apply appropriate conditions for OUTFLOW/WALL boundaries
-	SWE_Block::applyBoundaryConditions();
-
-	//if (boundaryType[BND_LEFT] == CONNECT) {
-	//	for (int i = 1; i < ny; i++) {
-	//		h[0][i] = rget(neighbourCopyLayer[BND_LEFT].pointerH + i).wait();
-	//		hu[0][i] = rget(neighbourCopyLayer[BND_LEFT].pointerHu + i).wait();
-	//		hv[0][i] = rget(neighbourCopyLayer[BND_LEFT].pointerHv + i).wait();
-	//	}
-	//}
-	//if (boundaryType[BND_RIGHT] == CONNECT) {
-	//	for (int i = 1; i < ny; i++) {
-	//		h[nx + 1][i] = rget(neighbourCopyLayer[BND_RIGHT].pointerH + i).wait();
-	//		hu[nx + 1][i] = rget(neighbourCopyLayer[BND_RIGHT].pointerHu + i).wait();
-	//		hv[nx + 1][i] = rget(neighbourCopyLayer[BND_RIGHT].pointerHv + i).wait();
-	//	}
-	//}
-	//upcxx::barrier();
-}
-
-/**
- * Compute net updates for the block.
- * The member variable #maxTimestep will be updated with the
- * maximum allowed time step size
- */
-void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
-	//maximum (linearized) wave speed within one iteration
+void SWE_DimensionalSplittingCharm::xSweep() {
+	// Start compute clocks
+	computeClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &startTimeCompute);
+	
+	// maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
-	float maxVerticalWaveSpeed = (float) 0.;
 
 	#pragma omp parallel private(solver)
 	{
@@ -209,16 +112,36 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 						);
 			}
 		}
+	}
 
-		#pragma omp single
-		{
-			// compute max timestep according to cautious CFL-condition
-			maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-			maxTimestepGlobal = upcxx::allreduce(maxTimestep, [](float a, float b) {return std::min(a, b);}).wait();
-			maxTimestep = maxTimestepGlobal;
-			upcxx::barrier();
-		}
+	// Accumulate compute time -> exclude the reduction
+	computeClock = clock() - computeClock;
+	computeTime += (float) computeClock / CLOCKS_PER_SEC;
 
+	clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
+	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
+	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
+
+	// compute max timestep according to cautious CFL-condition
+	maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+	CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
+	contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
+}
+
+void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
+	maxTimestep = maxWaveSpeed;
+	reductionTrigger();
+}
+
+void SWE_DimensionalSplittingCharm::ySweep() {
+	// Start compute clocks
+	computeClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &startTimeCompute);
+
+	float maxVerticalWaveSpeed = (float) 0.;
+
+	#pragma omp parallel private(solver)
+	{
 		// set intermediary Q* states
 		#pragma omp for collapse(2)
 		for (int x = 1; x < nx + 1; x++) {
@@ -255,23 +178,221 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		}
 		#endif // NDEBUG
 	}
+
+	// Accumulate compute time
+	computeClock = clock() - computeClock;
+	computeTime += (float) computeClock / CLOCKS_PER_SEC;
+
+	clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
+	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
+	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
 }
 
-/**
- * Updates the unknowns with the already computed net-updates.
- *
- * @param dt time step width used in the update. The timestep has to be equal to maxTimestep calculated by computeNumericalFluxes(),
- * since this is the step width used for the intermediary updates after the x-sweep.
- */
-void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
+void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
+	// Start compute clocks
+	computeClock = clock();
+	clock_gettime(CLOCK_MONOTONIC, &startTimeCompute);
+
 	// this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
 	assert(std::abs(dt - maxTimestep) < 0.00001);
 	//update cell averages with the net-updates
-	for (int x = 1; x < nx+1; x++) {
+	for (int x = 1; x < nx + 1; x++) {
 		for (int y = 1; y < ny + 1; y++) {
-			h[x][y] = hStar[x][y] - (maxTimestep / dx) * (hNetUpdatesBelow[x][y] + hNetUpdatesAbove[x][y]);
+			h[x][y] = hStar[x][y] - (dt / dx) * (hNetUpdatesBelow[x][y] + hNetUpdatesAbove[x][y]);
 			hu[x][y] = huStar[x][y];
-			hv[x][y] = hv[x][y] - (maxTimestep / dx) * (hvNetUpdatesBelow[x][y] + hvNetUpdatesAbove[x][y]);
+			hv[x][y] = hv[x][y] - (dt / dx) * (hvNetUpdatesBelow[x][y] + hvNetUpdatesAbove[x][y]);
 		}
 	}
+
+	// Accumulate compute time
+	computeClock = clock() - computeClock;
+	computeTime += (float) computeClock / CLOCKS_PER_SEC;
+
+	clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
+	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
+	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
 }
+
+void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
+	// LEFT ghost layer consists of values from the left neighbours RIGHT copy layer etc.
+	if (msg->boundary == BND_RIGHT && boundaryType[BND_LEFT] == CONNECT) {
+		for (int i = 0; i < ny; i++) {
+			if (msg->containsBathymetry)
+				b[0][i + 1] = msg->b[i];
+			h[0][i + 1] = msg->h[i];
+			hu[0][i + 1] = msg->hu[i];
+			hv[0][i + 1] = msg->hv[i];
+		}
+	} else if (msg->boundary == BND_LEFT && boundaryType[BND_RIGHT] == CONNECT) {
+		for (int i = 0; i < ny; i++) {
+			if (msg->containsBathymetry)
+				b[nx + 1][i + 1] = msg->b[i];
+			h[nx + 1][i + 1] = msg->h[i];
+			hu[nx + 1][i + 1] = msg->hu[i];
+			hv[nx + 1][i + 1] = msg->hv[i];
+		}
+	} else if (msg->boundary == BND_TOP && boundaryType[BND_BOTTOM] == CONNECT) {
+		for (int i = 0; i < nx; i++) {
+			if (msg->containsBathymetry)
+				b[i + 1][0] = msg->b[i];
+			h[i + 1][0] = msg->h[i];
+			hu[i + 1][0] = msg->hu[i];
+			hv[i + 1][0] = msg->hv[i];
+		}
+	} else if (msg->boundary == BND_BOTTOM && boundaryType[BND_TOP] == CONNECT) {
+		for (int i = 0; i < nx; i++) {
+			if (msg->containsBathymetry)
+				b[i + 1][ny + 1] = msg->b[i];
+			h[i + 1][ny + 1] = msg->h[i];
+			hu[i + 1][ny + 1] = msg->hu[i];
+			hv[i + 1][ny + 1] = msg->hv[i];
+		}
+	}
+
+	// Deallocate the message buffer
+	delete msg;
+}
+
+void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
+	// The array sizes for copy layers of either orientation, set bathymetry array to length zero
+	int sizesVertical[] = {0, ny, ny, ny};
+	int sizesHorizontal[] = {0, nx, nx, nx};
+
+	// If we are sending bathymetry too, change the bathymetry array sizes from 0 to the respective value
+	if (sendBathymetry) {
+		sizesVertical[0] = ny;
+		sizesHorizontal[0] = nx;
+	}
+
+	int size, stride, startIndex, endIndex;
+
+	if (boundaryType[BND_LEFT] == CONNECT) {
+		assert(neighbourIndex[BND_LEFT] > -1);
+
+		copyLayer *left = new(sizesVertical, 0) copyLayer();
+		left->containsBathymetry = sendBathymetry;
+		left->boundary = BND_LEFT;
+		left->isDummy = false;
+
+		// Fill left (stride 1, contiguous storage due to Float2D being column-major)
+		size = ny;
+		startIndex = ny + 2 + 1;
+		endIndex = startIndex + size;
+		if (sendBathymetry)
+			std::copy(b.getRawPointer() + startIndex, b.getRawPointer() + endIndex, left->b);
+		std::copy(h.getRawPointer() + startIndex, h.getRawPointer() + endIndex, left->h);
+		std::copy(hu.getRawPointer() + startIndex, hu.getRawPointer() + endIndex, left->hu);
+		std::copy(hv.getRawPointer() + startIndex, hv.getRawPointer() + endIndex, left->hv);
+
+		// Send
+		thisProxy[neighbourIndex[BND_LEFT]].receiveGhostRight(left);
+	}
+
+	if (boundaryType[BND_RIGHT] == CONNECT) {
+		assert(neighbourIndex[BND_RIGHT] > -1);
+
+		copyLayer *right = new(sizesVertical, 0) copyLayer();
+		right->containsBathymetry = sendBathymetry;
+		right->boundary = BND_RIGHT;
+		right->isDummy = false;
+
+		// Fill right (stride 1, contiguous storage due to Float2D being column-major)
+		size = ny;
+		startIndex = nx * (ny + 2) + 1;
+		endIndex = startIndex + size;
+		if (sendBathymetry)
+			std::copy(b.getRawPointer() + startIndex, b.getRawPointer() + endIndex, right->b);
+		std::copy(h.getRawPointer() + startIndex, h.getRawPointer() + endIndex, right->h);
+		std::copy(hu.getRawPointer() + startIndex, hu.getRawPointer() + endIndex, right->hu);
+		std::copy(hv.getRawPointer() + startIndex, hv.getRawPointer() + endIndex, right->hv);
+
+		// Send
+		thisProxy[neighbourIndex[BND_RIGHT]].receiveGhostLeft(right);
+	}
+
+	if (boundaryType[BND_BOTTOM] == CONNECT) {
+		assert(neighbourIndex[BND_BOTTOM] > -1);
+
+		copyLayer *bottom = new(sizesHorizontal, 0) copyLayer();
+		bottom->containsBathymetry = sendBathymetry;
+		bottom->boundary = BND_BOTTOM;
+		bottom->isDummy = false;
+
+		// Fill bottom
+		size = nx;
+		stride = ny + 2;
+		startIndex = ny + 2 + 1;
+		endIndex = startIndex + size;
+		for (int i = 0; i < size; i++) {
+			if (sendBathymetry)
+				*(bottom->b + i) = *(b.getRawPointer() + startIndex + i * stride);
+			*(bottom->h + i) = *(h.getRawPointer() + startIndex + i * stride);
+			*(bottom->hu + i) = *(hu.getRawPointer() + startIndex + i * stride);
+			*(bottom->hv + i) = *(hv.getRawPointer() + startIndex + i * stride);
+		}
+
+		// Send
+		thisProxy[neighbourIndex[BND_BOTTOM]].receiveGhostTop(bottom);
+	}
+
+	if (boundaryType[BND_TOP] == CONNECT) {
+		assert(neighbourIndex[BND_TOP] > -1);
+
+		copyLayer *top = new(sizesHorizontal, 0) copyLayer();
+		top->containsBathymetry = sendBathymetry;
+		top->boundary = BND_TOP;
+		top->isDummy = false;
+
+		// Fill top
+		size = nx;
+		stride = ny + 2;
+		startIndex = ny + 2 + ny;
+		endIndex = startIndex + size;
+		for (int i = 0; i < size; i++) {
+			if (sendBathymetry)
+				*(top->b + i) = *(b.getRawPointer() + startIndex + i * stride);
+			*(top->h + i) = *(h.getRawPointer() + startIndex + i * stride);
+			*(top->hu + i) = *(hu.getRawPointer() + startIndex + i * stride);
+			*(top->hv + i) = *(hv.getRawPointer() + startIndex + i * stride);
+		}
+
+		// Send
+		thisProxy[neighbourIndex[BND_TOP]].receiveGhostBottom(top);
+	}
+}
+
+void SWE_DimensionalSplittingCharm::writeTimestep() {
+	writer->writeTimeStep(h, hu, hv, currentSimulationTime);
+}
+
+void SWE_DimensionalSplittingCharm::setGhostLayer() {
+	applyBoundaryConditions();
+
+	// Initialize dummy messages
+	// Charm++ does not allow buffer reuse, so initialize four separate messages
+	int sizesEmpty[] = {0, 0, 0, 0};
+	copyLayer *empty0 = new(sizesEmpty, 0) copyLayer();
+	copyLayer *empty1 = new(sizesEmpty, 0) copyLayer();
+	copyLayer *empty2 = new(sizesEmpty, 0) copyLayer();
+	copyLayer *empty3 = new(sizesEmpty, 0) copyLayer();
+	empty0->isDummy = true;
+	empty1->isDummy = true;
+	empty2->isDummy = true;
+	empty3->isDummy = true;
+
+	// Send out dummy messages to trigger the next timestep
+	if (boundaryType[BND_LEFT] != CONNECT) {
+		thisProxy[thisIndex].receiveGhostLeft(empty0);
+	}
+	if (boundaryType[BND_RIGHT] != CONNECT) {
+		thisProxy[thisIndex].receiveGhostRight(empty1);
+	}
+	if (boundaryType[BND_BOTTOM] != CONNECT) {
+		thisProxy[thisIndex].receiveGhostBottom(empty2);
+	}
+	if (boundaryType[BND_TOP] != CONNECT) {
+		thisProxy[thisIndex].receiveGhostTop(empty3);
+	}
+}
+
+#include "SWE_DimensionalSplittingCharm.def.h"

@@ -45,8 +45,13 @@ if env['parallelization'] in ['mpi', 'ampi']:
 elif env['parallelization'] in ['upcxx']:
     # TODO works with which solvers?
     sourceFiles = ['blocks/SWE_DimensionalSplittingUpcxx.cpp']
-# Code without CUDA
-elif env['parallelization'] not in ['cuda', 'mpi_with_cuda', 'upcxx']:
+# CHARM++
+elif env['parallelization'] in ['charm']:
+    # TODO works with which solvers?
+    sourceFilesCharm = ['blocks/SWE_DimensionalSplittingCharm.ci']
+    sourceFiles = ['blocks/SWE_DimensionalSplittingCharm.cpp']
+# Other Code without CUDA
+elif env['parallelization'] not in ['cuda', 'mpi_with_cuda']:
     if env['solver'] == 'rusanov':
         sourceFiles = ['blocks/rusanov/SWE_RusanovBlock.cpp']
     elif env['solver'] == 'augrie_simd' or env['simdExtensions'] != 'NONE':
@@ -54,9 +59,7 @@ elif env['parallelization'] not in ['cuda', 'mpi_with_cuda', 'upcxx']:
     elif env['solver'] == 'augriefun' or env['solver'] == 'fwavevec':
         sourceFiles = ['blocks/SWE_WaveAccumulationBlock.cpp']
     else:
-        # TODO custom block in use here, maybe refactor this (merge these two)
         sourceFiles = ['blocks/SWE_DimensionalSplitting.cpp']
-        # sourceFiles = ['blocks/SWE_WavePropagationBlock.cpp']
 # Code with CUDA
 else:
     sourceFiles = ['blocks/cuda/SWE_BlockCUDA.cu',
@@ -74,11 +77,17 @@ else:
 
 # compile the files defined so far,
 # this is an important step because of possibly different compilers
+#if env['parallelization'] == 'charm':
+#    for i in sourceFilesCharm:
+#        env.charmBuilder(i)
 for i in sourceFiles:
-    env.src_files.append(env.Object(i))
+    env.objects.append(env.Object(i))
 
 # Logger is used in every implementation
-sourceFiles = ['tools/Logger.cpp']
+#sourceFiles = ['tools/Logger.cpp']
+
+# Logger is unused for now
+sourceFiles = []
 
 # OpenGL CPU-files
 if env['openGL']:
@@ -120,12 +129,18 @@ elif env['parallelization'] in ['mpi_with_cuda']:
     sourceFiles.append(['examples/swe_mpi_legacy.cpp'])
 elif env['parallelization'] in ['upcxx']:
     sourceFiles.append(['examples/swe_upcxx.cpp'])
+elif env['parallelization'] in ['charm']:
+    sourceFilesCharm.append(['examples/swe_charm.ci'])
+    sourceFiles.append(['examples/swe_charm.cpp'])
 else:
     print(sys.stderr, '** The selected configuration is not implemented.')
     Exit(1)
 
 # CPU compilation for sure
+#if env['parallelization'] == 'charm':
+#    for i in sourceFilesCharm:
+#        env.charmBuilder(i)
 for i in sourceFiles:
-    env.src_files.append(env.Object(i))
+    env.objects.append(env.Object(i))
 
 Export('env')

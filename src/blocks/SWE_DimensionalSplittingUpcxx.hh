@@ -34,6 +34,8 @@
 #include "scenarios/SWE_Scenario.hh"
 #include "tools/Float2DUpcxx.hh"
 #include "types/BlockConnectInterface.hh"
+#include <ctime>
+#include <time.h>
 
 #include <upcxx/upcxx.hpp>
 
@@ -55,6 +57,9 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 		void connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[]);
 		BlockConnectInterface<upcxx::global_ptr<float>> getCopyLayer(Boundary boundary);
 		void exchangeBathymetry();
+
+		float computeTime;
+		float computeTimeWall;
 
 	private:
 		solver::Hybrid<float> solver;
@@ -81,5 +86,10 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 
 		// Interfaces to neighbouring block copy layers, indexed by Boundary
 		BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[4];
+
+		// timer
+		std::clock_t computeClock;
+		struct timespec startTime;
+		struct timespec endTime;
 };
 #endif /* SWEDIMENSIONALSPLITTINGUPCXX_HH_ */

@@ -30,6 +30,9 @@
 #ifndef SWEDIMENSIONALSPLITTINGMPI_HH_
 #define SWEDIMENSIONALSPLITTINGMPI_HH_
 
+#include <limits.h>
+#include <ctime>
+#include <time.h>
 #include "blocks/SWE_Block.hh"
 #include "scenarios/SWE_Scenario.hh"
 #include "tools/Float2DNative.hh"
@@ -50,9 +53,13 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 		void computeNumericalFluxes();
 		void updateUnknowns(float dt);
 
-		// Upcxx specific
+		// Mpi specific
+		void freeMpiType();
 		void connectNeighbours(int neighbourRankId[]);
 		void exchangeBathymetry();
+
+		float computeTime;
+		float computeTimeWall;
 
 	private:
 		solver::Hybrid<float> solver;
@@ -87,5 +94,13 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 
 		// Neighbouring block rank ids, indexed by Boundary
 		int neighbourRankId[4];
+
+		// Custom data types for bottom/top border which are requrired due to the stride
+		MPI_Datatype HORIZONTAL_BOUNDARY;
+
+		// timer
+		std::clock_t computeClock;
+		struct timespec startTime;
+		struct timespec endTime;
 };
 #endif /* SWEDIMENSIONALSPLITTINGMPI_HH_ */
