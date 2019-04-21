@@ -1,5 +1,6 @@
 all: test clean
 
+ASAGI_PATH = /home/martin/ASAGI/
 simulate_smp:
 	./build/SWE_gnu_release_none_omp_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/tohu_1m_new -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
 

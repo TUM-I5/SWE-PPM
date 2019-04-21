@@ -281,7 +281,7 @@ if env['parallelization'] in ['charm', 'ampi']:
     def modifyTargets(target, source, env):
         target.append('${SOURCE.basename}.def.h')
         return target, source
-    charmBuilder = Builder(action=charmInstall + '/bin/charmc ' + '$SOURCE',
+    charmBuilder = Builder(action=charmInstall + '/bin/charmc2 ' + '$SOURCE',
                            suffix='.decl.h',
                            src_suffix='.ci')
     env.Append(BUILDERS={'charmBuilder': charmBuilder})

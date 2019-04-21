@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="swe_benchmark"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/martin/CLionProjects/swe-benchmark/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/martin/CLionProjects/swe-benchmark/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="swe_benchmark_default">
+				<Option output="/home/martin/CLionProjects/swe-benchmark/cmake-build-release/swe_benchmark_default" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/martin/CLionProjects/swe-benchmark/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/martin/CLionProjects/swe-benchmark/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 swe_benchmark_default"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="swe_benchmark_default/fast">
+				<Option output="/home/martin/CLionProjects/swe-benchmark/cmake-build-release/swe_benchmark_default" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/martin/CLionProjects/swe-benchmark/cmake-build-release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/martin/CLionProjects/swe-benchmark/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 swe_benchmark_default/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/martin/CLionProjects/swe-benchmark/cmake-build-release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/martin/CLionProjects/swe-benchmark/cmake-build-release/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/blocks/SWE_Block.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/blocks/SWE_DimensionalSplitting.cpp">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/blocks/SWE_DimensionalSplitting.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/examples/swe_simple.cpp">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/scenarios/SWE_AsagiScenario.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/scenarios/SWE_AsagiScenario_vis.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/scenarios/SWE_Scenario.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/scenarios/SWE_TsunamiScenario.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/scenarios/SWE_VisInfo.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/scenarios/SWE_simple_scenarios.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/scenarios/SWE_simple_scenarios_vis.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/solvers/FWave.hpp">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/types/BlockConnectInterface.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/types/Boundary.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/types/SWE_Block1D.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/types/SWE_Block1DUpcxx.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/writer/NetCdfWriter.cpp">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/writer/NetCdfWriter.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/writer/VtkWriter.cpp">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/writer/VtkWriter.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/src/writer/Writer.hh">
+			<Option target="swe_benchmark_default"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/BuildDefault.cmake">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/FindNetCDF.cmake">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/martin/CLionProjects/swe-benchmark/Structure.cmake">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

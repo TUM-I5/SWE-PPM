@@ -32,7 +32,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <limits.h>
-
+#include <iostream>
 #include "tools/args.hh"
 
 #ifdef WRITENETCDF
