@@ -1,6 +1,6 @@
 all: test clean
 
-ASAGI_PATH = /home/martin/ASAGI/
+ASAGI_PATH = $(HOME)/ASAGI/
 simulate_smp:
 	./build/SWE_gnu_release_none_omp_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/tohu_1m_new -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
 
@@ -34,18 +34,19 @@ smp:
 mpi_hybrid:
 	scons writeNetCDF=True openmp=True solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} netCDFDir=${NETCDF_BASE}
 mpi:
-	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH}
+	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} copyenv=true
+
 
 upcxx_hybrid:
 	scons writeNetCDF=True openmp=True solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} netCDFDir=${NETCDF_BASE}
 upcxx:
-	scons writeNetCDF=True openmp=false solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH}
+	scons writeNetCDF=True openmp=false solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} copyenv=true
 
 charm:
-	scons writeNetCDF=True openmp=true solver=hybrid parallelization=charm asagi=true asagiDir=${ASAGI_PATH}
+	scons writeNetCDF=True openmp=true solver=hybrid parallelization=charm asagi=true asagiDir=${ASAGI_PATH}  copyenv=true
 
-
-
+default:
+	scons writeNetCDF=True solver=fwave
 
 
 

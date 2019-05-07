@@ -237,7 +237,7 @@ if env['copyenv']:
 #######################
 
 if env['parallelization'] == 'upcxx':
-    env.Append(CCFLAGS=['-std=c++11'])
+    env.Append(CCFLAGS=['-std=c++14'])
     # get the upcxx folder
     upcxxInstall = os.environ['UPCXX_PATH']
     if upcxxInstall == '':
@@ -248,7 +248,7 @@ if env['parallelization'] == 'upcxx':
         print("Found UPC++ install at: " + upcxxInstall)
 
     # point to the upcxx native upcxx-meta tool
-    upcxxMeta = upcxxInstall + '/bin/upcxx-meta'
+    upcxxMeta =upcxxInstall + '/bin/upcxx-meta'
 
     # let upcxx-meta tell us the necessary compiler flags
     upcxxPpFlags = check_output([upcxxMeta, 'PPFLAGS']).split()
@@ -308,13 +308,15 @@ if env['parallelization'] in ['mpi', 'mpi_with_cuda']:
         # We need to the the mpiCC wrapper which compiler it should use
         # Here are several environment variables that
         # do the job for different MPI libraries
-        envVars = ['OMPI_CXX', 'MPICH_CXX']
+	envVars = ['OMPI_CXX', 'MPICH_CXX']
         for var in envVars:
             env['ENV'][var] = 'icpc'
 elif env['parallelization'] == 'ampi':
     env['CXX'] = charmInstall + '/bin/ampicc'
 elif env['parallelization'] == 'charm':
     env['CXX'] = charmInstall + '/bin/charmc'
+elif env['parallelization'] == 'upcxx':
+    env['CXX'] = check_output([upcxxMeta, 'CXX']).replace("\n", "")
 else:
     if env['compiler'] == 'intel':
         env['CXX'] = 'icpc'
@@ -472,11 +474,11 @@ if 'libSDLDir' in env:
 if env['writeNetCDF']:
     env.Append(CPPDEFINES=['WRITENETCDF'])
     env.Append(LIBS=['netcdf'])
-    # set netCDF location
-    if 'netCDFDir' in env:
-        env.Append(CPPPATH=[env['netCDFDir']+'/include'])
-        env.Append(LIBPATH=[os.path.join(env['netCDFDir'], 'lib')])
-        env.Append(RPATH=[os.path.join(env['netCDFDir'], 'lib')])
+    path_netcdf=os.environ['NETCDF_BASE']
+	# set netCDF location
+    env.Append(CPPPATH=[path_netcdf+'/include'])
+    env.Append(LIBPATH=[path_netcdf+ '/lib'])
+    env.Append(RPATH=[path_netcdf+ '/lib'])
 
 # set the precompiler flags, includes and libraries for ASAGI
 if env['asagi']:
@@ -490,9 +492,10 @@ if env['asagi']:
         env.Append(LIBS=['asagi'])
 
     if 'asagiDir' in env:
-        env.Append(CPPPATH=[env['asagiDir']+'/include'])
-        env.Append(LIBPATH=[env['asagiDir']+'/lib'])
-        env.Append(RPATH=[os.path.join(env['asagiDir'], 'lib')])
+        print(env['asagiDir'])
+	env.Append(CPPPATH=[env['asagiDir']+'/include'])
+        env.Append(LIBPATH=[env['asagiDir']+'/build'])
+        env.Append(RPATH=[os.path.join(env['asagiDir'], 'build')])
 
     if 'netCDFDir' in env:
         env.Append(LIBPATH=[env['netCDFDir']+'/lib'])
