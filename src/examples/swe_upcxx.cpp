@@ -202,7 +202,8 @@ int main(int argc, char** argv) {
 	int bottomNeighborRank = (localBlockPositionY > 0) ? myUpcxxRank - 1 : -1;
 	int topNeighborRank = (localBlockPositionY < blockCountY - 1) ? myUpcxxRank + 1 : -1;
 
-    std::cout   << "Rank: " << myUpcxxRank << std::endl
+    std::cout    << "Total Rank: " << totalUpcxxRanks << std::endl
+                << "Rank: " << myUpcxxRank << std::endl
                 << "Block Count: X " << blockCountX << " Y " << blockCountY << std::endl
                 << "Block Position: X " << localBlockPositionX << " Y " << localBlockPositionY<< std::endl
                 << "Block Size: X " << nxLocal << " Y " << nyLocal << std::endl
