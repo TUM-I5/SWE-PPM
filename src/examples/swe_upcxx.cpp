@@ -180,6 +180,8 @@ int main(int argc, char** argv) {
 	float localOriginX = scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX * dxSimulation * nxBlockSimulation;
 	float localOriginY = scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY * dySimulation * nyBlockSimulation;
 
+
+
 	// Determine the boundary types for the SWE_Block:
 	// block boundaries bordering other blocks have a CONNECT boundary,
 	// block boundaries bordering the entire scenario have the respective scenario boundary type
@@ -200,7 +202,13 @@ int main(int argc, char** argv) {
 	int bottomNeighborRank = (localBlockPositionY > 0) ? myUpcxxRank - 1 : -1;
 	int topNeighborRank = (localBlockPositionY < blockCountY - 1) ? myUpcxxRank + 1 : -1;
 
-
+    std::cout   << "Rank: " << myUpcxxRank << std::endl
+                << "Block Count: X " << blockCountX << " Y " << blockCountY << std::endl
+                << "Block Position: X " << localBlockPositionX << " Y " << localBlockPositionY<< std::endl
+                << "Block Size: X " << nxLocal << " Y " << nyLocal << std::endl
+                << "Block Origin: X " << localOriginX << " Y "<< localOriginY << std::endl
+                << "Neighbor Rank: L " << leftNeighborRank << " T " << topNeighborRank << std::endl
+                << "               R " << rightNeighborRank << " B "<< bottomNeighborRank << std::endl;
 	/****************************************
 	 * BROADCAST COPY LAYER GLOBAL POINTERS *
 	 ****************************************/
