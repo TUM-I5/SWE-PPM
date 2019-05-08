@@ -90,6 +90,7 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 
 	computeTime = 0.;
 	computeTimeWall = 0.;
+	flops = 0;
 }
 
 void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> p_neighbourCopyLayer[]) {
@@ -391,4 +392,7 @@ void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
 	clock_gettime(CLOCK_MONOTONIC, &endTime);
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+}
+uint64_t SWE_DimensionalSplittingUpcxx::getFlops(){
+    return solver.flopcounter;
 }

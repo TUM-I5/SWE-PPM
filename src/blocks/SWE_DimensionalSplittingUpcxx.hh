@@ -40,7 +40,7 @@
 #include <upcxx/upcxx.hpp>
 
 #include "solvers/Hybrid.hpp"
-
+#include "solvers/HLLEFun.hpp"
 class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 	public:
 		// Constructor/Destructor
@@ -60,9 +60,9 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 
 		float computeTime;
 		float computeTimeWall;
-
+        uint64_t getFlops();
 	private:
-		solver::Hybrid<float> solver;
+		solver::HLLEFun<float> solver;
 
 		// Max timestep reduced over all upcxx ranks
 		float maxTimestepGlobal;

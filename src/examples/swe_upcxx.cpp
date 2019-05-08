@@ -361,9 +361,16 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime); 
+	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime);
 
-	upcxx::finalize();
+    uint64_t  sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
+
+    std::cout   << "Rank: " << myUpcxxRank << std::endl
+                << "Flop count: " << sumFlops << std::endl
+                << "Flops(Total): " << ((float)sumFlops)/wallTime << std::endl
+                << "Flops(Single): "<< ((float)simulation.getFlops())/wallTime << std::endl;
+
+    upcxx::finalize();
 
 	return 0;
 }
