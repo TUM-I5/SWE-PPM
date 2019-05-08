@@ -255,7 +255,9 @@ int main(int argc, char** argv) {
 	simulation.exchangeBathymetry();
 	upcxx::barrier();
 
-
+    int sumX = upcxx::reduce_all(nxLocal, upcxx::op_fast_add).wait();
+    std::cout << "Sum of BlockSize X "<< sumX << std::endl;
+    std::cout << "Sum of BlockSize Y "<< sumY << std::endl;
 	/***************
 	 * INIT OUTPUT *
 	 ***************/
