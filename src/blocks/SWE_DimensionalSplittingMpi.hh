@@ -38,7 +38,7 @@
 #include "tools/Float2DNative.hh"
 
 #include <mpi.h>
-
+#include "solvers/HLLEFun.hpp"
 #include "solvers/Hybrid.hpp"
 
 class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
@@ -60,9 +60,9 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 
 		float computeTime;
 		float computeTimeWall;
-
+        uint64_t getFlops();
 	private:
-		solver::Hybrid<float> solver;
+        solver::HLLEFun<float> solver;
 
 		// Max timestep reduced over all upcxx ranks
 		float maxTimestepGlobal;

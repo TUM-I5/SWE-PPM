@@ -435,3 +435,6 @@ void SWE_DimensionalSplittingMpi::updateUnknowns (float dt) {
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }
+uint64_t SWE_DimensionalSplittingMpi::getFlops(){
+    return solver.flopcounter;
+}
