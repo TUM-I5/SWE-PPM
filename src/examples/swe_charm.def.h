@@ -117,19 +117,16 @@ void exit();
 #ifndef CK_TEMPLATES_ONLY
 /* DEFS: swe_charm(CkArgMsg* impl_msg);
  */
-
 CkChareID CProxy_swe_charm::ckNew(CkArgMsg* impl_msg, int impl_onPE)
 {
   CkChareID impl_ret;
   CkCreateChare(CkIndex_swe_charm::__idx, CkIndex_swe_charm::idx_swe_charm_CkArgMsg(), impl_msg, &impl_ret, impl_onPE);
   return impl_ret;
 }
-
 void CProxy_swe_charm::ckNew(CkArgMsg* impl_msg, CkChareID* pcid, int impl_onPE)
 {
   CkCreateChare(CkIndex_swe_charm::__idx, CkIndex_swe_charm::idx_swe_charm_CkArgMsg(), impl_msg, pcid, impl_onPE);
 }
-
   CProxy_swe_charm::CProxy_swe_charm(CkArgMsg* impl_msg, int impl_onPE)
 {
   CkChareID impl_ret;
@@ -138,7 +135,6 @@ void CProxy_swe_charm::ckNew(CkArgMsg* impl_msg, CkChareID* pcid, int impl_onPE)
 }
 
 // Entry point registration function
-
 int CkIndex_swe_charm::reg_swe_charm_CkArgMsg() {
   int epidx = CkRegisterEp("swe_charm(CkArgMsg* impl_msg)",
       _call_swe_charm_CkArgMsg, CMessage_CkArgMsg::__idx, __idx, 0);
@@ -146,10 +142,9 @@ int CkIndex_swe_charm::reg_swe_charm_CkArgMsg() {
   return epidx;
 }
 
-
 void CkIndex_swe_charm::_call_swe_charm_CkArgMsg(void* impl_msg, void* impl_obj_void)
 {
-  swe_charm* impl_obj = static_cast<swe_charm *>(impl_obj_void);
+  swe_charm* impl_obj = static_cast<swe_charm*>(impl_obj_void);
   new (impl_obj_void) swe_charm((CkArgMsg*)impl_msg);
 }
 #endif /* CK_TEMPLATES_ONLY */
@@ -157,7 +152,6 @@ void CkIndex_swe_charm::_call_swe_charm_CkArgMsg(void* impl_msg, void* impl_obj_
 #ifndef CK_TEMPLATES_ONLY
 /* DEFS: void done(int index);
  */
-
 void CProxy_swe_charm::done(int index, const CkEntryOptions *impl_e_opts)
 {
   ckCheck();
@@ -182,7 +176,6 @@ void CProxy_swe_charm::done(int index, const CkEntryOptions *impl_e_opts)
 }
 
 // Entry point registration function
-
 int CkIndex_swe_charm::reg_done_marshall2() {
   int epidx = CkRegisterEp("done(int index)",
       _call_done_marshall2, CkMarshallMsg::__idx, __idx, 0+CK_EP_NOKEEP);
@@ -192,37 +185,37 @@ int CkIndex_swe_charm::reg_done_marshall2() {
   return epidx;
 }
 
-
 void CkIndex_swe_charm::_call_done_marshall2(void* impl_msg, void* impl_obj_void)
 {
-  swe_charm* impl_obj = static_cast<swe_charm *>(impl_obj_void);
+  swe_charm* impl_obj = static_cast<swe_charm*>(impl_obj_void);
   CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
   char *impl_buf=impl_msg_typed->msgBuf;
   /*Unmarshall pup'd fields: int index*/
   PUP::fromMem implP(impl_buf);
-  int index; implP|index;
+  PUP::detail::TemporaryObjectHolder<int> index;
+  implP|index;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
-  impl_obj->done(index);
+  impl_obj->done(std::move(index.t));
 }
-
 int CkIndex_swe_charm::_callmarshall_done_marshall2(char* impl_buf, void* impl_obj_void) {
-  swe_charm* impl_obj = static_cast< swe_charm *>(impl_obj_void);
+  swe_charm* impl_obj = static_cast<swe_charm*>(impl_obj_void);
   /*Unmarshall pup'd fields: int index*/
   PUP::fromMem implP(impl_buf);
-  int index; implP|index;
+  PUP::detail::TemporaryObjectHolder<int> index;
+  implP|index;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
-  impl_obj->done(index);
+  impl_obj->done(std::move(index.t));
   return implP.size();
 }
-
 void CkIndex_swe_charm::_marshallmessagepup_done_marshall2(PUP::er &implDestP,void *impl_msg) {
   CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
   char *impl_buf=impl_msg_typed->msgBuf;
   /*Unmarshall pup'd fields: int index*/
   PUP::fromMem implP(impl_buf);
-  int index; implP|index;
+  PUP::detail::TemporaryObjectHolder<int> index;
+  implP|index;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
   if (implDestP.hasComments()) implDestP.comment("index");
@@ -234,12 +227,10 @@ PUPable_def(SINGLE_ARG(Closure_swe_charm::done_2_closure))
 #ifndef CK_TEMPLATES_ONLY
 /* DEFS: void exit();
  */
-
 void CProxy_swe_charm::exit(const CkEntryOptions *impl_e_opts)
 {
   ckCheck();
-  static_cast<void>(impl_e_opts);
-  void *impl_msg = CkAllocSysMsg();
+  void *impl_msg = CkAllocSysMsg(impl_e_opts);
   if (ckIsDelegated()) {
     int destPE=CkChareMsgPrep(CkIndex_swe_charm::idx_exit_void(), impl_msg, &ckGetChareID());
     if (destPE!=-1) ckDelegatedTo()->ChareSend(ckDelegatedPtr(),CkIndex_swe_charm::idx_exit_void(), impl_msg, &ckGetChareID(),destPE);
@@ -249,19 +240,18 @@ void CProxy_swe_charm::exit(const CkEntryOptions *impl_e_opts)
 }
 
 // Entry point registration function
-
 int CkIndex_swe_charm::reg_exit_void() {
   int epidx = CkRegisterEp("exit()",
       _call_exit_void, 0, __idx, 0);
   return epidx;
 }
 
-
 void CkIndex_swe_charm::_call_exit_void(void* impl_msg, void* impl_obj_void)
 {
-  swe_charm* impl_obj = static_cast<swe_charm *>(impl_obj_void);
-  CkFreeSysMsg(impl_msg);
+  swe_charm* impl_obj = static_cast<swe_charm*>(impl_obj_void);
   impl_obj->exit();
+  if(UsrToEnv(impl_msg)->isVarSysMsg() == 0)
+    CkFreeSysMsg(impl_msg);
 }
 PUPable_def(SINGLE_ARG(Closure_swe_charm::exit_3_closure))
 #endif /* CK_TEMPLATES_ONLY */
@@ -317,6 +307,6 @@ extern "C" void CkRegisterMainModule(void) {
 #ifndef CK_TEMPLATES_ONLY
 template <>
 void CBase_swe_charm::virtual_pup(PUP::er &p) {
-    recursive_pup<swe_charm >(dynamic_cast<swe_charm* >(this), p);
+    recursive_pup<swe_charm>(dynamic_cast<swe_charm*>(this), p);
 }
 #endif /* CK_TEMPLATES_ONLY */

@@ -12,6 +12,15 @@
 
 #include "tools/Float2DNative.hh"
 
+#ifndef GROUPDEPNUM_DECLARED
+# define GROUPDEPNUM_DECLARED
+struct GroupDepNum
+{
+  int groupDepNum;
+  explicit GroupDepNum(int g = 0) : groupDepNum{g} { }
+  operator int() const { return groupDepNum; }
+};
+#endif
 /* DECLS: message copyLayer{
 Boundary boundary;
 bool containsBathymetry;
@@ -29,24 +38,28 @@ class CMessage_copyLayer:public CkMessage{
     void* operator new(size_t, void*p) { return p; }
     void* operator new(size_t);
     void* operator new(size_t, int*, const int);
+    void* operator new(size_t, int*, const int, const GroupDepNum);
     void* operator new(size_t, int*);
 #if CMK_MULTIPLE_DELETE
     void operator delete(void*p, void*){dealloc(p);}
     void operator delete(void*p){dealloc(p);}
     void operator delete(void*p, int*, const int){dealloc(p);}
+    void operator delete(void*p, int*, const int, const GroupDepNum){dealloc(p);}
     void operator delete(void*p, int*){dealloc(p);}
 #endif
     void operator delete(void*p, size_t){dealloc(p);}
-    static void* alloc(int,size_t, int*, int);
+    static void* alloc(int,size_t, int*, int, GroupDepNum);
     static void dealloc(void *p);
     CMessage_copyLayer();
     static void *pack(copyLayer *p);
     static copyLayer* unpack(void* p);
     void *operator new(size_t, int, int, int, int);
     void *operator new(size_t, int, int, int, int, const int);
+    void *operator new(size_t, int, int, int, int, const int, const GroupDepNum);
 #if CMK_MULTIPLE_DELETE
     void operator delete(void *p, int, int, int, int){dealloc(p);}
     void operator delete(void *p, int, int, int, int, const int){dealloc(p);}
+    void operator delete(void *p, int, int, int, int, const int, const GroupDepNum){dealloc(p);}
 #endif
     static void __register(const char *s, size_t size, CkPackFnPtr pack, CkUnpackFnPtr unpack) {
       __idx = CkRegisterMsg(s, pack, unpack, dealloc, size);
@@ -316,6 +329,7 @@ class CkIndex_SWE_DimensionalSplittingCharm:public CkIndex_ArrayElement{
     typedef CProxyElement_SWE_DimensionalSplittingCharm element_t;
     typedef CProxySection_SWE_DimensionalSplittingCharm section_t;
 
+    using array_index_t = CkArrayIndex1D;
 
     /* TRAM aggregators */
 
@@ -454,6 +468,7 @@ PUPmarshall(CProxyElement_SWE_DimensionalSplittingCharm)
     typedef CProxyElement_SWE_DimensionalSplittingCharm element_t;
     typedef CProxySection_SWE_DimensionalSplittingCharm section_t;
 
+    using array_index_t = CkArrayIndex1D;
     CProxy_SWE_DimensionalSplittingCharm(void) {
     }
     CProxy_SWE_DimensionalSplittingCharm(const ArrayElement *e) : CProxy_ArrayElement(e){
@@ -581,6 +596,7 @@ PUPmarshall(CProxy_SWE_DimensionalSplittingCharm)
     typedef CProxyElement_SWE_DimensionalSplittingCharm element_t;
     typedef CProxySection_SWE_DimensionalSplittingCharm section_t;
 
+    using array_index_t = CkArrayIndex1D;
     CProxySection_SWE_DimensionalSplittingCharm(void) {
     }
 
@@ -663,28 +679,47 @@ PUPmarshall(CProxy_SWE_DimensionalSplittingCharm)
     static CkSectionID ckNew(const CkArrayID &aid, CkArrayIndex1D *elems, int nElems, int factor=USE_DEFAULT_BRANCH_FACTOR) {
       return CkSectionID(aid, elems, nElems, factor);
     } 
+    static CkSectionID ckNew(const CkArrayID &aid, const std::vector<CkArrayIndex1D> &elems, int factor=USE_DEFAULT_BRANCH_FACTOR) {
+      return CkSectionID(aid, elems, factor);
+    } 
     static CkSectionID ckNew(const CkArrayID &aid, int l, int u, int s, int factor=USE_DEFAULT_BRANCH_FACTOR) {
-      CkVec<CkArrayIndex1D> al;
-      for (int i=l; i<=u; i+=s) al.push_back(CkArrayIndex1D(i));
-      return CkSectionID(aid, al.getVec(), al.size(), factor);
+      std::vector<CkArrayIndex1D> al;
+      for (int i=l; i<=u; i+=s) al.emplace_back(i);
+      return CkSectionID(aid, al, factor);
     } 
     CProxySection_SWE_DimensionalSplittingCharm(const CkArrayID &aid, CkArrayIndex *elems, int nElems, CK_DELCTOR_PARAM) 
         :CProxySection_ArrayElement(aid,elems,nElems,CK_DELCTOR_ARGS) {}
+    CProxySection_SWE_DimensionalSplittingCharm(const CkArrayID &aid, const std::vector<CkArrayIndex> &elems, CK_DELCTOR_PARAM) 
+        :CProxySection_ArrayElement(aid,elems,CK_DELCTOR_ARGS) {}
     CProxySection_SWE_DimensionalSplittingCharm(const CkArrayID &aid, CkArrayIndex *elems, int nElems, int factor=USE_DEFAULT_BRANCH_FACTOR) 
-        :CProxySection_ArrayElement(aid,elems,nElems, factor) { ckAutoDelegate(); }
+        :CProxySection_ArrayElement(aid,elems,nElems, factor) {}
+    CProxySection_SWE_DimensionalSplittingCharm(const CkArrayID &aid, const std::vector<CkArrayIndex> &elems, int factor=USE_DEFAULT_BRANCH_FACTOR) 
+        :CProxySection_ArrayElement(aid,elems, factor) { ckAutoDelegate(); }
     CProxySection_SWE_DimensionalSplittingCharm(const CkSectionID &sid)  
         :CProxySection_ArrayElement(sid) { ckAutoDelegate(); }
     CProxySection_SWE_DimensionalSplittingCharm(int n, const CkArrayID *aid, CkArrayIndex const * const *elems, const int *nElems, CK_DELCTOR_PARAM) 
         :CProxySection_ArrayElement(n,aid,elems,nElems,CK_DELCTOR_ARGS) {}
+    CProxySection_SWE_DimensionalSplittingCharm(const std::vector<CkArrayID> &aid, const std::vector<std::vector<CkArrayIndex> > &elems, CK_DELCTOR_PARAM) 
+        :CProxySection_ArrayElement(aid,elems,CK_DELCTOR_ARGS) {}
     CProxySection_SWE_DimensionalSplittingCharm(int n, const CkArrayID *aid, CkArrayIndex const * const *elems, const int *nElems) 
         :CProxySection_ArrayElement(n,aid,elems,nElems) { ckAutoDelegate(); }
+    CProxySection_SWE_DimensionalSplittingCharm(const std::vector<CkArrayID> &aid, const std::vector<std::vector<CkArrayIndex> > &elems) 
+        :CProxySection_ArrayElement(aid,elems) { ckAutoDelegate(); }
     CProxySection_SWE_DimensionalSplittingCharm(int n, const CkArrayID *aid, CkArrayIndex const * const *elems, const int *nElems, int factor) 
         :CProxySection_ArrayElement(n,aid,elems,nElems, factor) { ckAutoDelegate(); }
+    CProxySection_SWE_DimensionalSplittingCharm(const std::vector<CkArrayID> &aid, const std::vector<std::vector<CkArrayIndex> > &elems, int factor) 
+        :CProxySection_ArrayElement(aid,elems, factor) { ckAutoDelegate(); }
     static CkSectionID ckNew(const CkArrayID &aid, CkArrayIndex *elems, int nElems) {
       return CkSectionID(aid, elems, nElems);
     } 
+    static CkSectionID ckNew(const CkArrayID &aid, const std::vector<CkArrayIndex> &elems) {
+       return CkSectionID(aid, elems);
+    } 
     static CkSectionID ckNew(const CkArrayID &aid, CkArrayIndex *elems, int nElems, int factor) {
       return CkSectionID(aid, elems, nElems, factor);
+    } 
+    static CkSectionID ckNew(const CkArrayID &aid, const std::vector<CkArrayIndex> &elems, int factor) {
+      return CkSectionID(aid, elems, factor);
     } 
     void ckAutoDelegate(int opts=1) {
       if(ckIsDelegated()) return;
@@ -696,8 +731,14 @@ PUPmarshall(CProxy_SWE_DimensionalSplittingCharm)
     void resetSection() {
       CProxySection_ArrayElement::resetSection();
     } 
+    static void contribute(CkSectionInfo &sid, int userData=-1, int fragSize=-1);
     static void contribute(int dataSize,void *data,CkReduction::reducerType type, CkSectionInfo &sid, int userData=-1, int fragSize=-1);
-    static void contribute(int dataSize,void *data,CkReduction::reducerType type, CkSectionInfo &sid, CkCallback &cb, int userData=-1, int fragSize=-1);
+    template <typename T>
+    static void contribute(std::vector<T> &data, CkReduction::reducerType type, CkSectionInfo &sid, int userData=-1, int fragSize=-1);
+    static void contribute(CkSectionInfo &sid, const CkCallback &cb, int userData=-1, int fragSize=-1);
+    static void contribute(int dataSize,void *data,CkReduction::reducerType type, CkSectionInfo &sid, const CkCallback &cb, int userData=-1, int fragSize=-1);
+    template <typename T>
+    static void contribute(std::vector<T> &data, CkReduction::reducerType type, CkSectionInfo &sid, const CkCallback &cb, int userData=-1, int fragSize=-1);
 /* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile);
  */
     
@@ -745,6 +786,7 @@ PUPmarshall(CProxySection_SWE_DimensionalSplittingCharm)
 #define SWE_DimensionalSplittingCharm_SDAG_CODE                                \
 public:                                                                        \
   void compute();                                                              \
+  void _sdag_fnc_compute();                                                    \
 private:                                                                       \
   void compute_end();                                                          \
   void _slist_0();                                                             \

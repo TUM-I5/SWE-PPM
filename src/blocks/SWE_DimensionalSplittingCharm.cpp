@@ -113,7 +113,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 			}
 		}
 	}
-    flopCounter += nx*ny*135 //HLLESOLVER flops;
+    	flopCounter += nx*ny*135; //HLLESOLVER flops;
 	// Accumulate compute time -> exclude the reduction
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -178,7 +178,7 @@ void SWE_DimensionalSplittingCharm::ySweep() {
 		}
 		#endif // NDEBUG
 	}
-    flopCounter += nx*ny*135 //HLLESOLVER flops;
+    	flopCounter += nx*ny*135; //HLLESOLVER flops;
 	// Accumulate compute time
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -189,6 +189,7 @@ void SWE_DimensionalSplittingCharm::ySweep() {
 }
 
 void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
+//	std::cout << "Flop " << solver.flopcounter << std::endl;
 	// Start compute clocks
 	computeClock = clock();
 	clock_gettime(CLOCK_MONOTONIC, &startTimeCompute);
@@ -215,12 +216,8 @@ void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
 void SWE_DimensionalSplittingCharm::printFlops(double flop){
             wallTime += (endTime.tv_sec - startTime.tv_sec);
             wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-            std::cout << "FLOPS" <<
-            CkPrintf("Rank %i : Flops(single): %f:\n", thisIndex, (float)flopCounter);
-            ckout   << "Rank: " << thisIndex << "\n"
-            //                                               << "Flop count: " << sumFlops << std::endl
-            //                                             << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << std::endl
-            << "Flops(Single): "<< ((flop)/(wallTime*1000000000)) << "\n";
+	    
+            CkPrintf("Rank %i : Flops: %fGFLOPS:\n", thisIndex,flop/(wallTime*1000000000));
 
 }
 void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {

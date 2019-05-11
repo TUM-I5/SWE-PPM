@@ -255,9 +255,6 @@ int main(int argc, char** argv) {
 	simulation.exchangeBathymetry();
 	upcxx::barrier();
 
-    int sumX = upcxx::reduce_all(nxLocal, upcxx::op_fast_add).wait();
-    std::cout << "Sum of BlockSize X "<< sumX << std::endl;
-    std::cout << "Sum of BlockSize Y "<< sumY << std::endl;
 	/***************
 	 * INIT OUTPUT *
 	 ***************/
@@ -367,8 +364,8 @@ int main(int argc, char** argv) {
 
     std::cout   << "Rank: " << myUpcxxRank << std::endl
                 << "Flop count: " << sumFlops << std::endl
-                << "Flops(Total): " << ((float)sumFlops)/wallTime << std::endl
-                << "Flops(Single): "<< ((float)simulation.getFlops())/wallTime << std::endl;
+                << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << std::endl
+                << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl;
 
     upcxx::finalize();
 

@@ -17,7 +17,7 @@
 #include "types/Boundary.hh"
 #include "writer/NetCdfWriter.hh"
 #include "tools/Float2DNative.hh"
-#include "solvers/Hybrid.hpp"
+#include "solvers/HLLEFun.hpp"
 
 extern CProxy_swe_charm mainProxy;
 extern int blockCountX;
@@ -39,10 +39,9 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 
 		// Charm++ entry methods
 		void reduceWaveSpeed(float maxWaveSpeed);
-
+               void printFlops(double flop);
 		// Unused pure virtual interface methods
 		void computeNumericalFluxes() {}
-
 	private:
 		void writeTimestep();
 		void sendCopyLayers(bool sendBathymetry = false);
@@ -50,11 +49,10 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 		void xSweep();
 		void ySweep();
 		void updateUnknowns(float dt);
-        void printFlops(double flop);
 		// Interface implementation
 		void setGhostLayer();
 
-		solver::Hybrid<float> solver;
+		solver::HLLEFun<float> solver;
 		float *checkpointInstantOfTime;
 		NetCdfWriter *writer;
 		float currentSimulationTime;

@@ -281,11 +281,14 @@ if env['parallelization'] in ['charm', 'ampi']:
     def modifyTargets(target, source, env):
         target.append('${SOURCE.basename}.def.h')
         return target, source
-    charmBuilder = Builder(action=charmInstall + '/bin/charmc2 ' + '$SOURCE',
+    buildString = "cd ${SOURCE.dir};" +charmInstall + '/bin/charmc ' + '${SOURCE.file}'
+    charmBuilder = Builder(action=buildString,
                            suffix='.decl.h',
                            src_suffix='.ci')
-    env.Append(BUILDERS={'charmBuilder': charmBuilder})
 
+
+    env.Append(BUILDERS={'charmBuilder': charmBuilder})
+    env.charmBuilder("src/blocks/SWE_DimensionalSplittingCharm.ci")
 #####################################
 # Precompiler/Compiler/Linker flags #
 #####################################

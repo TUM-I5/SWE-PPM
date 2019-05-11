@@ -85,9 +85,9 @@ module SWE_DimensionalSplittingCharm {
 						wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
 						CkPrintf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", thisIndex, computeTime, computeTimeWall, wallTime);
-                        CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, done), thisProxy);
-                        double flopC = (double)flopCounter;
-                        contribute(sizeof(double), &flopC, CkReduction::sum_double, cb);
+	CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, printFlops), thisProxy);
+	double flopC = (double)flopCounter;
+	contribute(sizeof(double), &flopC, CkReduction::sum_double, cb);
 						mainProxy.done(thisIndex);
 					}
 				}

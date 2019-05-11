@@ -30,7 +30,7 @@
 #
 # Definition of the source files.
 #
-
+import os
 import sys
 # Explicitly import SCons symbols for proper linting
 # from SCons.Script import (env, Exit, Export, Import)
