@@ -50,6 +50,7 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 		void xSweep();
 		void ySweep();
 		void updateUnknowns(float dt);
+        void printFlops(double flop);
 		// Interface implementation
 		void setGhostLayer();
 
@@ -91,6 +92,7 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 		float computeTime;
 		float computeTimeWall;
 		float wallTime;
+		uint64_t flopCounter;
 };
 
 class copyLayer : public CMessage_copyLayer {

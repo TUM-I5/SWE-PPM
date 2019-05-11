@@ -48,7 +48,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 
 	computeTime = 0.;
 	wallTime = 0.;
-
+    flopCounter = 0;
 	neighbourIndex[BND_LEFT] = (posX > 0) ? thisIndex - blockCountY : -1;
 	neighbourIndex[BND_RIGHT] = (posX < blockCountX - 1) ? thisIndex + blockCountY : -1;
 	neighbourIndex[BND_BOTTOM] = (posY > 0) ? thisIndex - 1 : -1;
@@ -113,7 +113,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 			}
 		}
 	}
-
+    flopCounter += nx*ny*135 //HLLESOLVER flops;
 	// Accumulate compute time -> exclude the reduction
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -178,7 +178,7 @@ void SWE_DimensionalSplittingCharm::ySweep() {
 		}
 		#endif // NDEBUG
 	}
-
+    flopCounter += nx*ny*135 //HLLESOLVER flops;
 	// Accumulate compute time
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -212,7 +212,17 @@ void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
 	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
 	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
 }
+void SWE_DimensionalSplittingCharm::printFlops(double flop){
+            wallTime += (endTime.tv_sec - startTime.tv_sec);
+            wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+            std::cout << "FLOPS" <<
+            CkPrintf("Rank %i : Flops(single): %f:\n", thisIndex, (float)flopCounter);
+            ckout   << "Rank: " << thisIndex << "\n"
+            //                                               << "Flop count: " << sumFlops << std::endl
+            //                                             << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << std::endl
+            << "Flops(Single): "<< ((flop)/(wallTime*1000000000)) << "\n";
 
+}
 void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
 	// LEFT ghost layer consists of values from the left neighbours RIGHT copy layer etc.
 	if (msg->boundary == BND_RIGHT && boundaryType[BND_LEFT] == CONNECT) {
