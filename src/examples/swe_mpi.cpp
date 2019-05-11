@@ -210,14 +210,6 @@ int main(int argc, char** argv) {
 
 	simulation.exchangeBathymetry();
 
-    std::cout    << "Total Rank: " << totalMpiRanks << std::endl
-                 << "Rank: " << myMpiRank << std::endl
-                 << "Block Count: X " << blockCountX << " Y " << blockCountY << std::endl
-                 << "Block Position: X " << localBlockPositionX << " Y " << localBlockPositionY<< std::endl
-                 << "Block Size: X " << nxLocal << " Y " << nyLocal << std::endl
-                 << "Block Origin: X " << localOriginX << " Y "<< localOriginY << std::endl
-                 << "Neighbor Rank: L " << leftNeighborRank << " T " << topNeighborRank << std::endl
-                 << "               R " << rightNeighborRank << " B "<< bottomNeighborRank << std::endl;
 
 	/***************
 	 * INIT OUTPUT *
@@ -323,7 +315,7 @@ int main(int argc, char** argv) {
 	 ************/
 
 	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myMpiRank, simulation.computeTime, simulation.computeTimeWall, wallTime);
-    float flop = simulation.flopCounter;
+    float flop = simulation.getFlops();
     float sumFlops;
 	MPI_Allreduce(&flop, &sumFlops, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 
@@ -332,6 +324,7 @@ int main(int argc, char** argv) {
                     << "Flop count: " << sumFlops << std::endl
                     << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
                     << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl;
+	}
 	simulation.freeMpiType();
 	MPI_Finalize();
 
