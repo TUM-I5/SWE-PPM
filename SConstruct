@@ -336,7 +336,7 @@ if env['compiler'] != 'cray':
 if env['compileMode'] == 'debug':
     env.Append(CPPDEFINES=['DEBUG'])
     if env['compiler'] == 'gnu':
-        env.Append(CCFLAGS=['-O0', '-g3', '-Wall'])
+        env.Append(CCFLAGS=['-O0', '-g3', '-Wall' ])
     elif env['compiler'] == 'intel':
         env.Append(CCFLAGS=['-O0', '-g'])
     elif env['compiler'] == 'cray':
@@ -374,8 +374,8 @@ if env['compileMode'] == 'release' and env['vectorize']:
         env.Append(CCFLAGS=['-xHost'])
 
 if env['compiler'] == 'intel' and env['showVectorization']:
-    env.Append(CCFLAGS=['-vec-report2', '-opt-report'])
-
+    #env.Append(CCFLAGS=['-vec-report2', '-opt-report']) 
+    env.Append(CCFLAGS=['-qopt-report-phase=vec', '-qopt-report=2'])
 # OpenMP parallelism
 # TODO Refactor: This can probably be an else if
 if env['openmp']:
