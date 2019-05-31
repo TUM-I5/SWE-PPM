@@ -160,7 +160,7 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 	if (boundaryType[BND_TOP] == CONNECT) {
 		assert(neighbourCopyLayer[BND_TOP].size == nx);
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_TOP];
-		for (int i = 0; i < nx; i++)
+		for (int i = 0; i < nx; i++){
 			b[i + 1][ny + 1] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
 		}
 	}
@@ -225,16 +225,16 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
-		uint thisStride = static_cast<uint>(sizeof(float) * ny + 2);
-		auto bottomFutH = upcxx::rget_strided<1>(srcBaseH, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&h[1][0], {{thisStride}},
-							{{(size_t) nx}});
-		auto bottomFutHu = upcxx::rget_strided<1>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hu[1][0], {{thisStride}},
-							{{(size_t) nx}});
-		auto bottomFutHv = upcxx::rget_strided<1>(srcBaseHv, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hv[1][0], {{thisStride}},
-							{{(size_t) nx}});
+		uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
+		auto bottomFutH = upcxx::rget_strided<2>(srcBaseH, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
+							&h[1][0], {{sizeof(float),thisStride}},
+							{{1,(size_t) nx}});
+		auto bottomFutHu = upcxx::rget_strided<2>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hu[1][0], {{sizeof(float),thisStride}},
+							{{1,(size_t) nx}});
+		auto bottomFutHv = upcxx::rget_strided<2>(srcBaseHv, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hv[1][0], {{sizeof(float),thisStride}},
+							{{1,(size_t) nx}});
 		bottomFuture = upcxx::when_all(bottomFutH, bottomFutHu, bottomFutHv);
 	} else {
 		bottomFuture = upcxx::make_future<>(); 
@@ -246,23 +246,34 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
-        uint thisStride = static_cast<uint>(sizeof(float) * ny + 2);
-		auto topFutH = upcxx::rget_strided<1>(srcBaseH, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&h[1][ny + 1], {{thisStride}},
-							{{(size_t) nx}});
-		auto topFutHu = upcxx::rget_strided<1>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hu[1][ny + 1], {{thisStride}},
-							{{(size_t) nx}});
-		auto topFutHv = upcxx::rget_strided<1>(srcBaseHv, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hv[1][ny + 1], {{thisStride}},
-							{{(size_t) nx}});
+        	uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
+		auto topFutH = upcxx::rget_strided<2>(srcBaseH, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
+							&h[1][ny + 1], {{sizeof(float),thisStride}},
+							{{1,(size_t) nx}});
+		auto topFutHu = upcxx::rget_strided<2>(srcBaseHu, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hu[1][ny + 1], {{sizeof(float),thisStride}},
+							{{1,(size_t) nx}});
+		auto topFutHv = upcxx::rget_strided<2>(srcBaseHv, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hv[1][ny + 1], {{sizeof(float),thisStride}},
+							{{1,(size_t) nx}});
 		topFuture = upcxx::when_all(topFutH, topFutHu, topFutHv);
 	} else {
 		topFuture = upcxx::make_future<>();
 	}
 	upcxx::when_all(leftFuture, rightFuture, bottomFuture, topFuture).wait();
+	/*if(upcxx::rank_me()==47){
+	std::cout << "bot ";	
+	for(int i = 0; i < ny; i++){
+		std::cout << " " << h[i+1][0];
+	}
+	std::cout << "\n";
+	std::cout << "top";
+	for(int i = 0; i < ny; i++){
+		std::cout << " " << h[i+1][ny+1];
+	}
+	std::cout << std::endl;
+}*/
 }
-
 /**
  * Compute net updates for the block.
  * The member variable #maxTimestep will be updated with the
@@ -349,7 +360,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		#pragma omp single
 		{
 			// check if the cfl condition holds in the y-direction
-			assert(maxTimestep < (float) .5 * (dy / maxVerticalWaveSpeed));
+		//	assert(maxTimestep < (float) .5 * (dy / maxVerticalWaveSpeed));
 		}
 		#endif // NDEBUG
 	}

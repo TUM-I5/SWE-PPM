@@ -391,7 +391,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes () {
 		#pragma omp single
 		{
 			// check if the cfl condition holds in the y-direction
-			assert(maxTimestep < (float) .5 * (dy / maxVerticalWaveSpeed));
+			//assert(maxTimestep < (float) .5 * (dy / maxVerticalWaveSpeed));
 		}
 		#endif // NDEBUG
 	}
