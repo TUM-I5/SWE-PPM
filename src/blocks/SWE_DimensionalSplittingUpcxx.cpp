@@ -294,8 +294,12 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		// iterate over cells on the x-axis, leave out the last column (two cells per computation)
 		#pragma omp for reduction(max : maxHorizontalWaveSpeed) collapse(2)
 		for (int x = 0; x < nx + 1; x++) {
-			// iterate over all rows, including ghost layer
-			for (int y = 0; y < ny + 2; y++) {
+			const int ny_end = ny+2;
+		    // iterate over all rows, including ghost layer
+            #if defined(VECTORIZE)
+                #pragma omp simd reduction(max:maxHorizontalWaveSpeed)
+            #endif // VECTORIZE
+			for (int y = 0; y < ny_end; y++) {
 				solver.computeNetUpdates (
 						h[x][y], h[x + 1][y],
 						hu[x][y], hu[x + 1][y],
@@ -344,7 +348,12 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		#pragma omp for reduction(max : maxVerticalWaveSpeed) collapse(2)
 		#endif
 		for (int x = 1; x < nx + 1; x++) {
-			for (int y = 0; y < ny + 1; y++) {
+            const int ny_end = ny+1;
+            // iterate over all rows, including ghost layer
+#if defined(VECTORIZE)
+#pragma omp simd reduction(max:maxVerticalWaveSpeed)
+#endif // VECTORIZE
+			for (int y = 0; y < ny_end; y++) {
 				solver.computeNetUpdates (
 						h[x][y], h[x][y + 1],
 						hv[x][y], hv[x][y + 1],
