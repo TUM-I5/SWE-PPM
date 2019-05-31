@@ -160,7 +160,7 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 	if (boundaryType[BND_TOP] == CONNECT) {
 		assert(neighbourCopyLayer[BND_TOP].size == nx);
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_TOP];
-		for (int i = 0; i < nx; i++) {
+		for (int i = 0; i < nx; i++)
 			b[i + 1][ny + 1] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
 		}
 	}
@@ -225,15 +225,15 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
-
+		uint thisStride = static_cast<uint>(sizeof(float) * ny + 2);
 		auto bottomFutH = upcxx::rget_strided<1>(srcBaseH, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&h[1][0], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&h[1][0], {{thisStride}},
 							{{(size_t) nx}});
 		auto bottomFutHu = upcxx::rget_strided<1>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hu[1][0], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hu[1][0], {{thisStride}},
 							{{(size_t) nx}});
 		auto bottomFutHv = upcxx::rget_strided<1>(srcBaseHv, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hv[1][0], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hv[1][0], {{thisStride}},
 							{{(size_t) nx}});
 		bottomFuture = upcxx::when_all(bottomFutH, bottomFutHu, bottomFutHv);
 	} else {
@@ -246,14 +246,15 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+        uint thisStride = static_cast<uint>(sizeof(float) * ny + 2);
 		auto topFutH = upcxx::rget_strided<1>(srcBaseH, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&h[1][ny + 1], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&h[1][ny + 1], {{thisStride}},
 							{{(size_t) nx}});
 		auto topFutHu = upcxx::rget_strided<1>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hu[1][ny + 1], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hu[1][ny + 1], {{thisStride}},
 							{{(size_t) nx}});
 		auto topFutHv = upcxx::rget_strided<1>(srcBaseHv, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hv[1][ny + 1], {{static_cast<uint>(sizeof(float) * iface.stride)}},
+							&hv[1][ny + 1], {{thisStride}},
 							{{(size_t) nx}});
 		topFuture = upcxx::when_all(topFutH, topFutHu, topFutHv);
 	} else {
