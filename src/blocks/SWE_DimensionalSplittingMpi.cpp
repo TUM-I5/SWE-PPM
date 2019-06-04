@@ -245,7 +245,6 @@ void SWE_DimensionalSplittingMpi::setGhostLayer() {
 		MPI_Request_free(&req);
 
 	}
-:Wq
 
 	/***********
 	 * RECEIVE *
@@ -329,9 +328,9 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes () {
 		for (int x = 0; x < nx + 1; x++) {
             const int ny_end = ny+2;
             // iterate over all rows, including ghost layer
-#if defined(VECTORIZE)
+/*#if defined(VECTORIZE)
 #pragma omp simd reduction(max:maxHorizontalWaveSpeed)
-#endif // VECTORIZE
+#endif*/ // VECTORIZE
 			for (int y = 0; y < ny_end; y++) {
 				solver.computeNetUpdates (
 						h[x][y], h[x + 1][y],
@@ -344,7 +343,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes () {
 			}
 		}
 	}
-
+flopCounter += nx*ny*135;
 	// Accumulate compute time -> exclude the reduction
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -382,9 +381,9 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes () {
 		for (int x = 1; x < nx + 1; x++) {
             const int ny_end = ny+1;
             // iterate over all rows, including ghost layer
-#if defined(VECTORIZE)
+/*#if defined(VECTORIZE)
 #pragma omp simd reduction(max:maxVerticalWaveSpeed)
-#endif // VECTORIZE
+#endif */// VECTORIZE
 			for (int y = 0; y < ny_end; y++) {
 				solver.computeNetUpdates (
 						h[x][y], h[x][y + 1],
@@ -405,7 +404,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes () {
 		}
 		#endif // NDEBUG
 	}
-
+flopCounter += nx*ny*135;
 	// Accumulate compute time
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -445,6 +444,6 @@ void SWE_DimensionalSplittingMpi::updateUnknowns (float dt) {
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }
-uint64_t SWE_DimensionalSplittingMpi::getFlops(){
-    return solver.flopcounter;
+float SWE_DimensionalSplittingMpi::getFlops(){
+    return flopCounter;
 }

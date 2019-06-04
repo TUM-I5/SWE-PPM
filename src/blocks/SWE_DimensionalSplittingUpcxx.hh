@@ -60,7 +60,8 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 
 		float computeTime;
 		float computeTimeWall;
-        uint64_t getFlops();
+        	float getFlops();
+		float flopCounter = 0;
 	private:
 		solver::HLLEFun<float> solver;
 

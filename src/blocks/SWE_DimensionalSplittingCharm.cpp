@@ -101,7 +101,11 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 		#pragma omp for reduction(max : maxHorizontalWaveSpeed) collapse(2)
 		for (int x = 0; x < nx + 1; x++) {
 			// iterate over all rows, including ghost layer
-			for (int y = 0; y < ny + 2; y++) {
+          /*  // iterate over all rows, including ghost layer
+#if defined(VECTORIZE)
+#pragma omp simd reduction(max:maxHorizontalWaveSpeed)
+#endif // VECTORIZE*/
+			for (int y = 0; y < ny+2; y++) {
 				solver.computeNetUpdates (
 						h[x][y], h[x + 1][y],
 						hu[x][y], hu[x + 1][y],
@@ -145,12 +149,7 @@ void SWE_DimensionalSplittingCharm::ySweep() {
 		// set intermediary Q* states
 		#pragma omp for collapse(2)
 		for (int x = 1; x < nx + 1; x++) {
-            const int ny_end = ny+2;
-            // iterate over all rows, including ghost layer
-#if defined(VECTORIZE)
-#pragma omp simd reduction(max:maxHorizontalWaveSpeed)
-#endif // VECTORIZE
-			for (int y = 0; y < ny_end; y++) {
+			for (int y = 0; y < ny+2; y++) {
 				hStar[x][y] = h[x][y] - (maxTimestep / dx) * (hNetUpdatesLeft[x][y] + hNetUpdatesRight[x][y]);
 				huStar[x][y] = hu[x][y] - (maxTimestep / dx) * (huNetUpdatesLeft[x][y] + huNetUpdatesRight[x][y]);
 			}
@@ -163,12 +162,11 @@ void SWE_DimensionalSplittingCharm::ySweep() {
 		#pragma omp for reduction(max : maxVerticalWaveSpeed) collapse(2)
 		#endif
 		for (int x = 1; x < nx + 1; x++) {
-            const int ny_end = ny+1;
             // iterate over all rows, including ghost layer
-#if defined(VECTORIZE)
+/*#if defined(VECTORIZE)
 #pragma omp simd reduction(max:maxVerticalWaveSpeed)
-#endif // VECTORIZE
-			for (int y = 0; y < ny_end; y++) {
+#endif // VECTORIZE*/
+			for (int y = 0; y < ny+1; y++) {
 				solver.computeNetUpdates (
 						h[x][y], h[x][y + 1],
 						hv[x][y], hv[x][y + 1],

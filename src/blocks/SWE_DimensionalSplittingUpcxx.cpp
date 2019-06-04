@@ -312,6 +312,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		}
 	}
 
+flopCounter += nx*ny*135;
 	// Accumulate compute time -> exclude the reduction
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -373,7 +374,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		}
 		#endif // NDEBUG
 	}
-	
+flopCounter += nx*ny*135;	
 	// Accumulate compute time
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -413,6 +414,6 @@ void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }
-uint64_t SWE_DimensionalSplittingUpcxx::getFlops(){
-    return solver.flopcounter;
+float SWE_DimensionalSplittingUpcxx::getFlops(){
+    return flopCounter;
 }

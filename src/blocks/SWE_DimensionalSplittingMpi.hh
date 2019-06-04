@@ -60,13 +60,13 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 
 		float computeTime;
 		float computeTimeWall;
-        uint64_t getFlops();
+        	float getFlops();
 	private:
         solver::HLLEFun<float> solver;
 
 		// Max timestep reduced over all upcxx ranks
 		float maxTimestepGlobal;
-
+		float flopCounter = 0;
 		// Temporary values after x-sweep and before y-sweep
 		Float2DNative hStar;
 		Float2DNative huStar;
