@@ -32,17 +32,17 @@ smp:
 	scons writeNetCDF=True openmp=True solver=hybrid parallelization=none asagi=true asagiDir=${ASAGI_PATH}
 
 mpi_hybrid:
-	scons writeNetCDF=True openmp=True solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} netCDFDir=${NETCDF_BASE}
+	scons writeNetCDF=True openmp=True solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} netCDFDir=${NETCDF_BASE} copyenv=true
 mpi:
-	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} copyenv=true
+	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} copyenv=true vectorize=true
 
 mpi_rad:
 	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=false asagiDir=${ASAGI_PATH} copyenv=true
 mpi_debug:
-	scons compileMode=debug writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} copyenv=true
+	scons compileMode=debug writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} copyenv=true vectorize=true
 
 upcxx_hybrid:
-	scons writeNetCDF=True openmp=True solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} netCDFDir=${NETCDF_BASE}
+	scons writeNetCDF=True openmp=True solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} netCDFDir=${NETCDF_BASE} copyenv=true
 upcxx:
 	scons writeNetCDF=True openmp=false solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} copyenv=true showVectorization=true vectorize=true 
 
@@ -51,8 +51,13 @@ upcxx_rad:
 upcxx_debug:
 	scons compileMode=debug writeNetCDF=True openmp=false solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} copyenv=true
 charm:
+	scons writeNetCDF=True openmp=false solver=hybrid parallelization=charm asagi=true asagiDir=${ASAGI_PATH}  copyenv=true vectorize=true
+
+charm_hybrid:
 	scons writeNetCDF=True openmp=true solver=hybrid parallelization=charm asagi=true asagiDir=${ASAGI_PATH}  copyenv=true
 
+charm_over:
+	scons writeNetCDF=True openmp=false solver=augrie parallelization=charm asagi=true asagiDir=${ASAGI_PATH}  copyenv=true
 default:
 	scons writeNetCDF=True solver=fwave
 
