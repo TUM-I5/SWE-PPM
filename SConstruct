@@ -108,7 +108,7 @@ vars.AddVariables(
                      'level of parallelization',
                      'none',
                      allowed_values=('none', 'cuda', 'mpi_with_cuda',
-                                     'mpi', 'ampi', 'charm', 'upcxx')
+                                     'mpi', 'ampi', 'charm', 'upcxx', 'hpx')
                      ),
         BoolVariable('openmp',
                      'compile with OpenMP parallelization enabled',
@@ -261,7 +261,36 @@ if env['parallelization'] == 'upcxx':
     upcxxIncludes = [i[2:] for i in upcxxPpFlags if i.startswith("-I")]
     upcxxLibPaths = [i[2:] for i in upcxxLibFlags if i.startswith("-L")]
     upcxxLibs = [i[2:] for i in upcxxLibFlags if i.startswith("-l")]
+#######################
+# HPX Specific Init #
+#######################
 
+if env['parallelization'] == 'hpx':
+    env.Append(CCFLAGS=['-std=c++14'])
+    # get the upcxx folder
+    hpxInstall = os.environ['HPX_PATH']
+    if hpxInstall == '':
+        print(sys.stderr,
+              'No HPX installation found. Did you set $HPX_PATH?')
+        Exit(3)
+    else:
+        print("Found HPX install at: " + hpxInstall)
+
+    boostInstall = os.environ['BOOST_ROOT']
+    if boostInstall == '':
+        print(sys.stderr,
+              'No BOOST installation found. Did you set $BOOST_ROOT?')
+        Exit(3)
+    else:
+        print("Found BOOST install at: " + boostInstall)
+
+    hwInstall = os.environ['HWLOC_ROOT']
+    if hwInstall == '':
+        print(sys.stderr,
+              'No HWLOC installation found. Did you set $HWLOC_ROOT?')
+        Exit(3)
+    else:
+        print("Found HWLOC install at: " + hwInstall)
 ################################
 # Charm++ / AMPI specific Init #
 ################################
@@ -409,6 +438,30 @@ if env['parallelization'] == 'upcxx':
     env.Append(CPPPATH=upcxxIncludes)
     env.Append(LIBS=upcxxLibs)
     env.Append(LIBPATH=upcxxLibPaths)
+if env['parallelization'] == 'hpx':
+
+    boostInstallLib = boostInstall+ '/li1b'
+    hpxInstallLib = hpxInstall + '/lib1'
+    boostInstallLib = boostInstall
+    hpxInstallLib = hpxInstall
+    hpxIncDir=[hpxInstall+'/include',boostInstall+'/include', hwInstall+'/include']
+    init_lib = File(hpxInstallLib+'libhpx_init.a')
+    hpxLinDir=[init_lib,'libhpx.so','libhpx_iostreams.so'
+    ,'libboost_atomic.so'
+    ,'libboost_filesystem.so'
+    ,'libboost_program_options.so'
+    ,'libboost_regex.so'
+    ,'libboost_system.so','-lpthread'
+    #$(TCMALLOC_ROOT)/libtcmalloc_minimal.so
+    ,'libhwloc.so', '-ldl' ,'-lrt']
+
+
+    env.Append(LIBS=hpxLinDir)
+    env.Append(CPPPATH=hpxIncDir)
+    env.Append(LIBS=[init_lib])
+    #env.Append(LINKFLAGS=['-Wl,-wrap=main'])
+    env.Append(LIBPATH=[hpxInstallLib])
+
 
 if env['parallelization'] == 'charm':
     env.Append(CPPDEFINES=['CHARM'])

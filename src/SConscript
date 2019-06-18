@@ -51,6 +51,9 @@ elif env['parallelization'] in ['charm']:
     sourceFilesCharm = ['blocks/SWE_DimensionalSplittingCharm.ci']
     sourceFiles = ['blocks/SWE_DimensionalSplittingCharm.cpp']
 # Other Code without CUDA
+elif env['parallelization'] in ['hpx']:
+    sourceFiles = ['blocks/SWE_DimensionalSplittingHpx.cpp','blocks/SWE_Hpx_Component.cpp']
+
 elif env['parallelization'] not in ['cuda', 'mpi_with_cuda']:
     if env['solver'] == 'rusanov':
         sourceFiles = ['blocks/rusanov/SWE_RusanovBlock.cpp']
@@ -132,6 +135,8 @@ elif env['parallelization'] in ['upcxx']:
 elif env['parallelization'] in ['charm']:
     sourceFilesCharm.append(['examples/swe_charm.ci'])
     sourceFiles.append(['examples/swe_charm.cpp'])
+elif env['parallelization'] in ['hpx']:
+    sourceFiles.append(['examples/swe_hpx.cpp'])
 else:
     print(sys.stderr, '** The selected configuration is not implemented.')
     Exit(1)
