@@ -352,7 +352,7 @@ int main(int argc, char** argv) {
 
 	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime);
 
-    uint64_t  sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
+    	float sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
     if(myUpcxxRank == 0){
     std::cout   << "Rank: " << myUpcxxRank << std::endl
                 << "Flop count: " << sumFlops << std::endl

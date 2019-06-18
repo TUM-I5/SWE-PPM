@@ -17,7 +17,14 @@
 #include "types/Boundary.hh"
 #include "writer/NetCdfWriter.hh"
 #include "tools/Float2DNative.hh"
+#if WAVE_PROPAGATION_SOLVER==0
+//#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
+#elif WAVE_PROPAGATION_SOLVER==1
+#include "solvers/FWave.hpp"
+#elif WAVE_PROPAGATION_SOLVER==2
+#include "solvers/AugRie.hpp"
+#endif
 
 extern CProxy_swe_charm mainProxy;
 extern int blockCountX;
@@ -51,8 +58,17 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 		void updateUnknowns(float dt);
 		// Interface implementation
 		void setGhostLayer();
-
+#if WAVE_PROPAGATION_SOLVER==0
+    //! Hybrid solver (f-wave + augmented)
+    //solver::Hybrid<float> solver;
 		solver::HLLEFun<float> solver;
+#elif WAVE_PROPAGATION_SOLVER==1
+    //! F-wave Riemann solver
+    solver::FWave<float> solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> solver;
+#endif
 		float *checkpointInstantOfTime;
 		NetCdfWriter *writer;
 		float currentSimulationTime;

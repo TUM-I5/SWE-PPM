@@ -315,7 +315,6 @@ if env['parallelization'] in ['charm', 'ampi']:
                            suffix='.decl.h',
                            src_suffix='.ci')
 
-
     env.Append(BUILDERS={'charmBuilder': charmBuilder})
     env.charmBuilder("src/blocks/SWE_DimensionalSplittingCharm.ci")
 #####################################
@@ -346,7 +345,7 @@ if env['parallelization'] in ['mpi', 'mpi_with_cuda']:
 elif env['parallelization'] == 'ampi':
     env['CXX'] = charmInstall + '/bin/ampicc'
 elif env['parallelization'] == 'charm':
-    env['CXX'] = charmInstall + '/bin/charmc'
+    env['CXX'] = charmInstall + '/bin/charmc' # ' -balancer NeighborLB'
 elif env['parallelization'] == 'upcxx':
     env['CXX'] = check_output([upcxxMeta, 'CXX']).replace("\n", "")
 else:

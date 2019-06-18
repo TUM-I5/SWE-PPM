@@ -294,12 +294,12 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		// iterate over cells on the x-axis, leave out the last column (two cells per computation)
 		#pragma omp for reduction(max : maxHorizontalWaveSpeed) collapse(2)
 		for (int x = 0; x < nx + 1; x++) {
+            #if defined(VECTORIZE)
 			const int ny_end = ny+2;
 		    // iterate over all rows, including ghost layer
-            #if defined(VECTORIZE)
                 #pragma omp simd reduction(max:maxHorizontalWaveSpeed)
             #endif // VECTORIZE
-			for (int y = 0; y < ny_end; y++) {
+			for (int y = 0; y < ny+2; y++) {
 				solver.computeNetUpdates (
 						h[x][y], h[x + 1][y],
 						hu[x][y], hu[x + 1][y],
@@ -312,6 +312,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		}
 	}
 
+flopCounter += nx*ny*135;
 	// Accumulate compute time -> exclude the reduction
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -348,12 +349,12 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		#pragma omp for reduction(max : maxVerticalWaveSpeed) collapse(2)
 		#endif
 		for (int x = 1; x < nx + 1; x++) {
+#if defined(VECTORIZE)
             const int ny_end = ny+1;
             // iterate over all rows, including ghost layer
-#if defined(VECTORIZE)
 #pragma omp simd reduction(max:maxVerticalWaveSpeed)
 #endif // VECTORIZE
-			for (int y = 0; y < ny_end; y++) {
+			for (int y = 0; y < ny+1; y++) {
 				solver.computeNetUpdates (
 						h[x][y], h[x][y + 1],
 						hv[x][y], hv[x][y + 1],
@@ -373,7 +374,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		}
 		#endif // NDEBUG
 	}
-	
+flopCounter += nx*ny*135;	
 	// Accumulate compute time
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -413,6 +414,6 @@ void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }
-uint64_t SWE_DimensionalSplittingUpcxx::getFlops(){
-    return solver.flopcounter;
+float SWE_DimensionalSplittingUpcxx::getFlops(){
+    return flopCounter;
 }
