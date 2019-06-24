@@ -439,8 +439,8 @@ if env['parallelization'] == 'upcxx':
     env.Append(LIBPATH=upcxxLibPaths)
 if env['parallelization'] == 'hpx':
 
-    boostInstallLib = boostInstall+ '/li1b'
-    hpxInstallLib = hpxInstall + '/lib1'
+    boostInstallLib = boostInstall+ '/lib'
+    hpxInstallLib = hpxInstall + '/lib'
     boostInstallLib = boostInstall
     hpxInstallLib = hpxInstall
     hpxIncDir=[hpxInstall+'/include',boostInstall+'/include', hwInstall+'/include']

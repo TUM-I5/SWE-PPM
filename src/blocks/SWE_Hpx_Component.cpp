@@ -3,7 +3,7 @@
 //
 
 #include "SWE_Hpx_Component.hpp"
-#include <hpx/include/iostreams.hpp>
+
 
 #include <algorithm>
 #include <iostream>
@@ -31,18 +31,39 @@ HPX_REGISTER_REDUCE_ACTION_DECLARATION(remote::SWE_Hpx_Component::get_wave_speed
 HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max_type)
  namespace remote
     {
-        void SWE_Hpx_Component::invoke(std::vector<hpx::naming::id_type>const &test)
-        {
+     SWE_Hpx_Component::SWE_Hpx_Component(
+             int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
+             int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
+             float localOriginX, float localOriginY,  std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours)
+ /*
+#ifdef WRITENETCDF
+     // Construct a netCDF writer
 
+	    writer(
+			outputFileName,
+			simulation.getBathymetry(),
+			boundarySize,
+			nxLocal,
+			nyLocal,
+			dxSimulation,
+			dySimulation,
+			simulation.getOriginX(),
+			simulation.getOriginY())
 
-        }
-     void SWE_Hpx_Component::initialize(std::size_t rank,std::size_t totalRanks,std::vector<hpx::naming::id_type> const &ids, float simulationDuration,
-                                        int numberOfCheckPoints,
-                                        int nxRequested,
-                                        int nyRequested,
-                                        std::string const &outputBaseName,
-                                        std::string const &batFile,
-                                        std::string const &displFile)
+#else
+             // Construct a vtk writer
+             writer(
+                     outputFileName,
+                     simulation.getBathymetry(),
+                     boundarySize,
+                     nxLocal,
+                     nyLocal,
+                     dxSimulation,
+                     dySimulation)
+#endif // WRITENETCDF*/
+
+     :
+             simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, communicator_type(rank,totalRank,neighbours))
      {
          std::string outputFileName;
          // Initialize Scenario
@@ -51,21 +72,30 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
 #else
          SWE_RadialDamBreakScenario scenario;
 #endif
-
+        //this->ids(ids);
+         this->simulationDuration = simulationDuration;
+         this->numberOfCheckPoints = numberOfCheckPoints;
          // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
-         float* checkpointInstantOfTime = new float[numberOfCheckPoints];
+         //float* checkpointInstantOfTime = new float[numberOfCheckPoints];
          // Time delta is the time between any two checkpoints
          float checkpointTimeDelta = simulationDuration / numberOfCheckPoints;
          // The first checkpoint is reached after 0 + delta t
-         checkpointInstantOfTime[0] = checkpointTimeDelta;
+         checkpointInstantOfTime.push_back(checkpointTimeDelta);
          for(int i = 1; i < numberOfCheckPoints; i++) {
-             checkpointInstantOfTime[i] = checkpointInstantOfTime[i - 1] + checkpointTimeDelta;
+             checkpointInstantOfTime.push_back(checkpointInstantOfTime[i - 1] + checkpointTimeDelta);
          }
 
+         myHpxRank = rank;
+         totalHpxRanks = totalRank;
 
-         /**********************************
-          * INIT UPCXX & SIMULATION BLOCKS *
-          **********************************/
+
+         simulation.initScenario(scenario, boundaries.data());
+
+        /* std::cout<< "Rank: " << myHpxRank << std::endl
+                  << "Left " << myNeighbours[BND_LEFT] << std::endl
+                  << "Right " << myNeighbours[BND_RIGHT] << std::endl
+                  << "Bottom " << myNeighbours[BND_BOTTOM] << std::endl
+                  << "TOP " << myNeighbours[BND_TOP] << std::endl;*/
 
 
          /*
@@ -73,14 +103,12 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
           * The cell count of the scenario as well as the scenario size is fixed,
           * Get the size of the actual domain and divide it by the requested resolution.
           */
-         int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
+        /* int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
          int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
          float dxSimulation = (float) widthScenario / nxRequested;
          float dySimulation = (float) heightScenario / nyRequested;
 
 
-         auto myHpxRank = rank;
-         auto totalHpxRanks = totalRanks;
 
          // Print status
          char hostname[HOST_NAME_MAX];
@@ -95,7 +123,7 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
           * else l_blockCountX > l_blockCountY
           */
          // number of SWE-Blocks in x- and y-direction
-         int blockCountY = std::sqrt(totalHpxRanks);
+       /*  int blockCountY = std::sqrt(totalHpxRanks);
          while (totalHpxRanks % blockCountY != 0) blockCountY--;
          int blockCountX = totalHpxRanks / blockCountY;
 
@@ -142,60 +170,46 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
          myNeighbours[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? myHpxRank + 1 : -1;
 
          communicator_type comm(myHpxRank,totalHpxRanks,myNeighbours);
-         simulation= new SWE_DimensionalSplittingHpx(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, comm);
-         simulation->initScenario(scenario, boundaries);
+         simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, comm);
+         simulation.initScenario(scenario, boundaries);
 
          std::cout<< "Rank: " << myHpxRank << std::endl
                   << "Left " << myNeighbours[BND_LEFT] << std::endl
                   << "Right " << myNeighbours[BND_RIGHT] << std::endl
                   << "Bottom " << myNeighbours[BND_BOTTOM] << std::endl
                   << "TOP " << myNeighbours[BND_TOP] << std::endl;
-         simulation->exchangeBathymetry();
+         simulation.exchangeBathymetry();
 
-
+         // Initialize boundary size of the ghost layers
+         BoundarySize boundarySize = {{1, 1, 1, 1}};
+         outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);*/
          /***************
           * INIT OUTPUT *
           ***************/
 
 
-         // Initialize boundary size of the ghost layers
-         BoundarySize boundarySize = {{1, 1, 1, 1}};
-         outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
-
-#ifdef WRITENETCDF
-         // Construct a netCDF writer
-
-	NetCdfWriter writer(
-			outputFileName,
-			simulation->getBathymetry(),
-			boundarySize,
-			nxLocal,
-			nyLocal,
-			dxSimulation,
-			dySimulation,
-			simulation->getOriginX(),
-			simulation->getOriginY());
-
-#else
-         // Construct a vtk writer
-         VtkWriter writer(
-                 outputFileName,
-                 simulation->getBathymetry(),
-                 boundarySize,
-                 nxLocal,
-                 nyLocal,
-                 dxSimulation,
-                 dySimulation);
-#endif // WRITENETCDF
-
          // Write the output at t = 0
-         writer.writeTimeStep(
-                 simulation->getWaterHeight(),
-                 simulation->getMomentumHorizontal(),
-                 simulation->getMomentumVertical(),
+       /*  writer.writeTimeStep(
+                 simulation.getWaterHeight(),
+                 simulation.getMomentumHorizontal(),
+                 simulation.getMomentumVertical(),
                  (float) 0.);
 
+*/
+        hpx::cout << myHpxRank << " finished init" << std::endl;
+     }
+        void SWE_Hpx_Component::invoke(std::vector<hpx::naming::id_type>const &test)
+        {
 
+
+        }
+     void SWE_Hpx_Component::initialize(std::vector<hpx::naming::id_type> const &ids)
+     {
+
+
+
+         simulation.exchangeBathymetry();
+         hpx::cout << "STARTED\n";
          /********************
           * START SIMULATION *
           ********************/
@@ -223,22 +237,22 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
                  // set values in ghost cells.
                  // this function blocks until everything has been received
 
-                 simulation->setGhostLayer();
+                 simulation.setGhostLayer();
 
                  // compute numerical flux on each edge
-                // simulation->computeNumericalFluxes(ids);
-                 simulation->computeXSweep();
+                // simulation.computeNumericalFluxes(ids);
+                 simulation.computeXSweep();
 
                  hpx::lcos::barrier(std::string("midcalc"), totalHpxRanks, myHpxRank).wait();
 
-                 simulation->maxTimestepGlobal = hpx::lcos::reduce<get_wave_speed_action>(ids,Min<float>()).get();
-
-                 simulation->computeYSweep();
+                 simulation.maxTimestepGlobal = hpx::lcos::reduce<get_wave_speed_action>(ids,Min<float>()).get();
+                 hpx::cout << myHpxRank << " timestep " << simulation.maxTimestepGlobal << std::endl;
+                 simulation.computeYSweep();
                  // max timestep has been reduced over all ranks in computeNumericalFluxes()
-                 timestep = simulation->getMaxTimestep();
+                 timestep = simulation.getMaxTimestep();
 
                  // update the cell values
-                 simulation->updateUnknowns(timestep);
+                 simulation.updateUnknowns(timestep);
 
                  // Accumulate wall time
                  clock_gettime(CLOCK_MONOTONIC, &endTime);
@@ -249,19 +263,19 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
                  t += timestep;
                  iterations++;
                  // upcxx::barrier();
-                // hpx::lcos::barrier(std::string("endcalc"), totalHpxRanks, myHpxRank).wait();
+                 hpx::lcos::barrier(std::string("endcalc"), totalHpxRanks, myHpxRank).wait();
              }
 
              if(myHpxRank == 0) {
-                 printf("Write timestep (%fs)\n", t);
+                hpx::cout <<"Write timestep " << t<<"s" << std::endl;
              }
 
              // write output
-             writer.writeTimeStep(
-                     simulation->getWaterHeight(),
-                     simulation->getMomentumHorizontal(),
-                     simulation->getMomentumVertical(),
-                     t);
+            /* writer.writeTimeStep(
+                     simulation.getWaterHeight(),
+                     simulation.getMomentumHorizontal(),
+                     simulation.getMomentumVertical(),
+                     t);*/
          }
 
 
@@ -269,20 +283,21 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
           * FINALIZE *
           ************/
 
-         printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myHpxRank, simulation->computeTime, simulation->computeTimeWall, wallTime);
+         hpx::cout << "Rank "<< myHpxRank <<  ": Compute Time (CPU):" << simulation.computeTime
+                 <<"s"<< " - (WALL): "<<  simulation.computeTimeWall<<"s"<< " | Total Time (Wall):"<< wallTime <<"s"<<std::endl;
          uint64_t sumFlops = 0;
-         //uint64_t  sumFlops = upcxx::reduce_all(simulation->getFlops(), upcxx::op_fast_add).wait();
+         //uint64_t  sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
          if(myHpxRank == 0){
-             std::cout   << "Rank: " << myHpxRank << std::endl
+             hpx::cout   << "Rank: " << myHpxRank << std::endl
                          << "Flop count: " << sumFlops << std::endl
                          << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
-                         << "Flops(Single): "<< ((float)simulation->getFlops())/(wallTime*1000000000) << std::endl;
+                         << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl;
          }
-         delete simulation;
+
      }
         float SWE_Hpx_Component::get_wave_speed()
         {
-            return simulation->maxTimestepGlobal;
+            return simulation.maxTimestepGlobal;
         }
 
 

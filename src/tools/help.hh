@@ -96,7 +96,7 @@ inline std::string generateFileName(std::string baseName, int timeStep, int bloc
  * @return the output filename <b>without</b> timestep information and file extension
  */
 	inline
-std::string generateBaseFileName(std::string &i_baseName, int i_blockPositionX , int i_blockPositionY)
+std::string generateBaseFileName(std::string const &i_baseName, int i_blockPositionX , int i_blockPositionY)
 {
 	std::ostringstream l_fileName;
 

@@ -42,7 +42,7 @@ class SWE_RadialDamBreakScenario : public SWE_Scenario {
   public:
 
     float getBathymetry(float x, float y) {
-       return 0.f;
+       return 10.f;
     };
 
     float getWaterHeight(float x, float y) { 

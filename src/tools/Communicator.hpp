@@ -18,7 +18,7 @@ struct communicator
 
     // rank: our rank in the system
     // num: number of participating partners
-    communicator(std::size_t rank, std::size_t num,int neighbours[])
+    communicator(std::size_t rank, std::size_t num,std::array<int, 4>  const &neighbours)
     {
         static const char* top_name = "top";
         static const char* bot_name = "bot";
@@ -100,5 +100,13 @@ struct communicator
 
     std::array<hpx::lcos::channel<T>, 4> recv;
     std::array<hpx::lcos::channel<T>, 4> send;
+
+    template <typename Archive>
+    void serialize(Archive & ar, unsigned)
+    {
+        ar & recv;
+        ar & send;
+
+    }
 };
 #endif //SWE_BENCHMARK_COMMUNICATOR_HPP

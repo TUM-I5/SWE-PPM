@@ -31,7 +31,7 @@
 #include <vector>
 #include <iostream>
 #include <cassert>
-
+#define PRINT_NETCDFWRITER_INFORMATION
 /**
  * Create a netCdf-file
  * Any existing file will be replaced.
@@ -65,6 +65,7 @@ NetCdfWriter::NetCdfWriter( const std::string &i_baseName,
 
 	//check if the netCDF-file creation constructor succeeded.
 	if (status != NC_NOERR) {
+
 		assert(false);
 		return;
 	}
@@ -108,10 +109,11 @@ NetCdfWriter::NetCdfWriter( const std::string &i_baseName,
 	ncPutAttText(NC_GLOBAL, "source", "Bathymetry and displacement data.");
 	ncPutAttText(NC_GLOBAL, "references", "http://www5.in.tum.de/SWE");
 	ncPutAttText(NC_GLOBAL, "comment", "SWE is free software and licensed under the GNU General Public License. Remark: In general this does not hold for the used input data.");
-
+   ;
 	//setup grid size
 	float gridPosition = i_originX + (float).5 * i_dX;
 	for(size_t i = 0; i < nX; i++) {
+
 		nc_put_var1_float(dataFile, l_xVar, &i, &gridPosition);
 
 		gridPosition += i_dX;
@@ -123,6 +125,7 @@ NetCdfWriter::NetCdfWriter( const std::string &i_baseName,
 
 		gridPosition += i_dY;
 	}
+
 }
 
 /**

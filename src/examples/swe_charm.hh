@@ -10,8 +10,8 @@ class swe_charm : public CBase_swe_charm {
 
 		void done(int index);
 		void exit();
-
+            int chareCount;
 	private:
-		int chareCount;
+
 };
 #endif // __SWE_CHARM_HH

@@ -44,6 +44,7 @@
 class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 	public:
 		// Constructor/Destructor
+        SWE_DimensionalSplittingUpcxx();
 		SWE_DimensionalSplittingUpcxx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY);
 		~SWE_DimensionalSplittingUpcxx() {};
 
