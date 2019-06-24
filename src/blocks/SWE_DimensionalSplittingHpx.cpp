@@ -35,6 +35,7 @@
 #include <hpx/include/async.hpp>
 #include <hpx/include/components.hpp>
 #include <hpx/include/parallel_algorithm.hpp>
+#include <hpx/include/iostreams.hpp>
 #include <cassert>
 #include <algorithm>
 #include <omp.h>
@@ -155,7 +156,7 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
             send_bat.push_back(b[i][1]);
         }
 
-        comm.set(BND_BOTTOM,  copyLayerStruct<std::vector<float>> {ny,send_bat});
+        comm.set(BND_BOTTOM,  copyLayerStruct<std::vector<float>> {nx,send_bat});
     }
     if (boundaryType[BND_TOP] == CONNECT) {
 
@@ -163,7 +164,7 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
         for (int i = 1; i < nx+1 ; i++) {
             send_bat.push_back(b[i][ny]);
         }
-        comm.set(BND_TOP,  copyLayerStruct<std::vector<float>> {ny,send_bat});
+        comm.set(BND_TOP,  copyLayerStruct<std::vector<float>> {nx,send_bat});
 
     }
 
@@ -274,7 +275,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
             send_hv.push_back(hv[i][1]);
         }
 
-        comm.set(BND_BOTTOM,  copyLayerStruct<std::vector<float>> {ny,{},send_h,send_hu,send_hv});
+        comm.set(BND_BOTTOM,  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv});
     }
     if (boundaryType[BND_TOP] == CONNECT) {
 
@@ -287,7 +288,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
             send_hv.push_back(hv[i][ny]);
         }
 
-        comm.set(BND_TOP,  copyLayerStruct<std::vector<float>> {ny,{},send_h,send_hu,send_hv});
+        comm.set(BND_TOP,  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv});
 
     }
 
@@ -297,14 +298,12 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
      * RECEIVE *
      **********/
 
-    // 4 Boundaries times 3 arrays (h, hu, hv) means 12 requests
-    // The requests corresponding to the h array will be at indices 0, 3, 6, 9
-    // hu array requests will be at indices 1, 4, 5, 10 and so forth
 
     if (boundaryType[BND_LEFT] == CONNECT) {
 
         int startIndex = 1;
         auto border = comm.get(BND_LEFT).get();
+        if(border.size != ny)hpx::cout << "------------------------------\nFALSE BORDER "<< border.size << " "<< ny <<"\n --------------------------\n";
         for(int i= 0; i < border.size; i++){
 
             h[0][i + 1] = border.H[i];
@@ -317,8 +316,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
         int startIndex = (nx + 1) * (ny + 2) + 1;
 
         auto border = comm.get(BND_RIGHT).get();
-
-
+        if(border.size != ny)hpx::cout << "------------------------------\nFALSE BORDER "<< border.size << " "<< ny <<"\n --------------------------\n";
         for(int i= 0; i < border.size; i++){
 
             h[nx+1][i + 1] = border.H[i];
@@ -331,8 +329,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     if (boundaryType[BND_BOTTOM] == CONNECT) {
 
         auto border = comm.get(BND_BOTTOM).get();
-
-
+        if(border.size != nx)hpx::cout << "------------------------------\nFALSE BORDER "<< border.size << " "<< nx <<"\n --------------------------\n";
         for(int i= 0; i < border.size; i++){
 
             h[i + 1][0] = border.H[i];
@@ -344,7 +341,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
 
     if (boundaryType[BND_TOP] == CONNECT) {
         auto border = comm.get(BND_TOP).get();
-
+        if(border.size != nx)hpx::cout << "------------------------------\nFALSE BORDER "<< border.size << " "<< nx <<"\n --------------------------\n";
 
         for(int i= 0; i < border.size; i++){
 

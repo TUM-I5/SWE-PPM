@@ -292,26 +292,29 @@ void cycle( float simulationDuration,
 
             // set values in ghost cells.
             // this function blocks until everything has been received
-
+            fut = std::vector<hpx::future<void>>();
             for(auto block : blocks)fut.push_back(block.setGhostLayer());
 
             hpx::when_all(fut).wait();
+            //hpx::cout << "Finished ghostlayer" << std::endl;
             // compute numerical flux on each edge
             // for(auto block : blocks)block.computeNumericalFluxes(ids);
             fut = std::vector<hpx::future<void>>();
             for(auto block : blocks)fut.push_back(block.computeXSweep());
             hpx::when_all(fut).wait();
+           // hpx::cout << "Finished xSweep" << std::endl;
             std::vector<float> timesteps;
             for(auto block : blocks)timesteps.push_back(block.getMaxTimestep().get());
 
             timestep = *std::min_element(timesteps.begin(), timesteps.end());
-
+            //hpx::cout << "Finished reduction" << std::endl;
             fut = std::vector<hpx::future<void>>();
             for(auto block : blocks)fut.push_back(block.setMaxTimestep(timestep));
             hpx::when_all(fut).wait();
 
             fut = std::vector<hpx::future<void>>();
             for(auto block : blocks)fut.push_back(block.computeYSweep());
+            //hpx::cout << "Finished ySweep" << std::endl;
             // max timestep has been reduced over all ranks in computeNumericalFluxes()
 
             hpx::when_all(fut).wait();
