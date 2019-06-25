@@ -39,7 +39,7 @@
 #include <cassert>
 #include <algorithm>
 #include <omp.h>
-
+#include <typeinfo>
 
 /*
  * Constructor of a SWE_DimensionalSplitting Block.
@@ -168,14 +168,56 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
     /***********
      * RECEIVE *
      **********/
+   std::vector<hpx::future<copyLayerStruct<std::vector<float>>>>fut;
+
+   // auto other = hpx::when_all(fut);
+   // auto all = other.get();
+    //hpx::cout << "typppe " <<  typeid(all).name()<< std::endl;
+    //fut.push_back(comm.get(BND_LEFT));
+    /*std::vector<hpx::future<copyLayerStruct<std::vector<float>>>> fut =
+            hpx::when_all(std::vector<hpx::future<copyLayerStruct<std::vector<float>>>>{comm.get(BND_LEFT),
+                                                                                        comm.get(BND_RIGHT),
+                                                                                        comm.get(BND_BOTTOM),
+                                                                                      comm.get(BND_TOP)}).get(); */
+
 
     if (boundaryType[BND_LEFT] == CONNECT) {
+      fut.push_back(comm.get(BND_LEFT));
+
+
+    } else {
+        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+    }
+
+    if (boundaryType[BND_RIGHT] == CONNECT) {
+
+        fut.push_back(comm.get(BND_RIGHT));
+
+    } else {
+        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+    }
+
+    if (boundaryType[BND_BOTTOM] == CONNECT) {
+        fut.push_back(comm.get(BND_BOTTOM));
+
+    } else {
+        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+    }
+
+    if (boundaryType[BND_TOP] == CONNECT) {
+        fut.push_back(comm.get(BND_TOP));
+    } else {
+        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+    }
+
+    auto borders = hpx::when_all(fut).get();
+
+
+   if (boundaryType[BND_LEFT] == CONNECT) {
 
         int startIndex = 1;
         int i = 0;
-       std::cout <<"LEFT " ;
-        for(auto elm: comm.get(BND_LEFT).get().B){
-            std::cout << " " << elm;
+        for(auto &elm: borders[BND_LEFT].get().B){
             b[0][i + 1] = elm;
             i++;
         }
@@ -183,16 +225,14 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 
     }
 
+
     if (boundaryType[BND_RIGHT] == CONNECT) {
         int startIndex = (nx + 1) * (ny + 2) + 1;
 
+        int i = 0;
 
-       int i = 0;
-        auto border = comm.get(BND_RIGHT).get().B;
-        std::cout <<"RIGHT "  << border.size() << std::endl ;
+        for(auto &elm:  borders[BND_RIGHT].get().B){
 
-        for(auto elm: border){
-            std::cout << " " << elm;
             b[nx+1][i + 1] = elm;
             i++;
         }
@@ -203,7 +243,7 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 
     if (boundaryType[BND_BOTTOM] == CONNECT) {
         int i = 0;
-        for(auto elm: comm.get(BND_BOTTOM).get().B){
+        for(auto &elm: borders[BND_BOTTOM].get().B){
 
             b[i+1][0] = elm;
             i++;
@@ -214,7 +254,7 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 
     if (boundaryType[BND_TOP] == CONNECT) {
         int i = 0;
-        for(auto elm: comm.get(BND_TOP).get().B){
+        for(auto &elm: borders[BND_TOP].get().B){
 
             b[i+1][ny+1] = elm;
             i++;
@@ -243,7 +283,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     /*********
      * SEND *
      ********/
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
+
 
     if (boundaryType[BND_LEFT] == CONNECT) {
 
@@ -296,12 +336,38 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     /***********
      * RECEIVE *
      **********/
+    clock_gettime(CLOCK_MONOTONIC, &startTime);
+    std::vector<hpx::future<copyLayerStruct<std::vector<float>>>>fut;
+    if (boundaryType[BND_LEFT] == CONNECT) {
+        fut.push_back(comm.get(BND_LEFT));
+    } else {
+        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+    }
+    if (boundaryType[BND_RIGHT] == CONNECT) {
+        fut.push_back(comm.get(BND_RIGHT));
+    } else {
+        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+    }
 
+    if (boundaryType[BND_BOTTOM] == CONNECT) {
+        fut.push_back(comm.get(BND_BOTTOM));
+
+    } else {
+        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+    }
+
+    if (boundaryType[BND_TOP] == CONNECT) {
+        fut.push_back(comm.get(BND_TOP));
+    } else {
+        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+    }
+
+    auto borders = hpx::when_all(fut).get();
 
     if (boundaryType[BND_LEFT] == CONNECT) {
 
         int startIndex = 1;
-        auto border = comm.get(BND_LEFT).get();
+        auto border = borders[BND_LEFT].get();
 
         for(int i= 0; i < border.size; i++){
 
@@ -314,7 +380,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     if (boundaryType[BND_RIGHT] == CONNECT) {
         int startIndex = (nx + 1) * (ny + 2) + 1;
 
-        auto border = comm.get(BND_RIGHT).get();
+        auto border = borders[BND_RIGHT].get();
 
         for(int i= 0; i < border.size; i++){
 
@@ -327,7 +393,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
 
     if (boundaryType[BND_BOTTOM] == CONNECT) {
 
-        auto border = comm.get(BND_BOTTOM).get();
+        auto border = borders[BND_BOTTOM].get();
 
         for(int i= 0; i < border.size; i++){
 
@@ -339,7 +405,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     }
 
     if (boundaryType[BND_TOP] == CONNECT) {
-        auto border = comm.get(BND_TOP).get();
+        auto border = borders[BND_TOP].get();
 
         for(int i= 0; i < border.size; i++){
 
