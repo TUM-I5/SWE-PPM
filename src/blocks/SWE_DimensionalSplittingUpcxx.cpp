@@ -90,6 +90,8 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 
 	computeTime = 0.;
 	computeTimeWall = 0.;
+	flopCounter = 0;
+	communicationTime = 0;
 }
 
 void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> p_neighbourCopyLayer[]) {
@@ -180,7 +182,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 	upcxx::future<> rightFuture;
 	upcxx::future<> bottomFuture;
 	upcxx::future<> topFuture;
-
+    clock_gettime(CLOCK_MONOTONIC, &startTime);
 	if (boundaryType[BND_LEFT] == CONNECT) {
 		assert(neighbourCopyLayer[BND_LEFT].size == ny);
 		assert(neighbourCopyLayer[BND_LEFT].stride == 1);
@@ -261,18 +263,10 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		topFuture = upcxx::make_future<>();
 	}
 	upcxx::when_all(leftFuture, rightFuture, bottomFuture, topFuture).wait();
-	/*if(upcxx::rank_me()==47){
-	std::cout << "bot ";	
-	for(int i = 0; i < ny; i++){
-		std::cout << " " << h[i+1][0];
-	}
-	std::cout << "\n";
-	std::cout << "top";
-	for(int i = 0; i < ny; i++){
-		std::cout << " " << h[i+1][ny+1];
-	}
-	std::cout << std::endl;
-}*/
+
+    clock_gettime(CLOCK_MONOTONIC, &endTime);
+    communicationTime += (endTime.tv_sec - startTime.tv_sec);
+    communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }
 /**
  * Compute net updates for the block.

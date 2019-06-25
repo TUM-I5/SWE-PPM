@@ -350,14 +350,16 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime);
 
-    	float sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
+    printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs Communication Time: %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime, simulation.communicationTime);
+    float sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
+    float sumCommTime = upcxx::reduce_all(simulation.communicationTime, upcxx::op_fast_add).wait();
     if(myUpcxxRank == 0){
     std::cout   << "Rank: " << myUpcxxRank << std::endl
-                << "Flop count: " << sumFlops << std::endl
-                << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
-                << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl;
+            << "Flop count: " << sumFlops << std::endl
+            << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
+            << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl
+            << "Communication Time(Total): " << sumCommTime << "s" << std::endl;
 }
     upcxx::finalize();
 

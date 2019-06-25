@@ -101,12 +101,12 @@ struct communicator
     std::array<hpx::lcos::channel<T>, 4> recv;
     std::array<hpx::lcos::channel<T>, 4> send;
 
-    template <typename Archive>
+  /*  template <typename Archive>
     void serialize(Archive & ar, unsigned)
     {
         ar & recv;
         ar & send;
 
-    }
+    }*/
 };
 #endif //SWE_BENCHMARK_COMMUNICATOR_HPP

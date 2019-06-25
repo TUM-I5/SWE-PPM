@@ -350,19 +350,22 @@ void cycle( float simulationDuration,
     /************
      * FINALIZE *
      ************/
+    float totalCommTime = 0;
+    float sumFlops = 0;
+    for(auto block: blocks){
+        block.printResult();
+        totalCommTime += block.getCommunicationTime();
+        sumFlops += block.getFlopCount();
+    }
 
-    for(auto block: blocks)block.printResult();
 
 
-    hpx::cout << "Total Time (Wall):"<< wallTime <<"s"<<hpx::endl;
-    uint64_t sumFlops = 0;
     //uint64_t  sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
 
-    /*hpx::cout   //<< "Rank: " << myHpxRank << std::endl
-            << "Flop count: " << sumFlops << std::endl
-            << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
-            << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl;
-*/
+    hpx::cout   << "Flop count: " << sumFlops << std::endl
+                << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
+    hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
+    hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
 
 }
 

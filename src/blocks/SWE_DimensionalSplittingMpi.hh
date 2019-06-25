@@ -60,7 +60,8 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 
 		float computeTime;
 		float computeTimeWall;
-        	float getFlops();
+        float communicationTime;
+        float getFlops();
 	private:
         solver::HLLEFun<float> solver;
 

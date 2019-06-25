@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -DNDEBUG   CMakeFiles/swe_benchmark_Default.dir/src/blocks/SWE_DimensionalSplitting.cpp.o CMakeFiles/swe_benchmark_Default.dir/src/examples/swe_simple.cpp.o CMakeFiles/swe_benchmark_Default.dir/src/writer/NetCdfWriter.cpp.o CMakeFiles/swe_benchmark_Default.dir/src/writer/VtkWriter.cpp.o  -o swe_benchmark_Default /usr/lib/x86_64-linux-gnu/libnetcdf.so 

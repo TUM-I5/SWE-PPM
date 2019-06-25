@@ -125,9 +125,15 @@ namespace remote
     }
     void SWE_DimensionalSplittingComponent::printResult()
     {
-        hpx::cout << "Rank "<< myHpxRank <<  ": Compute Time (CPU):" << simulation.computeTime
-                  <<"s"<< " - (WALL): "<<  simulation.computeTimeWall<<"s"<< hpx::endl;
+        hpx::cout << "Rank "<< myHpxRank <<  ": Compute Time (CPU): " << simulation.computeTime
+                  <<"s"<< " - (WALL): "<<  simulation.computeTimeWall<<"s - Communication Time: "<< simulation.communicationTime << "s"<< hpx::endl;
 
+    }
+    float SWE_DimensionalSplittingComponent::getCommunicationTime(){
+            return simulation.communicationTime;
+            }
+    float SWE_DimensionalSplittingComponent::getFlopCount(){
+        return simulation.flopCounter;
     }
 }
 
@@ -157,3 +163,7 @@ HPX_REGISTER_ACTION(
 HPX_REGISTER_ACTION(
         remote::SWE_DimensionalSplittingComponent::printResult_action, SWE_DimensionalSplittingComponent_printResult_action);
 
+HPX_REGISTER_ACTION(
+        remote::SWE_DimensionalSplittingComponent::getCommunicationTime_action, SWE_DimensionalSplittingComponent_getCommunicationTime_action);
+HPX_REGISTER_ACTION(
+        remote::SWE_DimensionalSplittingComponent::getFlopCount_action, SWE_DimensionalSplittingComponent_getFlopCount_action);

@@ -104,6 +104,8 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
 
     computeTime = 0.;
     computeTimeWall = 0.;
+    communicationTime = 0.;
+    flopCounter = 0;
 }
 
 
@@ -113,11 +115,6 @@ void SWE_DimensionalSplittingHpx::connectNeighbours(int p_neighbourRankId[]) {
 
 }
 
-int f1(int num)
-{
-
-    return num;
-}
 
 
 typedef copyLayerStruct<std::vector<float>> communication_type;
@@ -246,6 +243,8 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     /*********
      * SEND *
      ********/
+    clock_gettime(CLOCK_MONOTONIC, &startTime);
+
     if (boundaryType[BND_LEFT] == CONNECT) {
 
         int startIndex = ny + 2 + 1;
@@ -303,7 +302,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
 
         int startIndex = 1;
         auto border = comm.get(BND_LEFT).get();
-        if(border.size != ny)hpx::cout << "------------------------------\nFALSE BORDER "<< border.size << " "<< ny <<"\n --------------------------\n";
+
         for(int i= 0; i < border.size; i++){
 
             h[0][i + 1] = border.H[i];
@@ -316,7 +315,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
         int startIndex = (nx + 1) * (ny + 2) + 1;
 
         auto border = comm.get(BND_RIGHT).get();
-        if(border.size != ny)hpx::cout << "------------------------------\nFALSE BORDER "<< border.size << " "<< ny <<"\n --------------------------\n";
+
         for(int i= 0; i < border.size; i++){
 
             h[nx+1][i + 1] = border.H[i];
@@ -329,7 +328,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     if (boundaryType[BND_BOTTOM] == CONNECT) {
 
         auto border = comm.get(BND_BOTTOM).get();
-        if(border.size != nx)hpx::cout << "------------------------------\nFALSE BORDER "<< border.size << " "<< nx <<"\n --------------------------\n";
+
         for(int i= 0; i < border.size; i++){
 
             h[i + 1][0] = border.H[i];
@@ -341,7 +340,6 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
 
     if (boundaryType[BND_TOP] == CONNECT) {
         auto border = comm.get(BND_TOP).get();
-        if(border.size != nx)hpx::cout << "------------------------------\nFALSE BORDER "<< border.size << " "<< nx <<"\n --------------------------\n";
 
         for(int i= 0; i < border.size; i++){
 
@@ -351,7 +349,9 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
         }
 
     }
-
+    clock_gettime(CLOCK_MONOTONIC, &endTime);
+    communicationTime += (endTime.tv_sec - startTime.tv_sec);
+    communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 }
 void SWE_DimensionalSplittingHpx::computeXSweep (){
     computeClock = clock();
@@ -395,7 +395,7 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
             );
         }
     }
-
+    flopCounter += nx*ny*135;
 
     // Accumulate compute time -> exclude the reduction
     computeClock = clock() - computeClock;
@@ -407,11 +407,7 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
 
     // compute max timestep according to cautious CFL-condition
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-    //MPI_Allreduce(&maxTimestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
-    //maxTimestep = maxTimestepGlobal;
 
-    //maxTimestep=hpx::lcos::reduce<rand_num_action>(ids,
-      //                                             Max<float>(),maxTimestep).get();
     maxTimestepGlobal = maxTimestep;
 }
 void SWE_DimensionalSplittingHpx::computeYSweep (){
@@ -446,7 +442,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
         }
     }
 
-
+    flopCounter += nx*ny*135;
     // Accumulate compute time
     computeClock = clock() - computeClock;
     computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -589,8 +585,4 @@ void SWE_DimensionalSplittingHpx::updateUnknowns (float dt) {
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
     computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-}
-uint64_t SWE_DimensionalSplittingHpx::getFlops(){
-    //return solver.flopcounter;
-    return 0;
 }

@@ -43,7 +43,8 @@ class SWE_DimensionalSplittingHpx : public SWE_Block<Float2DNative> {
 
 public:
     // Constructor/Destructor
-    SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY , communicator_type comm);
+    SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
+                                float cellSizeVertical, float originX, float originY , communicator_type comm);
     ~SWE_DimensionalSplittingHpx() {};
 
     // Interface methods
@@ -61,10 +62,11 @@ public:
 
     float computeTime;
     float computeTimeWall;
-    uint64_t getFlops();
+    float communicationTime;
+    float flopCounter;
     float maxTimestepGlobal;
 
-    template <typename Archive>
+   /* template <typename Archive>
     void serialize(Archive & ar, unsigned)
     {
 
@@ -98,7 +100,7 @@ public:
         ar & startTime;
         ar & endTime;
 
-    }
+    }*/
 private:
     solver::HLLEFun<float> solver;
 

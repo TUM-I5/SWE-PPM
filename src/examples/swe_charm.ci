@@ -10,7 +10,7 @@ mainmodule swe_charm {
 	mainchare swe_charm {
 		entry swe_charm(CkArgMsg *msg);
 
-		entry void done(int index);
+		entry void done(int index,float flop, float commTime, float wallTime);
 		entry void exit();
 	};
 };

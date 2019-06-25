@@ -314,17 +314,19 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", myMpiRank, simulation.computeTime, simulation.computeTimeWall, wallTime);
+	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs Communication Time: %fs\n", myMpiRank, simulation.computeTime, simulation.computeTimeWall, wallTime, simulation.communicationTime);
     float flop = simulation.getFlops();
     float sumFlops;
-	MPI_Allreduce(&flop, &sumFlops, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-
+	float sumCommTime;
+    MPI_Allreduce(&flop, &sumFlops, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&simulation.communicationTime, &sumCommTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
     if(myMpiRank == 0){
         std::cout   << "Rank: " << myMpiRank << std::endl
                     << "Flop count: " << sumFlops << std::endl
                     << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
-                    << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl;
-	}
+                    << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl
+	                << "Communication Time(Total): " << sumCommTime << "s" << std::endl;
+    }
 	simulation.freeMpiType();
 	MPI_Finalize();
 

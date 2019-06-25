@@ -49,7 +49,8 @@ namespace remote
         void computeXSweep();
         void computeYSweep();
         void printResult();
-
+        float getCommunicationTime();
+        float getFlopCount();
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, exchangeBathymetry);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, setGhostLayer);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, getMaxTimestep);
@@ -57,7 +58,8 @@ namespace remote
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, computeXSweep);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, computeYSweep);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, printResult);
-
+        HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, getCommunicationTime);
+        HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, getFlopCount);
     };
 }
 
@@ -75,6 +77,10 @@ HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::computeYSweep_action, SWE_DimensionalSplittingComponent_computeYSweep_action);
 HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::printResult_action, SWE_DimensionalSplittingComponent_printResult_action);
+HPX_REGISTER_ACTION_DECLARATION(
+        remote::SWE_DimensionalSplittingComponent::getCommunicationTime_action, SWE_DimensionalSplittingComponent_getCommunicationTime_action);
+HPX_REGISTER_ACTION_DECLARATION(
+        remote::SWE_DimensionalSplittingComponent::getFlopCount_action, SWE_DimensionalSplittingComponent_getFlopCount_action);
 struct SWE_DimensionalSplittingComponent
         : hpx::components::client_base<SWE_DimensionalSplittingComponent,remote::SWE_DimensionalSplittingComponent>
 {
@@ -124,6 +130,14 @@ struct SWE_DimensionalSplittingComponent
     void printResult()
     {
         return hpx::async<remote::SWE_DimensionalSplittingComponent::printResult_action>(this->get_id()).get();
+    }
+    float getCommunicationTime()
+    {
+        return hpx::async<remote::SWE_DimensionalSplittingComponent::getCommunicationTime_action>(this->get_id()).get();
+    }
+    float getFlopCount()
+    {
+        return hpx::async<remote::SWE_DimensionalSplittingComponent::getFlopCount_action>(this->get_id()).get();
     }
 };
 

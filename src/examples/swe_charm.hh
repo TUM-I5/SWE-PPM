@@ -8,9 +8,11 @@ class swe_charm : public CBase_swe_charm {
 		swe_charm(CkArgMsg *msg);
 		swe_charm(CkMigrateMessage *msg);
 
-		void done(int index);
+		void done(int index,float flop, float commTime, float wallTime);
 		void exit();
             int chareCount;
+    float sumFlops;
+    float sumCommTime;
 	private:
 
 };
