@@ -12,6 +12,9 @@
 
     struct Closure_swe_charm::done_2_closure : public SDAG::Closure {
             int index;
+            float flop;
+            float commTime;
+            float wallTime;
 
 
       done_2_closure() {
@@ -21,8 +24,14 @@
         init();
       }
             int & getP0() { return index;}
+            float & getP1() { return flop;}
+            float & getP2() { return commTime;}
+            float & getP3() { return wallTime;}
       void pup(PUP::er& __p) {
         __p | index;
+        __p | flop;
+        __p | commTime;
+        __p | wallTime;
         packClosure(__p);
       }
       virtual ~done_2_closure() {
@@ -105,7 +114,7 @@ extern "C" void __xlater_roPup_checkpointCount(void *_impl_pup_er) {
 
 /* DEFS: mainchare swe_charm: Chare{
 swe_charm(CkArgMsg* impl_msg);
-void done(int index);
+void done(int index, float flop, float commTime, float wallTime);
 void exit();
 };
  */
@@ -150,22 +159,28 @@ void CkIndex_swe_charm::_call_swe_charm_CkArgMsg(void* impl_msg, void* impl_obj_
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
-/* DEFS: void done(int index);
+/* DEFS: void done(int index, float flop, float commTime, float wallTime);
  */
-void CProxy_swe_charm::done(int index, const CkEntryOptions *impl_e_opts)
+void CProxy_swe_charm::done(int index, float flop, float commTime, float wallTime, const CkEntryOptions *impl_e_opts)
 {
   ckCheck();
-  //Marshall: int index
+  //Marshall: int index, float flop, float commTime, float wallTime
   int impl_off=0;
   { //Find the size of the PUP'd data
     PUP::sizer implP;
     implP|index;
+    implP|flop;
+    implP|commTime;
+    implP|wallTime;
     impl_off+=implP.size();
   }
   CkMarshallMsg *impl_msg=CkAllocateMarshallMsg(impl_off,impl_e_opts);
   { //Copy over the PUP'd data
     PUP::toMem implP((void *)impl_msg->msgBuf);
     implP|index;
+    implP|flop;
+    implP|commTime;
+    implP|wallTime;
   }
   if (ckIsDelegated()) {
     int destPE=CkChareMsgPrep(CkIndex_swe_charm::idx_done_marshall2(), impl_msg, &ckGetChareID());
@@ -177,7 +192,7 @@ void CProxy_swe_charm::done(int index, const CkEntryOptions *impl_e_opts)
 
 // Entry point registration function
 int CkIndex_swe_charm::reg_done_marshall2() {
-  int epidx = CkRegisterEp("done(int index)",
+  int epidx = CkRegisterEp("done(int index, float flop, float commTime, float wallTime)",
       _call_done_marshall2, CkMarshallMsg::__idx, __idx, 0+CK_EP_NOKEEP);
   CkRegisterMarshallUnpackFn(epidx, _callmarshall_done_marshall2);
   CkRegisterMessagePupFn(epidx, _marshallmessagepup_done_marshall2);
@@ -190,36 +205,60 @@ void CkIndex_swe_charm::_call_done_marshall2(void* impl_msg, void* impl_obj_void
   swe_charm* impl_obj = static_cast<swe_charm*>(impl_obj_void);
   CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
   char *impl_buf=impl_msg_typed->msgBuf;
-  /*Unmarshall pup'd fields: int index*/
+  /*Unmarshall pup'd fields: int index, float flop, float commTime, float wallTime*/
   PUP::fromMem implP(impl_buf);
   PUP::detail::TemporaryObjectHolder<int> index;
   implP|index;
+  PUP::detail::TemporaryObjectHolder<float> flop;
+  implP|flop;
+  PUP::detail::TemporaryObjectHolder<float> commTime;
+  implP|commTime;
+  PUP::detail::TemporaryObjectHolder<float> wallTime;
+  implP|wallTime;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
-  impl_obj->done(std::move(index.t));
+  impl_obj->done(std::move(index.t), std::move(flop.t), std::move(commTime.t), std::move(wallTime.t));
 }
 int CkIndex_swe_charm::_callmarshall_done_marshall2(char* impl_buf, void* impl_obj_void) {
   swe_charm* impl_obj = static_cast<swe_charm*>(impl_obj_void);
-  /*Unmarshall pup'd fields: int index*/
+  /*Unmarshall pup'd fields: int index, float flop, float commTime, float wallTime*/
   PUP::fromMem implP(impl_buf);
   PUP::detail::TemporaryObjectHolder<int> index;
   implP|index;
+  PUP::detail::TemporaryObjectHolder<float> flop;
+  implP|flop;
+  PUP::detail::TemporaryObjectHolder<float> commTime;
+  implP|commTime;
+  PUP::detail::TemporaryObjectHolder<float> wallTime;
+  implP|wallTime;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
-  impl_obj->done(std::move(index.t));
+  impl_obj->done(std::move(index.t), std::move(flop.t), std::move(commTime.t), std::move(wallTime.t));
   return implP.size();
 }
 void CkIndex_swe_charm::_marshallmessagepup_done_marshall2(PUP::er &implDestP,void *impl_msg) {
   CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
   char *impl_buf=impl_msg_typed->msgBuf;
-  /*Unmarshall pup'd fields: int index*/
+  /*Unmarshall pup'd fields: int index, float flop, float commTime, float wallTime*/
   PUP::fromMem implP(impl_buf);
   PUP::detail::TemporaryObjectHolder<int> index;
   implP|index;
+  PUP::detail::TemporaryObjectHolder<float> flop;
+  implP|flop;
+  PUP::detail::TemporaryObjectHolder<float> commTime;
+  implP|commTime;
+  PUP::detail::TemporaryObjectHolder<float> wallTime;
+  implP|wallTime;
   impl_buf+=CK_ALIGN(implP.size(),16);
   /*Unmarshall arrays:*/
   if (implDestP.hasComments()) implDestP.comment("index");
   implDestP|index;
+  if (implDestP.hasComments()) implDestP.comment("flop");
+  implDestP|flop;
+  if (implDestP.hasComments()) implDestP.comment("commTime");
+  implDestP|commTime;
+  if (implDestP.hasComments()) implDestP.comment("wallTime");
+  implDestP|wallTime;
 }
 PUPable_def(SINGLE_ARG(Closure_swe_charm::done_2_closure))
 #endif /* CK_TEMPLATES_ONLY */
@@ -266,7 +305,7 @@ void CkIndex_swe_charm::__register(const char *s, size_t size) {
   idx_swe_charm_CkArgMsg();
   CkRegisterMainChare(__idx, idx_swe_charm_CkArgMsg());
 
-  // REG: void done(int index);
+  // REG: void done(int index, float flop, float commTime, float wallTime);
   idx_done_marshall2();
 
   // REG: void exit();
@@ -293,7 +332,7 @@ void _registerswe_charm(void)
 
 /* REG: mainchare swe_charm: Chare{
 swe_charm(CkArgMsg* impl_msg);
-void done(int index);
+void done(int index, float flop, float commTime, float wallTime);
 void exit();
 };
 */

@@ -74,6 +74,7 @@ void receiveGhostRight(copyLayer* impl_msg);
 void receiveGhostBottom(copyLayer* impl_msg);
 void receiveGhostTop(copyLayer* impl_msg);
 void reductionTrigger();
+void printFlops(double flop);
 void reduceWaveSpeed(float maxWaveSpeed);
 SWE_DimensionalSplittingCharm(CkMigrateMessage* impl_msg);
 };
@@ -260,47 +261,88 @@ class CkIndex_SWE_DimensionalSplittingCharm:public CkIndex_ArrayElement{
     static void _call_reductionTrigger_void(void* impl_msg, void* impl_obj);
     
     static void _call_sdag_reductionTrigger_void(void* impl_msg, void* impl_obj);
+    /* DECLS: void printFlops(double flop);
+     */
+    // Entry point registration at startup
+    
+    static int reg_printFlops_marshall8();
+    // Entry point index lookup
+    
+    inline static int idx_printFlops_marshall8() {
+      static int epidx = reg_printFlops_marshall8();
+      return epidx;
+    }
+
+    
+    inline static int idx_printFlops(void (SWE_DimensionalSplittingCharm::*)(double flop) ) {
+      return idx_printFlops_marshall8();
+    }
+
+
+    
+    static int printFlops(double flop) { return idx_printFlops_marshall8(); }
+    // Entry point registration at startup
+    
+    static int reg_redn_wrapper_printFlops_marshall8();
+    // Entry point index lookup
+    
+    inline static int idx_redn_wrapper_printFlops_marshall8() {
+      static int epidx = reg_redn_wrapper_printFlops_marshall8();
+      return epidx;
+    }
+    
+    static int redn_wrapper_printFlops(CkReductionMsg* impl_msg) { return idx_redn_wrapper_printFlops_marshall8(); }
+    
+    static void _call_redn_wrapper_printFlops_marshall8(void* impl_msg, void* impl_obj_void);
+    
+    static void _call_printFlops_marshall8(void* impl_msg, void* impl_obj);
+    
+    static void _call_sdag_printFlops_marshall8(void* impl_msg, void* impl_obj);
+    
+    static int _callmarshall_printFlops_marshall8(char* impl_buf, void* impl_obj_void);
+    
+    static void _marshallmessagepup_printFlops_marshall8(PUP::er &p,void *msg);
     /* DECLS: void reduceWaveSpeed(float maxWaveSpeed);
      */
     // Entry point registration at startup
     
-    static int reg_reduceWaveSpeed_marshall8();
+    static int reg_reduceWaveSpeed_marshall9();
     // Entry point index lookup
     
-    inline static int idx_reduceWaveSpeed_marshall8() {
-      static int epidx = reg_reduceWaveSpeed_marshall8();
+    inline static int idx_reduceWaveSpeed_marshall9() {
+      static int epidx = reg_reduceWaveSpeed_marshall9();
       return epidx;
     }
 
     
     inline static int idx_reduceWaveSpeed(void (SWE_DimensionalSplittingCharm::*)(float maxWaveSpeed) ) {
-      return idx_reduceWaveSpeed_marshall8();
+      return idx_reduceWaveSpeed_marshall9();
     }
 
 
     
-    static int reduceWaveSpeed(float maxWaveSpeed) { return idx_reduceWaveSpeed_marshall8(); }
+    static int reduceWaveSpeed(float maxWaveSpeed) { return idx_reduceWaveSpeed_marshall9(); }
     // Entry point registration at startup
     
-    static int reg_redn_wrapper_reduceWaveSpeed_marshall8();
+    static int reg_redn_wrapper_reduceWaveSpeed_marshall9();
     // Entry point index lookup
     
-    inline static int idx_redn_wrapper_reduceWaveSpeed_marshall8() {
-      static int epidx = reg_redn_wrapper_reduceWaveSpeed_marshall8();
+    inline static int idx_redn_wrapper_reduceWaveSpeed_marshall9() {
+      static int epidx = reg_redn_wrapper_reduceWaveSpeed_marshall9();
       return epidx;
     }
     
-    static int redn_wrapper_reduceWaveSpeed(CkReductionMsg* impl_msg) { return idx_redn_wrapper_reduceWaveSpeed_marshall8(); }
+    static int redn_wrapper_reduceWaveSpeed(CkReductionMsg* impl_msg) { return idx_redn_wrapper_reduceWaveSpeed_marshall9(); }
     
-    static void _call_redn_wrapper_reduceWaveSpeed_marshall8(void* impl_msg, void* impl_obj_void);
+    static void _call_redn_wrapper_reduceWaveSpeed_marshall9(void* impl_msg, void* impl_obj_void);
     
-    static void _call_reduceWaveSpeed_marshall8(void* impl_msg, void* impl_obj);
+    static void _call_reduceWaveSpeed_marshall9(void* impl_msg, void* impl_obj);
     
-    static void _call_sdag_reduceWaveSpeed_marshall8(void* impl_msg, void* impl_obj);
+    static void _call_sdag_reduceWaveSpeed_marshall9(void* impl_msg, void* impl_obj);
     
-    static int _callmarshall_reduceWaveSpeed_marshall8(char* impl_buf, void* impl_obj_void);
+    static int _callmarshall_reduceWaveSpeed_marshall9(char* impl_buf, void* impl_obj_void);
     
-    static void _marshallmessagepup_reduceWaveSpeed_marshall8(PUP::er &p,void *msg);
+    static void _marshallmessagepup_reduceWaveSpeed_marshall9(PUP::er &p,void *msg);
     /* DECLS: SWE_DimensionalSplittingCharm(CkMigrateMessage* impl_msg);
      */
     // Entry point registration at startup
@@ -449,6 +491,11 @@ class CkIndex_SWE_DimensionalSplittingCharm:public CkIndex_ArrayElement{
     
     void reductionTrigger(const CkEntryOptions *impl_e_opts=NULL) ;
 
+/* DECLS: void printFlops(double flop);
+ */
+    
+    void printFlops(double flop, const CkEntryOptions *impl_e_opts=NULL) ;
+
 /* DECLS: void reduceWaveSpeed(float maxWaveSpeed);
  */
     
@@ -576,6 +623,11 @@ PUPmarshall(CProxyElement_SWE_DimensionalSplittingCharm)
  */
     
     void reductionTrigger(const CkEntryOptions *impl_e_opts=NULL) ;
+
+/* DECLS: void printFlops(double flop);
+ */
+    
+    void printFlops(double flop, const CkEntryOptions *impl_e_opts=NULL) ;
 
 /* DECLS: void reduceWaveSpeed(float maxWaveSpeed);
  */
@@ -773,6 +825,11 @@ PUPmarshall(CProxy_SWE_DimensionalSplittingCharm)
     
     void reductionTrigger(const CkEntryOptions *impl_e_opts=NULL) ;
 
+/* DECLS: void printFlops(double flop);
+ */
+    
+    void printFlops(double flop, const CkEntryOptions *impl_e_opts=NULL) ;
+
 /* DECLS: void reduceWaveSpeed(float maxWaveSpeed);
  */
     
@@ -887,7 +944,10 @@ class Closure_SWE_DimensionalSplittingCharm {
     struct reductionTrigger_7_closure;
 
 
-    struct reduceWaveSpeed_8_closure;
+    struct printFlops_8_closure;
+
+
+    struct reduceWaveSpeed_9_closure;
 
 
 };

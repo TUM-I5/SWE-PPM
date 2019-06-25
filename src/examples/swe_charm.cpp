@@ -201,8 +201,8 @@ void swe_charm::done(int index,float flop, float commTime, float wallTime ) {
     sumFlops += flop;
     sumCommTime += commTime;
 	if (--chareCount == 0){
-        CkPrintf("Rank %i : Flops(Total): %fGFLOPS\n", thisIndex,(sumFlops/(wallTime*1000000000));
-        CkPrintf("Rank %i : Communication Time(Total): %fs\n", thisIndex,sumCommTime);
+        CkPrintf("Flops(Total): %fGFLOPS\n",(sumFlops/(wallTime*1000000000)));
+        CkPrintf("Communication Time(Total): %fs\n", sumCommTime);
         exit();
 	}
 
