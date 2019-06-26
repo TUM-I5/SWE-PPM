@@ -436,30 +436,38 @@ int hpx_main(boost::program_options::variables_map& vm)
    displFile = vm["displacement-file"].as<std::string>();
 #endif
 
-
+        int totalWorkers =  hpx::get_num_worker_threads();
+        int nodes       =  hpx::get_num_localities(hpx::launch::sync);
+        int workersPerNode = totalWorkers/nodes;
         // Create a single instance of the component on this locality.
+        std::cout << "Application has access to:" << std::endl
+                    << "Workers: " << totalWorkers << std::endl
+                    << "Nodes: " << nodes << std::endl
+                    << "Workers/Node: " << workersPerNode << std::endl;
 
+        std::vector<SWE_Hpx_Component> blocks;
 
-         std::vector<SWE_Hpx_Component> blocks;
-        int totalRanks= hpx::get_num_worker_threads();
-        for(int i = 0 ; i < totalRanks; i++){
-            blocks.push_back(initializeWorker(i,totalRanks,hpx::find_here(),
-                                                        simulationDuration,
-                                                        numberOfCheckPoints,
-                                                        nxRequested,
-                                                        nyRequested,
-                                                        outputBaseName,
-                                                        batFile,
-                                                        displFile));
-
+        int indiRank = 0;
+        for(auto &locality : hpx::find_all_localities()){
+            for(int i = 0; i < workersPerNode; i++){
+                blocks.push_back(initializeWorker(indiRank,totalWorkers,locality,
+                                                  simulationDuration,
+                                                  numberOfCheckPoints,
+                                                  nxRequested,
+                                                  nyRequested,
+                                                  outputBaseName,
+                                                  batFile,
+                                                  displFile));
+                indiRank++;
+            }
         }
-        std::cout << "test\n";
+
         std::vector<hpx::naming::id_type> test;
         std::vector<hpx::future<void>> comps;
         for(auto comp : blocks ) test.push_back(comp.get_id());
 
-        for(int i = 0; i < totalRanks; i++) {
-            comps.push_back(blocks[i].initialize(test));
+        for(auto &block : blocks) {
+            comps.push_back(block.initialize(test));
         }
         hpx::when_all(comps).get();
 
