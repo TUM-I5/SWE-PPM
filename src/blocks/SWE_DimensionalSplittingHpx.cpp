@@ -284,7 +284,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
      * SEND *
      ********/
 
-
+    clock_gettime(CLOCK_MONOTONIC, &startTime);
     if (boundaryType[BND_LEFT] == CONNECT) {
 
         int startIndex = ny + 2 + 1;
@@ -332,11 +332,10 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     }
 
 
-
     /***********
      * RECEIVE *
      **********/
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
+
     std::vector<hpx::future<copyLayerStruct<std::vector<float>>>>fut;
     if (boundaryType[BND_LEFT] == CONNECT) {
         fut.push_back(comm.get(BND_LEFT));
@@ -418,6 +417,7 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     communicationTime += (endTime.tv_sec - startTime.tv_sec);
     communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+
 }
 void SWE_DimensionalSplittingHpx::computeXSweep (){
     computeClock = clock();

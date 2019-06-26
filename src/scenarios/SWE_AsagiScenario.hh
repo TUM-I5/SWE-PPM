@@ -139,11 +139,14 @@ class SWE_AsagiScenario: public SWE_Scenario {
 				return bathymetryRange[3];
 		}
 
+
+
 	private:
 		Grid* bathymetryGrid;
 		Grid* displacementGrid;
 
 		float bathymetryRange[4];
 		float displacementRange[4];
+
 };
 #endif // __SWE_ASAGISCENARIO_HH

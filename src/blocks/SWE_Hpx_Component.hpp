@@ -14,6 +14,7 @@
 #include "SWE_DimensionalSplittingHpx.hh"
 #include <utility>
 
+
 namespace remote
     {
         struct HPX_COMPONENT_EXPORT SWE_Hpx_Component
@@ -39,7 +40,11 @@ namespace remote
             SWE_Hpx_Component(
                     int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
                     int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
-                    float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours);
+                    float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours, std::string batFile, std::string displFile);
+    SWE_Hpx_Component(
+            int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
+            int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
+            float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours);
             SWE_Hpx_Component(): simulation(0,0,0,0,0,0,communicator_type(0,0,std::array<int,4>())){}
             void invoke(std::vector<hpx::naming::id_type> const &test);
             HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, invoke);
@@ -84,6 +89,14 @@ HPX_REGISTER_ACTION_DECLARATION(
         SWE_Hpx_Component(hpx::naming::id_type && f)
                 : base_type(std::move(f))
         {}
+        SWE_Hpx_Component(hpx::naming::id_type && f,
+                          int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
+                          int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
+                          float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries,std::array<int,4> neighbours, std::string batFile, std::string displFile)
+                : base_type(std::move(f))
+        {
+            this->create(f,rank, totalRank, simulationDuration, numberOfCheckPoints, nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,boundaries,neighbours,batFile,displFile);
+        }
         SWE_Hpx_Component(hpx::naming::id_type && f,
                           int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
                           int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,

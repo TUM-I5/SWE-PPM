@@ -168,9 +168,15 @@ std::string const &displFile){
     myNeighbours[BND_BOTTOM] = (localBlockPositionY > 0) ? myHpxRank - 1 : -1;
     myNeighbours[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? myHpxRank + 1 : -1;
 
-    return hpx::new_<SWE_Hpx_Component>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
-             nxLocal,nyLocal,dxSimulation,dySimulation,localOriginX,localOriginY,boundaries, myNeighbours);
 
+
+#ifdef ASAGI
+    return hpx::new_<SWE_Hpx_Component>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
+             nxLocal,nyLocal,dxSimulation,dySimulation,localOriginX,localOriginY,boundaries, myNeighbours,batFile, displFile);
+#else
+    return hpx::new_<SWE_Hpx_Component>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
+                                        nxLocal,nyLocal,dxSimulation,dySimulation,localOriginX,localOriginY,boundaries, myNeighbours);
+#endif
 
 
    // communicator_type comm(myHpxRank,totalHpxRanks,std::move(myNeighbours));
