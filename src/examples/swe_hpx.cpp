@@ -55,8 +55,8 @@
 #endif
 
 #include "blocks/SWE_DimensionalSplittingHpx.hh"
-#include "blocks/SWE_DimensionalSplittingComponent.hpp"
-//#include "blocks/SWE_Hpx_Component.hpp"
+//#include "blocks/SWE_DimensionalSplittingComponent.hpp"
+#include "blocks/SWE_Hpx_Component.hpp"
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/include/compute.hpp>
@@ -67,7 +67,7 @@
 
 
 
-SWE_DimensionalSplittingComponent initializeWorker (std::size_t rank,std::size_t totalRanks,hpx::id_type locality, float simulationDuration,
+SWE_Hpx_Component initializeWorker (std::size_t rank,std::size_t totalRanks,hpx::id_type locality, float simulationDuration,
 int numberOfCheckPoints,
 int nxRequested,
 int nyRequested,
@@ -168,7 +168,7 @@ std::string const &displFile){
     myNeighbours[BND_BOTTOM] = (localBlockPositionY > 0) ? myHpxRank - 1 : -1;
     myNeighbours[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? myHpxRank + 1 : -1;
 
-    return hpx::new_<SWE_DimensionalSplittingComponent>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
+    return hpx::new_<SWE_Hpx_Component>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
              nxLocal,nyLocal,dxSimulation,dySimulation,localOriginX,localOriginY,boundaries, myNeighbours);
 
 
@@ -238,7 +238,7 @@ void cycle( float simulationDuration,
            std::string const &batFile,
            std::string const &displFile){
 
-    std::vector<SWE_DimensionalSplittingComponent> blocks;
+  /*  std::vector<SWE_DimensionalSplittingComponent> blocks;
     int totalRanks= hpx::get_num_worker_threads();
     for(int i = 0 ; i < totalRanks; i++){
         blocks.push_back(initializeWorker(i,totalRanks,hpx::find_here(),
@@ -258,9 +258,8 @@ void cycle( float simulationDuration,
     hpx::when_all(fut).wait();
 
     hpx::cout << "STARTED\n";
-    /********************
-     * START SIMULATION *
-     ********************/
+
+
     // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
     float* checkpointInstantOfTime = new float[numberOfCheckPoints];
     // Time delta is the time between any two checkpoints
@@ -343,13 +342,10 @@ void cycle( float simulationDuration,
                  simulation.getWaterHeight(),
                  simulation.getMomentumHorizontal(),
                  simulation.getMomentumVertical(),
-                 t);*/
+                 t);
     }
-
-
-    /************
-     * FINALIZE *
-     ************/
+*/
+/*
     float totalCommTime = 0;
     float sumFlops = 0;
     for(auto block: blocks){
@@ -366,7 +362,7 @@ void cycle( float simulationDuration,
                 << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
     hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
     hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
-
+*/
 }
 
 
@@ -444,7 +440,7 @@ int hpx_main(boost::program_options::variables_map& vm)
         // Create a single instance of the component on this locality.
 
 
-        /* std::vector<SWE_Hpx_Component> blocks;
+         std::vector<SWE_Hpx_Component> blocks;
         int totalRanks= hpx::get_num_worker_threads();
         for(int i = 0 ; i < totalRanks; i++){
             blocks.push_back(initializeWorker(i,totalRanks,hpx::find_here(),
@@ -465,17 +461,33 @@ int hpx_main(boost::program_options::variables_map& vm)
         for(int i = 0; i < totalRanks; i++) {
             comps.push_back(blocks[i].initialize(test));
         }
-        hpx::when_all(comps);
+        hpx::when_all(comps).get();
+
+    float totalCommTime = 0;
+    float sumFlops = 0;
+    for(auto block: blocks){
+
+        totalCommTime += block.getCommunicationTime();
+        sumFlops += block.getFlopCount();
+    }
 
 
-*/
-    cycle(simulationDuration,
+    float wallTime = blocks[0].getWallTime();
+    //uint64_t  sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
+
+    hpx::cout   << "Flop count: " << sumFlops << std::endl
+                << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
+    hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
+    hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
+
+
+/*    cycle(simulationDuration,
           numberOfCheckPoints,
           nxRequested,
           nyRequested,
           outputBaseName,
           batFile,
-          displFile);
+          displFile);*/
     return hpx::finalize();
 }
 int main(int argc, char** argv) {

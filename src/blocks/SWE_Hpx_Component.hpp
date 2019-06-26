@@ -32,6 +32,7 @@ namespace remote
             const std::vector<hpx::naming::id_type> ids;
             float simulationDuration;
             int numberOfCheckPoints;
+            float wallTime;
             std::vector<float> checkpointInstantOfTime;
 
 
@@ -47,8 +48,13 @@ namespace remote
             void initialize(std::vector<hpx::naming::id_type> const &ids);
 
             HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, initialize);
-
-
+        
+            float getCommunicationTime();
+            float getFlopCount();
+            float getWallTime();
+    HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, getCommunicationTime);
+    HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, getFlopCount);
+    HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, getWallTime);
         };
     }
 
@@ -59,7 +65,12 @@ HPX_REGISTER_ACTION_DECLARATION(
 
 HPX_REGISTER_ACTION_DECLARATION(
        remote::SWE_Hpx_Component::get_wave_speed_action, SWE_Hpx_Component_get_wave_speed_action);
-
+HPX_REGISTER_ACTION_DECLARATION(
+        remote::SWE_Hpx_Component::getCommunicationTime_action, SWE_Hpx_Component_getCommunicationTime_action);
+HPX_REGISTER_ACTION_DECLARATION(
+        remote::SWE_Hpx_Component::getFlopCount_action, SWE_Hpx_Component_getFlopCount_action);
+HPX_REGISTER_ACTION_DECLARATION(
+        remote::SWE_Hpx_Component::getWallTime_action, SWE_Hpx_Component_getWallTime_action);
     struct SWE_Hpx_Component
             : hpx::components::client_base<SWE_Hpx_Component,remote::SWE_Hpx_Component>
     {
@@ -93,7 +104,18 @@ HPX_REGISTER_ACTION_DECLARATION(
         {
             return  hpx::async<remote::SWE_Hpx_Component::get_wave_speed_action>(this->get_id()).get();
         }
-
+        float getCommunicationTime()
+        {
+            return hpx::async<remote::SWE_Hpx_Component::getCommunicationTime_action>(this->get_id()).get();
+        }
+        float getFlopCount()
+        {
+            return hpx::async<remote::SWE_Hpx_Component::getFlopCount_action>(this->get_id()).get();
+        }
+        float getWallTime()
+        {
+            return hpx::async<remote::SWE_Hpx_Component::getWallTime_action>(this->get_id()).get();
+        }
     };
 
 

@@ -196,7 +196,7 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
                  (float) 0.);
 
 */
-        hpx::cout << myHpxRank << " finished init" << std::endl;
+       
      }
         void SWE_Hpx_Component::invoke(std::vector<hpx::naming::id_type>const &test)
         {
@@ -209,7 +209,7 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
 
 
          simulation.exchangeBathymetry();
-         hpx::cout << "STARTED\n";
+
          /********************
           * START SIMULATION *
           ********************/
@@ -219,7 +219,7 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
          struct timespec startTime;
          struct timespec endTime;
 
-         float wallTime = 0.;
+         wallTime = 0.;
          float t = 0.;
 
 
@@ -246,7 +246,7 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
                  hpx::lcos::barrier(std::string("midcalc"), totalHpxRanks, myHpxRank).wait();
 
                  simulation.maxTimestepGlobal = hpx::lcos::reduce<get_wave_speed_action>(ids,Min<float>()).get();
-                 hpx::cout << myHpxRank << " timestep " << simulation.maxTimestepGlobal << std::endl;
+                // hpx::cout << myHpxRank << " timestep " << simulation.maxTimestepGlobal << std::endl;
                  simulation.computeYSweep();
                  // max timestep has been reduced over all ranks in computeNumericalFluxes()
                  timestep = simulation.getMaxTimestep();
@@ -283,15 +283,14 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
           * FINALIZE *
           ************/
 
-         hpx::cout << "Rank "<< myHpxRank <<  ": Compute Time (CPU):" << simulation.computeTime
-                 <<"s"<< " - (WALL): "<<  simulation.computeTimeWall<<"s"<< " | Total Time (Wall):"<< wallTime <<"s"<<std::endl;
-         uint64_t sumFlops = 0;
-         //uint64_t  sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
          if(myHpxRank == 0){
+
+             hpx::cout << "Rank "<< myHpxRank <<  ": Compute Time (CPU):" << simulation.computeTime
+                       <<"s"<< " - (WALL): "<<  simulation.computeTimeWall<<"s"<< " | Total Time (Wall):"<< wallTime <<"s"<<std::endl;
              hpx::cout   << "Rank: " << myHpxRank << std::endl
-                         << "Flop count: " << sumFlops << std::endl
-                         << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
-                         << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl;
+
+                         << "Flops(Single): "<< ((float)simulation.flopCounter)/(wallTime*1000000000) << std::endl
+                         <<"Communication Time: "<< simulation.communicationTime << "s"<< hpx::endl;
          }
 
      }
@@ -299,9 +298,15 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
         {
             return simulation.maxTimestepGlobal;
         }
-
-
-
+         float SWE_Hpx_Component::getCommunicationTime(){
+             return simulation.communicationTime;
+         }
+         float SWE_Hpx_Component::getFlopCount(){
+             return simulation.flopCounter;
+         }
+         float SWE_Hpx_Component::getWallTime(){
+             return wallTime;
+         }
 
     }
 
@@ -320,3 +325,9 @@ HPX_REGISTER_ACTION(
         remote::SWE_Hpx_Component::initialize_action, SWE_Hpx_Component_initialize_action);
 HPX_REGISTER_ACTION(
         remote::SWE_Hpx_Component::get_wave_speed_action, SWE_Hpx_Component_get_wave_speed_action);
+HPX_REGISTER_ACTION(
+        remote::SWE_Hpx_Component::getCommunicationTime_action, SWE_Hpx_Component_getCommunicationTime_action);
+HPX_REGISTER_ACTION(
+        remote::SWE_Hpx_Component::getFlopCount_action, SWE_Hpx_Component_getFlopCount_action);
+HPX_REGISTER_ACTION(
+        remote::SWE_Hpx_Component::getWallTime_action, SWE_Hpx_Component_getWallTime_action);
