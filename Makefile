@@ -52,6 +52,8 @@ upcxx_debug:
 	scons compileMode=debug writeNetCDF=True openmp=false solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} copyenv=true
 hpx:
 	scons writeNetCDF=False openmp=false solver=hybrid parallelization=hpx asagi=true asagiDir=${ASAGI_PATH} copyenv=true
+hpx_rad:
+	scons writeNetCDF=False openmp=false solver=hybrid parallelization=hpx asagi=false asagiDir=${ASAGI_PATH} copyenv=true
 charm:
 	scons writeNetCDF=True openmp=false solver=hybrid parallelization=charm asagi=true asagiDir=${ASAGI_PATH}  copyenv=true vectorize=true
 

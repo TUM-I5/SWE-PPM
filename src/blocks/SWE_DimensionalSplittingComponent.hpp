@@ -34,12 +34,15 @@ namespace remote
         float simulationDuration;
         int numberOfCheckPoints;
         std::vector<float> checkpointInstantOfTime;
-
+    SWE_DimensionalSplittingComponent(
+            int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
+            int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
+            float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours);
 
         SWE_DimensionalSplittingComponent(
                 int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
                 int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
-                float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours);
+                float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours,std::string batFile, std::string displFile );
         SWE_DimensionalSplittingComponent(): simulation(0,0,0,0,0,0,communicator_type(0,0,std::array<int,4>())){}
 
         void exchangeBathymetry();
@@ -100,7 +103,20 @@ struct SWE_DimensionalSplittingComponent
                       float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries,std::array<int,4> neighbours)
             : base_type(std::move(f))
     {
-        this->create(f,rank, totalRank, simulationDuration, numberOfCheckPoints, nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,boundaries,neighbours);
+        this->create(f,rank, totalRank, simulationDuration,
+                numberOfCheckPoints, nxLocal, nyLocal, dxSimulation,
+                dySimulation, localOriginX, localOriginY,boundaries,neighbours);
+    }
+    SWE_DimensionalSplittingComponent(hpx::naming::id_type && f,
+                                      int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
+                                      int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
+                                      float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries,std::array<int,4> neighbours ,
+                                      std::string batFile, std::string displFile )
+            : base_type(std::move(f))
+    {
+        this->create(f,rank, totalRank, simulationDuration,
+                numberOfCheckPoints, nxLocal, nyLocal, dxSimulation,
+                dySimulation, localOriginX, localOriginY,boundaries,neighbours ,batFile, displFile );
     }
 
     hpx::future<void> exchangeBathymetry()

@@ -55,8 +55,8 @@
 #endif
 
 #include "blocks/SWE_DimensionalSplittingHpx.hh"
-//#include "blocks/SWE_DimensionalSplittingComponent.hpp"
-#include "blocks/SWE_Hpx_Component.hpp"
+#include "blocks/SWE_DimensionalSplittingComponent.hpp"
+//#include "blocks/SWE_Hpx_Component.hpp"
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/include/compute.hpp>
@@ -64,10 +64,9 @@
 #include <hpx/include/async.hpp>
 #include <hpx/include/components.hpp>
 #include <hpx/include/parallel_algorithm.hpp>
-
-
-
-SWE_Hpx_Component initializeWorker (std::size_t rank,std::size_t totalRanks,hpx::id_type locality, float simulationDuration,
+#include <hpx/lcos/broadcast.hpp>
+#include <hpx/util/unwrap.hpp>
+SWE_DimensionalSplittingComponent initializeWorker (std::size_t rank,std::size_t totalRanks,hpx::id_type locality, float simulationDuration,
 int numberOfCheckPoints,
 int nxRequested,
 int nyRequested,
@@ -171,10 +170,10 @@ std::string const &displFile){
 
 
 #ifdef ASAGI
-    return hpx::new_<SWE_Hpx_Component>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
+    return hpx::new_<SWE_DimensionalSplittingComponent>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
              nxLocal,nyLocal,dxSimulation,dySimulation,localOriginX,localOriginY,boundaries, myNeighbours,batFile, displFile);
 #else
-    return hpx::new_<SWE_Hpx_Component>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
+    return hpx::new_<SWE_DimensionalSplittingComponent>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
                                         nxLocal,nyLocal,dxSimulation,dySimulation,localOriginX,localOriginY,boundaries, myNeighbours);
 #endif
 
@@ -236,7 +235,8 @@ std::string const &displFile){
 
 }
 
-void cycle( float simulationDuration,
+void cycle(int totalRanks,
+           float simulationDuration,
            int numberOfCheckPoints,
            int nxRequested,
            int nyRequested,
@@ -244,8 +244,7 @@ void cycle( float simulationDuration,
            std::string const &batFile,
            std::string const &displFile){
 
-  /*  std::vector<SWE_DimensionalSplittingComponent> blocks;
-    int totalRanks= hpx::get_num_worker_threads();
+   std::vector<SWE_DimensionalSplittingComponent> blocks;
     for(int i = 0 ; i < totalRanks; i++){
         blocks.push_back(initializeWorker(i,totalRanks,hpx::find_here(),
                                           simulationDuration,
@@ -259,12 +258,10 @@ void cycle( float simulationDuration,
     }
 
     std::vector<hpx::future<void>> fut;
+    std::vector<hpx::naming::id_type> block_ids;
+    for(auto comp : blocks ) block_ids.push_back(comp.get_id());
 
-    for(auto block : blocks)fut.push_back(block.exchangeBathymetry());
-    hpx::when_all(fut).wait();
-
-    hpx::cout << "STARTED\n";
-
+    hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::exchangeBathymetry_action>(block_ids).wait();
 
     // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
     float* checkpointInstantOfTime = new float[numberOfCheckPoints];
@@ -297,37 +294,26 @@ void cycle( float simulationDuration,
 
             // set values in ghost cells.
             // this function blocks until everything has been received
-            fut = std::vector<hpx::future<void>>();
-            for(auto block : blocks)fut.push_back(block.setGhostLayer());
 
-            hpx::when_all(fut).wait();
-            //hpx::cout << "Finished ghostlayer" << std::endl;
-            // compute numerical flux on each edge
-            // for(auto block : blocks)block.computeNumericalFluxes(ids);
-            fut = std::vector<hpx::future<void>>();
-            for(auto block : blocks)fut.push_back(block.computeXSweep());
-            hpx::when_all(fut).wait();
-           // hpx::cout << "Finished xSweep" << std::endl;
-            std::vector<float> timesteps;
-            for(auto block : blocks)timesteps.push_back(block.getMaxTimestep().get());
+            hpx::future<void> ghostlayer = hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::setGhostLayer_action>(block_ids);
+           // ghostlayer.get();
+            hpx::future<std::vector<float>> timestepsFut= hpx::dataflow(hpx::util::unwrapping(
+                    [&block_ids]()-> hpx::future<std::vector<float>> {
+                    return hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::getMaxTimestep_action>(block_ids);
+            })
+                    ,std::move(ghostlayer));
 
-            timestep = *std::min_element(timesteps.begin(), timesteps.end());
-            //hpx::cout << "Finished reduction" << std::endl;
-            fut = std::vector<hpx::future<void>>();
-            for(auto block : blocks)fut.push_back(block.setMaxTimestep(timestep));
-            hpx::when_all(fut).wait();
+            hpx::future<float> minTimestep = hpx::dataflow(hpx::util::unwrapping([](std::vector<float> timesteps)-> float {
 
-            fut = std::vector<hpx::future<void>>();
-            for(auto block : blocks)fut.push_back(block.computeYSweep());
-            //hpx::cout << "Finished ySweep" << std::endl;
-            // max timestep has been reduced over all ranks in computeNumericalFluxes()
+                return *std::min_element(timesteps.begin(), timesteps.end());
 
-            hpx::when_all(fut).wait();
+            }),std::move(timestepsFut));
 
-            // update the cell values
-            //simulation.updateUnknowns(timestep);
 
-            // Accumulate wall time
+            float timestep = minTimestep.get();
+
+            hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::setMaxTimestep_action>(block_ids,timestep).get();
+
             clock_gettime(CLOCK_MONOTONIC, &endTime);
             wallTime += (endTime.tv_sec - startTime.tv_sec);
             wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
@@ -339,19 +325,19 @@ void cycle( float simulationDuration,
 
         }
 
+        printf("Write timestep (%fs)\n", t);
+        //hpx::cout <<"Write timestep " << t<<"s" << std::endl;
 
-        hpx::cout <<"Write timestep " << t<<"s" << std::endl;
-
-
+    }
         // write output
         /* writer.writeTimeStep(
                  simulation.getWaterHeight(),
                  simulation.getMomentumHorizontal(),
                  simulation.getMomentumVertical(),
                  t);
-    }
+
 */
-/*
+
     float totalCommTime = 0;
     float sumFlops = 0;
     for(auto block: blocks){
@@ -361,14 +347,11 @@ void cycle( float simulationDuration,
     }
 
 
-
-    //uint64_t  sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
-
     hpx::cout   << "Flop count: " << sumFlops << std::endl
                 << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
     hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
     hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
-*/
+
 }
 
 
@@ -383,6 +366,7 @@ int hpx_main(boost::program_options::variables_map& vm)
     int numberOfCheckPoints;
     int nxRequested;
     int nyRequested;
+    int totalRanks;
     std::string outputBaseName;
     std::string batFile;
     std::string displFile;
@@ -436,12 +420,13 @@ int hpx_main(boost::program_options::variables_map& vm)
        numberOfCheckPoints = vm["checkpoint-count"].as<int>();
     nxRequested = vm["resolution-horizontal"].as<int>();
     nyRequested = vm["resolution-vertical"].as<int>();
+    totalRanks = vm["blocks"].as<int>();
     outputBaseName = vm["output-basepath"].as<std::string>();
 #ifdef ASAGI
     batFile = vm["bathymetry-file"].as<std::string>();
    displFile = vm["displacement-file"].as<std::string>();
 #endif
-
+/*
         int totalWorkers =  hpx::get_num_worker_threads();
         int nodes       =  hpx::get_num_localities(hpx::launch::sync);
         int workersPerNode = totalWorkers/nodes;
@@ -494,14 +479,14 @@ int hpx_main(boost::program_options::variables_map& vm)
     hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
     hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
 
-
-/*    cycle(simulationDuration,
+*/
+   cycle(totalRanks,simulationDuration,
           numberOfCheckPoints,
           nxRequested,
           nyRequested,
           outputBaseName,
           batFile,
-          displFile);*/
+          displFile);
     return hpx::finalize();
 }
 int main(int argc, char** argv) {
@@ -524,7 +509,7 @@ int main(int argc, char** argv) {
      ("resolution-horizontal",value<int>()->default_value(100), "Number of simulation cells in horizontal direction")
      ("resolution-vertical", value<int>()->default_value(100),"Number of simulated cells in y-direction")
      ("output-basepath,o", value<std::string>()->default_value("lolo"),"Output base file name")
-
+            ("blocks,", value<int>()->default_value(1),"Number of swe blocks")
     ;
 
     // Initialize and run HPX, this example requires to run hpx_main on all

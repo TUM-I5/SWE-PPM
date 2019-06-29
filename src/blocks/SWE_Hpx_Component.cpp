@@ -15,10 +15,15 @@
 #include "writer/VtkWriter.hh"
 #endif
 
-
+#ifdef ASAGI
 #include "scenarios/SWE_AsagiScenario.hh"
+#else
 
 #include "scenarios/SWE_simple_scenarios.hh"
+#endif
+
+
+
 
 
 template <typename T> class Min {
@@ -41,8 +46,13 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
      {
          std::string outputFileName;
          // Initialize Scenario
-         SWE_AsagiScenario scenario(batFile, displFile);
-         //this->ids(ids);
+#ifdef ASAGI
+        SWE_AsagiScenario scenario(batFile, displFile);
+#else
+        SWE_RadialDamBreakScenario scenario;
+#endif
+
+        //this->ids(ids);
          this->simulationDuration = simulationDuration;
          this->numberOfCheckPoints = numberOfCheckPoints;
          // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
@@ -72,7 +82,11 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
      {
          std::string outputFileName;
 
+
+
          SWE_RadialDamBreakScenario scenario;
+
+
          this->simulationDuration = simulationDuration;
          this->numberOfCheckPoints = numberOfCheckPoints;
          // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
@@ -91,7 +105,7 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
 
          simulation.initScenario(scenario, boundaries.data());
 
-         hpx::cout << myHpxRank << " finished init" << std::endl;
+
      }
         void SWE_Hpx_Component::invoke(std::vector<hpx::naming::id_type>const &test)
         {
@@ -127,7 +141,7 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
              // Simulate until the checkpoint is reached
              while(t < checkpointInstantOfTime[i]) {
                  // Start measurement
-                 clock_gettime(CLOCK_MONOTONIC, &startTime);
+
 
                  // set values in ghost cells.
                  // this function blocks until everything has been received
@@ -139,9 +153,12 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
                  simulation.computeXSweep();
 
                  hpx::lcos::barrier(std::string("midcalc"), totalHpxRanks, myHpxRank).wait();
-
+                 clock_gettime(CLOCK_MONOTONIC, &startTime);
                  simulation.maxTimestepGlobal = hpx::lcos::reduce<get_wave_speed_action>(ids,Min<float>()).get();
                 // hpx::cout << myHpxRank << " timestep " << simulation.maxTimestepGlobal << std::endl;
+                 clock_gettime(CLOCK_MONOTONIC, &endTime);
+                 wallTime += (endTime.tv_sec - startTime.tv_sec);
+                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
                  simulation.computeYSweep();
                  // max timestep has been reduced over all ranks in computeNumericalFluxes()
                  timestep = simulation.getMaxTimestep();
@@ -150,9 +167,7 @@ HPX_REGISTER_REDUCE_ACTION(remote::SWE_Hpx_Component::get_wave_speed_action, max
                  simulation.updateUnknowns(timestep);
 
                  // Accumulate wall time
-                 clock_gettime(CLOCK_MONOTONIC, &endTime);
-                 wallTime += (endTime.tv_sec - startTime.tv_sec);
-                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+
 
                  // update simulation time with time step width.
                  t += timestep;

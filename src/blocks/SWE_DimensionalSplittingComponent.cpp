@@ -17,11 +17,10 @@
 #else
 #include "writer/VtkWriter.hh"
 #endif
-
+#include "scenarios/SWE_simple_scenarios.hh"
 #ifdef ASAGI
 #include "scenarios/SWE_AsagiScenario.hh"
-#else
-#include "scenarios/SWE_simple_scenarios.hh"
+
 #endif
 
 
@@ -32,6 +31,65 @@ namespace remote
             int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
             int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
             float localOriginX, float localOriginY,  std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours)
+    /*
+   #ifdef WRITENETCDF
+        // Construct a netCDF writer
+
+           writer(
+               outputFileName,
+               simulation.getBathymetry(),
+               boundarySize,
+               nxLocal,
+               nyLocal,
+               dxSimulation,
+               dySimulation,
+               simulation.getOriginX(),
+               simulation.getOriginY())
+
+   #else
+                // Construct a vtk writer
+                writer(
+                        outputFileName,
+                        simulation.getBathymetry(),
+                        boundarySize,
+                        nxLocal,
+                        nyLocal,
+                        dxSimulation,
+                        dySimulation)
+   #endif // WRITENETCDF*/
+
+            :
+            simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, communicator_type(rank,totalRank,neighbours))
+    {
+        std::string outputFileName;
+
+        SWE_RadialDamBreakScenario scenario;
+
+        //this->ids(ids);
+        this->simulationDuration = simulationDuration;
+        this->numberOfCheckPoints = numberOfCheckPoints;
+        // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
+        //float* checkpointInstantOfTime = new float[numberOfCheckPoints];
+        // Time delta is the time between any two checkpoints
+        float checkpointTimeDelta = simulationDuration / numberOfCheckPoints;
+        // The first checkpoint is reached after 0 + delta t
+        checkpointInstantOfTime.push_back(checkpointTimeDelta);
+        for(int i = 1; i < numberOfCheckPoints; i++) {
+            checkpointInstantOfTime.push_back(checkpointInstantOfTime[i - 1] + checkpointTimeDelta);
+        }
+
+        myHpxRank = rank;
+        totalHpxRanks = totalRank;
+
+
+        simulation.initScenario(scenario, boundaries.data());
+
+
+    }
+    SWE_DimensionalSplittingComponent::SWE_DimensionalSplittingComponent(
+            int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
+            int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
+            float localOriginX, float localOriginY,  std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours,std::string batFile, std::string displFile )
     /*
    #ifdef WRITENETCDF
         // Construct a netCDF writer
@@ -88,7 +146,7 @@ namespace remote
 
         simulation.initScenario(scenario, boundaries.data());
 
-        hpx::cout << myHpxRank << " finished init" << std::endl;
+
     }
 
     void SWE_DimensionalSplittingComponent::exchangeBathymetry()
@@ -99,12 +157,14 @@ namespace remote
 
     float SWE_DimensionalSplittingComponent::getMaxTimestep()
     {
+
         return simulation.maxTimestepGlobal;
 
     }
     void SWE_DimensionalSplittingComponent::setMaxTimestep(float maxTimestep)
     {
         simulation.maxTimestepGlobal = maxTimestep;
+        computeYSweep();
 
     }
     void SWE_DimensionalSplittingComponent::computeXSweep()
@@ -118,10 +178,11 @@ namespace remote
         simulation.updateUnknowns(simulation.maxTimestepGlobal);
 
     }
-    void SWE_DimensionalSplittingComponent::setGhostLayer()
+   void SWE_DimensionalSplittingComponent::setGhostLayer()
     {
-        simulation.setGhostLayer();
 
+        simulation.setGhostLayer().get();
+       computeXSweep();
     }
     void SWE_DimensionalSplittingComponent::printResult()
     {

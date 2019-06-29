@@ -282,16 +282,16 @@ int main(int argc, char** argv) {
 
 			// max timestep has been reduced over all ranks in computeNumericalFluxes()
 			timestep = simulation.getMaxTimestep();
-
+           // std::cout << "timestep " << timestep << std::endl;
 			// update the cell values
 			simulation.updateUnknowns(timestep);
 
 			// Accumulate wall time
-			clock_gettime(CLOCK_MONOTONIC, &endTime);
-			wallTime += (endTime.tv_sec - startTime.tv_sec);
-			wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+            clock_gettime(CLOCK_MONOTONIC, &endTime);
+            wallTime += (endTime.tv_sec - startTime.tv_sec);
+            wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
-			// update simulation time with time step width.
+            // update simulation time with time step width.
 			t += timestep;
 			iterations++;
 			MPI_Barrier(MPI_COMM_WORLD);
@@ -316,10 +316,11 @@ int main(int argc, char** argv) {
 
 	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs Communication Time: %fs\n", myMpiRank, simulation.computeTime, simulation.computeTimeWall, wallTime, simulation.communicationTime);
     float flop = simulation.getFlops();
+    float commTime = simulation.communicationTime;
     float sumFlops;
 	float sumCommTime;
     MPI_Allreduce(&flop, &sumFlops, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-    MPI_Allreduce(&simulation.communicationTime, &sumCommTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&commTime, &sumCommTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
     if(myMpiRank == 0){
         std::cout   << "Rank: " << myMpiRank << std::endl
                     << "Flop count: " << sumFlops << std::endl

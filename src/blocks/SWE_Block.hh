@@ -139,7 +139,7 @@ class SWE_Block {
 		virtual void applyBoundaryConditions();
 
 		// Interface methods without a default implementation
-		virtual void setGhostLayer() = 0;
+		//virtual void setGhostLayer() = 0;
 		// TODO is this needed (computeMaxTimeStep)
 		virtual void computeNumericalFluxes() = 0;
 		virtual void updateUnknowns(float dt) = 0;

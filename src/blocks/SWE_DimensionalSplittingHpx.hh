@@ -17,7 +17,10 @@
 #include "tools/Communicator.hpp"
 #include "solvers/HLLEFun.hpp"
 #include "solvers/Hybrid.hpp"
-
+#include <hpx/include/compute.hpp>
+#include <hpx/include/lcos.hpp>
+#include <hpx/include/async.hpp>
+#include <hpx/include/components.hpp>
 template <typename T>
 struct copyLayerStruct {
 
@@ -48,7 +51,7 @@ public:
     ~SWE_DimensionalSplittingHpx() {};
 
     // Interface methods
-    void setGhostLayer();
+    hpx::future<void> setGhostLayer();
     void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
     void computeXSweep();
     void computeYSweep();

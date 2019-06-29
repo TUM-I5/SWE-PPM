@@ -30,10 +30,7 @@
  *
  */
 #include "SWE_DimensionalSplittingHpx.hh"
-#include <hpx/include/compute.hpp>
-#include <hpx/include/lcos.hpp>
-#include <hpx/include/async.hpp>
-#include <hpx/include/components.hpp>
+
 #include <hpx/include/parallel_algorithm.hpp>
 #include <hpx/include/iostreams.hpp>
 #include <cassert>
@@ -267,7 +264,7 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 
 }
 
-void SWE_DimensionalSplittingHpx::setGhostLayer() {
+hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     // Apply appropriate conditions for OUTFLOW/WALL boundaries
     SWE_Block::applyBoundaryConditions();
 
@@ -283,8 +280,8 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
     /*********
      * SEND *
      ********/
-
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
+    struct timespec startTimeComm;
+    clock_gettime(CLOCK_MONOTONIC, &startTimeComm);
     if (boundaryType[BND_LEFT] == CONNECT) {
 
         int startIndex = ny + 2 + 1;
@@ -361,63 +358,74 @@ void SWE_DimensionalSplittingHpx::setGhostLayer() {
         fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
     }
 
-    auto borders = hpx::when_all(fut).get();
 
-    if (boundaryType[BND_LEFT] == CONNECT) {
+   auto ret = hpx::dataflow([this,startTimeComm] (std::vector<hpx::future<copyLayerStruct<std::vector<float>>>> borders )-> void {
+            if (boundaryType[BND_LEFT] == CONNECT) {
 
-        int startIndex = 1;
-        auto border = borders[BND_LEFT].get();
+                int startIndex = 1;
+                auto border = borders[BND_LEFT].get();
 
-        for(int i= 0; i < border.size; i++){
+                for(int i= 0; i < border.size; i++){
 
-            h[0][i + 1] = border.H[i];
-            hu[0][i + 1] = border.Hu[i];
-            hv[0][i + 1] = border.Hv[i];
-        }
-    }
+                    h[0][i + 1] = border.H[i];
+                    hu[0][i + 1] = border.Hu[i];
+                    hv[0][i + 1] = border.Hv[i];
+                }
+            }
 
-    if (boundaryType[BND_RIGHT] == CONNECT) {
-        int startIndex = (nx + 1) * (ny + 2) + 1;
+            if (boundaryType[BND_RIGHT] == CONNECT) {
+                int startIndex = (nx + 1) * (ny + 2) + 1;
 
-        auto border = borders[BND_RIGHT].get();
+                auto border = borders[BND_RIGHT].get();
 
-        for(int i= 0; i < border.size; i++){
+                for(int i= 0; i < border.size; i++){
 
-            h[nx+1][i + 1] = border.H[i];
-            hu[nx+1][i + 1] = border.Hu[i];
-            hv[nx+1][i + 1] = border.Hv[i];
-        }
+                    h[nx+1][i + 1] = border.H[i];
+                    hu[nx+1][i + 1] = border.Hu[i];
+                    hv[nx+1][i + 1] = border.Hv[i];
+                }
 
-    }
+            }
 
-    if (boundaryType[BND_BOTTOM] == CONNECT) {
+            if (boundaryType[BND_BOTTOM] == CONNECT) {
 
-        auto border = borders[BND_BOTTOM].get();
+                auto border = borders[BND_BOTTOM].get();
 
-        for(int i= 0; i < border.size; i++){
+                for(int i= 0; i < border.size; i++){
 
-            h[i + 1][0] = border.H[i];
-            hu[i + 1][0] = border.Hu[i];
-            hv[i + 1][0] = border.Hv[i];
-        }
+                    h[i + 1][0] = border.H[i];
+                    hu[i + 1][0] = border.Hu[i];
+                    hv[i + 1][0] = border.Hv[i];
+                }
 
-    }
+            }
 
-    if (boundaryType[BND_TOP] == CONNECT) {
-        auto border = borders[BND_TOP].get();
+            if (boundaryType[BND_TOP] == CONNECT) {
+                auto border = borders[BND_TOP].get();
 
-        for(int i= 0; i < border.size; i++){
+                for(int i= 0; i < border.size; i++){
 
-            h[i + 1][ny+1] = border.H[i];
-            hu[i + 1][ny+1] = border.Hu[i];
-            hv[i + 1][ny+1] = border.Hv[i];
-        }
+                    h[i + 1][ny+1] = border.H[i];
+                    hu[i + 1][ny+1] = border.Hu[i];
+                    hv[i + 1][ny+1] = border.Hv[i];
+                }
 
-    }
-    clock_gettime(CLOCK_MONOTONIC, &endTime);
-    communicationTime += (endTime.tv_sec - startTime.tv_sec);
-    communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+            }
 
+         /*   for (int y = 0; y < ny+2; y++) {
+
+                for (int x = 0; x < nx +2; x++) {
+                    std::cout << " " << h[x][y];
+                }
+                std::cout << std::endl;
+            }*/
+            clock_gettime(CLOCK_MONOTONIC, &endTime);
+            communicationTime += (endTime.tv_sec - startTimeComm.tv_sec);
+            communicationTime += (float) (endTime.tv_nsec - startTimeComm.tv_nsec) / 1E9;
+    },std::move(fut));
+
+
+    return ret;
 }
 void SWE_DimensionalSplittingHpx::computeXSweep (){
     computeClock = clock();
@@ -450,7 +458,7 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
                     );
                 });
 */
-        for (int y = 0; y < ny_end; y++) {
+      for (int y = 0; y < ny_end; y++) {
             solver.computeNetUpdates (
                     h[x][y], h[x + 1][y],
                     hu[x][y], hu[x + 1][y],
