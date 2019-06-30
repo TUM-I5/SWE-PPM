@@ -58,7 +58,11 @@ namespace remote
 
         simulation.initScenario(scenario, boundaries.data());
 
-        hpx::cout << "Moin" << std::endl;
+        char hostname[HOST_NAME_MAX];
+        gethostname(hostname, HOST_NAME_MAX);
+
+        printf("%i Spawned at %s\n", myHpxRank, hostname);
+
     }
     SWE_DimensionalSplittingComponent::SWE_DimensionalSplittingComponent(
             int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
