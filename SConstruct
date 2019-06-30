@@ -266,7 +266,7 @@ if env['parallelization'] == 'upcxx':
 #######################
 
 if env['parallelization'] == 'hpx':
-    env.Append(CCFLAGS=['-std=c++14'])
+    env.Append(CCFLAGS=['-std=c++17'])
     # get the upcxx folder
     hpxInstall = os.environ['HPX_PATH']
     if hpxInstall == '':
