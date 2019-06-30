@@ -12,7 +12,8 @@
 #include <hpx/include/iostreams.hpp>
 #include <hpx/include/serialization.hpp>
 #include <hpx/lcos/broadcast.hpp>
-#include "SWE_DimensionalSplittingComponent.hpp"
+
+#include "SWE_DimensionalSplittingHpx.hh"
 #include "tools/LocalityChannel.hpp"
 #include <hpx/util/unwrap.hpp>
 
@@ -26,7 +27,8 @@ namespace remote
         struct HPX_COMPONENT_EXPORT SWE_Hpx_Component
                 : hpx::components::component_base<SWE_Hpx_Component>
         {
-            std::vector<client::SWE_DimensionalSplittingComponent> simulationBlocks;
+            //std::vector<client::SWE_DimensionalSplittingComponent> simulationBlocks;
+            std::vector<SWE_DimensionalSplittingHpx> simulationBlocks;
             std::vector <int> left_border;
             std::vector <int> right_border;
             std::vector <int> top_border;
