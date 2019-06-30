@@ -55,8 +55,8 @@
 #endif
 
 #include "blocks/SWE_DimensionalSplittingHpx.hh"
-#include "blocks/SWE_DimensionalSplittingComponent.hpp"
-//#include "blocks/SWE_Hpx_Component.hpp"
+
+#include "blocks/SWE_Hpx_Component.hpp"
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/include/compute.hpp>
@@ -66,7 +66,7 @@
 #include <hpx/include/parallel_algorithm.hpp>
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/util/unwrap.hpp>
-SWE_DimensionalSplittingComponent initializeWorker (std::size_t rank,std::size_t totalRanks,hpx::id_type locality, float simulationDuration,
+/*SWE_DimensionalSplittingComponent initializeWorker (std::size_t rank,std::size_t totalRanks,hpx::id_type locality, float simulationDuration,
 int numberOfCheckPoints,
 int nxRequested,
 int nyRequested,
@@ -94,16 +94,6 @@ std::string const &displFile){
     }
 
 
-    /**********************************
-     * INIT UPCXX & SIMULATION BLOCKS *
-     **********************************/
-
-
-    /*
-     * Calculate the simulation grid layout.
-     * The cell count of the scenario as well as the scenario size is fixed,
-     * Get the size of the actual domain and divide it by the requested resolution.
-     */
     int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
     int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
     float dxSimulation = (float) widthScenario / nxRequested;
@@ -119,12 +109,6 @@ std::string const &displFile){
 
     printf("%i Spawned at %s\n", myHpxRank, hostname);
 
-    /*
-     * determine the layout of UPC++ ranks:
-     * one block per process;
-     * if the number of processes is a square number, l_blockCountX = l_blockCountY,
-     * else l_blockCountX > l_blockCountY
-     */
     // number of SWE-Blocks in x- and y-direction
     int blockCountY = std::sqrt(totalHpxRanks);
     while (totalHpxRanks % blockCountY != 0) blockCountY--;
@@ -178,62 +162,9 @@ std::string const &displFile){
 #endif
 
 
-   // communicator_type comm(myHpxRank,totalHpxRanks,std::move(myNeighbours));
-
-   /*SWE_DimensionalSplittingHpx simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, comm);
-    simulation.initScenario(scenario, boundaries);
-
-    std::cout<< "Rank: " << myHpxRank << std::endl
-            << "Left " << myNeighbours[BND_LEFT] << std::endl
-            << "Right " << myNeighbours[BND_RIGHT] << std::endl
-            << "Bottom " << myNeighbours[BND_BOTTOM] << std::endl
-            << "TOP " << myNeighbours[BND_TOP] << std::endl;
-    simulation.exchangeBathymetry();
 
 
-
-
-    // Initialize boundary size of the ghost layers
-    BoundarySize boundarySize = {{1, 1, 1, 1}};
-    outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
-
-#ifdef WRITENETCDF
-    // Construct a netCDF writer
-
-	NetCdfWriter writer(
-			outputFileName,
-			simulation.getBathymetry(),
-			boundarySize,
-			nxLocal,
-			nyLocal,
-			dxSimulation,
-			dySimulation,
-			simulation.getOriginX(),
-			simulation.getOriginY());
-
-#else
-    // Construct a vtk writer
-    VtkWriter writer(
-            outputFileName,
-            simulation.getBathymetry(),
-            boundarySize,
-            nxLocal,
-            nyLocal,
-            dxSimulation,
-            dySimulation);
-#endif // WRITENETCDF
-
-    // Write the output at t = 0
-    writer.writeTimeStep(
-            simulation.getWaterHeight(),
-            simulation.getMomentumHorizontal(),
-            simulation.getMomentumVertical(),
-            (float) 0.);
-
-
-   */
-
-}
+} */
 
 void cycle(int totalRanks,
            float simulationDuration,
@@ -243,7 +174,7 @@ void cycle(int totalRanks,
            std::string outputBaseName,
            std::string const &batFile,
            std::string const &displFile){
-
+/*
    std::vector<SWE_DimensionalSplittingComponent> blocks;
     for(int i = 0 ; i < totalRanks; i++){
         blocks.push_back(initializeWorker(i,totalRanks,hpx::find_here(),
@@ -329,14 +260,7 @@ void cycle(int totalRanks,
         //hpx::cout <<"Write timestep " << t<<"s" << std::endl;
 
     }
-        // write output
-        /* writer.writeTimeStep(
-                 simulation.getWaterHeight(),
-                 simulation.getMomentumHorizontal(),
-                 simulation.getMomentumVertical(),
-                 t);
 
-*/
 
     float totalCommTime = 0;
     float sumFlops = 0;
@@ -351,7 +275,7 @@ void cycle(int totalRanks,
                 << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
     hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
     hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
-
+*/
 }
 
 
@@ -426,67 +350,10 @@ int hpx_main(boost::program_options::variables_map& vm)
     batFile = vm["bathymetry-file"].as<std::string>();
    displFile = vm["displacement-file"].as<std::string>();
 #endif
-/*
-        int totalWorkers =  hpx::get_num_worker_threads();
-        int nodes       =  hpx::get_num_localities(hpx::launch::sync);
-        int workersPerNode = totalWorkers/nodes;
-        // Create a single instance of the component on this locality.
-        std::cout << "Application has access to:" << std::endl
-                    << "Workers: " << totalWorkers << std::endl
-                    << "Nodes: " << nodes << std::endl
-                    << "Workers/Node: " << workersPerNode << std::endl;
 
-        std::vector<SWE_Hpx_Component> blocks;
-
-        int indiRank = 0;
-        for(auto &locality : hpx::find_all_localities()){
-            for(int i = 0; i < workersPerNode; i++){
-                blocks.push_back(initializeWorker(indiRank,totalWorkers,locality,
-                                                  simulationDuration,
-                                                  numberOfCheckPoints,
-                                                  nxRequested,
-                                                  nyRequested,
-                                                  outputBaseName,
-                                                  batFile,
-                                                  displFile));
-                indiRank++;
-            }
-        }
-
-        std::vector<hpx::naming::id_type> test;
-        std::vector<hpx::future<void>> comps;
-        for(auto comp : blocks ) test.push_back(comp.get_id());
-
-        for(auto &block : blocks) {
-            comps.push_back(block.initialize(test));
-        }
-        hpx::when_all(comps).get();
-
-    float totalCommTime = 0;
-    float sumFlops = 0;
-    for(auto block: blocks){
-
-        totalCommTime += block.getCommunicationTime();
-        sumFlops += block.getFlopCount();
-    }
-
-
-    float wallTime = blocks[0].getWallTime();
-    //uint64_t  sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
-
-    hpx::cout   << "Flop count: " << sumFlops << std::endl
-                << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
-    hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
-    hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
-
-*/
-   cycle(totalRanks,simulationDuration,
-          numberOfCheckPoints,
-          nxRequested,
-          nyRequested,
-          outputBaseName,
-          batFile,
-          displFile);
+    auto test = hpx::new_<SWE_Hpx_Component>(hpx::find_here(),totalRanks,simulationDuration,numberOfCheckPoints,
+                                                        nxRequested,nyRequested,outputBaseName,batFile,displFile);
+    test.run();
     return hpx::finalize();
 }
 int main(int argc, char** argv) {

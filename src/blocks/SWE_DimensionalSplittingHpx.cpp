@@ -440,24 +440,11 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
     // iterate over cells on the x-axis, leave out the last column (two cells per computation)
 
 
+
     for (int x = 0; x < nx + 1; x++) {
         const int ny_end = ny+2;
         // iterate over all rows, including ghost layer
-        /*hpx::parallel::for_loop(
-               hpx::parallel::execution::par,
-               0,ny_end,
-                [&x,this,&maxHorizontalWaveSpeed](int y)
-                {
-                    solver.computeNetUpdates (
-                            h[x][y], h[x + 1][y],
-                            hu[x][y], hu[x + 1][y],
-                            b[x][y], b[x + 1][y],
-                            hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
-                            huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                            maxHorizontalWaveSpeed
-                    );
-                });
-*/
+
       for (int y = 0; y < ny_end; y++) {
             solver.computeNetUpdates (
                     h[x][y], h[x + 1][y],
@@ -515,6 +502,8 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
             );
         }
     }
+
+
 
     flopCounter += nx*ny*135;
     // Accumulate compute time

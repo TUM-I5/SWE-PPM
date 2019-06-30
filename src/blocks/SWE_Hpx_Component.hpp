@@ -11,71 +11,41 @@
 #include <hpx/include/components.hpp>
 #include <hpx/include/iostreams.hpp>
 #include <hpx/include/serialization.hpp>
-#include "SWE_DimensionalSplittingHpx.hh"
+#include <hpx/lcos/broadcast.hpp>
+#include "SWE_DimensionalSplittingComponent.hpp"
+
+#include <hpx/util/unwrap.hpp>
+
+
 #include <utility>
 
 
 namespace remote
     {
+
         struct HPX_COMPONENT_EXPORT SWE_Hpx_Component
                 : hpx::components::component_base<SWE_Hpx_Component>
         {
-            SWE_DimensionalSplittingHpx simulation;
-/*#ifdef WRITENETCDF
-        // Construct a netCDF writer
-            NetCdfWriter writer;
-#else
-        // Construct a vtk writer
-            VtkWriter writer;
-#endif // WRITENETCDF*/
-            std::size_t myHpxRank;
-            std::size_t totalHpxRanks;
-            const std::vector<hpx::naming::id_type> ids;
+             std::vector<client::SWE_DimensionalSplittingComponent> simulationBlocks;
             float simulationDuration;
             int numberOfCheckPoints;
-            float wallTime;
-            std::vector<float> checkpointInstantOfTime;
 
-
-            SWE_Hpx_Component(
-                    int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
-                    int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
-                    float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours, std::string batFile, std::string displFile);
-    SWE_Hpx_Component(
-            int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
-            int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
-            float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours);
-            SWE_Hpx_Component(): simulation(0,0,0,0,0,0,communicator_type(0,0,std::array<int,4>())){}
-            void invoke(std::vector<hpx::naming::id_type> const &test);
-            HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, invoke);
-            float get_wave_speed();
-            HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, get_wave_speed);
-            void initialize(std::vector<hpx::naming::id_type> const &ids);
-
-            HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, initialize);
-        
-            float getCommunicationTime();
-            float getFlopCount();
-            float getWallTime();
-    HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, getCommunicationTime);
-    HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, getFlopCount);
-    HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, getWallTime);
+            SWE_Hpx_Component(int totalRanks,
+                              float simulationDuration,
+                              int numberOfCheckPoints,
+                              int nxRequested,
+                              int nyRequested,
+                              std::string outputBaseName,
+                              std::string const &batFile,
+                              std::string const &displFile);
+            void run();
+            HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, run);
         };
     }
 
 HPX_REGISTER_ACTION_DECLARATION(
-       remote::SWE_Hpx_Component::invoke_action, SWE_Hpx_Component_invoke_action);
-HPX_REGISTER_ACTION_DECLARATION(
-        remote::SWE_Hpx_Component::initialize_action, SWE_Hpx_Component_initialize_action);
+       remote::SWE_Hpx_Component::run_action, SWE_Hpx_Component_run_action);
 
-HPX_REGISTER_ACTION_DECLARATION(
-       remote::SWE_Hpx_Component::get_wave_speed_action, SWE_Hpx_Component_get_wave_speed_action);
-HPX_REGISTER_ACTION_DECLARATION(
-        remote::SWE_Hpx_Component::getCommunicationTime_action, SWE_Hpx_Component_getCommunicationTime_action);
-HPX_REGISTER_ACTION_DECLARATION(
-        remote::SWE_Hpx_Component::getFlopCount_action, SWE_Hpx_Component_getFlopCount_action);
-HPX_REGISTER_ACTION_DECLARATION(
-        remote::SWE_Hpx_Component::getWallTime_action, SWE_Hpx_Component_getWallTime_action);
     struct SWE_Hpx_Component
             : hpx::components::client_base<SWE_Hpx_Component,remote::SWE_Hpx_Component>
     {
@@ -89,45 +59,21 @@ HPX_REGISTER_ACTION_DECLARATION(
         SWE_Hpx_Component(hpx::naming::id_type && f)
                 : base_type(std::move(f))
         {}
-        SWE_Hpx_Component(hpx::naming::id_type && f,
-                          int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
-                          int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
-                          float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries,std::array<int,4> neighbours, std::string batFile, std::string displFile)
+        SWE_Hpx_Component(hpx::naming::id_type && f,int totalRanks,float simulationDuration,
+                          int numberOfCheckPoints,
+                          int nxRequested,
+                          int nyRequested,
+                          std::string outputBaseName,
+                          std::string const &batFile,
+                          std::string const &displFile)
+
                 : base_type(std::move(f))
         {
-            this->create(f,rank, totalRank, simulationDuration, numberOfCheckPoints, nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,boundaries,neighbours,batFile,displFile);
+            this->create(f,totalRanks,simulationDuration,numberOfCheckPoints,nxRequested,nyRequested,outputBaseName,batFile,displFile);
         }
-        SWE_Hpx_Component(hpx::naming::id_type && f,
-                          int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
-                          int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
-                          float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries,std::array<int,4> neighbours)
-                : base_type(std::move(f))
+        void run()
         {
-            this->create(f,rank, totalRank, simulationDuration, numberOfCheckPoints, nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,boundaries,neighbours);
-        }
-        void invoke(std::vector<hpx::naming::id_type> const &test)
-        {
-            hpx::async<remote::SWE_Hpx_Component::invoke_action>(this->get_id(),test).get();
-        }
-        hpx::future<void> initialize(std::vector<hpx::naming::id_type> const &ids)
-        {
-            return hpx::async<remote::SWE_Hpx_Component::initialize_action>(this->get_id(),ids);
-        }
-        float get_wave_speed()
-        {
-            return  hpx::async<remote::SWE_Hpx_Component::get_wave_speed_action>(this->get_id()).get();
-        }
-        float getCommunicationTime()
-        {
-            return hpx::async<remote::SWE_Hpx_Component::getCommunicationTime_action>(this->get_id()).get();
-        }
-        float getFlopCount()
-        {
-            return hpx::async<remote::SWE_Hpx_Component::getFlopCount_action>(this->get_id()).get();
-        }
-        float getWallTime()
-        {
-            return hpx::async<remote::SWE_Hpx_Component::getWallTime_action>(this->get_id()).get();
+            return hpx::async<remote::SWE_Hpx_Component::run_action>(this->get_id()).get();
         }
     };
 

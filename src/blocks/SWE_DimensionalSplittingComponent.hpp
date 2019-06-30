@@ -84,78 +84,81 @@ HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::getCommunicationTime_action, SWE_DimensionalSplittingComponent_getCommunicationTime_action);
 HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::getFlopCount_action, SWE_DimensionalSplittingComponent_getFlopCount_action);
-struct SWE_DimensionalSplittingComponent
-        : hpx::components::client_base<SWE_DimensionalSplittingComponent,remote::SWE_DimensionalSplittingComponent>
-{
-    typedef hpx::components::client_base<SWE_DimensionalSplittingComponent,remote::SWE_DimensionalSplittingComponent>
-            base_type;
+namespace client {
 
-    SWE_DimensionalSplittingComponent(hpx::future<hpx::naming::id_type> && f)
-            : base_type(std::move(f))
-    {}
+    struct SWE_DimensionalSplittingComponent
+            : hpx::components::client_base<SWE_DimensionalSplittingComponent, remote::SWE_DimensionalSplittingComponent> {
+        typedef hpx::components::client_base <SWE_DimensionalSplittingComponent, remote::SWE_DimensionalSplittingComponent>
+                base_type;
 
-    SWE_DimensionalSplittingComponent(hpx::naming::id_type && f)
-            : base_type(std::move(f))
-    {}
-    SWE_DimensionalSplittingComponent(hpx::naming::id_type && f,
-                      int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
-                      int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
-                      float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries,std::array<int,4> neighbours)
-            : base_type(std::move(f))
-    {
-        this->create(f,rank, totalRank, simulationDuration,
-                numberOfCheckPoints, nxLocal, nyLocal, dxSimulation,
-                dySimulation, localOriginX, localOriginY,boundaries,neighbours);
-    }
-    SWE_DimensionalSplittingComponent(hpx::naming::id_type && f,
-                                      int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
-                                      int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
-                                      float localOriginX, float localOriginY,std::array<BoundaryType,4> boundaries,std::array<int,4> neighbours ,
-                                      std::string batFile, std::string displFile )
-            : base_type(std::move(f))
-    {
-        this->create(f,rank, totalRank, simulationDuration,
-                numberOfCheckPoints, nxLocal, nyLocal, dxSimulation,
-                dySimulation, localOriginX, localOriginY,boundaries,neighbours ,batFile, displFile );
-    }
+        SWE_DimensionalSplittingComponent(hpx::future <hpx::naming::id_type> &&f)
+                : base_type(std::move(f)) {}
 
-    hpx::future<void> exchangeBathymetry()
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::exchangeBathymetry_action>(this->get_id());
-    }
-    hpx::future<void> setGhostLayer()
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::setGhostLayer_action>(this->get_id());
-    }
-    hpx::future<float> getMaxTimestep()
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::getMaxTimestep_action>(this->get_id());
-    }
-    hpx::future<void> setMaxTimestep(float maxTimestep)
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::setMaxTimestep_action>(this->get_id(),maxTimestep);
-    }
-    hpx::future<void> computeXSweep()
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::computeXSweep_action>(this->get_id());
-    }
-    hpx::future<void> computeYSweep()
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::computeYSweep_action>(this->get_id());
-    }
-    void printResult()
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::printResult_action>(this->get_id()).get();
-    }
-    float getCommunicationTime()
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::getCommunicationTime_action>(this->get_id()).get();
-    }
-    float getFlopCount()
-    {
-        return hpx::async<remote::SWE_DimensionalSplittingComponent::getFlopCount_action>(this->get_id()).get();
-    }
-};
+        SWE_DimensionalSplittingComponent(hpx::naming::id_type &&f)
+                : base_type(std::move(f)) {}
 
+        SWE_DimensionalSplittingComponent(hpx::naming::id_type &&f,
+                                          int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
+                                          int nxLocal, int nyLocal, float dxSimulation, float dySimulation,
+                                          float localOriginX, float localOriginY,
+                                          std::array<BoundaryType, 4> boundaries, std::array<int, 4> neighbours)
+                : base_type(std::move(f)) {
+            this->create(f, rank, totalRank, simulationDuration,
+                         numberOfCheckPoints, nxLocal, nyLocal, dxSimulation,
+                         dySimulation, localOriginX, localOriginY, boundaries, neighbours);
+        }
+
+        SWE_DimensionalSplittingComponent(hpx::naming::id_type &&f,
+                                          int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
+                                          int nxLocal, int nyLocal, float dxSimulation, float dySimulation,
+                                          float localOriginX, float localOriginY,
+                                          std::array<BoundaryType, 4> boundaries, std::array<int, 4> neighbours,
+                                          std::string batFile, std::string displFile)
+                : base_type(std::move(f)) {
+            this->create(f, rank, totalRank, simulationDuration,
+                         numberOfCheckPoints, nxLocal, nyLocal, dxSimulation,
+                         dySimulation, localOriginX, localOriginY, boundaries, neighbours, batFile, displFile);
+        }
+
+
+        hpx::future<void> exchangeBathymetry() {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::exchangeBathymetry_action>(this->get_id());
+        }
+
+        hpx::future<void> setGhostLayer() {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::setGhostLayer_action>(this->get_id());
+        }
+
+        hpx::future<float> getMaxTimestep() {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::getMaxTimestep_action>(this->get_id());
+        }
+
+        hpx::future<void> setMaxTimestep(float maxTimestep) {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::setMaxTimestep_action>(this->get_id(),
+                                                                                                maxTimestep);
+        }
+
+        hpx::future<void> computeXSweep() {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::computeXSweep_action>(this->get_id());
+        }
+
+        hpx::future<void> computeYSweep() {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::computeYSweep_action>(this->get_id());
+        }
+
+        void printResult() {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::printResult_action>(this->get_id()).get();
+        }
+
+        float getCommunicationTime() {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::getCommunicationTime_action>(
+                    this->get_id()).get();
+        }
+
+        float getFlopCount() {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::getFlopCount_action>(this->get_id()).get();
+        }
+    };
+}
 
 #endif //SWE_BENCHMARK_SWE_DIMENSIONALSPLITTINGCOMPONENT_HPP

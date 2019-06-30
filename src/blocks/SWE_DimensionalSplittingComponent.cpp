@@ -31,32 +31,6 @@ namespace remote
             int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
             int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
             float localOriginX, float localOriginY,  std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours)
-    /*
-   #ifdef WRITENETCDF
-        // Construct a netCDF writer
-
-           writer(
-               outputFileName,
-               simulation.getBathymetry(),
-               boundarySize,
-               nxLocal,
-               nyLocal,
-               dxSimulation,
-               dySimulation,
-               simulation.getOriginX(),
-               simulation.getOriginY())
-
-   #else
-                // Construct a vtk writer
-                writer(
-                        outputFileName,
-                        simulation.getBathymetry(),
-                        boundarySize,
-                        nxLocal,
-                        nyLocal,
-                        dxSimulation,
-                        dySimulation)
-   #endif // WRITENETCDF*/
 
             :
             simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, communicator_type(rank,totalRank,neighbours))
@@ -84,38 +58,12 @@ namespace remote
 
         simulation.initScenario(scenario, boundaries.data());
 
-
+        hpx::cout << "Moin" << std::endl;
     }
     SWE_DimensionalSplittingComponent::SWE_DimensionalSplittingComponent(
             int rank, int totalRank, float simulationDuration, int numberOfCheckPoints,
             int nxLocal, int nyLocal,float  dxSimulation, float  dySimulation,
             float localOriginX, float localOriginY,  std::array<BoundaryType,4> boundaries, std::array<int,4> neighbours,std::string batFile, std::string displFile )
-    /*
-   #ifdef WRITENETCDF
-        // Construct a netCDF writer
-
-           writer(
-               outputFileName,
-               simulation.getBathymetry(),
-               boundarySize,
-               nxLocal,
-               nyLocal,
-               dxSimulation,
-               dySimulation,
-               simulation.getOriginX(),
-               simulation.getOriginY())
-
-   #else
-                // Construct a vtk writer
-                writer(
-                        outputFileName,
-                        simulation.getBathymetry(),
-                        boundarySize,
-                        nxLocal,
-                        nyLocal,
-                        dxSimulation,
-                        dySimulation)
-   #endif // WRITENETCDF*/
 
             :
             simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, communicator_type(rank,totalRank,neighbours))
