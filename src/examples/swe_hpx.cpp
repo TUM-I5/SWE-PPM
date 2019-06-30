@@ -351,9 +351,28 @@ int hpx_main(boost::program_options::variables_map& vm)
    displFile = vm["displacement-file"].as<std::string>();
 #endif
 
-    auto test = hpx::new_<SWE_Hpx_Component>(hpx::find_here(),totalRanks,simulationDuration,numberOfCheckPoints,
-                                                        nxRequested,nyRequested,outputBaseName,batFile,displFile);
-    test.run();
+
+    auto func = [](hpx::naming::id_type locality, int totalRanks, int localityNumber, int localityCount, float simulationDuration, int numberOfCheckPoints,
+                    int nxRequested, int nyRequested, std::string outputBaseName, std::string batFile, std::string displFile) -> SWE_Hpx_Component {
+        return hpx::new_<SWE_Hpx_Component>(locality,totalRanks,localityNumber,localityCount,simulationDuration,numberOfCheckPoints,
+                                     nxRequested,nyRequested,outputBaseName,batFile,displFile);
+
+    };
+
+    int localityCount = hpx::get_num_localities().get();
+    int localityNumber = 0;
+    std::vector<hpx::future<SWE_Hpx_Component>> locFut;
+    for(auto &locality: hpx::find_all_localities()){
+        locFut.push_back(hpx::async(func, locality,totalRanks,localityNumber,localityCount,simulationDuration,numberOfCheckPoints,
+                         nxRequested,nyRequested,outputBaseName,batFile,displFile ));
+        localityNumber++;
+    }
+    hpx::wait_all(locFut);
+    std::vector<hpx::naming::id_type> components;
+    for(auto &comp : locFut){
+        components.push_back(comp.get().get_id());
+    }
+   hpx::wait_all(hpx::lcos::broadcast<remote::SWE_Hpx_Component::run_action>(components));
     return hpx::finalize();
 }
 int main(int argc, char** argv) {

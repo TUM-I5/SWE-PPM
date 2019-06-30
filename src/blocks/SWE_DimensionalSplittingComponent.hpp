@@ -13,6 +13,7 @@
 #include <hpx/include/iostreams.hpp>
 #include <hpx/include/serialization.hpp>
 #include "SWE_DimensionalSplittingHpx.hh"
+
 #include <utility>
 
 namespace remote
@@ -20,6 +21,7 @@ namespace remote
     struct HPX_COMPONENT_EXPORT SWE_DimensionalSplittingComponent
             : hpx::components::component_base<SWE_DimensionalSplittingComponent>
     {
+
         SWE_DimensionalSplittingHpx simulation;
 /*#ifdef WRITENETCDF
         // Construct a netCDF writer
@@ -47,6 +49,7 @@ namespace remote
 
         void exchangeBathymetry();
         void setGhostLayer();
+        copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary);
         float getMaxTimestep();
         void setMaxTimestep(float maxTimestep);
         void computeXSweep();
@@ -56,6 +59,7 @@ namespace remote
         float getFlopCount();
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, exchangeBathymetry);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, setGhostLayer);
+    HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, getGhostLayer);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, getMaxTimestep);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, setMaxTimestep);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, computeXSweep);
@@ -70,6 +74,8 @@ HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::exchangeBathymetry_action, SWE_DimensionalSplittingComponent_exchangeBathymetry_action);
 HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::setGhostLayer_action, SWE_DimensionalSplittingComponent_setGhostLayer_action);
+HPX_REGISTER_ACTION_DECLARATION(
+        remote::SWE_DimensionalSplittingComponent::getGhostLayer_action, SWE_DimensionalSplittingComponent_getGhostLayer_action);
 HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::getMaxTimestep_action, SWE_DimensionalSplittingComponent_getMaxTimestep_action);
 HPX_REGISTER_ACTION_DECLARATION(
@@ -128,7 +134,9 @@ namespace client {
         hpx::future<void> setGhostLayer() {
             return hpx::async<remote::SWE_DimensionalSplittingComponent::setGhostLayer_action>(this->get_id());
         }
-
+        hpx::future<copyLayerStruct<std::vector<float>>> getGhostLayer(Boundary boundary) {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::getGhostLayer_action>(this->get_id(),boundary);
+        }
         hpx::future<float> getMaxTimestep() {
             return hpx::async<remote::SWE_DimensionalSplittingComponent::getMaxTimestep_action>(this->get_id());
         }

@@ -132,6 +132,11 @@ namespace remote
         simulation.setGhostLayer().get();
        computeXSweep();
     }
+    copyLayerStruct<std::vector<float>> SWE_DimensionalSplittingComponent::getGhostLayer(Boundary boundary)
+    {
+
+        return simulation.getGhostLayer(boundary);
+    }
     void SWE_DimensionalSplittingComponent::printResult()
     {
         hpx::cout << "Rank "<< myHpxRank <<  ": Compute Time (CPU): " << simulation.computeTime
@@ -160,6 +165,8 @@ HPX_REGISTER_ACTION(
         remote::SWE_DimensionalSplittingComponent::exchangeBathymetry_action, SWE_DimensionalSplittingComponent_exchangeBathymetry_action);
 HPX_REGISTER_ACTION(
         remote::SWE_DimensionalSplittingComponent::setGhostLayer_action, SWE_DimensionalSplittingComponent_setGhostLayer_action);
+HPX_REGISTER_ACTION(
+        remote::SWE_DimensionalSplittingComponent::getGhostLayer_action, SWE_DimensionalSplittingComponent_getGhostLayer_action);
 HPX_REGISTER_ACTION(
         remote::SWE_DimensionalSplittingComponent::getMaxTimestep_action, SWE_DimensionalSplittingComponent_getMaxTimestep_action);
 HPX_REGISTER_ACTION(

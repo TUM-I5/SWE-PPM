@@ -52,12 +52,15 @@ public:
 
     // Interface methods
     hpx::future<void> setGhostLayer();
+
+    void setGhostLayer(Boundary boundary,copyLayerStruct<std::vector<float>> border);
     void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
     void computeXSweep();
     void computeYSweep();
     void computeNumericalFluxes();
     void updateUnknowns(float dt);
 
+    copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary);
     // Hpx specific
     void freeHpxType();
     void connectNeighbours(int neighbourRankId[]);
@@ -69,41 +72,7 @@ public:
     float flopCounter;
     float maxTimestepGlobal;
 
-   /* template <typename Archive>
-    void serialize(Archive & ar, unsigned)
-    {
 
-        ar &  computeTime;
-        ar &  computeTimeWall;
-        ar & getFlops();
-        ar &  maxTimestepGlobal;
-        ar & solver;
-
-        ar & comm;
-        // Max timestep reduced over all upcxx ranks
-
-        // Temporary values after x-sweep and before y-sweep
-        ar & hStar;
-        ar & huStar;
-
-        // net updates per cell
-        ar & hNetUpdatesLeft;
-        ar & hNetUpdatesRight;
-
-        ar & huNetUpdatesLeft;
-        ar & huNetUpdatesRight;
-
-        ar & hNetUpdatesBelow;
-        ar & hNetUpdatesAbove;
-
-        ar & hvNetUpdatesBelow;
-        ar & hvNetUpdatesAbove;
-
-        ar & computeClock;
-        ar & startTime;
-        ar & endTime;
-
-    }*/
 private:
     solver::HLLEFun<float> solver;
 

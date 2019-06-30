@@ -13,7 +13,7 @@
 #include <hpx/include/serialization.hpp>
 #include <hpx/lcos/broadcast.hpp>
 #include "SWE_DimensionalSplittingComponent.hpp"
-
+#include "tools/LocalityChannel.hpp"
 #include <hpx/util/unwrap.hpp>
 
 
@@ -22,15 +22,21 @@
 
 namespace remote
     {
-
+        typedef LocalityChannel<float> localityChannel_type;
         struct HPX_COMPONENT_EXPORT SWE_Hpx_Component
                 : hpx::components::component_base<SWE_Hpx_Component>
         {
-             std::vector<client::SWE_DimensionalSplittingComponent> simulationBlocks;
+            std::vector<client::SWE_DimensionalSplittingComponent> simulationBlocks;
+            std::vector <int> left_border;
+            std::vector <int> right_border;
+            std::vector <int> top_border;
+            std::vector <int> bottom_border;
             float simulationDuration;
             int numberOfCheckPoints;
-
-            SWE_Hpx_Component(int totalRanks,
+            int localityRank;
+            int localityCount;
+            localityChannel_type localityChannel;
+            SWE_Hpx_Component(int totalRanks,int rank,int localityCount,
                               float simulationDuration,
                               int numberOfCheckPoints,
                               int nxRequested,
@@ -39,7 +45,9 @@ namespace remote
                               std::string const &batFile,
                               std::string const &displFile);
             void run();
+
             HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, run);
+
         };
     }
 
@@ -59,7 +67,7 @@ HPX_REGISTER_ACTION_DECLARATION(
         SWE_Hpx_Component(hpx::naming::id_type && f)
                 : base_type(std::move(f))
         {}
-        SWE_Hpx_Component(hpx::naming::id_type && f,int totalRanks,float simulationDuration,
+        SWE_Hpx_Component(hpx::naming::id_type && f,int totalRanks,int rank,int localityCount,float simulationDuration,
                           int numberOfCheckPoints,
                           int nxRequested,
                           int nyRequested,
@@ -69,7 +77,7 @@ HPX_REGISTER_ACTION_DECLARATION(
 
                 : base_type(std::move(f))
         {
-            this->create(f,totalRanks,simulationDuration,numberOfCheckPoints,nxRequested,nyRequested,outputBaseName,batFile,displFile);
+            this->create(f,totalRanks,rank,localityCount,simulationDuration,numberOfCheckPoints,nxRequested,nyRequested,outputBaseName,batFile,displFile);
         }
         void run()
         {
