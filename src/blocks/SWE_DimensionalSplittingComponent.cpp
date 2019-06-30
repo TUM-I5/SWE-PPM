@@ -187,3 +187,5 @@ HPX_REGISTER_ACTION(
         remote::SWE_DimensionalSplittingComponent::getCommunicationTime_action, SWE_DimensionalSplittingComponent_getCommunicationTime_action);
 HPX_REGISTER_ACTION(
         remote::SWE_DimensionalSplittingComponent::getFlopCount_action, SWE_DimensionalSplittingComponent_getFlopCount_action);
+HPX_REGISTER_ACTION(
+        remote::SWE_DimensionalSplittingComponent::testLatency_action, SWE_DimensionalSplittingComponent_testLatency_action);

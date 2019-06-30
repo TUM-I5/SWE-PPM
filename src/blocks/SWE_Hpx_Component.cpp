@@ -292,7 +292,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
 
             }
-
+             struct timespec testTime;
+             clock_gettime(CLOCK_MONOTONIC, &testTime);
+             hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::testLatency_action>(block_ids,startTime.tv_sec,startTime.tv_nsec);
              if(localityRank == 0) {
                 printf("Write timestep (%fs)\n", t);
             }
@@ -308,7 +310,6 @@ HPX_REGISTER_CHANNEL(timestep_type);
              totalCommTime += block.getCommunicationTime();
              sumFlops += block.getFlopCount();
          }
-
 
          hpx::cout   << "Flop count: " << sumFlops << std::endl
                      << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;

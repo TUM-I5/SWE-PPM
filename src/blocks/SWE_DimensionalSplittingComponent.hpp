@@ -57,6 +57,14 @@ namespace remote
         void printResult();
         float getCommunicationTime();
         float getFlopCount();
+        void testLatency( float sec, float nsec){
+            struct timespec endTime;
+            clock_gettime(CLOCK_MONOTONIC, &endTime);
+            float wallTime;
+            wallTime += (endTime.tv_sec - sec);
+            wallTime += (float) (endTime.tv_nsec - nsec) / 1E9;
+            hpx::cout << "LATENCY is " << wallTime << std::endl;
+        };
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, exchangeBathymetry);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, setGhostLayer);
     HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, getGhostLayer);
@@ -67,6 +75,7 @@ namespace remote
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, printResult);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, getCommunicationTime);
         HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, getFlopCount);
+    HPX_DEFINE_COMPONENT_ACTION(SWE_DimensionalSplittingComponent, testLatency);
     };
 }
 
@@ -90,6 +99,8 @@ HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::getCommunicationTime_action, SWE_DimensionalSplittingComponent_getCommunicationTime_action);
 HPX_REGISTER_ACTION_DECLARATION(
         remote::SWE_DimensionalSplittingComponent::getFlopCount_action, SWE_DimensionalSplittingComponent_getFlopCount_action);
+HPX_REGISTER_ACTION_DECLARATION(
+        remote::SWE_DimensionalSplittingComponent::testLatency_action, SWE_DimensionalSplittingComponent_testLatency_action);
 namespace client {
 
     struct SWE_DimensionalSplittingComponent
@@ -165,6 +176,9 @@ namespace client {
 
         float getFlopCount() {
             return hpx::async<remote::SWE_DimensionalSplittingComponent::getFlopCount_action>(this->get_id()).get();
+        }
+        void testLatency(float sec, float nsec) {
+            return hpx::async<remote::SWE_DimensionalSplittingComponent::testLatency_action>(this->get_id(),sec,nsec).get();
         }
     };
 }
