@@ -52,8 +52,8 @@ elif env['parallelization'] in ['charm']:
     sourceFiles = ['blocks/SWE_DimensionalSplittingCharm.cpp']
 # Other Code without CUDA
 elif env['parallelization'] in ['hpx']:
-    sourceFiles = ['blocks/SWE_DimensionalSplittingHpx.cpp','blocks/SWE_DimensionalSplittingComponent.cpp','blocks/SWE_Hpx_Component.cpp']
-
+   # sourceFiles = ['blocks/SWE_DimensionalSplittingHpx.cpp','blocks/SWE_DimensionalSplittingComponent.cpp','blocks/SWE_Hpx_Component.cpp']
+   sourceFiles = ['blocks/SWE_DimensionalSplittingHpx.cpp','blocks/SWE_Hpx_No_Component.cpp']
 elif env['parallelization'] not in ['cuda', 'mpi_with_cuda']:
     if env['solver'] == 'rusanov':
         sourceFiles = ['blocks/rusanov/SWE_RusanovBlock.cpp']

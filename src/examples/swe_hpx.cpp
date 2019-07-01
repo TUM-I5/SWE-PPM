@@ -54,9 +54,9 @@
 #include "scenarios/SWE_simple_scenarios.hh"
 #endif
 
-#include "blocks/SWE_DimensionalSplittingHpx.hh"
+//#include "blocks/SWE_DimensionalSplittingHpx.hh"
 
-#include "blocks/SWE_Hpx_Component.hpp"
+#include "blocks/SWE_Hpx_No_Component.hpp"
 
 #include <hpx/hpx_init.hpp>
 #include <hpx/include/compute.hpp>
@@ -66,217 +66,6 @@
 #include <hpx/include/parallel_algorithm.hpp>
 #include <hpx/lcos/broadcast.hpp>
 #include <hpx/util/unwrap.hpp>
-/*SWE_DimensionalSplittingComponent initializeWorker (std::size_t rank,std::size_t totalRanks,hpx::id_type locality, float simulationDuration,
-int numberOfCheckPoints,
-int nxRequested,
-int nyRequested,
- std::string outputBaseName,
-std::string const &batFile,
-std::string const &displFile){
-
-
-    std::string outputFileName;
-    // Initialize Scenario
-#ifdef ASAGI
-    SWE_AsagiScenario scenario(batFile, displFile);
-#else
-    SWE_RadialDamBreakScenario scenario;
-#endif
-
-    // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
-    float* checkpointInstantOfTime = new float[numberOfCheckPoints];
-    // Time delta is the time between any two checkpoints
-    float checkpointTimeDelta = simulationDuration / numberOfCheckPoints;
-    // The first checkpoint is reached after 0 + delta t
-    checkpointInstantOfTime[0] = checkpointTimeDelta;
-    for(int i = 1; i < numberOfCheckPoints; i++) {
-        checkpointInstantOfTime[i] = checkpointInstantOfTime[i - 1] + checkpointTimeDelta;
-    }
-
-
-    int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
-    int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
-    float dxSimulation = (float) widthScenario / nxRequested;
-    float dySimulation = (float) heightScenario / nyRequested;
-
-
-    auto myHpxRank = rank;
-    auto totalHpxRanks = totalRanks;
-
-    // Print status
-    char hostname[HOST_NAME_MAX];
-    gethostname(hostname, HOST_NAME_MAX);
-
-    printf("%i Spawned at %s\n", myHpxRank, hostname);
-
-    // number of SWE-Blocks in x- and y-direction
-    int blockCountY = std::sqrt(totalHpxRanks);
-    while (totalHpxRanks % blockCountY != 0) blockCountY--;
-    int blockCountX = totalHpxRanks / blockCountY;
-
-    // determine the local block position of each SWE_Block
-    int localBlockPositionX = myHpxRank / blockCountY;
-    int localBlockPositionY = myHpxRank % blockCountY;
-
-    // compute local number of cells for each SWE_Block w.r.t. the simulation domain
-    // (particularly not the original scenario domain, which might be finer in resolution)
-    // (blocks at the domain boundary are assigned the "remainder" of cells)
-    int nxBlockSimulation = nxRequested / blockCountX;
-    int nxRemainderSimulation = nxRequested - (blockCountX - 1) * (nxRequested / blockCountX);
-    int nyBlockSimulation = nyRequested / blockCountY;
-    int nyRemainderSimulation = nyRequested - (blockCountY - 1) * (nyRequested / blockCountY);
-
-    int nxLocal = (localBlockPositionX < blockCountX - 1) ? nxBlockSimulation : nxRemainderSimulation;
-    int nyLocal = (localBlockPositionY < blockCountY - 1) ? nyBlockSimulation : nyRemainderSimulation;
-
-    // Compute the origin of the local simulation block w.r.t. the original scenario domain.
-    float localOriginX = scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX * dxSimulation * nxBlockSimulation;
-    float localOriginY = scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY * dySimulation * nyBlockSimulation;
-
-
-
-    // Determine the boundary types for the SWE_Block:
-    // block boundaries bordering other blocks have a CONNECT boundary,
-    // block boundaries bordering the entire scenario have the respective scenario boundary type
-    std::array<BoundaryType,4> boundaries;
-
-    boundaries[BND_LEFT] = (localBlockPositionX > 0) ? CONNECT : scenario.getBoundaryType(BND_LEFT);
-    boundaries[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? CONNECT : scenario.getBoundaryType(BND_RIGHT);
-    boundaries[BND_BOTTOM] = (localBlockPositionY > 0) ? CONNECT : scenario.getBoundaryType(BND_BOTTOM);
-    boundaries[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? CONNECT : scenario.getBoundaryType(BND_TOP);
-
-    std::array<int, 4> myNeighbours;
-    myNeighbours[BND_LEFT] = (localBlockPositionX > 0) ? myHpxRank - blockCountY : -1;
-    myNeighbours[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? myHpxRank + blockCountY : -1;
-    myNeighbours[BND_BOTTOM] = (localBlockPositionY > 0) ? myHpxRank - 1 : -1;
-    myNeighbours[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? myHpxRank + 1 : -1;
-
-
-
-#ifdef ASAGI
-    return hpx::new_<SWE_DimensionalSplittingComponent>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
-             nxLocal,nyLocal,dxSimulation,dySimulation,localOriginX,localOriginY,boundaries, myNeighbours,batFile, displFile);
-#else
-    return hpx::new_<SWE_DimensionalSplittingComponent>(locality,myHpxRank,totalHpxRanks,simulationDuration,numberOfCheckPoints,
-                                        nxLocal,nyLocal,dxSimulation,dySimulation,localOriginX,localOriginY,boundaries, myNeighbours);
-#endif
-
-
-
-
-} */
-
-void cycle(int totalRanks,
-           float simulationDuration,
-           int numberOfCheckPoints,
-           int nxRequested,
-           int nyRequested,
-           std::string outputBaseName,
-           std::string const &batFile,
-           std::string const &displFile){
-/*
-   std::vector<SWE_DimensionalSplittingComponent> blocks;
-    for(int i = 0 ; i < totalRanks; i++){
-        blocks.push_back(initializeWorker(i,totalRanks,hpx::find_here(),
-                                          simulationDuration,
-                                          numberOfCheckPoints,
-                                          nxRequested,
-                                          nyRequested,
-                                          outputBaseName,
-                                          batFile,
-                                          displFile));
-
-    }
-
-    std::vector<hpx::future<void>> fut;
-    std::vector<hpx::naming::id_type> block_ids;
-    for(auto comp : blocks ) block_ids.push_back(comp.get_id());
-
-    hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::exchangeBathymetry_action>(block_ids).wait();
-
-    // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
-    float* checkpointInstantOfTime = new float[numberOfCheckPoints];
-    // Time delta is the time between any two checkpoints
-    float checkpointTimeDelta = simulationDuration / numberOfCheckPoints;
-    // The first checkpoint is reached after 0 + delta t
-    checkpointInstantOfTime[0] = checkpointTimeDelta;
-    for(int i = 1; i < numberOfCheckPoints; i++) {
-        checkpointInstantOfTime[i] = checkpointInstantOfTime[i - 1] + checkpointTimeDelta;
-    }
-
-
-    // Initialize wall timer
-    struct timespec startTime;
-    struct timespec endTime;
-
-    float wallTime = 0.;
-    float t = 0.;
-
-
-    float timestep;
-    unsigned int iterations = 0;
-
-    // loop over the count of requested checkpoints
-    for(int i = 0; i < numberOfCheckPoints; i++) {
-        // Simulate until the checkpoint is reached
-        while(t < checkpointInstantOfTime[i]) {
-            // Start measurement
-            clock_gettime(CLOCK_MONOTONIC, &startTime);
-
-            // set values in ghost cells.
-            // this function blocks until everything has been received
-
-            hpx::future<void> ghostlayer = hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::setGhostLayer_action>(block_ids);
-           // ghostlayer.get();
-            hpx::future<std::vector<float>> timestepsFut= hpx::dataflow(hpx::util::unwrapping(
-                    [&block_ids]()-> hpx::future<std::vector<float>> {
-                    return hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::getMaxTimestep_action>(block_ids);
-            })
-                    ,std::move(ghostlayer));
-
-            hpx::future<float> minTimestep = hpx::dataflow(hpx::util::unwrapping([](std::vector<float> timesteps)-> float {
-
-                return *std::min_element(timesteps.begin(), timesteps.end());
-
-            }),std::move(timestepsFut));
-
-
-            float timestep = minTimestep.get();
-
-            hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::setMaxTimestep_action>(block_ids,timestep).get();
-
-            clock_gettime(CLOCK_MONOTONIC, &endTime);
-            wallTime += (endTime.tv_sec - startTime.tv_sec);
-            wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
-            // update simulation time with time step width.
-            t += timestep;
-            iterations++;
-
-
-        }
-
-        printf("Write timestep (%fs)\n", t);
-        //hpx::cout <<"Write timestep " << t<<"s" << std::endl;
-
-    }
-
-
-    float totalCommTime = 0;
-    float sumFlops = 0;
-    for(auto block: blocks){
-        block.printResult();
-        totalCommTime += block.getCommunicationTime();
-        sumFlops += block.getFlopCount();
-    }
-
-
-    hpx::cout   << "Flop count: " << sumFlops << std::endl
-                << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
-    hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
-    hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
-*/
-}
 
 
 int hpx_main(boost::program_options::variables_map& vm)
@@ -352,27 +141,18 @@ int hpx_main(boost::program_options::variables_map& vm)
 #endif
 
 
-    auto func = [](hpx::naming::id_type locality, int totalRanks, int localityNumber, int localityCount, float simulationDuration, int numberOfCheckPoints,
-                    int nxRequested, int nyRequested, std::string outputBaseName, std::string batFile, std::string displFile) -> SWE_Hpx_Component {
-        return hpx::new_<SWE_Hpx_Component>(locality,totalRanks,localityNumber,localityCount,simulationDuration,numberOfCheckPoints,
-                                     nxRequested,nyRequested,outputBaseName,batFile,displFile);
-
-    };
 
     int localityCount = hpx::get_num_localities().get();
-    int localityNumber = 0;
-    std::vector<hpx::future<SWE_Hpx_Component>> locFut;
-    for(auto &locality: hpx::find_all_localities()){
-        locFut.push_back(hpx::async(func, locality,totalRanks,localityNumber,localityCount,simulationDuration,numberOfCheckPoints,
-                         nxRequested,nyRequested,outputBaseName,batFile,displFile ));
-        localityNumber++;
-    }
-    hpx::wait_all(locFut);
-    std::vector<hpx::naming::id_type> components;
-    for(auto &comp : locFut){
-        components.push_back(comp.get().get_id());
-    }
-   hpx::wait_all(hpx::lcos::broadcast<remote::SWE_Hpx_Component::run_action>(components));
+    int localityNumber = hpx::get_locality_id();
+
+    hpx::cout << "Locality " << localityNumber << "of " << localityCount << " Localities" << std::endl;
+
+    SWE_Hpx_No_Component comp(totalRanks,localityNumber,localityCount,simulationDuration,numberOfCheckPoints,
+                         nxRequested,nyRequested,outputBaseName,batFile,displFile );
+
+    comp.run();
+
+
     return hpx::finalize();
 }
 int main(int argc, char** argv) {
@@ -401,8 +181,8 @@ int main(int argc, char** argv) {
     // Initialize and run HPX, this example requires to run hpx_main on all
     // localities
     std::vector<std::string> const cfg = {
-            //"hpx.run_hpx_main!=1"
+            "hpx.run_hpx_main!=1"
     };
 
-    return hpx::init(desc_commandline,argc, argv);//,cfg);
+    return hpx::init(desc_commandline,argc, argv,cfg);
 }
