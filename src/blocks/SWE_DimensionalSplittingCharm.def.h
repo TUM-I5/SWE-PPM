@@ -1951,8 +1951,12 @@ void SWE_DimensionalSplittingCharm::_serial_7() {
       clock_gettime(CLOCK_MONOTONIC, &startTime);
      }
      if (currentSimulationTime < simulationDuration) {
+      clock_gettime(CLOCK_MONOTONIC, &commTime);
       sendCopyLayers(false);
       setGhostLayer();
+      clock_gettime(CLOCK_MONOTONIC, &endTime);
+                            communicationTime += (endTime.tv_sec - startTime.tv_sec);
+                            communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
      } else {
       clock_gettime(CLOCK_MONOTONIC, &endTime);
       wallTime += (endTime.tv_sec - startTime.tv_sec);
@@ -1961,7 +1965,7 @@ void SWE_DimensionalSplittingCharm::_serial_7() {
       mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime);
      }
     
-#line 1965 "SWE_DimensionalSplittingCharm.def.h"
+#line 1969 "SWE_DimensionalSplittingCharm.def.h"
   } // end serial block
   _TRACE_END_EXECUTE(); 
   _when_4_end();

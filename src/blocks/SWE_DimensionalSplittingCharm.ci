@@ -76,8 +76,12 @@ module SWE_DimensionalSplittingCharm {
 
 					// If there is an iteration to go, propagate copy layers anew
 					if (currentSimulationTime < simulationDuration) {
+						clock_gettime(CLOCK_MONOTONIC, &commTime);
 						sendCopyLayers(false);
 						setGhostLayer();
+						clock_gettime(CLOCK_MONOTONIC, &endTime);
+                            communicationTime += (endTime.tv_sec - startTime.tv_sec);
+                            communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 					} else {
 						// Accumulate wall time
 						clock_gettime(CLOCK_MONOTONIC, &endTime);

@@ -98,6 +98,7 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 		std::clock_t computeClock;
 
 		struct timespec startTime;
+		struct timespec commTime;
 		struct timespec endTime;
 
 		struct timespec startTimeCompute;
