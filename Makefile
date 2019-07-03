@@ -36,6 +36,8 @@ mpi_hybrid:
 mpi:
 	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} copyenv=true vectorize=true
 
+mpi_load:
+	scons writeNetCDF=True openmp=false solver=augrie parallelization=mpi asagi=false asagiDir=${ASAGI_PATH} copyenv=true
 mpi_rad:
 	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=false asagiDir=${ASAGI_PATH} copyenv=true
 mpi_debug:
@@ -46,6 +48,8 @@ upcxx_hybrid:
 upcxx:
 	scons writeNetCDF=True openmp=false solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} copyenv=true showVectorization=true vectorize=true 
 
+upcxx_load:
+	scons writeNetCDF=True openmp=false solver=augrie parallelization=upcxx asagi=false copyenv=true showVectorization=true vectorize=true 
 upcxx_rad:
 	scons writeNetCDF=True openmp=false solver=hybrid parallelization=upcxx asagi=false copyenv=true showVectorization=true vectorize=true 
 upcxx_debug:
@@ -54,14 +58,16 @@ hpx:
 	scons writeNetCDF=False openmp=false solver=hybrid parallelization=hpx asagi=true asagiDir=${ASAGI_PATH} copyenv=true
 hpx_rad:
 	scons writeNetCDF=False openmp=false solver=hybrid parallelization=hpx asagi=false asagiDir=${ASAGI_PATH} copyenv=true
+hpx_load:
+	scons writeNetCDF=False openmp=false solver=augrie parallelization=hpx asagi=false asagiDir=${ASAGI_PATH} copyenv=true
 charm:
 	scons writeNetCDF=True openmp=false solver=hybrid parallelization=charm asagi=true asagiDir=${ASAGI_PATH}  copyenv=true vectorize=true
 
 charm_hybrid:
 	scons writeNetCDF=True openmp=true solver=hybrid parallelization=charm asagi=true asagiDir=${ASAGI_PATH}  copyenv=true
 
-charm_over:
-	scons writeNetCDF=True openmp=false solver=augrie parallelization=charm asagi=true asagiDir=${ASAGI_PATH}  copyenv=true
+charm_load:
+	scons writeNetCDF=True openmp=false solver=augrie parallelization=charm asagi=false asagiDir=${ASAGI_PATH}  copyenv=true
 default:
 	scons writeNetCDF=True solver=fwave
 

@@ -12,12 +12,19 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" afterDir="false" />
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Added Half dry scenario">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SConscript" beforeDir="false" afterPath="$PROJECT_DIR$/src/SConscript" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solvers/AugRie.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/AugRie.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRie.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRie.hpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -44,44 +51,19 @@
     <expand />
     <select />
   </component>
-  <component name="DockManager">
-    <window id="2">
-      <content type="file-editors">
-        <state>
-          <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-            <file pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/src/examples/swe_mpi.cpp">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="362">
-                    <caret line="286" column="46" selection-start-line="286" selection-start-column="38" selection-end-line="286" selection-end-column="46" />
-                    <folding>
-                      <element signature="e#3155#3284#0" expanded="true" />
-                      <element signature="e#8239#8471#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="FavoritesManager">
     <favorites_list name="swe_benchmark" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/examples/swe_hpx.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="526">
-              <caret line="145" column="48" lean-forward="true" selection-start-line="145" selection-start-column="48" selection-end-line="145" selection-end-column="48" />
+            <state relative-caret-position="131">
+              <caret line="140" column="6" selection-start-line="140" selection-start-column="6" selection-end-line="140" selection-end-column="6" />
               <folding>
                 <element signature="e#1303#1336#0" expanded="true" />
                 <element signature="e#1395#1436#0" expanded="true" />
-                <element signature="e#11157#11309#0" expanded="true" />
-                <element signature="e#13097#13205#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -90,94 +72,87 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="930">
-              <caret line="176" selection-start-line="176" selection-end-line="176" />
+            <state relative-caret-position="761">
+              <caret line="57" column="9" selection-start-line="57" selection-start-column="9" selection-end-line="57" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/solvers/AugRie.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="841">
+              <caret line="355" column="49" lean-forward="true" selection-start-line="355" selection-start-column="49" selection-end-line="355" selection-end-column="49" />
               <folding>
-                <element signature="e#242#275#0" expanded="true" />
-                <element signature="e#334#375#0" expanded="true" />
-                <element signature="e#1312#1370#0" expanded="true" />
-                <element signature="e#3203#3250#0" expanded="true" />
+                <element signature="e#8687#8798#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.hpp">
+        <entry file="file://$PROJECT_DIR$/src/examples/swe_mpi.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="635">
-              <caret line="89" selection-start-line="7" selection-end-line="89" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="421">
-              <caret line="29" column="7" selection-start-line="29" selection-start-column="7" selection-end-line="29" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SConstruct">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2291">
-              <caret line="268" column="35" selection-start-line="268" selection-start-column="35" selection-end-line="268" selection-end-column="35" />
+            <state relative-caret-position="566">
+              <caret line="113" column="42" selection-start-line="113" selection-start-column="42" selection-end-line="113" selection-end-column="42" />
               <folding>
-                <element signature="e#1020#1029#0" expanded="true" />
+                <element signature="e#1661#1813#0" expanded="true" />
+                <element signature="e#3155#3284#0" expanded="true" />
+                <element signature="e#8239#8471#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SConscript">
+        <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="55" column="78" selection-start-line="55" selection-start-column="78" selection-end-line="55" selection-end-column="78" />
+            <state relative-caret-position="460">
+              <caret line="48" column="10" selection-start-line="48" selection-start-column="10" selection-end-line="48" selection-end-column="10" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp">
+        <entry file="file://$PROJECT_DIR$/src/examples/swe_upcxx.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="117" selection-start-line="117" selection-end-line="117" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1050">
-              <caret line="70" column="27" selection-start-line="70" selection-start-column="11" selection-end-line="70" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1455">
-              <caret line="97" selection-start-line="96" selection-end-line="97" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="271" column="31" selection-end-line="315" />
+            <state relative-caret-position="613">
+              <caret line="112" column="42" selection-start-line="112" selection-start-column="42" selection-end-line="112" selection-end-column="42" />
               <folding>
-                <element signature="e#162#195#0" expanded="true" />
-                <element signature="e#254#295#0" expanded="true" />
+                <element signature="e#1672#1824#0" expanded="true" />
               </folding>
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="596">
+              <caret line="121" column="42" selection-start-line="121" selection-start-column="42" selection-end-line="121" selection-end-column="42" />
+              <folding>
+                <element signature="e#7005#7219#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.ci">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.decl.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1845" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.def.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-4454" />
           </provider>
         </entry>
       </file>
@@ -270,40 +245,41 @@
         <option value="$PROJECT_DIR$/BuildCharm.cmake" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/Makefile" />
-        <option value="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" />
         <option value="$PROJECT_DIR$/src/writer/NetCdfWriter.cpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx_component.hpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx_component.cpp" />
         <option value="$PROJECT_DIR$/src/blocks/some_component.hpp" />
         <option value="$PROJECT_DIR$/src/tools/help.hh" />
         <option value="$PROJECT_DIR$/src/solvers/HLLEFun.hpp" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" />
-        <option value="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" />
         <option value="$PROJECT_DIR$/src/examples/swe_charm.ci" />
         <option value="$PROJECT_DIR$/src/examples/swe_charm.hh" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" />
-        <option value="$PROJECT_DIR$/src/examples/swe_charm.cpp" />
         <option value="$PROJECT_DIR$/src/tools/Communicator.hpp" />
         <option value="$PROJECT_DIR$/src/scenarios/SWE_AsagiScenario.hh" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_Block.hh" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" />
-        <option value="$PROJECT_DIR$/src/examples/swe_mpi.cpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" />
         <option value="$PROJECT_DIR$/src/tools/LocalityChannel.hpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.cpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.hpp" />
         <option value="$PROJECT_DIR$/SConstruct" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.hpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" />
         <option value="$PROJECT_DIR$/src/SConscript" />
         <option value="$PROJECT_DIR$/src/examples/swe_hpx.cpp" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" />
+        <option value="$PROJECT_DIR$/src/examples/swe_mpi.cpp" />
+        <option value="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" />
+        <option value="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" />
+        <option value="$PROJECT_DIR$/src/examples/swe_charm.cpp" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" />
+        <option value="$PROJECT_DIR$/src/solvers/AugRie.hpp" />
       </list>
     </option>
   </component>
@@ -318,7 +294,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -377,6 +352,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -466,7 +442,8 @@
       <workItem from="1561810263767" duration="13401000" />
       <workItem from="1561827620352" duration="9511000" />
       <workItem from="1561893614258" duration="32742000" />
-      <workItem from="1561972123957" duration="1614000" />
+      <workItem from="1561972123957" duration="3997000" />
+      <workItem from="1562142059905" duration="8823000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed Upcxx Bug">
       <created>1559309785408</created>
@@ -601,11 +578,25 @@
       <option name="project" value="LOCAL" />
       <updated>1561934650185</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="No Component Hpx Implementation">
+      <created>1561973862525</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1561973862525</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Added Charm communication time">
+      <created>1562020511889</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1562020511889</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="326046000" />
+    <option name="totallyTimeSpent" value="337252000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -620,7 +611,7 @@
     <frame x="0" y="-2" width="1920" height="1082" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49784017" visible="true" weight="0.28815368" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49784017" visible="true" weight="0.2913554" />
       <window_info id="Structure" order="1" sideWeight="0.50215983" side_tool="true" weight="0.26895407" />
       <window_info id="Favorites" order="2" sideWeight="0.50282484" side_tool="true" weight="0.2401771" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -635,14 +626,14 @@
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32937366" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5008301" side_tool="true" weight="0.32937366" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.32937366" />
-      <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.4991699" weight="0.16894019" />
+      <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.4991699" weight="0.16369359" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" weight="0.32982844" />
     </layout>
     <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49784017" visible="true" weight="0.28815368" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49784017" visible="true" weight="0.2913554" />
       <window_info id="Structure" order="1" sideWeight="0.50215983" side_tool="true" weight="0.26895407" />
       <window_info id="Favorites" order="2" sideWeight="0.50282484" side_tool="true" weight="0.2401771" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -657,7 +648,7 @@
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32937366" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5008301" side_tool="true" weight="0.32937366" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.32937366" />
-      <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.4991699" visible="true" weight="0.16894019" />
+      <window_info anchor="bottom" id="CMake" order="12" sideWeight="0.4991699" visible="true" weight="0.16369359" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -678,7 +669,10 @@
     <MESSAGE value="Updated Hpx Impletation" />
     <MESSAGE value="Added Hpx Component" />
     <MESSAGE value="Changed Hpx Completley, added LocalityComponent" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed Hpx Completley, added LocalityComponent" />
+    <MESSAGE value="No Component Hpx Implementation" />
+    <MESSAGE value="Added Charm communication time" />
+    <MESSAGE value="Added Half dry scenario" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Half dry scenario" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -698,120 +692,12 @@
           <line>44</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh</url>
-          <line>18</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/tools/Logger.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="343" column="5" selection-start-line="343" selection-start-column="5" selection-end-line="343" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/solvers/Hybrid.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-514" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/writer/VtkWriter.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-315" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/writer/NetCdfWriter.hh">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/writer/NetCdfWriter.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1755">
-          <caret line="117" selection-start-line="117" selection-end-line="117" />
-          <folding>
-            <element signature="e#1052#1078#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/writer/VtkWriter.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/writer/Writer.hh">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/examples/swe_upcxx.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="354" column="4" selection-start-line="354" selection-start-column="4" selection-end-line="354" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.ci">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="76" lean-forward="true" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.def.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-675" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.decl.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1035" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="27" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="86" column="30" selection-start-line="86" selection-start-column="30" selection-end-line="86" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tools/help.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1650">
-          <caret line="110" column="58" selection-start-line="110" selection-start-column="58" selection-end-line="110" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-270" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="619">
-          <caret line="203" column="77" selection-start-line="203" selection-start-column="77" selection-end-line="203" selection-end-column="77" />
-          <folding>
-            <element signature="e#7005#7219#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_AsagiScenario_vis.hh">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="50" column="26" selection-start-line="50" selection-start-column="26" selection-end-line="50" selection-end-column="26" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Block_common.cpp">
       <provider selected="true" editor-type-id="text-editor" />
@@ -825,37 +711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-6">
           <caret line="110" column="37" selection-start-line="110" selection-start-column="37" selection-end-line="110" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="604">
-          <caret line="112" column="25" selection-start-line="112" selection-start-column="25" selection-end-line="112" selection-end-column="25" />
-          <folding>
-            <element signature="e#251#292#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
-          <caret line="62" column="24" selection-start-line="62" selection-start-column="24" selection-end-line="62" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/solvers/HLLEFun.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8220">
-          <caret line="548" column="26" selection-start-line="548" selection-start-column="12" selection-end-line="548" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="120" column="23" selection-start-line="120" selection-start-column="23" selection-end-line="120" selection-end-column="23" />
         </state>
       </provider>
     </entry>
@@ -877,25 +732,6 @@
             <element signature="e#114#140#0" expanded="true" />
           </folding>
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_AsagiScenario.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1015">
-          <caret line="41" column="23" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_Scenario.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="49" column="22" selection-start-line="49" selection-start-column="8" selection-end-line="49" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-855" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tools/args.hh">
@@ -922,20 +758,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="761">
-          <caret line="313" column="6" selection-start-line="313" selection-start-column="6" selection-end-line="313" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="945">
-          <caret line="63" column="32" selection-start-line="63" selection-start-column="32" selection-end-line="63" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="975">
@@ -943,38 +765,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.cpp">
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.hh">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh">
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1050">
-          <caret line="70" column="27" selection-start-line="70" selection-start-column="11" selection-end-line="70" selection-end-column="27" />
+        <state relative-caret-position="1185">
+          <caret line="79" column="46" selection-start-line="79" selection-start-column="46" selection-end-line="79" selection-end-column="46" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2760">
+          <caret line="184" column="38" selection-start-line="184" selection-start-column="38" selection-end-line="184" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="7" selection-start-line="29" selection-start-column="7" selection-end-line="29" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.hh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-165">
+          <caret line="112" column="52" selection-start-line="112" selection-start-column="52" selection-end-line="112" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1575" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1455">
+        <state relative-caret-position="713">
           <caret line="97" selection-start-line="96" selection-end-line="97" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/examples/swe_mpi.cpp">
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.hh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="286" column="46" selection-start-line="286" selection-start-column="38" selection-end-line="286" selection-end-column="46" />
-          <folding>
-            <element signature="e#3155#3284#0" expanded="true" />
-            <element signature="e#8239#8471#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-1440" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solvers/HLLEFun.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1485">
+          <caret line="99" column="38" lean-forward="true" selection-start-line="97" selection-start-column="4" selection-end-line="99" selection-end-column="38" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.hpp">
+    <entry file="file://$PROJECT_DIR$/src/solvers/Hybrid.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="635">
-          <caret line="89" selection-start-line="7" selection-end-line="89" />
+        <state relative-caret-position="430">
+          <caret line="232" column="54" lean-forward="true" selection-start-line="232" selection-start-column="54" selection-end-line="232" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2090">
+          <caret line="447" column="35" selection-start-line="447" selection-start-column="22" selection-end-line="447" selection-end-column="35" />
         </state>
       </provider>
     </entry>
@@ -989,6 +851,25 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="740">
+          <caret line="271" column="50" selection-start-line="271" selection-start-column="36" selection-end-line="271" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="60" selection-start-line="60" selection-end-line="70" selection-end-column="6" />
+          <folding>
+            <element signature="e#251#292#0" expanded="true" />
+            <element signature="e#612#703#0" expanded="true" />
+            <element signature="e#2127#2297#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -996,32 +877,88 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp">
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
-          <caret line="176" selection-start-line="176" selection-end-line="176" />
+        <state relative-caret-position="620">
+          <caret line="85" column="6" selection-start-line="85" selection-start-column="6" selection-end-line="85" selection-end-column="6" />
           <folding>
-            <element signature="e#242#275#0" expanded="true" />
-            <element signature="e#334#375#0" expanded="true" />
-            <element signature="e#1312#1370#0" expanded="true" />
-            <element signature="e#3203#3250#0" expanded="true" />
+            <element signature="e#1397#1488#0" expanded="true" />
+            <element signature="e#2595#2765#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.hh">
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="81" column="6" selection-start-line="81" selection-start-column="6" selection-end-line="81" selection-end-column="6" />
+          <folding>
+            <element signature="e#1361#1452#0" expanded="true" />
+            <element signature="e#2388#2558#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="415">
+          <caret line="87" column="32" selection-start-line="87" selection-start-column="32" selection-end-line="87" selection-end-column="32" />
+          <folding>
+            <element signature="e#469#560#0" expanded="true" />
+            <element signature="e#2325#2495#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1140">
+          <caret line="76" column="25" selection-start-line="76" selection-start-column="25" selection-end-line="76" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_Scenario.hh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="505">
+          <caret line="49" column="22" selection-start-line="49" selection-start-column="8" selection-end-line="49" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_VisInfo.hh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-450" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_AsagiScenario.hh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="41" column="23" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_TsunamiScenario.hh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1760" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/examples/netCdf_mpi.cpp">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp">
+    <entry file="file://$PROJECT_DIR$/src/solvers/FWave.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="29" column="7" selection-start-line="29" selection-start-column="7" selection-end-line="29" selection-end-column="7" />
+        <state relative-caret-position="-3960" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SConscript">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-658">
+          <caret line="55" column="78" selection-start-line="55" selection-start-column="78" selection-end-line="55" selection-end-column="78" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SConstruct">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2291">
+        <state relative-caret-position="-610">
           <caret line="268" column="35" selection-start-line="268" selection-start-column="35" selection-end-line="268" selection-end-column="35" />
           <folding>
             <element signature="e#1020#1029#0" expanded="true" />
@@ -1029,22 +966,82 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/SConscript">
+    <entry file="file://$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="55" column="78" selection-start-line="55" selection-start-column="78" selection-end-line="55" selection-end-column="78" />
+        <state relative-caret-position="460">
+          <caret line="48" column="10" selection-start-line="48" selection-start-column="10" selection-end-line="48" selection-end-column="10" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/examples/swe_mpi.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="566">
+          <caret line="113" column="42" selection-start-line="113" selection-start-column="42" selection-end-line="113" selection-end-column="42" />
+          <folding>
+            <element signature="e#1661#1813#0" expanded="true" />
+            <element signature="e#3155#3284#0" expanded="true" />
+            <element signature="e#8239#8471#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/examples/swe_upcxx.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="613">
+          <caret line="112" column="42" selection-start-line="112" selection-start-column="42" selection-end-line="112" selection-end-column="42" />
+          <folding>
+            <element signature="e#1672#1824#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="596">
+          <caret line="121" column="42" selection-start-line="121" selection-start-column="42" selection-end-line="121" selection-end-column="42" />
+          <folding>
+            <element signature="e#7005#7219#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.ci">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.decl.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1845" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/examples/swe_charm.def.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4454" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/examples/swe_hpx.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="526">
-          <caret line="145" column="48" lean-forward="true" selection-start-line="145" selection-start-column="48" selection-end-line="145" selection-end-column="48" />
+        <state relative-caret-position="131">
+          <caret line="140" column="6" selection-start-line="140" selection-start-column="6" selection-end-line="140" selection-end-column="6" />
           <folding>
             <element signature="e#1303#1336#0" expanded="true" />
             <element signature="e#1395#1436#0" expanded="true" />
-            <element signature="e#11157#11309#0" expanded="true" />
-            <element signature="e#13097#13205#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="761">
+          <caret line="57" column="9" selection-start-line="57" selection-start-column="9" selection-end-line="57" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/solvers/AugRie.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="841">
+          <caret line="355" column="49" lean-forward="true" selection-start-line="355" selection-start-column="49" selection-end-line="355" selection-end-column="49" />
+          <folding>
+            <element signature="e#8687#8798#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -110,7 +110,8 @@ int main(int argc, char** argv) {
 #ifdef ASAGI
 	SWE_AsagiScenario scenario(args.getArgument<std::string>("bathymetry-file"), args.getArgument<std::string>("displacement-file"));
 #else
-	SWE_RadialDamBreakScenario scenario;
+    SWE_HalfDomainDry scenario;
+	//SWE_RadialDamBreakScenario scenario;
 #endif
 
 	// Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached

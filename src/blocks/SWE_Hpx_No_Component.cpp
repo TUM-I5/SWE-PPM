@@ -55,7 +55,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
 #ifdef ASAGI
         SWE_AsagiScenario * scenario = (SWE_AsagiScenario *) scen;
 #else
-        SWE_RadialDamBreakScenario * scenario =  (SWE_RadialDamBreakScenario*) scen;
+       // SWE_RadialDamBreakScenario * scenario =  (SWE_RadialDamBreakScenario*) scen;
+        SWE_HalfDomainDry * scenario =  (SWE_HalfDomainDry *) scen  ;
+        //SWE_RadialDamBreakScenario scenario;
 #endif
         std::array<BoundaryType, 4> boundaries;
         boundaries[BND_LEFT] = (localBlockPositionX > 0) ? CONNECT : scenario->getBoundaryType(BND_LEFT);
@@ -88,7 +90,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
 #ifdef ASAGI
         SWE_AsagiScenario scenario(batFile, displFile);
 #else
-        SWE_RadialDamBreakScenario scenario;
+        SWE_HalfDomainDry scenario;
+        //SWE_RadialDamBreakScenario scenario;
 #endif
 
         int totalRanks = ranksPerLocality* localityCount;

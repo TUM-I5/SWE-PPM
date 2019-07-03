@@ -33,6 +33,44 @@
 
 #include "SWE_Scenario.hh"
 
+
+
+class SWE_HalfDomainDry : public SWE_Scenario {
+
+public:
+
+    float getBathymetry(float x, float y){
+
+        if(y > 500)return 20;
+        return -250;
+    };
+
+    float getWaterHeight(float x, float y) {
+        //if(y > 500)return 0;
+        return ( sqrt( (x-250.f)*(x-250.f) + (y-250.f)*(y-250.f) ) < 100.f ) ? 15.f: 10.0f;
+    };
+
+    virtual float endSimulation() { return (float) 15; };
+
+    virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; };
+
+    /** Get the boundary positions
+     *
+     * @param boundary which edge
+     * @return value in the corresponding dimension
+     */
+    float getBoundaryPos(Boundary boundary) {
+        if ( boundary == BND_LEFT )
+            return (float)0;
+        else if ( boundary == BND_RIGHT)
+            return (float)1000;
+        else if ( boundary == BND_BOTTOM )
+            return (float)0;
+        else
+            return (float)1000;
+    };
+};
+
 /**
  * Scenario "Radial Dam Break":
  * elevated water in the center of the domain
@@ -143,6 +181,7 @@ class SWE_SplashingPoolScenario : public SWE_Scenario {
   public:
 
     float getBathymetry(float x, float y) {
+
        return -250.f;
     };
 

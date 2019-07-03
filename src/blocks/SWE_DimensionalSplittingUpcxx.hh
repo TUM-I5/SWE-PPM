@@ -39,8 +39,15 @@
 
 #include <upcxx/upcxx.hpp>
 
-#include "solvers/Hybrid.hpp"
+#if WAVE_PROPAGATION_SOLVER==0
+//#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
+#elif WAVE_PROPAGATION_SOLVER==1
+#include "solvers/FWave.hpp"
+#elif WAVE_PROPAGATION_SOLVER==2
+#include "solvers/AugRie.hpp"
+#endif
+
 class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 	public:
 		// Constructor/Destructor
@@ -66,7 +73,17 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 		float flopCounter = 0;
 
 	private:
-		solver::HLLEFun<float> solver;
+#if WAVE_PROPAGATION_SOLVER==0
+    //! Hybrid solver (f-wave + augmented)
+    //solver::Hybrid<float> solver;
+    solver::HLLEFun<float> solver;
+#elif WAVE_PROPAGATION_SOLVER==1
+    //! F-wave Riemann solver
+    solver::FWave<float> solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> solver;
+#endif
 
 		// Max timestep reduced over all upcxx ranks
 		float maxTimestepGlobal;
