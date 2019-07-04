@@ -217,6 +217,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                  ghostlayer.reserve(simulationBlocks.size());
                  for(auto & block: simulationBlocks)ghostlayer.push_back(block.setGhostLayer());
                  hpx::wait_all(ghostlayer);
+
                  std::vector<hpx::future<void>> xsweep;
                  xsweep.reserve(simulationBlocks.size());
 
@@ -225,7 +226,6 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
                  std::vector<float> timesteps;
                  for(auto & block: simulationBlocks)timesteps.push_back(block.maxTimestepGlobal);
-
 
                  float minTimestep= *std::min_element(timesteps.begin(), timesteps.end());
 
@@ -271,6 +271,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                  // update simulation time with time step width.
                  t += timestep;
                  iterations++;
+
 
 
             }

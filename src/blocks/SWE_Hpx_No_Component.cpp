@@ -55,8 +55,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
 #ifdef ASAGI
         SWE_AsagiScenario * scenario = (SWE_AsagiScenario *) scen;
 #else
-       // SWE_RadialDamBreakScenario * scenario =  (SWE_RadialDamBreakScenario*) scen;
-        SWE_HalfDomainDry * scenario =  (SWE_HalfDomainDry *) scen  ;
+       SWE_RadialDamBreakScenario * scenario =  (SWE_RadialDamBreakScenario*) scen;
+       // SWE_HalfDomainDry * scenario =  (SWE_HalfDomainDry *) scen  ;
         //SWE_RadialDamBreakScenario scenario;
 #endif
         std::array<BoundaryType, 4> boundaries;
@@ -90,13 +90,13 @@ HPX_REGISTER_CHANNEL(timestep_type);
 #ifdef ASAGI
         SWE_AsagiScenario scenario(batFile, displFile);
 #else
-        SWE_HalfDomainDry scenario;
-        //SWE_RadialDamBreakScenario scenario;
+        //SWE_HalfDomainDry scenario;
+        SWE_RadialDamBreakScenario scenario;
 #endif
 
         int totalRanks = ranksPerLocality* localityCount;
         this->localityRank = rank;
-        hpx::cout << "Locality Rank " << localityRank << std::endl;
+
         this->localityCount = localityCount;
         this->numberOfCheckPoints = numberOfCheckPoints;
         this->simulationDuration = simulationDuration;
@@ -126,12 +126,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
         while (totalHpxRanks % blockCountY != 0) blockCountY--;
         int blockCountX = totalHpxRanks / blockCountY;
 
-        hpx::cout <<  "BlockCount "<< blockCountX << " " << blockCountY << std::endl;
-        // determine the local block position of each SWE_Block
-
-
 
         int startPoint = localityRank * ranksPerLocality;
+        hpx::cout << "Locality Rank " << localityRank << std::endl;
         hpx::cout << "Total Ranks " << totalHpxRanks << std::endl;
         hpx::cout << "Start point " << startPoint << std::endl;
         for(int i = startPoint ; i < startPoint+ ranksPerLocality; i++) {
@@ -160,9 +157,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                     scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX * dxSimulation * nxBlockSimulation;
             float localOriginY =
                     scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY * dySimulation * nyBlockSimulation;
-            hpx::cout << "BlockPosition " << localBlockPositionX << " " << localBlockPositionY << std::endl;
-            hpx::cout << "LocalGrid " << nxLocal << " " << nyLocal << std::endl;
-            hpx::cout << "LocalOrigin " << localOriginX << " " << localOriginY << std::endl << std::endl;
+
 
             // Determine the boundary types for the SWE_Block:
             // block boundaries bordering other blocks have a CONNECT boundary,
@@ -186,7 +181,10 @@ HPX_REGISTER_CHANNEL(timestep_type);
         std::vector<hpx::future<void>> fut;
         for(auto & block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, &block));
         hpx::wait_all(fut);
-
+        int i = 0;
+        for(auto & block: simulationBlocks){
+            block.printB(i++);
+        }
         // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
         float* checkpointInstantOfTime = new float[numberOfCheckPoints];
         // Time delta is the time between any two checkpoints
@@ -222,6 +220,10 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 ghostlayer.reserve(simulationBlocks.size());
                 for(auto & block: simulationBlocks)ghostlayer.push_back(block.setGhostLayer());
                 hpx::wait_all(ghostlayer);
+                int f = 0;
+                for(auto & block: simulationBlocks){
+        //            block.printH(f++);
+              }
                 std::vector<hpx::future<void>> xsweep;
                 xsweep.reserve(simulationBlocks.size());
 
@@ -233,7 +235,6 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
 
                 float minTimestep= *std::min_element(timesteps.begin(), timesteps.end());
-
 
                 float timestep;
                 //barrier

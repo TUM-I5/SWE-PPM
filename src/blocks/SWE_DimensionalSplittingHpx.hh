@@ -28,6 +28,9 @@
 #include <hpx/include/lcos.hpp>
 #include <hpx/include/async.hpp>
 #include <hpx/include/components.hpp>
+
+#include <hpx/include/parallel_algorithm.hpp>
+#include <hpx/include/iostreams.hpp>
 template <typename T>
 struct copyLayerStruct {
 
@@ -79,7 +82,26 @@ public:
     float flopCounter;
     float maxTimestepGlobal;
 
+    void printH(int rank){
+        hpx::cout << "H OF " <<rank << std::endl;
+        for (int y = 0; y < ny+2; y++) {
 
+            for (int x = 0; x < nx +2; x++) {
+                hpx::cout << " " << h[x][y];
+            }
+            hpx::cout << std::endl;
+        }
+    }
+    void printB(int rank){
+        hpx::cout << "B OF " <<rank << std::endl;
+        for (int y = 0; y < ny+2; y++) {
+
+            for (int x = 0; x < nx +2; x++) {
+                hpx::cout << " " << b[x][y];
+            }
+            hpx::cout << std::endl;
+        }
+    }
 private:
 #if WAVE_PROPAGATION_SOLVER==0
     //! Hybrid solver (f-wave + augmented)

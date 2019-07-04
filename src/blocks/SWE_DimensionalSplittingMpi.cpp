@@ -311,13 +311,7 @@ void SWE_DimensionalSplittingMpi::setGhostLayer() {
     communicationTime += (endTime.tv_sec - startTime.tv_sec);
     communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
-    /*for (int y = 0; y < ny+2; y++) {
 
-        for (int x = 0; x < nx +2; x++) {
-            std::cout << " " << h[x][y];
-        }
-        std::cout << std::endl;
-    }*/
 }
 
 /**

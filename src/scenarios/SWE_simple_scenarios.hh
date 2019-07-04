@@ -41,7 +41,7 @@ public:
 
     float getBathymetry(float x, float y){
 
-        if(y > 500)return 20;
+       // if(y > 500 && y < 600)return 20;
         return -250;
     };
 
@@ -52,7 +52,7 @@ public:
 
     virtual float endSimulation() { return (float) 15; };
 
-    virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; };
+    virtual BoundaryType getBoundaryType(Boundary boundary) { return WALL; };
 
     /** Get the boundary positions
      *
