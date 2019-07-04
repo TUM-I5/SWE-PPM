@@ -181,10 +181,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
         std::vector<hpx::future<void>> fut;
         for(auto & block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, &block));
         hpx::wait_all(fut);
-        int i = 0;
-        for(auto & block: simulationBlocks){
-            block.printB(i++);
-        }
+       
+
         // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
         float* checkpointInstantOfTime = new float[numberOfCheckPoints];
         // Time delta is the time between any two checkpoints
@@ -220,10 +218,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 ghostlayer.reserve(simulationBlocks.size());
                 for(auto & block: simulationBlocks)ghostlayer.push_back(block.setGhostLayer());
                 hpx::wait_all(ghostlayer);
-                int f = 0;
-                for(auto & block: simulationBlocks){
-        //            block.printH(f++);
-              }
+
+
                 std::vector<hpx::future<void>> xsweep;
                 xsweep.reserve(simulationBlocks.size());
 
