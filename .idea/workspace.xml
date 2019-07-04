@@ -14,15 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -104,14 +96,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="72" column="79" lean-forward="true" selection-start-line="72" selection-start-column="79" selection-end-line="72" selection-end-column="79" />
+            <state relative-caret-position="380">
+              <caret line="183" selection-start-line="183" selection-end-line="183" />
               <folding>
                 <element signature="e#1273#1331#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="641">
+              <caret line="83" column="84" selection-start-line="83" selection-start-column="84" selection-end-line="83" selection-end-column="84" />
             </state>
           </provider>
         </entry>
@@ -181,19 +182,6 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="219" selection-start-line="219" selection-end-line="219" />
-              <folding>
-                <element signature="e#162#195#0" expanded="true" />
-                <element signature="e#254#295#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -233,8 +221,8 @@
       <find>setGhostLayer</find>
       <find>SWE_Hpx_Component</find>
       <find>scenario</find>
-      <find>SWE_RadialDamBreakScenario</find>
       <find>hpx::cout</find>
+      <find>SWE_RadialDamBreakScenario</find>
     </findStrings>
     <replaceStrings>
       <replace>initialize</replace>
@@ -305,7 +293,6 @@
         <option value="$PROJECT_DIR$/src/SConscript" />
         <option value="$PROJECT_DIR$/src/examples/swe_hpx.cpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" />
         <option value="$PROJECT_DIR$/src/solvers/AugRie.hpp" />
@@ -316,8 +303,9 @@
         <option value="$PROJECT_DIR$/src/examples/swe_charm.cpp" />
         <option value="$PROJECT_DIR$/src/examples/swe_mpi.cpp" />
         <option value="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" />
       </list>
     </option>
   </component>
@@ -482,7 +470,7 @@
       <workItem from="1561893614258" duration="32742000" />
       <workItem from="1561972123957" duration="3997000" />
       <workItem from="1562142059905" duration="13374000" />
-      <workItem from="1562226690927" duration="3518000" />
+      <workItem from="1562226690927" duration="4450000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed Upcxx Bug">
       <created>1559309785408</created>
@@ -638,11 +626,25 @@
       <option name="project" value="LOCAL" />
       <updated>1562189031843</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Removed haly dry scenario for now">
+      <created>1562230286542</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1562230286542</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Removed haly dry scenario for now">
+      <created>1562230479330</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1562230479330</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="345321000" />
+    <option name="totallyTimeSpent" value="346253000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -718,7 +720,8 @@
     <MESSAGE value="No Component Hpx Implementation" />
     <MESSAGE value="Added Charm communication time" />
     <MESSAGE value="Added Half dry scenario" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Half dry scenario" />
+    <MESSAGE value="Removed haly dry scenario for now" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed haly dry scenario for now" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -799,13 +802,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.hh">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1185">
-          <caret line="79" column="46" selection-start-line="79" selection-start-column="46" selection-end-line="79" selection-end-column="46" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.hh">
       <provider selected="true" editor-type-id="text-editor" />
@@ -1083,11 +1079,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="72" column="79" lean-forward="true" selection-start-line="72" selection-start-column="79" selection-end-line="72" selection-end-column="79" />
+        <state relative-caret-position="380">
+          <caret line="183" selection-start-line="183" selection-end-line="183" />
           <folding>
             <element signature="e#1273#1331#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="641">
+          <caret line="83" column="84" selection-start-line="83" selection-start-column="84" selection-end-line="83" selection-end-column="84" />
         </state>
       </provider>
     </entry>

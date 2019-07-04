@@ -80,8 +80,8 @@ module SWE_DimensionalSplittingCharm {
 						sendCopyLayers(false);
 						setGhostLayer();
 						clock_gettime(CLOCK_MONOTONIC, &endTime);
-                            communicationTime += (endTime.tv_sec - startTime.tv_sec);
-                            communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+                            communicationTime += (endTime.tv_sec - commTime.tv_sec);
+                            communicationTime += (float) (endTime.tv_nsec - commTime.tv_nsec) / 1E9;
 					} else {
 						// Accumulate wall time
 						clock_gettime(CLOCK_MONOTONIC, &endTime);

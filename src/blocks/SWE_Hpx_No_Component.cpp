@@ -181,7 +181,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
         std::vector<hpx::future<void>> fut;
         for(auto & block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, &block));
         hpx::wait_all(fut);
-       
+
 
         // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
         float* checkpointInstantOfTime = new float[numberOfCheckPoints];
