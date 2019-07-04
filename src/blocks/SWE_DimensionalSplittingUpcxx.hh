@@ -69,6 +69,7 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 		float computeTime;
 		float computeTimeWall;
 		float communicationTime;
+        float reductionTime;
 		float getFlops();
 		float flopCounter = 0;
 

@@ -67,6 +67,7 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 		float computeTime;
 		float computeTimeWall;
         float communicationTime;
+        float reductionTime;
         float getFlops();
 	private:
 #if WAVE_PROPAGATION_SOLVER==0

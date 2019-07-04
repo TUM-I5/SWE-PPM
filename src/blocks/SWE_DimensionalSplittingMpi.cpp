@@ -95,6 +95,7 @@ SWE_DimensionalSplittingMpi::SWE_DimensionalSplittingMpi(int nx, int ny, float d
 	computeTimeWall = 0.;
 	communicationTime = 0;
 	flopCounter = 0;
+	reductionTime = 0;
 }
 
 void SWE_DimensionalSplittingMpi::freeMpiType() {
@@ -359,10 +360,14 @@ flopCounter += nx*ny*135;
 	clock_gettime(CLOCK_MONOTONIC, &endTime);
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-    std::cout<< maxHorizontalWaveSpeed << std::endl;
+
 	// compute max timestep according to cautious CFL-condition
 	maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+	clock_gettime(CLOCK_MONOTONIC, &startTime);
 	MPI_Allreduce(&maxTimestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+    clock_gettime(CLOCK_MONOTONIC, &endTime);
+    reductionTime += (endTime.tv_sec - startTime.tv_sec);
+    reductionTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 	maxTimestep = maxTimestepGlobal;
 
 	// restart compute clocks

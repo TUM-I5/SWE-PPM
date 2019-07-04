@@ -23,7 +23,7 @@
 
 /* DECLS: mainchare swe_charm: Chare{
 swe_charm(CkArgMsg* impl_msg);
-void done(int index, float flop, float commTime, float wallTime);
+void done(int index, float flop, float commTime, float wallTime, float reductionTime);
 void exit();
 };
  */
@@ -58,7 +58,7 @@ class CkIndex_swe_charm:public CkIndex_Chare{
     static void _call_swe_charm_CkArgMsg(void* impl_msg, void* impl_obj);
     
     static void _call_sdag_swe_charm_CkArgMsg(void* impl_msg, void* impl_obj);
-    /* DECLS: void done(int index, float flop, float commTime, float wallTime);
+    /* DECLS: void done(int index, float flop, float commTime, float wallTime, float reductionTime);
      */
     // Entry point registration at startup
     
@@ -71,13 +71,13 @@ class CkIndex_swe_charm:public CkIndex_Chare{
     }
 
     
-    inline static int idx_done(void (swe_charm::*)(int index, float flop, float commTime, float wallTime) ) {
+    inline static int idx_done(void (swe_charm::*)(int index, float flop, float commTime, float wallTime, float reductionTime) ) {
       return idx_done_marshall2();
     }
 
 
     
-    static int done(int index, float flop, float commTime, float wallTime) { return idx_done_marshall2(); }
+    static int done(int index, float flop, float commTime, float wallTime, float reductionTime) { return idx_done_marshall2(); }
     
     static void _call_done_marshall2(void* impl_msg, void* impl_obj);
     
@@ -157,10 +157,10 @@ class CProxy_swe_charm:public CProxy_Chare{
     static void ckNew(CkArgMsg* impl_msg, CkChareID* pcid, int onPE=CK_PE_ANY);
     CProxy_swe_charm(CkArgMsg* impl_msg, int onPE=CK_PE_ANY);
 
-/* DECLS: void done(int index, float flop, float commTime, float wallTime);
+/* DECLS: void done(int index, float flop, float commTime, float wallTime, float reductionTime);
  */
     
-    void done(int index, float flop, float commTime, float wallTime, const CkEntryOptions *impl_e_opts=NULL);
+    void done(int index, float flop, float commTime, float wallTime, float reductionTime, const CkEntryOptions *impl_e_opts=NULL);
 
 /* DECLS: void exit();
  */

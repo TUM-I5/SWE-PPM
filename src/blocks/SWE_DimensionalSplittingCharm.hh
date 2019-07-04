@@ -99,6 +99,7 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 
 		struct timespec startTime;
 		struct timespec commTime;
+        struct timespec reducTime;
 		struct timespec endTime;
 
 		struct timespec startTimeCompute;
@@ -108,6 +109,7 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 		float computeTimeWall;
 		float wallTime;
 		float communicationTime;
+        float reductionTime;
 		float flopCounter;
 };
 

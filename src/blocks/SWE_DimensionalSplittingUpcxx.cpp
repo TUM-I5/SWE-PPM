@@ -92,6 +92,7 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 	computeTimeWall = 0.;
 	flopCounter = 0;
 	communicationTime = 0;
+	reductionTime = 0;
 }
 
 void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> p_neighbourCopyLayer[]) {
@@ -317,7 +318,11 @@ flopCounter += nx*ny*135;
 
 	// compute max timestep according to cautious CFL-condition
 	maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+    clock_gettime(CLOCK_MONOTONIC, &startTime);
 	maxTimestepGlobal = upcxx::reduce_all(maxTimestep, [](float a, float b) {return std::min(a, b);}).wait();
+    clock_gettime(CLOCK_MONOTONIC, &endTime);
+    reductionTime += (endTime.tv_sec - startTime.tv_sec);
+    reductionTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 	maxTimestep = maxTimestepGlobal;
 	upcxx::barrier();
 

@@ -196,9 +196,11 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
         // Initialize wall timer
         struct timespec startTime;
+        struct timespec reductionTime;
         struct timespec endTime;
 
         float wallTime = 0.;
+        float sumReductionTime = 0.;
         float t = 0.;
 
 
@@ -234,6 +236,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
                 float timestep;
                 //barrier
+                clock_gettime(CLOCK_MONOTONIC, &reductionTime);
                 if(localityRank == 0){
                     if(localityCount > 1){
                         timestep =hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalTimesteps, float localTimestep) -> float {
@@ -252,7 +255,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
                     timestep = localityChannel.get()[0].get();
                 }
-
+                clock_gettime(CLOCK_MONOTONIC, &endTime);
+               sumReductionTime += (endTime.tv_sec - reductionTime.tv_sec);
+                sumReductionTime += (float) (endTime.tv_nsec -reductionTime.tv_nsec) / 1E9;
                 for(auto & block: simulationBlocks)block.maxTimestepGlobal = timestep;
                 //  hpx::lcos::broadcast<remote::SWE_DimensionalSplittingComponent::setMaxTimestep_action>(block_ids,timestep).get();
                 std::vector<hpx::future<void>>ysweep;
@@ -296,8 +301,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
         hpx::cout   << "Flop count: " << sumFlops << std::endl
                     << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
         hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
-        hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl;
-
+        hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl
+                    << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl;
     }
 
 

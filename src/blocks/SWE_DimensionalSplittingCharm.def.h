@@ -1955,14 +1955,14 @@ void SWE_DimensionalSplittingCharm::_serial_7() {
       sendCopyLayers(false);
       setGhostLayer();
       clock_gettime(CLOCK_MONOTONIC, &endTime);
-                            communicationTime += (endTime.tv_sec - startTime.tv_sec);
-                            communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+                            communicationTime += (endTime.tv_sec - commTime.tv_sec);
+                            communicationTime += (float) (endTime.tv_nsec - commTime.tv_nsec) / 1E9;
      } else {
       clock_gettime(CLOCK_MONOTONIC, &endTime);
       wallTime += (endTime.tv_sec - startTime.tv_sec);
       wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
       CkPrintf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", thisIndex, computeTime, computeTimeWall, wallTime);
-      mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime);
+      mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime,reductionTime);
      }
     
 #line 1969 "SWE_DimensionalSplittingCharm.def.h"

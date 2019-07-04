@@ -90,10 +90,8 @@ module SWE_DimensionalSplittingCharm {
 
             				//	CkPrintf("Rank %i : Flops(Total): %fGFLOPS:\n", thisIndex,((float)flopCounter)*CkNumPes()/(wallTime*1000000000));
 						CkPrintf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", thisIndex, computeTime, computeTimeWall, wallTime);
-	//CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, printFlops), thisProxy);
-//	double flopC = (double)flopCounter;
-//	contribute(sizeof(double), &flopC, CkReduction::sum_double, cb);
-						mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime);
+
+						mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime,reductionTime);
 					}
 				}
 			}

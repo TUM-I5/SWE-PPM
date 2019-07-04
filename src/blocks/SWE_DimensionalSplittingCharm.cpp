@@ -50,6 +50,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 	wallTime = 0.;
 	communicationTime = 0;
     flopCounter = 0;
+    reductionTime = 0;
 	neighbourIndex[BND_LEFT] = (posX > 0) ? thisIndex - blockCountY : -1;
 	neighbourIndex[BND_RIGHT] = (posX < blockCountX - 1) ? thisIndex + blockCountY : -1;
 	neighbourIndex[BND_BOTTOM] = (posY > 0) ? thisIndex - 1 : -1;
@@ -129,6 +130,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 
 	// compute max timestep according to cautious CFL-condition
 	maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+    clock_gettime(CLOCK_MONOTONIC, &reducTime);
 	CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
 	contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
 }
@@ -136,6 +138,9 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
 	maxTimestep = maxWaveSpeed;
 	reductionTrigger();
+    clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
+    computeTimeWall += (endTimeCompute.tv_sec - reducTime.tv_sec);
+    computeTimeWall += (float) (endTimeCompute.tv_nsec - reducTime.tv_nsec) / 1E9;
 }
 
 void SWE_DimensionalSplittingCharm::ySweep() {

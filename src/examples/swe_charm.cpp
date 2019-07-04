@@ -198,12 +198,14 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 	blocks.compute();
 }
 
-void swe_charm::done(int index,float flop, float commTime, float wallTime ) {
+void swe_charm::done(int index,float flop, float commTime, float wallTime ,float reductionTime) {
     sumFlops += flop;
     sumCommTime += commTime;
+    sumReductionTime += reductionTime;
 	if (--chareCount == 0){
         CkPrintf("Flops(Total): %fGFLOPS\n",(sumFlops/(wallTime*1000000000)));
         CkPrintf("Communication Time(Total): %fs\n", sumCommTime);
+        CkPrintf("Reduction Time(Total): %fs\n", sumReductionTime);
         exit();
 	}
 
