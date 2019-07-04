@@ -359,7 +359,7 @@ flopCounter += nx*ny*135;
 	clock_gettime(CLOCK_MONOTONIC, &endTime);
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
+    std::cout<< maxHorizontalWaveSpeed << std::endl;
 	// compute max timestep according to cautious CFL-condition
 	maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
 	MPI_Allreduce(&maxTimestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);

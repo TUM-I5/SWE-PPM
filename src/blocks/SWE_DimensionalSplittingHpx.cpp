@@ -35,7 +35,8 @@
 #include <algorithm>
 #include <omp.h>
 #include <typeinfo>
-
+#include <hpx/include/parallel_transform_reduce.hpp>
+#include <utility>
 /*
  * Constructor of a SWE_DimensionalSplitting Block.
  * Computational domain is [1,...,nx]*[1,...,ny]
@@ -416,21 +417,67 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
 
     return ret;
 }
+
+
 void SWE_DimensionalSplittingHpx::computeXSweep (){
     computeClock = clock();
     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
     //maximum (linearized) wave speed within one iteration
-    float maxHorizontalWaveSpeed = (float) 0.;
+   // float maxHorizontalWaveSpeed = (float) 0.;
 
 
-
+    std::vector<float> wave;
     // x-sweep, compute the actual domain plus ghost rows above and below
     // iterate over cells on the x-axis, leave out the last column (two cells per computation)
+    /*hpx::parallel::exclusive_scan(hpx::parallel::execution::par,                   // 3
+                                  0,nx + 1, wave.begin(),
+                                  [this](int x)
+                                  {
+                                      float maxHorizontalWaveSpeed = (float) 0.;
+                                      for (int y = 0; y < ny+2; y++) {
+                                          solver.computeNetUpdates (
+                                                  h[x][y], h[x + 1][y],
+                                                  hu[x][y], hu[x + 1][y],
+                                                  b[x][y], b[x + 1][y],
+                                                  hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
+                                                  huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
+                                                  maxHorizontalWaveSpeed
+                                          );
+                                      }
+                                      return maxHorizontalWaveSpeed;
+                                  });
 
+*/
 
+std::vector<int> test;
+test.reserve(nx+1);
+for(int i = 0; i < nx+1 ; i++)test.push_back(i);
 
-    for (int x = 0; x < nx + 1; x++) {
+    float maxHorizontalWaveSpeed = hpx::parallel::transform_reduce(hpx::parallel::execution::par,
+                                                       std::begin(test), std::end(test),
+                                                                   (float) 0.,   [](float a, float b){ return b; },
+                                                       [this](int x) ->
+                                                       float{
+
+                                                           float maxHorizontalWaveSpeed = (float) 0.;
+                                                           for (int y = 0; y < ny+2; y++) {
+                                                               solver.computeNetUpdates (
+                                                                       h[x][y], h[x + 1][y],
+                                                                       hu[x][y], hu[x + 1][y],
+                                                                       b[x][y], b[x + 1][y],
+                                                                       hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
+                                                                       huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
+                                                                       maxHorizontalWaveSpeed
+                                                               );
+                                                           }
+                                                           return maxHorizontalWaveSpeed;
+                                                       }
+                                                               );
+ //   std::cout<< maxHorizontalWaveSpeed << std::endl;
+  //  maxHorizontalWaveSpeed= *std::min_element(wave.begin(), wave.end());
+
+    /*for (int x = 0; x < nx + 1; x++) {
         const int ny_end = ny+2;
         // iterate over all rows, including ghost layer
 
@@ -444,7 +491,7 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
                     maxHorizontalWaveSpeed
             );
         }
-    }
+    }*/
     flopCounter += nx*ny*135;
 
     // Accumulate compute time -> exclude the reduction
@@ -476,8 +523,30 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
         }
     }
 
+    std::vector<int> test;
+    test.reserve(nx+1);
+    for(int i = 1; i < nx+1 ; i++)test.push_back(i);
+    float maxHorizontalWaveSpeed = hpx::parallel::transform_reduce(hpx::parallel::execution::par,
+                                                                   std::begin(test), std::end(test),
+                                                                   (float) 0.,   [](float a, float b){ return b; },
+                                                                   [this](int x) ->
+                                                                           float{
 
-    for (int x = 1; x < nx + 1; x++) {
+                                                                       float maxVerticalWaveSpeed = (float) 0.;
+                                                                       for (int y = 0; y < ny+1; y++) {
+                                                                           solver.computeNetUpdates (
+                                                                                   h[x][y], h[x][y + 1],
+                                                                                   hv[x][y], hv[x][y + 1],
+                                                                                   b[x][y], b[x][y + 1],
+                                                                                   hNetUpdatesBelow[x][y], hNetUpdatesAbove[x][y + 1],
+                                                                                   hvNetUpdatesBelow[x][y], hvNetUpdatesAbove[x][y + 1],
+                                                                                   maxVerticalWaveSpeed
+                                                                           );
+                                                                       }
+                                                                       return maxVerticalWaveSpeed;
+                                                                   }
+    );
+    /*for (int x = 1; x < nx + 1; x++) {
         const int ny_end = ny+1;
         // iterate over all rows, including ghost layer
         for (int y = 0; y < ny_end; y++) {
@@ -492,7 +561,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
         }
     }
 
-
+*/
 
     flopCounter += nx*ny*135;
     // Accumulate compute time
