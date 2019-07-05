@@ -169,12 +169,31 @@ HPX_REGISTER_CHANNEL(timestep_type);
                                                             blockCountY, myHpxRank);
 
             simulationBlocks.push_back(SWE_DimensionalSplittingHpx(nxLocal, nyLocal, dxSimulation, dySimulation,
-                                                                   localOriginX, localOriginY,
-                                                                   communicator_type(myHpxRank, totalHpxRanks,
-                                                                                     myNeighbours)));
+                                                                   localOriginX, localOriginY));
 
             simulationBlocks[i - startPoint].initScenario(scenario, boundaries.data());
         }
+        for(int i = startPoint ; i < startPoint+ ranksPerLocality; i++) {
+            auto myHpxRank = i;
+            int localBlockPositionX = myHpxRank / blockCountY;
+            int localBlockPositionY = myHpxRank % blockCountY;
+            std::array<int, 4> myNeighbours = getNeighbours(localBlockPositionX, localBlockPositionY, blockCountX,
+                                                            blockCountY, myHpxRank);
+
+            std::array<int,4> refinedNeighours;
+            std::array<SWE_DimensionalSplittingHpx * , 4> neighbourBlocks;
+            for(int j = 0; j < 4 ; j++){
+                if(myNeighbours[j] >= startPoint && myNeighbours[j] < (startPoint+ranksPerLocality)){
+                    refinedNeighours[j] = -2;
+                    neighbourBlocks[j] = &simulationBlocks[myNeighbours[j]-startPoint];
+                }else {
+                    refinedNeighours[j] = myNeighbours[i];
+                }
+
+            }
+            simulationBlocks[i-startPoint].connectNeighbours(communicator_type(myHpxRank,totalHpxRanks,refinedNeighours,neighbourBlocks));
+        }
+
     }
     void SWE_Hpx_No_Component::run()
     {

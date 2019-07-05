@@ -57,7 +57,7 @@
  * @param l_dy Cell height
  */
 
-SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX, float originY, communicator_type comm) :
+SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX, float originY) :
 /*
  * Important note concerning grid allocations:
  * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -93,8 +93,8 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
         hNetUpdatesAbove(nx + 1, ny + 2),
 
         hvNetUpdatesBelow(nx + 1, ny + 2),
-        hvNetUpdatesAbove(nx + 1, ny + 2),
-        comm(comm){
+        hvNetUpdatesAbove(nx + 1, ny + 2)
+       {
 
 
 
@@ -106,9 +106,9 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
 
 
 
-void SWE_DimensionalSplittingHpx::connectNeighbours(int p_neighbourRankId[]) {
-     //comm(p_neighbourRankId[i])
-
+void SWE_DimensionalSplittingHpx::connectNeighbours(communicator_type
+comm){
+this->comm = comm;
 }
 
 
@@ -119,6 +119,97 @@ HPX_REGISTER_CHANNEL_DECLARATION(communication_type);
 HPX_REGISTER_CHANNEL(communication_type);
 
 
+copyLayerStruct<std::vector<float>>  SWE_DimensionalSplittingHpx::getGhostLayer(Boundary boundary, bool bath){
+
+if(!bath){
+
+
+    if (boundary == BND_LEFT) {
+
+    int startIndex = ny + 2 + 1;
+
+    return  copyLayerStruct<std::vector<float>> {ny,{},
+    std::vector<float>(h.getRawPointer() + startIndex, h.getRawPointer() + startIndex + ny),
+    std::vector<float>(hu.getRawPointer() + startIndex, hu.getRawPointer() + startIndex + ny),
+    std::vector<float>(hv.getRawPointer() + startIndex, hv.getRawPointer() + startIndex + ny)};
+
+
+    }
+    if (boundary == BND_RIGHT) {
+    int startIndex = nx * (ny + 2) + 1;
+    return  copyLayerStruct<std::vector<float>> {ny,{},
+    std::vector<float>(h.getRawPointer() + startIndex, h.getRawPointer() + startIndex + ny),
+    std::vector<float>(hu.getRawPointer() + startIndex, hu.getRawPointer() + startIndex + ny),
+    std::vector<float>(hv.getRawPointer() + startIndex, hv.getRawPointer() + startIndex + ny)};
+    }
+    if (boundary == BND_BOTTOM) {
+
+    std::vector<float> send_h;
+    std::vector<float> send_hu;
+    std::vector<float> send_hv;
+    send_h.reserve(nx);
+    send_hu.reserve(nx);
+    send_hv.reserve(nx);
+    for (int i = 1; i < nx+1 ; i++) {
+    send_h.push_back(h[i][1]);
+    send_hu.push_back(hu[i][1]);
+    send_hv.push_back(hv[i][1]);
+    }
+
+    return  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv};
+    }
+    if (boundary == BND_TOP) {
+
+    std::vector<float> send_h;
+    std::vector<float> send_hu;
+    std::vector<float> send_hv;
+    send_h.reserve(nx);
+    send_hu.reserve(nx);
+    send_hv.reserve(nx);
+    for (int i = 1; i < nx+1 ; i++) {
+    send_h.push_back(h[i][ny]);
+    send_hu.push_back(hu[i][ny]);
+    send_hv.push_back(hv[i][ny]);
+    }
+
+    return  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv};
+
+    }
+} else {
+
+if (boundaryType[BND_LEFT] == CONNECT) {
+
+    int startIndex = ny + 2 + 1;
+
+    return copyLayerStruct<std::vector<float>> {ny,std::vector<float>(b.getRawPointer() + startIndex, b.getRawPointer() + startIndex + ny)};
+
+
+}
+if (boundaryType[BND_RIGHT] == CONNECT) {
+    int startIndex = nx * (ny + 2) + 1;
+    return  copyLayerStruct<std::vector<float>> {ny,std::vector<float>(b.getRawPointer() + startIndex, b.getRawPointer() + startIndex + ny)};
+
+}
+if (boundaryType[BND_BOTTOM] == CONNECT) {
+
+    std::vector<float> send_bat;
+    for (int i = 1; i < nx+1 ; i++) {
+    send_bat.push_back(b[i][1]);
+    }
+
+return  copyLayerStruct<std::vector<float>> {nx,send_bat};
+}
+    if (boundaryType[BND_TOP] == CONNECT) {
+
+    std::vector<float> send_bat;
+    for (int i = 1; i < nx+1 ; i++) {
+    send_bat.push_back(b[i][ny]);
+    }
+    return copyLayerStruct<std::vector<float>> {nx,send_bat};
+
+    }
+}
+}
 
 
 void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
@@ -167,7 +258,7 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
    std::vector<hpx::future<copyLayerStruct<std::vector<float>>>>fut;
 
     if (boundaryType[BND_LEFT] == CONNECT) {
-      fut.push_back(comm.get(BND_LEFT));
+      fut.push_back(comm.get(BND_LEFT,true));
 
 
     } else {
@@ -176,21 +267,21 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 
     if (boundaryType[BND_RIGHT] == CONNECT) {
 
-        fut.push_back(comm.get(BND_RIGHT));
+        fut.push_back(comm.get(BND_RIGHT,true));
 
     } else {
         fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
     }
 
     if (boundaryType[BND_BOTTOM] == CONNECT) {
-        fut.push_back(comm.get(BND_BOTTOM));
+        fut.push_back(comm.get(BND_BOTTOM,true));
 
     } else {
         fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
     }
 
     if (boundaryType[BND_TOP] == CONNECT) {
-        fut.push_back(comm.get(BND_TOP));
+        fut.push_back(comm.get(BND_TOP,true));
     } else {
         fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
     }
@@ -424,10 +515,10 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
     //maximum (linearized) wave speed within one iteration
-   // float maxHorizontalWaveSpeed = (float) 0.;
+    float maxHorizontalWaveSpeed = (float) 0.;
 
 
-    std::vector<float> wave;
+
     // x-sweep, compute the actual domain plus ghost rows above and below
     // iterate over cells on the x-axis, leave out the last column (two cells per computation)
     /*hpx::parallel::exclusive_scan(hpx::parallel::execution::par,                   // 3
@@ -449,7 +540,7 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
                                   });
 
 */
-
+/*
 std::vector<int> test;
 test.reserve(nx+1);
 for(int i = 0; i < nx+1 ; i++)test.push_back(i);
@@ -473,11 +564,11 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
                                                            }
                                                            return maxHorizontalWaveSpeed;
                                                        }
-                                                               );
+                                                               );*/
  //   std::cout<< maxHorizontalWaveSpeed << std::endl;
   //  maxHorizontalWaveSpeed= *std::min_element(wave.begin(), wave.end());
 
-    /*for (int x = 0; x < nx + 1; x++) {
+    for (int x = 0; x < nx + 1; x++) {
         const int ny_end = ny+2;
         // iterate over all rows, including ghost layer
 
@@ -491,7 +582,7 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
                     maxHorizontalWaveSpeed
             );
         }
-    }*/
+    }
     flopCounter += nx*ny*135;
 
     // Accumulate compute time -> exclude the reduction
@@ -523,7 +614,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
         }
     }
 
-    std::vector<int> test;
+    /*std::vector<int> test;
     test.reserve(nx+1);
     for(int i = 1; i < nx+1 ; i++)test.push_back(i);
     float maxHorizontalWaveSpeed = hpx::parallel::transform_reduce(hpx::parallel::execution::par,
@@ -545,8 +636,8 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
                                                                        }
                                                                        return maxVerticalWaveSpeed;
                                                                    }
-    );
-    /*for (int x = 1; x < nx + 1; x++) {
+    );*/
+    for (int x = 1; x < nx + 1; x++) {
         const int ny_end = ny+1;
         // iterate over all rows, including ghost layer
         for (int y = 0; y < ny_end; y++) {
@@ -560,8 +651,6 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
             );
         }
     }
-
-*/
 
     flopCounter += nx*ny*135;
     // Accumulate compute time

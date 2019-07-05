@@ -4,32 +4,36 @@
 
 #ifndef SWE_BENCHMARK_COMMUNICATOR_HPP
 #define SWE_BENCHMARK_COMMUNICATOR_HPP
-
+#include "blocks/SWE_DimensionalSplittingHpx.hh"
 #include <hpx/include/lcos.hpp>
 #include "types/Boundary.hh"
 #include <array>
 
+class SWE_DimensionalSplittingHpx;
 template <typename T>
 struct communicator
 {
 
 
     typedef hpx::lcos::channel<T> channel_type;
-
+    communicator(){}
     // rank: our rank in the system
     // num: number of participating partners
-    communicator(std::size_t rank, std::size_t num,std::array<int, 4>  const &neighbours)
+    communicator(std::size_t rank,std::size_t num,std::array<int, 4>  neighbours, std::array<SWE_DimensionalSplittingHpx*, 4> neighbourBlocks)
     {
         static const char* top_name = "top";
         static const char* bot_name = "bot";
         static const char* left_name = "left";
         static const char* right_name = "right";
         // Only set up channels if we have more than one partner
+        neighbourInfo = neighbours;
+        this->neighbourBlocks = neighbourBlocks;
         if (num > 1)
         {
             // We have an upper neighbor if our rank is greater than zero.
-            if (neighbours[BND_TOP] != -1)
+            if (neighbours[BND_TOP] >= 0 )
             {
+
                 // Retrieve the channel from our upper neighbor from which we receive
                 // the row we need to update the first row in our partition.
                 recv[BND_TOP] = hpx::find_from_basename<channel_type>(bot_name, neighbours[BND_TOP]);
@@ -40,7 +44,7 @@ struct communicator
                 // Register the channel with a name such that our neighbor can find it.
                 hpx::register_with_basename(top_name, send[BND_TOP], rank);
             }
-            if (neighbours[BND_BOTTOM] != -1)
+            if (neighbours[BND_BOTTOM] >= 0)
             {
                 // Retrieve the channel from our upper neighbor from which we receive
                 // the row we need to update the first row in our partition.
@@ -52,7 +56,7 @@ struct communicator
                 // Register the channel with a name such that our neighbor can find it.
                 hpx::register_with_basename(bot_name, send[BND_BOTTOM], rank);
             }
-            if (neighbours[BND_LEFT] != -1)
+            if (neighbours[BND_LEFT] >= 0)
             {
                 // Retrieve the channel from our upper neighbor from which we receive
                 // the row we need to update the first row in our partition.
@@ -64,7 +68,7 @@ struct communicator
                 // Register the channel with a name such that our neighbor can find it.
                 hpx::register_with_basename(left_name, send[BND_LEFT], rank);
             }
-            if (neighbours[BND_RIGHT] != -1)
+            if (neighbours[BND_RIGHT] >= 0)
             {
                 // Retrieve the channel from our upper neighbor from which we receive
                 // the row we need to update the first row in our partition.
@@ -88,19 +92,36 @@ struct communicator
     {
         // Send our data to the neighbor n using fire and forget semantics
         // Synchronization happens when receiving values.
-        send[n].set(hpx::launch::apply, std::move(t));
+        if(neighbourInfo[n]>= 0){
+            send[n].set(hpx::launch::apply, std::move(t));
+        }
+
     }
 
-    hpx::future<T> get(Boundary n)
+    hpx::future<T> get(Boundary n, bool bat = false)
     {
         // Get our data from our neighbor, we return a future to allow the
         // algorithm to synchronize.
-        return recv[n].get(hpx::launch::async);
+        if(neighbourInfo[n]>= 0){
+            return recv[n].get(hpx::launch::async);
+        }else if (neighbourInfo[n] == -2){
+            //std::cout << "get Layer of neighbour" << std::endl;
+            if(n == BND_LEFT)
+            return hpx::make_ready_future(neighbourBlocks[n]->getGhostLayer(BND_RIGHT,bat));
+            if(n == BND_RIGHT)
+                return hpx::make_ready_future(neighbourBlocks[n]->getGhostLayer(BND_LEFT,bat));
+            if(n == BND_TOP)
+                return hpx::make_ready_future(neighbourBlocks[n]->getGhostLayer(BND_BOTTOM,bat));
+            if(n == BND_BOTTOM)
+                return hpx::make_ready_future(neighbourBlocks[n]->getGhostLayer(BND_TOP,bat));
+        }
+
     }
 
     std::array<hpx::lcos::channel<T>, 4> recv;
     std::array<hpx::lcos::channel<T>, 4> send;
-
+    std::array<int,4 > neighbourInfo;
+    std::array<SWE_DimensionalSplittingHpx*, 4> neighbourBlocks;
   /*  template <typename Archive>
     void serialize(Archive & ar, unsigned)
     {

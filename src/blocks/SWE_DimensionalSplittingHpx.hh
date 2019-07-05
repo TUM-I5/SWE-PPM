@@ -58,23 +58,22 @@ class SWE_DimensionalSplittingHpx : public SWE_Block<Float2DNative> {
 public:
     // Constructor/Destructor
     SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
-                                float cellSizeVertical, float originX, float originY , communicator_type comm);
+                                float cellSizeVertical, float originX, float originY );
     ~SWE_DimensionalSplittingHpx() {};
 
     // Interface methods
     hpx::future<void> setGhostLayer();
 
-    void setGhostLayer(Boundary boundary,copyLayerStruct<std::vector<float>> border);
-    void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
+
     void computeXSweep();
     void computeYSweep();
     void computeNumericalFluxes();
     void updateUnknowns(float dt);
 
-    copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary);
+    copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary,bool bath);
     // Hpx specific
     void freeHpxType();
-    void connectNeighbours(int neighbourRankId[]);
+    void connectNeighbours(communicator_type comm);
     void exchangeBathymetry();
 
     float computeTime;
