@@ -56,6 +56,7 @@ typedef communicator<copyLayerStruct<std::vector<float>>> communicator_type;
 class SWE_DimensionalSplittingHpx : public SWE_Block<Float2DNative> {
 
 public:
+    friend  communicator_type;
     // Constructor/Destructor
     SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
                                 float cellSizeVertical, float originX, float originY );

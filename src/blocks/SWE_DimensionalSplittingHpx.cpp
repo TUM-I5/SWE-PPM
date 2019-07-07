@@ -220,20 +220,19 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
      ********/
 
 
-     if (boundaryType[BND_LEFT] == CONNECT) {
+     if (boundaryType[BND_LEFT] == CONNECT && !comm.isLocal(BND_LEFT)) {
 
         int startIndex = ny + 2 + 1;
 
         comm.set(BND_LEFT,  copyLayerStruct<std::vector<float>> {ny,std::vector<float>(b.getRawPointer() + startIndex, b.getRawPointer() + startIndex + ny)});
 
-
     }
-    if (boundaryType[BND_RIGHT] == CONNECT) {
+    if (boundaryType[BND_RIGHT] == CONNECT && !comm.isLocal(BND_RIGHT)) {
         int startIndex = nx * (ny + 2) + 1;
         comm.set(BND_RIGHT,  copyLayerStruct<std::vector<float>> {ny,std::vector<float>(b.getRawPointer() + startIndex, b.getRawPointer() + startIndex + ny)});
 
     }
-    if (boundaryType[BND_BOTTOM] == CONNECT) {
+    if (boundaryType[BND_BOTTOM] == CONNECT && !comm.isLocal(BND_BOTTOM)) {
 
         std::vector<float> send_bat;
         for (int i = 1; i < nx+1 ; i++) {
@@ -242,7 +241,7 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 
         comm.set(BND_BOTTOM,  copyLayerStruct<std::vector<float>> {nx,send_bat});
     }
-    if (boundaryType[BND_TOP] == CONNECT) {
+    if (boundaryType[BND_TOP] == CONNECT && !comm.isLocal(BND_TOP)) {
 
         std::vector<float> send_bat;
         for (int i = 1; i < nx+1 ; i++) {
@@ -255,90 +254,32 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
     /***********
      * RECEIVE *
      **********/
-   std::vector<hpx::future<copyLayerStruct<std::vector<float>>>>fut;
+   std::vector<hpx::future<void>>fut;
 
     if (boundaryType[BND_LEFT] == CONNECT) {
-      fut.push_back(comm.get(BND_LEFT,true));
+      fut.push_back(comm.get(BND_LEFT,nx,ny,&h,&hu,&hv,&b,true));
 
 
-    } else {
-        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
     }
 
     if (boundaryType[BND_RIGHT] == CONNECT) {
 
-        fut.push_back(comm.get(BND_RIGHT,true));
-
-    } else {
-        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
-    }
-
-    if (boundaryType[BND_BOTTOM] == CONNECT) {
-        fut.push_back(comm.get(BND_BOTTOM,true));
-
-    } else {
-        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
-    }
-
-    if (boundaryType[BND_TOP] == CONNECT) {
-        fut.push_back(comm.get(BND_TOP,true));
-    } else {
-        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
-    }
-
-    auto borders = hpx::when_all(fut).get();
-
-
-   if (boundaryType[BND_LEFT] == CONNECT) {
-
-        int startIndex = 1;
-        int i = 0;
-        for(auto &elm: borders[BND_LEFT].get().B){
-            b[0][i + 1] = elm;
-            i++;
-        }
-    } else {
-
-    }
-
-
-    if (boundaryType[BND_RIGHT] == CONNECT) {
-        int startIndex = (nx + 1) * (ny + 2) + 1;
-
-        int i = 0;
-
-        for(auto &elm:  borders[BND_RIGHT].get().B){
-
-            b[nx+1][i + 1] = elm;
-            i++;
-        }
-
-      } else {
+        fut.push_back(comm.get(BND_RIGHT,nx,ny,&h,&hu,&hv,&b,true));
 
     }
 
     if (boundaryType[BND_BOTTOM] == CONNECT) {
-        int i = 0;
-        for(auto &elm: borders[BND_BOTTOM].get().B){
-
-            b[i+1][0] = elm;
-            i++;
-        }
-    } else {
+        fut.push_back(comm.get(BND_BOTTOM,nx,ny,&h,&hu,&hv,&b,true));
 
     }
 
     if (boundaryType[BND_TOP] == CONNECT) {
-        int i = 0;
-        for(auto &elm: borders[BND_TOP].get().B){
-
-            b[i+1][ny+1] = elm;
-            i++;
-        }
-
-    } else {
-
+        fut.push_back(comm.get(BND_TOP,nx,ny,&h,&hu,&hv,&b,true));
     }
+
+
+
+    hpx::wait_all(fut);
 
 }
 
@@ -361,7 +302,7 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
      ********/
     struct timespec startTimeComm;
     clock_gettime(CLOCK_MONOTONIC, &startTimeComm);
-    if (boundaryType[BND_LEFT] == CONNECT) {
+    if (boundaryType[BND_LEFT] == CONNECT && !comm.isLocal(BND_LEFT)) {
 
         int startIndex = ny + 2 + 1;
 
@@ -372,14 +313,14 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
 
 
     }
-    if (boundaryType[BND_RIGHT] == CONNECT) {
+    if (boundaryType[BND_RIGHT] == CONNECT && !comm.isLocal(BND_RIGHT)) {
         int startIndex = nx * (ny + 2) + 1;
         comm.set(BND_RIGHT,  copyLayerStruct<std::vector<float>> {ny,{},
                                                                 std::vector<float>(h.getRawPointer() + startIndex, h.getRawPointer() + startIndex + ny),
                                                                 std::vector<float>(hu.getRawPointer() + startIndex, hu.getRawPointer() + startIndex + ny),
                                                                 std::vector<float>(hv.getRawPointer() + startIndex, hv.getRawPointer() + startIndex + ny)});
     }
-    if (boundaryType[BND_BOTTOM] == CONNECT) {
+    if (boundaryType[BND_BOTTOM] == CONNECT && !comm.isLocal(BND_BOTTOM)) {
 
         std::vector<float> send_h;
         std::vector<float> send_hu;
@@ -395,7 +336,7 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
 
         comm.set(BND_BOTTOM,  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv});
     }
-    if (boundaryType[BND_TOP] == CONNECT) {
+    if (boundaryType[BND_TOP] == CONNECT && !comm.isLocal(BND_TOP)) {
 
         std::vector<float> send_h;
         std::vector<float> send_hu;
@@ -418,92 +359,31 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
      * RECEIVE *
      **********/
 
-    std::vector<hpx::future<copyLayerStruct<std::vector<float>>>>fut;
+    std::vector<hpx::future<void>>fut;
     if (boundaryType[BND_LEFT] == CONNECT) {
-        fut.push_back(comm.get(BND_LEFT));
-    } else {
-        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+        fut.push_back(comm.get(BND_LEFT,nx,ny,&h,&hu,&hv,&b));
     }
     if (boundaryType[BND_RIGHT] == CONNECT) {
-        fut.push_back(comm.get(BND_RIGHT));
-    } else {
-        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+        fut.push_back(comm.get(BND_RIGHT,nx,ny,&h,&hu,&hv,&b));
     }
 
     if (boundaryType[BND_BOTTOM] == CONNECT) {
-        fut.push_back(comm.get(BND_BOTTOM));
-
-    } else {
-        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+        fut.push_back(comm.get(BND_BOTTOM,nx,ny,&h,&hu,&hv,&b));
     }
 
     if (boundaryType[BND_TOP] == CONNECT) {
-        fut.push_back(comm.get(BND_TOP));
-    } else {
-        fut.push_back(hpx::future<copyLayerStruct<std::vector<float>>>());
+        fut.push_back(comm.get(BND_TOP,nx,ny,&h,&hu,&hv,&b));
     }
 
 
-   auto ret = hpx::dataflow([this,startTimeComm] (std::vector<hpx::future<copyLayerStruct<std::vector<float>>>> borders )-> void {
-            if (boundaryType[BND_LEFT] == CONNECT) {
-
-                int startIndex = 1;
-                auto border = borders[BND_LEFT].get();
-
-                for(int i= 0; i < border.size; i++){
-
-                    h[0][i + 1] = border.H[i];
-                    hu[0][i + 1] = border.Hu[i];
-                    hv[0][i + 1] = border.Hv[i];
-                }
-            }
-
-            if (boundaryType[BND_RIGHT] == CONNECT) {
-                int startIndex = (nx + 1) * (ny + 2) + 1;
-
-                auto border = borders[BND_RIGHT].get();
-
-                for(int i= 0; i < border.size; i++){
-
-                    h[nx+1][i + 1] = border.H[i];
-                    hu[nx+1][i + 1] = border.Hu[i];
-                    hv[nx+1][i + 1] = border.Hv[i];
-                }
-
-            }
-
-            if (boundaryType[BND_BOTTOM] == CONNECT) {
-
-                auto border = borders[BND_BOTTOM].get();
-
-                for(int i= 0; i < border.size; i++){
-
-                    h[i + 1][0] = border.H[i];
-                    hu[i + 1][0] = border.Hu[i];
-                    hv[i + 1][0] = border.Hv[i];
-                }
-
-            }
-
-            if (boundaryType[BND_TOP] == CONNECT) {
-                auto border = borders[BND_TOP].get();
-
-                for(int i= 0; i < border.size; i++){
-
-                    h[i + 1][ny+1] = border.H[i];
-                    hu[i + 1][ny+1] = border.Hu[i];
-                    hv[i + 1][ny+1] = border.Hv[i];
-                }
-
-            }
-
+   auto ret = hpx::dataflow(hpx::util::unwrapping([this,startTimeComm] ( )-> void {
 
             clock_gettime(CLOCK_MONOTONIC, &endTime);
             communicationTime += (endTime.tv_sec - startTimeComm.tv_sec);
             communicationTime += (float) (endTime.tv_nsec - startTimeComm.tv_nsec) / 1E9;
 
 
-    },std::move(fut));
+    }),std::move(fut));
 
 
     return ret;

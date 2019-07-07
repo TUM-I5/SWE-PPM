@@ -8,6 +8,9 @@
 #include <hpx/include/lcos.hpp>
 #include "types/Boundary.hh"
 #include <array>
+#include "tools/Float2DNative.hh"
+
+#include <hpx/include/iostreams.hpp>
 
 class SWE_DimensionalSplittingHpx;
 template <typename T>
@@ -83,11 +86,6 @@ struct communicator
         }
     }
 
-    bool has_neighbor(Boundary n) const
-    {
-        return recv[n] && send[n];
-    }
-
     void set(Boundary n, T&& t)
     {
         // Send our data to the neighbor n using fire and forget semantics
@@ -98,22 +96,130 @@ struct communicator
 
     }
 
-    hpx::future<T> get(Boundary n, bool bat = false)
+    bool isLocal(Boundary n){
+        return neighbourInfo[n] < 0;
+    }
+    hpx::future<void> get(Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b, bool bat = false)
     {
         // Get our data from our neighbor, we return a future to allow the
         // algorithm to synchronize.
+
+
+
+
         if(neighbourInfo[n]>= 0){
-            return recv[n].get(hpx::launch::async);
+
+            return hpx::dataflow(
+                    hpx::util::unwrapping([&] (T border) -> void{
+                        if (n == BND_LEFT) {
+
+                            for(int i= 0; i < border.size; i++){
+
+                                (*h)[0][i + 1] = border.H[i];
+                                (*hu)[0][i + 1] = border.Hu[i];
+                                (*hv)[0][i + 1] = border.Hv[i];
+                            }
+                        }
+
+                        if (n == BND_RIGHT) {
+
+                            for(int i= 0; i < border.size; i++){
+
+                                (*h)[nx+1][i + 1] = border.H[i];
+                                (*hu)[nx+1][i + 1] = border.Hu[i];
+                                (*hv)[nx+1][i + 1] = border.Hv[i];
+                            }
+
+                        }
+
+                        if (n == BND_BOTTOM) {
+
+                            for(int i= 0; i < border.size; i++){
+
+                                (*h)[i + 1][0] = border.H[i];
+                                (*hu)[i + 1][0] = border.Hu[i];
+                                (*hv)[i + 1][0] = border.Hv[i];
+                            }
+
+                        }
+
+                        if (n == BND_TOP) {
+
+                            for(int i= 0; i < border.size; i++){
+
+                                (*h)[i + 1][ny+1] = border.H[i];
+                                (*hu)[i + 1][ny+1] = border.Hu[i];
+                                (*hv)[i + 1][ny+1] = border.Hv[i];
+                            }
+
+                        }
+                    }),recv[n].get(hpx::launch::async));
+
         }else if (neighbourInfo[n] == -2){
-            //std::cout << "get Layer of neighbour" << std::endl;
-            if(n == BND_LEFT)
-            return hpx::make_ready_future(neighbourBlocks[n]->getGhostLayer(BND_RIGHT,bat));
-            if(n == BND_RIGHT)
-                return hpx::make_ready_future(neighbourBlocks[n]->getGhostLayer(BND_LEFT,bat));
-            if(n == BND_TOP)
-                return hpx::make_ready_future(neighbourBlocks[n]->getGhostLayer(BND_BOTTOM,bat));
-            if(n == BND_BOTTOM)
-                return hpx::make_ready_future(neighbourBlocks[n]->getGhostLayer(BND_TOP,bat));
+
+            if(n == BND_LEFT){
+                if(ny !=  neighbourBlocks[n]->ny) hpx::cout << "length difference left border"<<std::endl;
+                int startIndexSender =  (neighbourBlocks[n]->nx)* (ny + 2) + 1;
+                int startIndexReceiver = 1;
+
+                if(!bat){
+                    std::copy_n(neighbourBlocks[n]->h.getRawPointer()+startIndexSender,ny, h->getRawPointer()+ startIndexReceiver);
+                    std::copy_n(neighbourBlocks[n]->hu.getRawPointer()+startIndexSender,ny, hu->getRawPointer()+ startIndexReceiver);
+                    std::copy_n(neighbourBlocks[n]->hv.getRawPointer()+startIndexSender,ny, hv->getRawPointer()+ startIndexReceiver);
+                }else {
+                    std::copy_n(neighbourBlocks[n]->b.getRawPointer()+startIndexSender,ny, b->getRawPointer()+ startIndexReceiver);
+                }
+
+                return hpx::make_ready_future();
+            }
+
+            if(n == BND_RIGHT){
+                if(ny !=  neighbourBlocks[n]->ny) hpx::cout << "length difference right border"<<std::endl;
+                int startIndexSender =  ny + 2 + 1;
+                int startIndexReceiver = (nx + 1) * (ny + 2) + 1;
+
+                if(!bat){
+                    std::copy_n(neighbourBlocks[n]->h.getRawPointer()+startIndexSender,ny, h->getRawPointer()+ startIndexReceiver);
+                    std::copy_n(neighbourBlocks[n]->hu.getRawPointer()+startIndexSender,ny, hu->getRawPointer()+ startIndexReceiver);
+                    std::copy_n(neighbourBlocks[n]->hv.getRawPointer()+startIndexSender,ny, hv->getRawPointer()+ startIndexReceiver);
+                }else {
+                    std::copy_n(neighbourBlocks[n]->b.getRawPointer()+startIndexSender,ny, b->getRawPointer()+ startIndexReceiver);
+                }
+
+                return hpx::make_ready_future();
+            }
+
+            if(n == BND_TOP) {
+                if (nx != neighbourBlocks[n]->nx) hpx::cout << "length difference top border" << std::endl;
+                if(!bat){
+                    for (int i = 0; i < nx; i++) {
+                        (*h)[i + 1][ny + 1] = neighbourBlocks[n]->h[i + 1][1];
+                        (*hu)[i + 1][ny + 1] = neighbourBlocks[n]->hu[i + 1][1];
+                        (*hv)[i + 1][ny + 1] = neighbourBlocks[n]->hv[i + 1][1];
+                    }
+                }else {
+                    for (int i = 0; i < nx; i++) {
+                       (*b)[i + 1][ny + 1] = neighbourBlocks[n]->b[i + 1][1];
+                    }
+
+                 }
+                return hpx::make_ready_future();
+            }
+            if(n == BND_BOTTOM){
+                if(nx !=  neighbourBlocks[n]->nx) hpx::cout << "length difference bottom border"<<std::endl;
+                if(!bat){
+                    for(int i = 0; i < nx ; i++){
+                        (*h)[i+1][0] = neighbourBlocks[n]->h[i+1][neighbourBlocks[n]->ny];
+                        (*hu)[i+1][0] = neighbourBlocks[n]->hu[i+1][neighbourBlocks[n]->ny];
+                        (*hv)[i+1][0] = neighbourBlocks[n]->hv[i+1][neighbourBlocks[n]->ny];
+                    }
+                }else {
+                    for(int i = 0; i < nx ; i++){
+                        (*b)[i+1][0] = neighbourBlocks[n]->b[i+1][neighbourBlocks[n]->ny];
+                     }
+                }
+                return hpx::make_ready_future();
+            }
         }
 
     }
