@@ -103,7 +103,7 @@ struct communicator
     hpx::future<void> get_remote(Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b, bool bat){
         hpx::cout << "get_remote downder" << std::endl;
         return hpx::dataflow(
-                hpx::util::unwrapping([&] (T border) -> void{
+                hpx::util::unwrapping([] (T border,Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b, bool bat) -> void{
                     if (n == BND_LEFT) {
                         if(!bat){
 
@@ -181,7 +181,7 @@ struct communicator
 
 
                     }
-                }),recv[n].get(hpx::launch::async));
+                }),recv[n].get(hpx::launch::async),n,nx,ny,h,hu,hv,b,bat);
     }
     hpx::future<void> get_local(Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b, bool bat){
         if(n == BND_LEFT){
