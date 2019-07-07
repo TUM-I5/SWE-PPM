@@ -521,37 +521,18 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
 
     // x-sweep, compute the actual domain plus ghost rows above and below
     // iterate over cells on the x-axis, leave out the last column (two cells per computation)
-    /*hpx::parallel::exclusive_scan(hpx::parallel::execution::par,                   // 3
-                                  0,nx + 1, wave.begin(),
-                                  [this](int x)
-                                  {
-                                      float maxHorizontalWaveSpeed = (float) 0.;
-                                      for (int y = 0; y < ny+2; y++) {
-                                          solver.computeNetUpdates (
-                                                  h[x][y], h[x + 1][y],
-                                                  hu[x][y], hu[x + 1][y],
-                                                  b[x][y], b[x + 1][y],
-                                                  hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
-                                                  huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                                                  maxHorizontalWaveSpeed
-                                          );
-                                      }
-                                      return maxHorizontalWaveSpeed;
-                                  });
 
-*/
-/*
-std::vector<int> test;
+
+/*std::vector<int> test;
 test.reserve(nx+1);
 for(int i = 0; i < nx+1 ; i++)test.push_back(i);
 
-    float maxHorizontalWaveSpeed = hpx::parallel::transform_reduce(hpx::parallel::execution::par,
-                                                       std::begin(test), std::end(test),
-                                                                   (float) 0.,   [](float a, float b){ return b; },
-                                                       [this](int x) ->
-                                                       float{
-
-                                                           float maxHorizontalWaveSpeed = (float) 0.;
+    hpx::parallel::for_loop(hpx::parallel::execution::par,
+                                                      0,nx+1,
+                            hpx::parallel::reduction_max(maxHorizontalWaveSpeed),
+                                                       [this](int x,float &maxHorizontalWaveSpeed)
+                                                       {
+                                                          // float maxHorizontalWaveSpeed = (float) 0.;
                                                            for (int y = 0; y < ny+2; y++) {
                                                                solver.computeNetUpdates (
                                                                        h[x][y], h[x + 1][y],
@@ -562,7 +543,7 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
                                                                        maxHorizontalWaveSpeed
                                                                );
                                                            }
-                                                           return maxHorizontalWaveSpeed;
+
                                                        }
                                                                );*/
  //   std::cout<< maxHorizontalWaveSpeed << std::endl;

@@ -46,7 +46,7 @@ private:
         int localityRank;
         int localityCount;
         localityChannel_type localityChannel;
-        std::vector<SWE_DimensionalSplittingHpx> simulationBlocks;
+        std::vector<std::shared_ptr<SWE_DimensionalSplittingHpx>> simulationBlocks;
 };
 
 
