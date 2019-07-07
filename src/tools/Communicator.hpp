@@ -233,7 +233,7 @@ struct communicator
 
         }
         if(n == BND_BOTTOM){
-          
+
             if(!bat){
                 for(int i = 0; i < nx ; i++){
                     (*h)[i+1][0] = neighbourBlocks[n]->h[i+1][neighbourBlocks[n]->ny];

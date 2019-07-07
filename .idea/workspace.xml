@@ -13,7 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tools/Communicator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Communicator.hpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -68,8 +68,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/tools/Communicator.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="706">
-              <caret line="183" column="72" selection-start-line="183" selection-start-column="72" selection-end-line="183" selection-end-column="72" />
+            <state relative-caret-position="376">
+              <caret line="235" column="10" selection-start-line="235" selection-start-column="10" selection-end-line="235" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -84,11 +84,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/tools/Float2DNative.hh">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/tools/Float2D.hh">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-633" />
@@ -98,7 +93,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1392">
+            <state relative-caret-position="897">
               <caret line="219" selection-start-line="219" selection-end-line="219" />
               <folding>
                 <element signature="e#162#195#0" expanded="true" />
@@ -121,10 +116,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="596">
+              <caret line="40" selection-start-line="40" selection-end-line="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="600">
-              <caret line="194" column="138" selection-start-line="194" selection-start-column="138" selection-end-line="194" selection-end-column="138" />
+            <state relative-caret-position="737">
+              <caret line="325" selection-start-line="325" selection-end-line="325" />
               <folding>
                 <element signature="e#1273#1331#0" expanded="true" />
               </folding>
@@ -279,9 +283,9 @@
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" />
         <option value="$PROJECT_DIR$/src/examples/swe_charm.hh" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" />
-        <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" />
         <option value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" />
+        <option value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" />
         <option value="$PROJECT_DIR$/src/tools/Communicator.hpp" />
       </list>
     </option>
@@ -452,7 +456,7 @@
       <workItem from="1562241988804" duration="11240000" />
       <workItem from="1562313389004" duration="5225000" />
       <workItem from="1562339183206" duration="2591000" />
-      <workItem from="1562506822468" duration="16071000" />
+      <workItem from="1562506822468" duration="16684000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed Upcxx Bug">
       <created>1559309785408</created>
@@ -671,11 +675,18 @@
       <option name="project" value="LOCAL" />
       <updated>1562523574228</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Added Bat support">
+      <created>1562523774420</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1562523774420</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="384822000" />
+    <option name="totallyTimeSpent" value="385435000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -757,7 +768,8 @@
     <MESSAGE value="Added Reduction Time analysis" />
     <MESSAGE value="Fixed destruction bug of simulation blocks" />
     <MESSAGE value="Improved communication performance" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improved communication performance" />
+    <MESSAGE value="Added Bat support" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Bat support" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1016,13 +1028,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="537">
-          <caret line="48" column="64" selection-start-line="48" selection-start-column="64" selection-end-line="48" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.cpp">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1059,17 +1064,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1392">
-          <caret line="219" selection-start-line="219" selection-end-line="219" />
-          <folding>
-            <element signature="e#162#195#0" expanded="true" />
-            <element signature="e#254#295#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
@@ -1101,10 +1095,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="897">
+          <caret line="219" selection-start-line="219" selection-end-line="219" />
+          <folding>
+            <element signature="e#162#195#0" expanded="true" />
+            <element signature="e#254#295#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="596">
+          <caret line="40" selection-start-line="40" selection-end-line="40" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="194" column="138" selection-start-line="194" selection-start-column="138" selection-end-line="194" selection-end-column="138" />
+        <state relative-caret-position="737">
+          <caret line="325" selection-start-line="325" selection-end-line="325" />
           <folding>
             <element signature="e#1273#1331#0" expanded="true" />
           </folding>
@@ -1113,8 +1125,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/tools/Communicator.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="706">
-          <caret line="183" column="72" selection-start-line="183" selection-start-column="72" selection-end-line="183" selection-end-column="72" />
+        <state relative-caret-position="376">
+          <caret line="235" column="10" selection-start-line="235" selection-start-column="10" selection-end-line="235" selection-end-column="10" />
         </state>
       </provider>
     </entry>
