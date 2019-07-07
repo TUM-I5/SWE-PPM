@@ -308,21 +308,23 @@ HPX_REGISTER_CHANNEL(timestep_type);
             //hpx::cout <<"Write timestep " << t<<"s" << std::endl;
 
         }
+if(localityRank == 0){
+    float totalCommTime = 0;
+    float sumFlops = 0;
+    for(auto &block: simulationBlocks){
+        //block.printResult();
+        totalCommTime += block->communicationTime;
+        sumFlops += block->flopCounter;
+    }
+
+    hpx::cout   << "Flop count: " << sumFlops << std::endl
+                << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
+    hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
+    hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl
+                << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl;
+}
 
 
-        float totalCommTime = 0;
-        float sumFlops = 0;
-        for(auto &block: simulationBlocks){
-            //block.printResult();
-            totalCommTime += block->communicationTime;
-            sumFlops += block->flopCounter;
-        }
-
-        hpx::cout   << "Flop count: " << sumFlops << std::endl
-                    << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
-        hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
-        hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl
-                    << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl;
     }
 
 

@@ -88,7 +88,7 @@ struct communicator
 
     void set(Boundary n, T&& t)
     {
-        hpx::cout << "set downer" << std::endl;
+
         // Send our data to the neighbor n using fire and forget semantics
         // Synchronization happens when receiving values.
         if(neighbourInfo[n]>= 0){
@@ -101,7 +101,7 @@ struct communicator
         return neighbourInfo[n] < 0;
     }
     hpx::future<void> get_remote(Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b, bool bat){
-        hpx::cout << "get_remote downder" << std::endl;
+
         return hpx::dataflow(
                 hpx::util::unwrapping([] (T border,Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b, bool bat) -> void{
                     if (n == BND_LEFT) {
@@ -185,7 +185,7 @@ struct communicator
     }
     hpx::future<void> get_local(Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b, bool bat){
         if(n == BND_LEFT){
-            if(ny !=  neighbourBlocks[n]->ny) hpx::cout << "length difference left border"<<std::endl;
+
             int startIndexSender =  (neighbourBlocks[n]->nx)* (ny + 2) + 1;
             int startIndexReceiver = 1;
 
@@ -201,7 +201,7 @@ struct communicator
         }
 
         if(n == BND_RIGHT){
-            if(ny !=  neighbourBlocks[n]->ny) hpx::cout << "length difference right border"<<std::endl;
+
             int startIndexSender =  ny + 2 + 1;
             int startIndexReceiver = (nx + 1) * (ny + 2) + 1;
 
@@ -217,7 +217,7 @@ struct communicator
         }
 
         if(n == BND_TOP) {
-            if (nx != neighbourBlocks[n]->nx) hpx::cout << "length difference top border" << std::endl;
+
             if(!bat){
                 for (int i = 0; i < nx; i++) {
                     (*h)[i + 1][ny + 1] = neighbourBlocks[n]->h[i + 1][1];
@@ -233,7 +233,7 @@ struct communicator
 
         }
         if(n == BND_BOTTOM){
-            if(nx !=  neighbourBlocks[n]->nx) hpx::cout << "length difference bottom border"<<std::endl;
+          
             if(!bat){
                 for(int i = 0; i < nx ; i++){
                     (*h)[i+1][0] = neighbourBlocks[n]->h[i+1][neighbourBlocks[n]->ny];
