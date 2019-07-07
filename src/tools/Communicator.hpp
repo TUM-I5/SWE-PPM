@@ -105,45 +105,80 @@ struct communicator
         return hpx::dataflow(
                 hpx::util::unwrapping([&] (T border) -> void{
                     if (n == BND_LEFT) {
+                        if(!bat){
 
-                        for(int i= 0; i < border.size; i++){
 
-                            (*h)[0][i + 1] = border.H[i];
-                            (*hu)[0][i + 1] = border.Hu[i];
-                            (*hv)[0][i + 1] = border.Hv[i];
+                            for(int i= 0; i < border.size; i++){
+
+                                (*h)[0][i + 1] = border.H[i];
+                                (*hu)[0][i + 1] = border.Hu[i];
+                                (*hv)[0][i + 1] = border.Hv[i];
+                            }
+                        }else {
+                            for(int i= 0; i < border.size; i++){
+
+                                (*b)[0][i + 1] = border.B[i];
+
+                            }
                         }
                     }
 
                     if (n == BND_RIGHT) {
+                        if(!bat){
 
-                        for(int i= 0; i < border.size; i++){
+                            for(int i= 0; i < border.size; i++){
 
-                            (*h)[nx+1][i + 1] = border.H[i];
-                            (*hu)[nx+1][i + 1] = border.Hu[i];
-                            (*hv)[nx+1][i + 1] = border.Hv[i];
+                                (*h)[nx+1][i + 1] = border.H[i];
+                                (*hu)[nx+1][i + 1] = border.Hu[i];
+                                (*hv)[nx+1][i + 1] = border.Hv[i];
+                            }
+                        }else {
+                            for(int i= 0; i < border.size; i++){
+
+                                (*b)[nx+1][i + 1] = border.B[i];
+
+                            }
                         }
+
 
                     }
 
                     if (n == BND_BOTTOM) {
+                        if(!bat){
 
-                        for(int i= 0; i < border.size; i++){
+                            for(int i= 0; i < border.size; i++){
 
-                            (*h)[i + 1][0] = border.H[i];
-                            (*hu)[i + 1][0] = border.Hu[i];
-                            (*hv)[i + 1][0] = border.Hv[i];
+                                (*h)[i + 1][0] = border.H[i];
+                                (*hu)[i + 1][0] = border.Hu[i];
+                                (*hv)[i + 1][0] = border.Hv[i];
+                            }
+                        }else {
+                            for(int i= 0; i < border.size; i++){
+
+                                (*b)[i+1][0] = border.B[i];
+
+                            }
                         }
 
                     }
 
                     if (n == BND_TOP) {
+                        if(!bat){
 
-                        for(int i= 0; i < border.size; i++){
+                            for(int i= 0; i < border.size; i++){
 
-                            (*h)[i + 1][ny+1] = border.H[i];
-                            (*hu)[i + 1][ny+1] = border.Hu[i];
-                            (*hv)[i + 1][ny+1] = border.Hv[i];
+                                (*h)[i + 1][ny+1] = border.H[i];
+                                (*hu)[i + 1][ny+1] = border.Hu[i];
+                                (*hv)[i + 1][ny+1] = border.Hv[i];
+                            }
+                        }else {
+                            for(int i= 0; i < border.size; i++){
+
+                                (*b)[i+1][ny+1] = border.B[i];
+
+                            }
                         }
+
 
                     }
                 }),recv[n].get(hpx::launch::async));
