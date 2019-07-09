@@ -30,7 +30,7 @@
  *
  */
 #include "SWE_DimensionalSplittingHpx.hh"
-
+#include <VT.h>
 #include <cassert>
 #include <algorithm>
 #include <omp.h>
@@ -56,7 +56,6 @@
  * @param l_dx Cell width
  * @param l_dy Cell height
  */
-
 SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX, float originY) :
 /*
  * Important note concerning grid allocations:
@@ -98,6 +97,7 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
 
 
 
+   VT_classdef ("DimensionalSplitting",&classhandle);
     computeTime = 0.;
     computeTimeWall = 0.;
     communicationTime = 0.;
@@ -286,6 +286,9 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 
 hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     // Apply appropriate conditions for OUTFLOW/WALL boundaries
+    int handle;
+VT_funcdef("GhostLayer",classhandle,&handle);
+VT_begin(handle);
     SWE_Block::applyBoundaryConditions();
 
 
@@ -376,12 +379,12 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     }
 
 
-   auto ret = hpx::dataflow(hpx::util::unwrapping([this,startTimeComm] ( )-> void {
+   auto ret = hpx::dataflow(hpx::util::unwrapping([this,startTimeComm,handle] ( )-> void {
 
             clock_gettime(CLOCK_MONOTONIC, &endTime);
             communicationTime += (endTime.tv_sec - startTimeComm.tv_sec);
             communicationTime += (float) (endTime.tv_nsec - startTimeComm.tv_nsec) / 1E9;
-
+VT_end(handle);
 
     }),std::move(fut));
 
@@ -391,6 +394,10 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
 
 
 void SWE_DimensionalSplittingHpx::computeXSweep (){
+
+    int handle;
+VT_funcdef("XSweep",classhandle,&handle);
+VT_begin(handle);
     computeClock = clock();
     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
@@ -458,8 +465,12 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
 
     maxTimestepGlobal = maxTimestep;
+VT_end(handle);
 }
 void SWE_DimensionalSplittingHpx::computeYSweep (){
+    int handle;
+VT_funcdef("YSweep",classhandle,&handle);
+    VT_begin(handle);
     maxTimestep = maxTimestepGlobal;
     float maxVerticalWaveSpeed = (float) 0.;
     computeClock = clock();
@@ -521,6 +532,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
     computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+VT_end(handle);
 }
 /**
  * Compute net updates for the block.
@@ -634,7 +646,11 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes () {
  * since this is the step width used for the intermediary updates after the x-sweep.
  */
 void SWE_DimensionalSplittingHpx::updateUnknowns (float dt) {
-    // Start compute clocks
+    
+    int handle;
+VT_funcdef("updateUnknowns",classhandle,&handle);
+VT_begin(handle);
+	// Start compute clocks
     computeClock = clock();
     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
@@ -656,4 +672,5 @@ void SWE_DimensionalSplittingHpx::updateUnknowns (float dt) {
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
     computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+VT_end(handle);
 }

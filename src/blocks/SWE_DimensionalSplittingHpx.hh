@@ -83,6 +83,7 @@ public:
     float flopCounter;
     float maxTimestepGlobal;
 
+    int classhandle;
     void printH(int rank){
         hpx::cout << "H OF " <<rank << std::endl;
         for (int y = 0; y < ny+2; y++) {
