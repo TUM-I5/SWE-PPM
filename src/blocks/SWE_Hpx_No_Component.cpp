@@ -231,6 +231,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
         std::vector<float> timesteps;
                 timesteps.reserve(simulationBlocks.size());
         // loop over the count of requested checkpoints
+        std::vector<hpx::future<void>> test;
         for(int i = 0; i < numberOfCheckPoints; i++) {
             // Simulate until the checkpoint is reached
             while(t < checkpointInstantOfTime[i]) {
@@ -243,9 +244,10 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 blockFuture.clear();
                 for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(setGhostLayer,block.get()));
                 hpx::wait_all(blockFuture);
-                /*hpx::when_each_n(hpx::util::unwrapping([this](int id) -> hpx::future<void> {
-                    return hpx::async(computeXSweep,simulationBlocks[id].get());
-                }),ghostlayer.begin(),simulationBlocks.size()).wait();*/
+                /*hpx::when_each_n(hpx::util::unwrapping([this](int id) -> void {
+                    //return hpx::async(computeXSweep,simulationBlocks[id].get());
+                    simulationBlocks[id]->computeXSweep();
+                }),blockFuture.begin(),simulationBlocks.size()).wait();*/
                 blockFuture.clear();
 
 
