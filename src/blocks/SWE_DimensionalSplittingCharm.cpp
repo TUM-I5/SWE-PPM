@@ -139,8 +139,8 @@ void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
 	maxTimestep = maxWaveSpeed;
 	reductionTrigger();
     clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
-    computeTimeWall += (endTimeCompute.tv_sec - reducTime.tv_sec);
-    computeTimeWall += (float) (endTimeCompute.tv_nsec - reducTime.tv_nsec) / 1E9;
+    reductionTime += (endTimeCompute.tv_sec - reducTime.tv_sec);
+    reductionTime += (float) (endTimeCompute.tv_nsec - reducTime.tv_nsec) / 1E9;
 }
 
 void SWE_DimensionalSplittingCharm::ySweep() {

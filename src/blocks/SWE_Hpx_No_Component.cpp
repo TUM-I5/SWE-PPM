@@ -230,6 +230,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
         blockFuture.reserve(simulationBlocks.size());
         std::vector<float> timesteps;
                 timesteps.reserve(simulationBlocks.size());
+std::vector<hpx::future<void>> xsweepFuture(simulationBlocks.size());
         // loop over the count of requested checkpoints
         for(int i = 0; i < numberOfCheckPoints; i++) {
             // Simulate until the checkpoint is reached
@@ -243,10 +244,14 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 blockFuture.clear();
                 for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(setGhostLayer,block.get()));
                 hpx::wait_all(blockFuture);
-                /*hpx::when_each_n(hpx::util::unwrapping([this](int id) -> hpx::future<void> {
-                    return hpx::async(computeXSweep,simulationBlocks[id].get());
-                }),ghostlayer.begin(),simulationBlocks.size()).wait();*/
-                blockFuture.clear();
+                /* hpx::when_each_n(hpx::util::unwrapping([this,&xsweepFuture](int id) -> void {
+                    xsweepFuture[id] = hpx::async(computeXSweep,simulationBlocks[id].get());
+                }),blockFuture.begin(),simulationBlocks.size()).wait();
+                
+		blockFuture.clear();
+
+                hpx::wait_all(xsweepFuture);*/
+		blockFuture.clear();
 
 
                 for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeXSweep,block.get()));
@@ -284,7 +289,15 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 sumReductionTime += (float) (endTime.tv_nsec -reductionTime.tv_nsec) / 1E9;
                 for(auto & block: simulationBlocks)block->maxTimestepGlobal = timestep;
 
-                blockFuture.clear();
+                /*for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep,block.get()));
+                //hpx::wait_all(blockFuture);
+                 hpx::when_each_n(hpx::util::unwrapping([this,&xsweepFuture](int id) -> void {
+                    xsweepFuture[id] = hpx::async(updateUnknowns,simulationBlocks[id].get());
+                }),blockFuture.begin(),simulationBlocks.size()).wait();
+                
+		blockFuture.clear();
+
+                hpx::wait_all(xsweepFuture);*/
                 for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep,block.get()));
                 hpx::wait_all(blockFuture);
 
@@ -309,21 +322,58 @@ HPX_REGISTER_CHANNEL(timestep_type);
             //hpx::cout <<"Write timestep " << t<<"s" << std::endl;
 
         }
-if(localityRank == 0){
-    float totalCommTime = 0;
+
+float totalCommTime = 0;
     float sumFlops = 0;
     for(auto &block: simulationBlocks){
         //block.printResult();
         totalCommTime += block->communicationTime;
         sumFlops += block->flopCounter;
     }
+                if(localityRank == 0){
+                    if(localityCount > 1){
+                        sumFlops +=hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalFlops) -> float {
+                        return std::accumulate(globalFlops.begin(),globalFlops.end(),0.0);
+			}),std::move(localityChannel.get())).get();
+			 float sendTs= sumFlops;
+			 localityChannel.set(std::move(sendTs));	
+			}	
+                } else {
+                    localityChannel.set(std::move(sumFlops));
+                    localityChannel.get()[0].get();	
+		}
 
+                if(localityRank == 0){
+                    if(localityCount > 1){
+                        totalCommTime +=hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalFlops) -> float {
+                        return std::accumulate(globalFlops.begin(),globalFlops.end(),0.0);
+			}),std::move(localityChannel.get())).get();
+
+			 float sendTs= totalCommTime;
+			 localityChannel.set(std::move(sendTs));	
+			}	
+                } else {
+                    localityChannel.set(std::move(totalCommTime));
+                    localityChannel.get()[0].get();	
+                }
+                if(localityRank == 0){
+                    if(localityCount > 1){
+                        sumReductionTime +=hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalFlops) -> float {
+                        return std::accumulate(globalFlops.begin(),globalFlops.end(),0.0);
+			}),std::move(localityChannel.get())).get();
+
+			}	
+                } else {
+                    localityChannel.set(std::move(sumReductionTime));
+                }
+if(localityRank == 0){
     hpx::cout   << "Flop count: " << sumFlops << std::endl
                 << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
     hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
     hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl
                 << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl;
 }
+
 
 
     }

@@ -78,7 +78,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 	args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
 	args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
 	args.addOption("output-basepath", 'o', "Output base file name");
-    args.addOption("chares", 'c', "charecount",args.Optional);
+    	args.addOption("chares", 'c', "charecount",args.Required,false);
 
 	// Declare the variables needed to hold command line input
 	int nxRequested;
