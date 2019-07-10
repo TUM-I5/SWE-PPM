@@ -414,7 +414,7 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
 test.reserve(nx+1);
 for(int i = 0; i < nx+1 ; i++)test.push_back(i);
 */
-
+/*
     hpx::parallel::for_loop(hpx::parallel::execution::par,
                                                       0,nx+1,
 
@@ -433,11 +433,11 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
                                                            }
                                                             if(x == nx) maxHorizontalWaveSpeed =localWaveSpeed;
                                                        }
-                                                               );
+                                                               );*/
  //   std::cout<< maxHorizontalWaveSpeed << std::endl;
   //  maxHorizontalWaveSpeed= *std::min_element(wave.begin(), wave.end());
 
-/*
+
     for (int x = 0; x < nx + 1; x++) {
         const int ny_end = ny+2;
         // iterate over all rows, including ghost layer
@@ -453,7 +453,7 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
             );
         }
     }
-    std::cout << "Reduction test " << maxHorizontalWaveSpeed << std::endl;*/
+
 
     flopCounter += nx*ny*135;
 
@@ -489,7 +489,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
             huStar[x][y] = hu[x][y] - (maxTimestep / dx) * (huNetUpdatesLeft[x][y] + huNetUpdatesRight[x][y]);
         }
     }
-
+/*
     hpx::parallel::for_loop(hpx::parallel::execution::par,
                             0,nx+1,
 
@@ -509,7 +509,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
 
                             }
     );
-    /*
+  */
     for (int x = 1; x < nx + 1; x++) {
         const int ny_end = ny+1;
         // iterate over all rows, including ghost layer
@@ -523,7 +523,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
                     maxVerticalWaveSpeed
             );
         }
-    }*/
+    }
 
     flopCounter += nx*ny*135;
     // Accumulate compute time
