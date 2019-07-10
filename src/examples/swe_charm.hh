@@ -10,7 +10,7 @@ class swe_charm : public CBase_swe_charm {
 
 		void done(int index,float flop, float commTime, float wallTime,float reductionTime);
 		void exit();
-            int chareCount;
+		int chareCount;
     float sumFlops;
     float sumCommTime;
     float sumReductionTime;

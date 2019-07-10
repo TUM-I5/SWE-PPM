@@ -413,13 +413,14 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
 /*std::vector<int> test;
 test.reserve(nx+1);
 for(int i = 0; i < nx+1 ; i++)test.push_back(i);
+*/
 
     hpx::parallel::for_loop(hpx::parallel::execution::par,
                                                       0,nx+1,
-                            hpx::parallel::reduction_max(maxHorizontalWaveSpeed),
-                                                       [this](int x,float &maxHorizontalWaveSpeed)
+
+                                                       [this ,&maxHorizontalWaveSpeed](int x)
                                                        {
-                                                          // float maxHorizontalWaveSpeed = (float) 0.;
+                                                            float localWaveSpeed;
                                                            for (int y = 0; y < ny+2; y++) {
                                                                solver.computeNetUpdates (
                                                                        h[x][y], h[x + 1][y],
@@ -427,15 +428,16 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
                                                                        b[x][y], b[x + 1][y],
                                                                        hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
                                                                        huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                                                                       maxHorizontalWaveSpeed
+                                                                       localWaveSpeed
                                                                );
                                                            }
-
+                                                            if(x == nx) maxHorizontalWaveSpeed =localWaveSpeed;
                                                        }
-                                                               );*/
+                                                               );
  //   std::cout<< maxHorizontalWaveSpeed << std::endl;
   //  maxHorizontalWaveSpeed= *std::min_element(wave.begin(), wave.end());
 
+/*
     for (int x = 0; x < nx + 1; x++) {
         const int ny_end = ny+2;
         // iterate over all rows, including ghost layer
@@ -451,6 +453,8 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
             );
         }
     }
+    std::cout << "Reduction test " << maxHorizontalWaveSpeed << std::endl;*/
+
     flopCounter += nx*ny*135;
 
     // Accumulate compute time -> exclude the reduction
@@ -486,29 +490,26 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
         }
     }
 
-    /*std::vector<int> test;
-    test.reserve(nx+1);
-    for(int i = 1; i < nx+1 ; i++)test.push_back(i);
-    float maxHorizontalWaveSpeed = hpx::parallel::transform_reduce(hpx::parallel::execution::par,
-                                                                   std::begin(test), std::end(test),
-                                                                   (float) 0.,   [](float a, float b){ return b; },
-                                                                   [this](int x) ->
-                                                                           float{
+    hpx::parallel::for_loop(hpx::parallel::execution::par,
+                            0,nx+1,
 
-                                                                       float maxVerticalWaveSpeed = (float) 0.;
-                                                                       for (int y = 0; y < ny+1; y++) {
-                                                                           solver.computeNetUpdates (
-                                                                                   h[x][y], h[x][y + 1],
-                                                                                   hv[x][y], hv[x][y + 1],
-                                                                                   b[x][y], b[x][y + 1],
-                                                                                   hNetUpdatesBelow[x][y], hNetUpdatesAbove[x][y + 1],
-                                                                                   hvNetUpdatesBelow[x][y], hvNetUpdatesAbove[x][y + 1],
-                                                                                   maxVerticalWaveSpeed
-                                                                           );
-                                                                       }
-                                                                       return maxVerticalWaveSpeed;
-                                                                   }
-    );*/
+                            [this ](int x)
+                            {
+                                float localWaveSpeed;
+                                for (int y = 0; y < ny+1; y++) {
+                                    solver.computeNetUpdates (
+                                            h[x][y], h[x][y + 1],
+                                            hv[x][y], hv[x][y + 1],
+                                            b[x][y], b[x][y + 1],
+                                            hNetUpdatesBelow[x][y], hNetUpdatesAbove[x][y + 1],
+                                            hvNetUpdatesBelow[x][y], hvNetUpdatesAbove[x][y + 1],
+                                           localWaveSpeed
+                                    );
+                                }
+
+                            }
+    );
+    /*
     for (int x = 1; x < nx + 1; x++) {
         const int ny_end = ny+1;
         // iterate over all rows, including ghost layer
@@ -522,7 +523,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
                     maxVerticalWaveSpeed
             );
         }
-    }
+    }*/
 
     flopCounter += nx*ny*135;
     // Accumulate compute time
