@@ -260,9 +260,9 @@ int main(int argc, char** argv) {
 	// Initialize wall timer
 	struct timespec startTime;
 	struct timespec endTime;
-
+    struct timespec barStartTime;
 	float wallTime = 0.;
-
+    float barrierTime = 0.;
 	t = 0.0;
 
 	float timestep;
@@ -295,8 +295,12 @@ int main(int argc, char** argv) {
             // update simulation time with time step width.
 			t += timestep;
 			iterations++;
+            clock_gettime(CLOCK_MONOTONIC, &barStartTime);
 			MPI_Barrier(MPI_COMM_WORLD);
-		}
+            barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
+            barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;
+
+        }
 
 		if(myMpiRank == 0) {
 			printf("Write timestep (%fs)\n", t);
@@ -322,16 +326,20 @@ int main(int argc, char** argv) {
     float sumFlops;
 	float sumCommTime;
 	float sumReductionTime;
+    float sumBarrierTime;
     MPI_Allreduce(&flop, &sumFlops, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
     MPI_Allreduce(&commTime, &sumCommTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
     MPI_Allreduce(&reductionTime, &sumReductionTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&barrierTime, &sumBarrierTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+
     if(myMpiRank == 0){
         std::cout   << "Rank: " << myMpiRank << std::endl
                     << "Flop count: " << sumFlops << std::endl
                     << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
                     << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl
-	                << "Communication Time(Total): " << sumCommTime << "s" << std::endl
-                    << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl;
+                    << "Communication Time(Total): " << sumCommTime << "s" << std::endl
+                    << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl
+                    << "Barrier Time(Total): " << sumBarrierTime << "s" << std::endl;
     }
 	simulation.freeMpiType();
 	MPI_Finalize();

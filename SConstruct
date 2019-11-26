@@ -108,7 +108,7 @@ vars.AddVariables(
                      'level of parallelization',
                      'none',
                      allowed_values=('none', 'cuda', 'mpi_with_cuda',
-                                     'mpi', 'ampi', 'charm', 'upcxx', 'hpx')
+                                     'mpi', 'ampi', 'charm', 'upcxx', 'hpx', 'chameleon')
                      ),
         BoolVariable('openmp',
                      'compile with OpenMP parallelization enabled',
@@ -180,6 +180,10 @@ vars.AddVariables(
         # FLOP measuring
         BoolVariable('countflops',
                      'enable flop counting; defines the macro COUNTFLOPS',
+                     False),
+
+        BoolVariable('itt',
+                     'enable itt api interface',
                      False)
 )
 
@@ -317,6 +321,52 @@ if env['parallelization'] in ['charm', 'ampi']:
 
     env.Append(BUILDERS={'charmBuilder': charmBuilder})
     env.charmBuilder("src/blocks/SWE_DimensionalSplittingCharm.ci")
+    ################################
+# Chameleon specific
+################################
+
+if env['parallelization'] in ['chameleon']:
+    env.Append(CCFLAGS=['-std=c++11'])
+    env.Append(CCFLAGS=['-lchameleon', '-lm', '-lstdc++'])
+    # get the chameleon folder
+    chameleonPath = os.environ['CHAM_PATH']
+    if chameleonPath == '':
+        print(sys.stderr,
+              'No chameleon installation found. Did you set $CHAM_PATH?')
+        Exit(3)
+    else:
+        print("Trying to find chameleon install at: " + chameleonPath)
+    env.Append(CCFLAGS=['-I'+chameleonPath+'/include/'])
+    env.Append(CCFLAGS=['-L'+chameleonPath+'/lib/'])
+    env.Append(LINKFLAGS=['-L'+chameleonPath+'/lib/'])
+    env.Append(LINKFLAGS=['-lchameleon'])
+    env.Append(LINKFLAGS=['-lfabric'])
+    env.Append(LINKFLAGS=['-lifcore'])
+    env.Append(LINKFLAGS=['-lirng'])
+
+################################
+# StarPU specific
+################################
+
+if env['parallelization'] in ['starpu']:
+    # get the starpu folder
+    starpuPath = os.environ['STARPU_PATH']
+    if starpuPath == '':
+        print(sys.stderr,
+              'No StarPU installation found. Did you set $STARPU_PATH?')
+        Exit(3)
+    else:
+        print("Trying to find StarPU install at: " + starpuPath)
+    env.Append(CCFLAGS=['-I'+starpuPath+'/include/'])
+    env.Append(CCFLAGS=['-I'+starpuPath+'/mpi/include/'])
+    env.Append(CCFLAGS=['-L'+starpuPath+'/lib/'])
+    env.Append(LINKFLAGS=['-L'+starpuPath+'/lib/'])
+    env.Append(LINKFLAGS=['-lfabric'])
+    env.Append(LINKFLAGS=['-lifcore'])
+    env.Append(LINKFLAGS=['-lirng'])
+    env.Append(LINKFLAGS=['-lstarpu-1.3'])
+    env.Append(LINKFLAGS=['-lstarpumpi-1.3'])
+
 #####################################
 # Precompiler/Compiler/Linker flags #
 #####################################
@@ -348,6 +398,10 @@ elif env['parallelization'] == 'charm':
     env['CXX'] = charmInstall + '/bin/charmc' # ' -balancer NeighborLB'
 elif env['parallelization'] == 'upcxx':
     env['CXX'] = check_output([upcxxMeta, 'CXX']).replace("\n", "")
+elif env['parallelization'] == 'chameleon':
+    env['CXX'] = 'mpiicpc'
+elif env['parallelization'] == 'starpu':
+    env['CXX'] = 'mpiicpc'
 else:
     if env['compiler'] == 'intel':
         env['CXX'] = 'icpc'
@@ -562,6 +616,10 @@ if env['asagi']:
     if 'asagiInputDir' in env:
         env.Append(CPPFLAGS=['\'-DASAGI_INPUT_DIR="'
                              + env['asagiInputDir'] + '"\''])
+
+if env['itt']:
+    env.Append(CPPDEFINES=['ITT'])
+    env.Append(LIBS=['ittnotify'])
 
 # xml runtime parameters
 if env['xmlRuntime']:  # TODO

@@ -296,9 +296,9 @@ int main(int argc, char** argv) {
 	// Initialize wall timer
 	struct timespec startTime;
 	struct timespec endTime;
-
+    struct timespec barStartTime;
 	float wallTime = 0.;
-
+    float barrierTime = 0.;
 	t = 0.0;
 
 	float timestep;
@@ -331,7 +331,10 @@ int main(int argc, char** argv) {
 			// update simulation time with time step width.
 			t += timestep;
 			iterations++;
+            clock_gettime(CLOCK_MONOTONIC, &barStartTime);
 			upcxx::barrier();
+            barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
+            barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;
 		}
 
 		if(myUpcxxRank == 0) {
@@ -356,13 +359,15 @@ int main(int argc, char** argv) {
     float sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
     float sumCommTime = upcxx::reduce_all(simulation.communicationTime, upcxx::op_fast_add).wait();
     float sumReductionTime = upcxx::reduce_all(simulation.reductionTime, upcxx::op_fast_add).wait();
+    float sumBarrierTime = upcxx::reduce_all(barrierTime, upcxx::op_fast_add).wait();
     if(myUpcxxRank == 0){
     std::cout   << "Rank: " << myUpcxxRank << std::endl
             << "Flop count: " << sumFlops << std::endl
             << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
             << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl
             << "Communication Time(Total): " << sumCommTime << "s" << std::endl
-            << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl;
+            << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl
+            << "Barrier Time(Total): " << sumBarrierTime << "s" << std::endl;
 }
     upcxx::finalize();
 

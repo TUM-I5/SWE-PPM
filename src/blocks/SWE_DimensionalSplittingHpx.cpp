@@ -30,7 +30,7 @@
  *
  */
 #include "SWE_DimensionalSplittingHpx.hh"
-//#include <//VT.h>
+//#include <VT.h>
 #include <cassert>
 #include <algorithm>
 #include <omp.h>
@@ -287,8 +287,8 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     // Apply appropriate conditions for OUTFLOW/WALL boundaries
     int handle;
-//VT_funcdef("GhostLayer",classhandle,&handle);
-//VT_begin(handle);
+VT_funcdef("GhostLayer",classhandle,&handle);
+VT_begin(handle);
     SWE_Block::applyBoundaryConditions();
 
 

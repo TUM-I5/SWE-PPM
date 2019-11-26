@@ -54,6 +54,11 @@ elif env['parallelization'] in ['charm']:
 elif env['parallelization'] in ['hpx']:
    # sourceFiles = ['blocks/SWE_DimensionalSplittingHpx.cpp','blocks/SWE_DimensionalSplittingComponent.cpp','blocks/SWE_Hpx_Component.cpp']
    sourceFiles = ['blocks/SWE_DimensionalSplittingHpx.cpp','blocks/SWE_Hpx_No_Component.cpp']
+# Chameleon
+elif env['parallelization'] in ['chameleon']:
+    sourceFiles = ['blocks/SWE_DimensionalSplittingChameleon.cpp']
+elif env['parallelization'] in ['starpu']:
+    sourceFiles = ['blocks/SWE_DimensionalSplittingStarPU.cpp']
 elif env['parallelization'] not in ['cuda', 'mpi_with_cuda']:
     if env['solver'] == 'rusanov':
         sourceFiles = ['blocks/rusanov/SWE_RusanovBlock.cpp']
@@ -137,6 +142,10 @@ elif env['parallelization'] in ['charm']:
     sourceFiles.append(['examples/swe_charm.cpp'])
 elif env['parallelization'] in ['hpx']:
     sourceFiles.append(['examples/swe_hpx.cpp'])
+elif env['parallelization'] in ['chameleon']:
+    sourceFiles.append(['examples/swe_chameleon.cpp'])
+elif env['parallelization'] in ['starpu']:
+    sourceFiles.append(['examples/swe_starpu.cpp'])
 else:
     print(sys.stderr, '** The selected configuration is not implemented.')
     Exit(1)

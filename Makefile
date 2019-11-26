@@ -68,6 +68,23 @@ charm_hybrid:
 
 charm_load:
 	scons writeNetCDF=True openmp=false solver=augrie parallelization=charm asagi=false asagiDir=${ASAGI_PATH}  copyenv=true
+
+chameleon:
+	scons writeNetCDF=True compiler=intel openmp=true parallelization=chameleon
+
+chameleon_gnu:
+	scons writeNetCDF=True compiler=gnu openmp=true parallelization=chameleon
+
+chameleon_asagi:
+	scons writeNetCDF=True compiler=intel openmp=true parallelization=chameleon asagi=true asagiDir=${ASAGI_PATH}
+
+chameleon_debug:
+	scons writeNetCDF=True compiler=intel openmp=true parallelization=chameleon compileMode=debug
+
+starpu:
+	scons writeNetCDF=True compiler=intel openmp=true solver=hybrid parallelization=starpu
+starpu_debug:
+	scons writeNetCDF=True compiler=intel openmp=true solver=hybrid parallelization=starpu compileMode=debug
 default:
 	scons writeNetCDF=True solver=fwave
 
