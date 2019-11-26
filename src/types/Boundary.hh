@@ -15,6 +15,7 @@ typedef enum BoundaryType {
 	WALL,
 	INFLOW,
 	CONNECT,
+    CONNECT_WITHIN_RANK,
 	PASSIVE
 } BoundaryType;
 
