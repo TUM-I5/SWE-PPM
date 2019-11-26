@@ -12,20 +12,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Merged with Cameleon Repo">
-      <change afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tools/CounterUtility.hpp" afterDir="false" />
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SConstruct" beforeDir="false" afterPath="$PROJECT_DIR$/SConstruct" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SConscript" beforeDir="false" afterPath="$PROJECT_DIR$/src/SConscript" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -136,7 +125,7 @@
     <property name="ChangesTree.GroupingKeys" value="directory&#10;repository" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/blocks/SWE_Block.hh" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -253,7 +242,7 @@
       <workItem from="1564951577017" duration="1157000" />
       <workItem from="1569929680153" duration="1279000" />
       <workItem from="1571243349350" duration="9000" />
-      <workItem from="1574777001530" duration="8623000" />
+      <workItem from="1574777001530" duration="9716000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed Upcxx Bug">
       <created>1559309785408</created>
@@ -521,7 +510,14 @@
       <option name="project" value="LOCAL" />
       <updated>1562772350004</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="Added barrier implementation again">
+      <created>1574807101712</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1574807101712</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -564,7 +560,8 @@
     <MESSAGE value="Fixed more locality bug" />
     <MESSAGE value="Added charm chares change" />
     <MESSAGE value="Merged with Cameleon Repo" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merged with Cameleon Repo" />
+    <MESSAGE value="Added barrier implementation again" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added barrier implementation again" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -116,10 +116,13 @@ class SWE_Block {
 		int getOriginY();
 		float getMaxTimestep();
 		const T& getWaterHeight();
+        T& getModifiableWaterHeight();
 		const T& getMomentumHorizontal();
+        T& getModifiableMomentumHorizontal();
 		const T& getMomentumVertical();
+        T& getModifiableMomentumVertical();
 		const T& getBathymetry();
-
+        T& getModifiableBathymetry();
 		// Default setter methods
 		virtual void setBoundaryType(Boundary boundary, BoundaryType type);
 
@@ -253,7 +256,22 @@ template <typename T>
 const T& SWE_Block<T>::getMomentumHorizontal() {
 	return hu;
 }
-
+template <typename T>
+T& SWE_Block<T>::getModifiableWaterHeight() {
+    return h;
+}
+template <typename T>
+T& SWE_Block<T>::getModifiableMomentumHorizontal() {
+    return hu;
+}
+template <typename T>
+T& SWE_Block<T>::getModifiableBathymetry() {
+    return b;
+}
+template <typename T>
+T& SWE_Block<T>::getModifiableMomentumVertical() {
+    return hv;
+}
 template <typename T>
 const T& SWE_Block<T>::getMomentumVertical() {
 	return hv;
@@ -408,6 +426,7 @@ void SWE_Block<T>::applyBoundaryConditions() {
 				break;
 			}
 		case CONNECT:
+        case CONNECT_WITHIN_RANK:
 		case PASSIVE:
 			break;
 		default:
@@ -436,6 +455,7 @@ void SWE_Block<T>::applyBoundaryConditions() {
 				break;
 			}
 		case CONNECT:
+        case CONNECT_WITHIN_RANK:
 		case PASSIVE:
 			break;
 		default:
@@ -464,6 +484,7 @@ void SWE_Block<T>::applyBoundaryConditions() {
 				break;
 			}
 		case CONNECT:
+        case CONNECT_WITHIN_RANK:
 		case PASSIVE:
 			break;
 		default:
@@ -492,6 +513,7 @@ void SWE_Block<T>::applyBoundaryConditions() {
 				break;
 			}
 		case CONNECT:
+        case CONNECT_WITHIN_RANK:
 		case PASSIVE:
 			break;
 		default:
