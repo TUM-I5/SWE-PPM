@@ -13,9 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/Float2D.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2D.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/Boundary.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/Boundary.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -243,7 +241,7 @@
       <workItem from="1564951577017" duration="1157000" />
       <workItem from="1569929680153" duration="1279000" />
       <workItem from="1571243349350" duration="9000" />
-      <workItem from="1574777001530" duration="9888000" />
+      <workItem from="1574777001530" duration="9979000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed Upcxx Bug">
       <created>1559309785408</created>
@@ -525,7 +523,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574810821976</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="Merged some More">
+      <created>1574810989151</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1574810989151</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -570,7 +575,8 @@
     <MESSAGE value="Merged with Cameleon Repo" />
     <MESSAGE value="Added barrier implementation again" />
     <MESSAGE value="Merged SWE_Block" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merged SWE_Block" />
+    <MESSAGE value="Merged some More" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merged some More" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -130,7 +130,7 @@ class SWE_Block {
 		virtual void initScenario(SWE_Scenario &scenario, BoundaryType boundaries[]);
 		virtual void computeMaxTimestep(const float dryTol = defaultDryTol, const float cflNumber = defaultCflNumber);
 		
-	protected:
+	//protected:
 		// Constructor/Destructor
 		SWE_Block<T>();
 		SWE_Block<T>(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX = 0, float originY = 0);
