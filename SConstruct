@@ -329,20 +329,24 @@ if env['parallelization'] in ['chameleon']:
     env.Append(CCFLAGS=['-std=c++11'])
     env.Append(CCFLAGS=['-lchameleon', '-lm', '-lstdc++'])
     # get the chameleon folder
+    libfabricPath = os.environ['LIBFABRIC_PATH']
     chameleonPath = os.environ['CHAM_PATH']
     if chameleonPath == '':
         print(sys.stderr,
               'No chameleon installation found. Did you set $CHAM_PATH?')
         Exit(3)
     else:
-        print("Trying to find chameleon install at: " + chameleonPath)
+        print("Trying to find chameleon install at: " + chameleonPath
+	)
     env.Append(CCFLAGS=['-I'+chameleonPath+'/include/'])
     env.Append(CCFLAGS=['-L'+chameleonPath+'/lib/'])
     env.Append(LINKFLAGS=['-L'+chameleonPath+'/lib/'])
+    env.Append(LINKFLAGS=['-L'+libfabricPath])
     env.Append(LINKFLAGS=['-lchameleon'])
     env.Append(LINKFLAGS=['-lfabric'])
     env.Append(LINKFLAGS=['-lifcore'])
     env.Append(LINKFLAGS=['-lirng'])
+    env.Append(RPATH=[chameleonPath+'/lib/'])
 
 ################################
 # StarPU specific
@@ -399,7 +403,8 @@ elif env['parallelization'] == 'charm':
 elif env['parallelization'] == 'upcxx':
     env['CXX'] = check_output([upcxxMeta, 'CXX']).replace("\n", "")
 elif env['parallelization'] == 'chameleon':
-    env['CXX'] = 'mpiicpc'
+    env['CXX'] = 'mpicxx'
+    #env['CXX'] = env['LINKERFORPROGRAMS'] = env.Detect(['mpiCC', 'mpicxx'])
 elif env['parallelization'] == 'starpu':
     env['CXX'] = 'mpiicpc'
 else:
@@ -462,8 +467,8 @@ if env['compiler'] == 'intel' and env['showVectorization']:
 # TODO Refactor: This can probably be an else if
 if env['openmp']:
     if env['compiler'] == 'intel':
-        env.Append(CCFLAGS=['-openmp'])
-        env.Append(LINKFLAGS=['-openmp'])
+        env.Append(CCFLAGS=['-qopenmp'])
+        env.Append(LINKFLAGS=['-qopenmp'])
 
     # cray: OpenMP turned on by default
     if env['compiler'] == 'gnu':
