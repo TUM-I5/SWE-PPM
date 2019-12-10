@@ -380,9 +380,9 @@ int main(int argc, char** argv) {
     if(localTimestepping){
         for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
             for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
-                float blockTimestep = blocks[x][y]->computeMaxTimestep( 0.01,0.4);
-                if(blockTimestepo > timestep)
-                    timestep = blockTimestep;//@todo look up the right timestep values
+                blocks[x][y]->computeMaxTimestep( 0.01,0.4);
+                if( blocks[x][y]->getMaxTimestep() > timestep)
+                    timestep = blocks[x][y]->getMaxTimestep();//@todo look up the right timestep values
             }
         }
 
