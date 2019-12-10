@@ -184,7 +184,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
     int totalLocalTimestep = getTotalLocalTimestep();
 	if (boundaryType[BND_LEFT] == CONNECT) {
 		int startIndex = ny + 2 + 1;
-        MPI_Isend(&totalLocalTimestep(), 1, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &req);
+        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 
 		MPI_Isend(h.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagH, MPI_COMM_WORLD, &req);
@@ -198,7 +198,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	}
 	if (boundaryType[BND_RIGHT] == CONNECT) {
 		int startIndex = nx * (ny + 2) + 1;
-        MPI_Isend(&totalLocalTimestep(), 1, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &req);
+        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 
 		MPI_Isend(h.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagH, MPI_COMM_WORLD, &req);
@@ -211,7 +211,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 		MPI_Request_free(&req);
 	}
 	if (boundaryType[BND_BOTTOM] == CONNECT) {
-        MPI_Isend(&totalLocalTimestep(), 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &req);
+        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 		//int code = 
 		MPI_Isend(&h[1][1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagH, MPI_COMM_WORLD, &req);
@@ -228,7 +228,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 
 	}
 	if (boundaryType[BND_TOP] == CONNECT) {
-        MPI_Isend(&totalLocalTimestep(), 1, MPI_FLOAT, neighbourRankId[BND_TOP], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &req);
+        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_TOP], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 
 		MPI_Isend(&h[1][ny], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int)originX)&tagH, MPI_COMM_WORLD, &req);
@@ -269,11 +269,11 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 
 	if (boundaryType[BND_LEFT] == CONNECT) {
 		int startIndex = 1;
-		MPI_Irecv(borderTimestep[BND_LEFT], 1, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[3] );
+
 		MPI_Irecv(bufferH.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagH, MPI_COMM_WORLD, &recvReqs[0]);
 		MPI_Irecv(bufferHu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagHU, MPI_COMM_WORLD, &recvReqs[1]);
 		MPI_Irecv(bufferHv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagHV, MPI_COMM_WORLD, &recvReqs[2]);
-        MPI_Irecv(borderTimestep[BND_LEFT], 1, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[3] );
+        MPI_Irecv(&borderTimestep[BND_LEFT], 1, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[3] );
 		leftReceive = 1;
 	} else {
 		recvReqs[0] = MPI_REQUEST_NULL;
@@ -287,7 +287,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 		MPI_Irecv(bufferH.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagH, MPI_COMM_WORLD, &recvReqs[4]);
 		MPI_Irecv(bufferHu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagHU, MPI_COMM_WORLD, &recvReqs[5]);
 		MPI_Irecv(bufferHv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagHV, MPI_COMM_WORLD, &recvReqs[6]);
-        MPI_Irecv(borderTimestep[BND_RIGHT], 1, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[7] );
+        MPI_Irecv(&borderTimestep[BND_RIGHT], 1, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[7] );
 		rightReceive = 1;
 	} else {
 		recvReqs[4] = MPI_REQUEST_NULL;
@@ -301,7 +301,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 		MPI_Irecv(&bufferH[1][0], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagH, MPI_COMM_WORLD, &recvReqs[8]);
 		MPI_Irecv(&bufferHu[1][0], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagHU, MPI_COMM_WORLD, &recvReqs[9]);
 		MPI_Irecv(&bufferHv[1][0], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagHV, MPI_COMM_WORLD, &recvReqs[10]);
-        MPI_Irecv(borderTimestep[BND_BOTTOM], 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[11] );
+        MPI_Irecv(&borderTimestep[BND_BOTTOM], 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[11] );
 		bottomReceive = 1;
 	} else {
 		recvReqs[8] = MPI_REQUEST_NULL;
@@ -315,7 +315,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 		MPI_Irecv(&bufferH[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int)originX)&tagH, MPI_COMM_WORLD, &recvReqs[12]);
 		MPI_Irecv(&bufferHu[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int)originX)&tagHU, MPI_COMM_WORLD, &recvReqs[13]);
 		MPI_Irecv(&bufferHv[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int)originX)&tagHV, MPI_COMM_WORLD, &recvReqs[14]);
-        MPI_Irecv(borderTimestep[BND_TOP], 1, MPI_FLOAT, neighbourRankId[BND_TOP], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[15] );
+        MPI_Irecv(&borderTimestep[BND_TOP], 1, MPI_FLOAT, neighbourRankId[BND_TOP], ((int)originY)&tagTimestep, MPI_COMM_WORLD, &recvReqs[15] );
 		topReceive = 1;
 	} else {
 		recvReqs[12] = MPI_REQUEST_NULL;
@@ -337,7 +337,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
             if((boundaryType[border] == CONNECT || boundaryType[border] == CONNECT_WITHIN_RANK)) {
                 if (borderTimestep[border] >= getTotalLocalTimestep() ){
 
-                    interpolateGhostlayer(border, getTotalLocalTimestep());
+                    interpolateGhostlayer(static_cast<Boundary>(border), getTotalLocalTimestep());
                     receivedGhostlayer[border] = true;
                 }else {
                     receivedGhostlayer[border] = false;

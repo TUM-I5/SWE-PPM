@@ -249,8 +249,8 @@ void SWE_Block<T>::interpolateGhostlayer(Boundary border,float timestep ){
         case BND_LEFT:
             for(int i = 1; i < ny+2; i++) {
                 h[0][i] = interpolateValue(h[0][i],bufferH[0][i], timestep);
-                hu[0][i] = linterpolateValue(hu[0][i],bufferHu[0][i], timestep);
-                hv[0][i] = linterpolateValue(hv[0][i],bufferHv[0][i], timestep);
+                hu[0][i] = interpolateValue(hu[0][i],bufferHu[0][i], timestep);
+                hv[0][i] = interpolateValue(hv[0][i],bufferHv[0][i], timestep);
             }
             break;
         case BND_RIGHT:
@@ -292,7 +292,7 @@ float SWE_Block<T>::getRoundTimestep(float timestep){
         for(int i = 1 ; i < 8 ; i*=2){
             if(diff > std::abs(maxTimestepLocal - (timestep/(float)i))){
 
-                diff = std::abs(maxTimestepLocal - (timestep/(float)i);
+                diff = std::abs(maxTimestepLocal - (timestep/(float)i));
                 stepSize = i;
             }
         }
