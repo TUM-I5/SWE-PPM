@@ -13,9 +13,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Float2DBuffer.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2DBuffer.hh" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,99 +49,26 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>&amp;</find>
-      <find>blocks</find>
-      <find>nxLocalityBlockSimulation</find>
-      <find>left_border</find>
-      <find>totalRanks</find>
-      <find>totalHpxRanks</find>
-      <find>localityNum</find>
-      <find>localityRank</find>
-      <find>setGhostLayer</find>
-      <find>SWE_Hpx_Component</find>
-      <find>scenario</find>
-      <find>SWE_RadialDamBreakScenario</find>
-      <find>hpx::cout</find>
-      <find>wave</find>
-      <find>reductionTrigger</find>
-      <find>sumFlops</find>
-      <find>myNeighbours</find>
-      <find>refinedNeighours</find>
-      <find>std::cout</find>
-      <find>h[</find>
-      <find>hu[</find>
-      <find>hv[</find>
-      <find>,true</find>
-      <find>for_each</find>
-      <find>chareCount</find>
-      <find>VT</find>
-      <find>o_maxWaveSpeed</find>
-      <find>reducTime</find>
-      <find>cbc_encrypt</find>
-      <find>win</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>compute</replace>
-      <replace>fut.push_back(comm.get</replace>
-      <replace>getFlopCount</replace>
-      <replace>borders[</replace>
-      <replace>test</replace>
-      <replace>std::array&lt;float,150&gt;()</replace>
-      <replace>std::array&lt;float,150&gt;</replace>
-      <replace>std::array&lt;float,50&gt;</replace>
-      <replace>hpx::future&lt;std::vector&lt;float&gt;&gt;</replace>
-      <replace>copyLayerStruct&lt;std::array&lt;float,ny&gt;&gt;</replace>
-      <replace>SWE_Hpx_Component</replace>
-      <replace>block_ids</replace>
-      <replace>localityNumber</replace>
-      <replace>locNxBlockSimulation</replace>
-      <replace>right_border</replace>
-      <replace>bottom_border</replace>
-      <replace>top_border</replace>
-      <replace>computeXSweep</replace>
-      <replace>computeYSweep</replace>
-      <replace>exchangeBathymetry</replace>
-      <replace>updateUnknowns</replace>
-      <replace>SWE_Hpx_No_Component</replace>
-      <replace>refinedNeighbours</replace>
-      <replace>n</replace>
-      <replace>hpx::cout</replace>
-      <replace>(*h)[</replace>
-      <replace>(*hu)[</replace>
-      <replace>(*hv)[</replace>
-      <replace>,&amp;h,&amp;hu,&amp;hv,&amp;b,true</replace>
-      <replace>//VT</replace>
-    </replaceStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
   </component>
   <component name="ProjectId" id="1OVFf0vkOekH6g0hBK97bG41hNH" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="ChangesTree.GroupingKeys" value="directory&#10;repository" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="CMakeSettings" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="CMake Application.swe-benchmark">
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
@@ -162,6 +90,18 @@
       <item itemvalue="CMake Application.swe-benchmark" />
       <item itemvalue="CMake Application.swe_benchmark_default" />
     </list>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -241,7 +181,9 @@
       <workItem from="1564951577017" duration="1157000" />
       <workItem from="1569929680153" duration="1279000" />
       <workItem from="1571243349350" duration="9000" />
-      <workItem from="1574777001530" duration="9979000" />
+      <workItem from="1574777001530" duration="10586000" />
+      <workItem from="1575908774982" duration="5065000" />
+      <workItem from="1575971836203" duration="18318000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed Upcxx Bug">
       <created>1559309785408</created>
@@ -530,7 +472,21 @@
       <option name="project" value="LOCAL" />
       <updated>1574810989151</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="Merged some More More">
+      <created>1574811077853</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1574811077853</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Added Local Timestepping for chameleon&#10;Not yet compiled">
+      <created>1576000756839</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1576000756839</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -551,8 +507,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Added Vectorizesation to all" />
-    <MESSAGE value="Added HPX Support" />
     <MESSAGE value="Fixed Upcxx Bug" />
     <MESSAGE value="Added communication time for all frameworks" />
     <MESSAGE value="Added charm support" />
@@ -576,7 +530,35 @@
     <MESSAGE value="Added barrier implementation again" />
     <MESSAGE value="Merged SWE_Block" />
     <MESSAGE value="Merged some More" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merged some More" />
+    <MESSAGE value="Merged some More More" />
+    <MESSAGE value="Added Local Timestepping for chameleon&#10;Not yet compiled" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Local Timestepping for chameleon&#10;Not yet compiled" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2" timestamp="1576000756764">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000756764" />
+    <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog" timestamp="1576000827352">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000827352" />
+    <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1576000765897">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000765897" />
+    <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1575973669221">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1575973669221" />
+    <state x="2577" y="253" key="run.anything.popup" timestamp="1575990692525">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2577" y="253" key="run.anything.popup/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1575990692525" />
+    <state x="2576" y="257" width="672" height="678" key="search.everywhere.popup" timestamp="1575989709816">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2576" y="257" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1575989709816" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

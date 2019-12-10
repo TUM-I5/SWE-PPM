@@ -122,10 +122,11 @@ class SWE_Block {
 		const T& getMomentumVertical();
         T& getModifiableMomentumVertical();
 		const T& getBathymetry();
-        T& getModifiableBathymetry()
+        T& getModifiableBathymetry();
         float getRoundTimestep(float timestep);
         void setMaxGlobalTimestep(float timestep);
         void interpolateGhostlayer(Boundary border);
+        float interpolateValue(float oldval, float newval, float timestep);
         float getTotalLocalTimestep();
         bool receivedAllGhostlayers();
 		// Default setter methods
@@ -138,7 +139,7 @@ class SWE_Block {
 	//protected:
 		// Constructor/Destructor
 		SWE_Block<T>();
-		SWE_Block<T>(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX = 0, float originY = 0);
+		SWE_Block<T>(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX = 0, float originY = 0, bool localTimestepping = false);
 		virtual ~SWE_Block() = 0;
 
 		// Default methods
@@ -233,13 +234,15 @@ SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float
 template <typename T>
 SWE_Block<T>::~SWE_Block() {
 }
+template <typename T>
 bool SWE_Block<T>::receivedAllGhostlayers() {
     return receivedGhostlayer[BND_LEFT] && receivedGhostlayer[BND_RIGHT] && receivedGhostlayer[BND_TOP] && receivedGhostlayer[BND_BOTTOM];
 }
+template <typename T>
 float SWE_Block<T>::interpolateValue(float oldval, float newval, float timestep){
     return oldval + (newval-oldval)*(timestep/maxTimestepLocal);
 }
-
+template <typename T>
 void SWE_Block<T>::interpolateGhostlayer(Boundary border,float timestep ){
 
     switch(border){
@@ -274,10 +277,11 @@ void SWE_Block<T>::interpolateGhostlayer(Boundary border,float timestep ){
     }
 
 }
-
+template <typename T>
 void SWE_Block<T>::setMaxLocalTimestep(float timestep){
     maxTimestepLocal = timestep;
 }
+template <typename T>
 float SWE_Block<T>::getRoundTimestep(float timestep){
     stepSizeCounter = stepSizeCounter%stepSize;
 
@@ -298,6 +302,7 @@ float SWE_Block<T>::getRoundTimestep(float timestep){
     return (float)maxTimestepLocal/stepsize;
 
 }
+template <typename T>
 float SWE_Block<T>::getTotalLocalTimestep(){
     return (float)(maxTimestep*stepSizeCounter)/stepSize;
 }

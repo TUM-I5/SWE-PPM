@@ -13,7 +13,7 @@ class Float2DBuffer : public Float2D {
 public:
     Float2DBuffer() :
             Float2D(0, 0) {};
-    Float2DBuffer(int cols, int rows,localTimestepping, Float2DNative *realData) :
+    Float2DBuffer(int cols, int rows,bool localTimestepping, Float2DNative *realData) :
             Float2D(cols, rows) {
 
         if(localTimestepping){
@@ -22,7 +22,7 @@ public:
             rawData = data.get();
         }else {
             // If there is no local timestepping buffer points to h |hu | hv
-            rawData = realData;
+            rawData = (*realData).getPointer();
         }
 
     }
@@ -34,7 +34,7 @@ public:
     }
 
 private:
-    bool localTimestepping ;
+
     std::shared_ptr<float> data;
 };
 #endif //SWE_BENCHMARK_FLOAT2DBUFFER_HH
