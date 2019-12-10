@@ -58,10 +58,10 @@
 #include "blocks/SWE_DimensionalSplittingChameleon.hh"
 
 
-bool synchronizedTimestep( SWE_DimensionalSplittingChameleon* *blocks, float maxTimestepGlobal,int xLower, int xUpper, int yLower, int yUpper){
+bool synchronizedTimestep( SWE_DimensionalSplittingChameleon *blocks, float maxTimestepGlobal,int xLower, int xUpper, int yLower, int yUpper){
     for(int x = xLower; x < xUpper; x++) {
         for (int y = yLower; y < yUpper; y++) {
-            if (blocks[x][y].getLocalTimestep() < maxTimestepGlobal) {
+            if (blocks[x][y].getTotalLocalTimestep() < maxTimestepGlobal) {
                 return false;
             }
         }
@@ -393,7 +393,7 @@ int main(int argc, char** argv) {
 
         for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
             for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
-                    blocks.setMaxLocalTimestep(maxLocalTimestep);
+                    blocks[x][y]->setMaxLocalTimestep(maxLocalTimestep);
             }
         }
     }
