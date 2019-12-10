@@ -14,8 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/Float2DBuffer.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2DBuffer.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,7 +183,7 @@
       <workItem from="1571243349350" duration="9000" />
       <workItem from="1574777001530" duration="10586000" />
       <workItem from="1575908774982" duration="5065000" />
-      <workItem from="1575971836203" duration="19441000" />
+      <workItem from="1575971836203" duration="19636000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed Upcxx Bug">
       <created>1559309785408</created>
@@ -508,7 +507,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576002249482</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Fixed some MORE Errors of Local Timestepping">
+      <created>1576002491594</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1576002491594</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -557,10 +563,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="Fixed some MORE Errors of Local Timestepping" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2" timestamp="1576002249432">
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2" timestamp="1576002491537">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576002249432" />
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576002491537" />
     <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog" timestamp="1576000827352">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>

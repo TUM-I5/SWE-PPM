@@ -56,7 +56,9 @@
 #endif
 
 #include "blocks/SWE_DimensionalSplittingChameleon.hh"
-bool synchronizedTimestep(SWE_DimensionalSplittingChamleon *blocks, float maxTimestepGlobal,int xLower, int xUpper, int yLower, int yUpper){
+
+
+bool synchronizedTimestep( SWE_DimensionalSplittingChameleon* *blocks, float maxTimestepGlobal,int xLower, int xUpper, int yLower, int yUpper){
     for(int x = xLower; x < xUpper; x++) {
         for (int y = yLower; y < yUpper; y++) {
             if (blocks[x][y].getLocalTimestep() < maxTimestepGlobal) {
