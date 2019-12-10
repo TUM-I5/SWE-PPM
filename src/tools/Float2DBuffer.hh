@@ -22,7 +22,8 @@ public:
             rawData = data.get();
         }else {
             // If there is no local timestepping buffer points to h |hu | hv
-            rawData = (*realData).getPointer();
+            data = (*realData).getPointer();
+            rawData = (*realData).getPointer().get();
         }
 
     }

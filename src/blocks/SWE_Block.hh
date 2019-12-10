@@ -125,7 +125,7 @@ class SWE_Block {
         T& getModifiableBathymetry();
         float getRoundTimestep(float timestep);
         void setMaxGlobalTimestep(float timestep);
-        void interpolateGhostlayer(Boundary border);
+        void interpolateGhostlayer(Boundary border, float timestep);
         float interpolateValue(float oldval, float newval, float timestep);
         float getTotalLocalTimestep();
         bool receivedAllGhostlayers();
