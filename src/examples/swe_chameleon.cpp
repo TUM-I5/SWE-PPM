@@ -550,7 +550,7 @@ int main(int argc, char** argv) {
                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
             }
-            while(localTimestepping && !synchronizedTimestep(blocks,maxTimestepGlobal,xLower,xUpper,yLower,yUpper));
+            while(localTimestepping && !synchronizedTimestep(blocks,maxLocalTimestep,xLower,xUpper,yLower,yUpper));
 
             // update simulation time with time step width.
 			t += timestep;
