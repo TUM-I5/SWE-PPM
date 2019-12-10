@@ -56,7 +56,16 @@
 #endif
 
 #include "blocks/SWE_DimensionalSplittingChameleon.hh"
-
+bool synchronizedTimestep(SWE_DimensionalSplittingChamleon *blocks, float maxTimestepGlobal,int xLower, int xUpper, int yLower, int yUpper){
+    for(int x = xLower; x < xUpper; x++) {
+        for (int y = yLower; y < yUpper; y++) {
+            if (blocks[x][y].getLocalTimestep() < maxTimestepGlobal) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 int main(int argc, char** argv) {
 
 	/**************
@@ -127,6 +136,7 @@ int main(int argc, char** argv) {
 		checkpointInstantOfTime[i] = checkpointInstantOfTime[i - 1] + checkpointTimeDelta;
 	}
 
+    bool localTimestepping = true;
 	/***************
 	 * INIT BLOCKS *
 	 ***************/
@@ -255,7 +265,7 @@ int main(int argc, char** argv) {
 			else
 				boundaries[BND_TOP] = CONNECT_WITHIN_RANK;
 
-			blocks[x][y] = new SWE_DimensionalSplittingChameleon(x_blocksize, y_blocksize, dxSimulation, dySimulation, originX, originY);
+			blocks[x][y] = new SWE_DimensionalSplittingChameleon(x_blocksize, y_blocksize, dxSimulation, dySimulation, originX, originY, localTimestepping);
 			blocks[x][y]->initScenario(scenario, boundaries);
 
 			blocks[x][y]->myRank = myRank;
@@ -357,12 +367,32 @@ int main(int argc, char** argv) {
     {
         chameleon_thread_init();
     }
-	
+
     // necessary to be aware of binary base addresses to calculate offset for target functions
     chameleon_determine_base_addresses((void *)&main);
 
     MPI_Barrier(MPI_COMM_WORLD);
+    //@todo reduce global maximal timestep and set smallest possible timestep in terms of a dividable part of max ts
+    float maxLocalTimestep;
+    if(localTimestepping){
+        for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
+            for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
+                if(blocks[x][y]->getMaxTimestep() < timestep)
+                    timestep = blocks[x][y]->computeMaxTimestep( 0.01,0.4); //@todo look up the right timestep values
+            }
+        }
 
+
+    // reduce over all ranks
+
+        MPI_Allreduce(&timestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+
+        for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
+            for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
+                    blocks.setMaxLocalTimestep(maxLocalTimestep);
+            }
+        }
+    }
 	// Initialize timers
 	std::clock_t computeClock;
 	std::clock_t commClock;
@@ -398,116 +428,126 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < numberOfCheckPoints; i++) {
 		// Simulate until the checkpoint is reached
 		while(t < checkpointInstantOfTime[i] && iterations < iteration_count) {
+            do {
+                // Start measurement
+                clock_gettime(CLOCK_MONOTONIC, &startTime);
+                commClock = clock();
+                lastTime = getTime();
 
-			// Start measurement
-			clock_gettime(CLOCK_MONOTONIC, &startTime);
-			commClock = clock();
-			lastTime = getTime();
+                timestep = std::numeric_limits<float>::max();
 
-			timestep = std::numeric_limits<float>::max();
+                //TODO: exchange bathymetry
 
-			//TODO: exchange bathymetry
+                int xLower = xBounds[myXRank]; int xUpper = xBounds[myXRank+1];
+                int yLower = yBounds[myYRank]; int yUpper = yBounds[myYRank+1];
+                //#pragma omp parallel for collapse(2)
+                for(int x = xLower; x < xUpper; x++) {
+                    for(int y = yLower; y < yUpper; y++) {
+                        // set values in ghost cells.
+                        // we need to sync here since block boundaries get exchanged over ranks
+                        blocks[x][y]->setGhostLayer();
+                    }
+                }
 
-			int xLower = xBounds[myXRank]; int xUpper = xBounds[myXRank+1];
-			int yLower = yBounds[myYRank]; int yUpper = yBounds[myYRank+1];
-			//#pragma omp parallel for collapse(2)
-			for(int x = xLower; x < xUpper; x++) {
-				for(int y = yLower; y < yUpper; y++) {
-					// set values in ghost cells.
-					// we need to sync here since block boundaries get exchanged over ranks
-					blocks[x][y]->setGhostLayer();
-				}
-			}
+                setGhostLayerTime += getTime()-lastTime; lastTime = getTime();
 
-			setGhostLayerTime += getTime()-lastTime; lastTime = getTime();
+                //if(myRank == 0) printf("After setGhostLayer() %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
+                //#pragma omp parallel for collapse(2)
+                for(int x = xLower; x < xUpper; x++) {
+                    for(int y = yLower; y < yUpper; y++) {
+                        //@todo probably need to change this semantic in order to allow local timestepping
+                        blocks[x][y]->receiveGhostLayer();
+                    }
+                }
 
-			//if(myRank == 0) printf("After setGhostLayer() %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
-			//#pragma omp parallel for collapse(2)
-			for(int x = xLower; x < xUpper; x++) {
-				for(int y = yLower; y < yUpper; y++) {
-					blocks[x][y]->receiveGhostLayer();
-				}
-			}
+                receiveGhostLayerTime += getTime()-lastTime; lastTime = getTime();
+                //if(myRank == 0) printf("After receiveGhostLayer() %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
 
-			receiveGhostLayerTime += getTime()-lastTime; lastTime = getTime();
-			//if(myRank == 0) printf("After receiveGhostLayer() %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
+                // Accumulate comm time and start compute clock
+                //commClock = clock() - commClock;
+                //commTime += (float) commClock / CLOCKS_PER_SEC;
+                computeClock = clock();
 
-			// Accumulate comm time and start compute clock
-			//commClock = clock() - commClock;
-			//commTime += (float) commClock / CLOCKS_PER_SEC;
-			computeClock = clock();
+                #pragma omp parallel
+                {
+                    int xLower = xBounds[myXRank]; int xUpper = xBounds[myXRank+1];
+                    int yLower = yBounds[myYRank]; int yUpper = yBounds[myYRank+1];
+                    #pragma omp for
+                    for(int x = xLower; x < xUpper; x++) {
+                        for(int y = yLower; y < yUpper; y++) {
+                            // compute numerical flux on each edge
+                            blocks[x][y]->computeNumericalFluxesHorizontal();
+                        }
+                    }
+                    #pragma omp master
+                        taskCreateHorizontalTime += getTime()-lastTime; lastTime = getTime();
+                    //if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Spawning %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
+                    chameleon_distributed_taskwait(0);
+                }
+                taskWaitHorizontalTime += getTime()-lastTime; lastTime = getTime();
+                //if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
+                if(!localTimestepping){
+                    for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
+                        for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
+                            if(blocks[x][y]->getMaxTimestep() < timestep)
+                                timestep = blocks[x][y]->getMaxTimestep();
+                        }
+                    }
 
-			#pragma omp parallel 
-			{
-				int xLower = xBounds[myXRank]; int xUpper = xBounds[myXRank+1];
-				int yLower = yBounds[myYRank]; int yUpper = yBounds[myYRank+1];
-				#pragma omp for
-				for(int x = xLower; x < xUpper; x++) {
-					for(int y = yLower; y < yUpper; y++) {
-						// compute numerical flux on each edge
-						blocks[x][y]->computeNumericalFluxesHorizontal();
-					}
-				}
-				#pragma omp master
-					taskCreateHorizontalTime += getTime()-lastTime; lastTime = getTime();
-				//if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Spawning %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
-				chameleon_distributed_taskwait(0);
-			}
-			taskWaitHorizontalTime += getTime()-lastTime; lastTime = getTime();
-			//if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
+                    // reduce over all ranks
+                    float maxTimestepGlobal;
+                    MPI_Allreduce(&timestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD); //@todo no need to reduction with localtimestepping (maybe)
+                    timestep = maxTimestepGlobal;
+                }else {
+                    timestep = maxLocalTimestep;
+                }
 
-			for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
-				for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
-					if(blocks[x][y]->getMaxTimestep() < timestep)
-						timestep = blocks[x][y]->getMaxTimestep();
-				}
-			}
+                reductionTime += getTime()-lastTime; lastTime = getTime();
+                #pragma omp parallel
+                {
+                    int xLower = xBounds[myXRank]; int xUpper = xBounds[myXRank+1];
+                    int yLower = yBounds[myYRank]; int yUpper = yBounds[myYRank+1];
+                    #pragma omp for
+                    for(int x = xLower; x < xUpper; x++) {
+                        for(int y = yLower; y < yUpper; y++) {
+                            // compute numerical flux on each edge
+                            if(!localTimestepping){
+                                blocks[x][y]->maxTimestep = timestep;
+                            }
+                            blocks[x][y]->computeNumericalFluxesVertical();
+                        }
+                    }
+                    #pragma omp master
+                        taskCreateVerticalTime += getTime()-lastTime; lastTime = getTime();
+                    //if(myRank == 0) printf("After computeNumericalFluxesVertical() Task Spawning %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
+                    chameleon_distributed_taskwait(0);
+                }
+                taskWaitVerticalTime += getTime()-lastTime; lastTime = getTime();
+                //if(myRank == 0) printf("After computeNumericalFluxesVertical() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
 
-			// reduce over all ranks
-			float maxTimestepGlobal;
-			MPI_Allreduce(&timestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
-			timestep = maxTimestepGlobal;
+                #pragma omp parallel for
+                for(int x = xLower; x < xUpper; x++) {
+                    for(int y = yLower; y < yUpper; y++) {
+                        // update the cell values
+                        blocks[x][y]->updateUnknowns(timestep);
+                    }
+                }
+                updateUnknownsTime += getTime()-lastTime; lastTime = getTime();
+                //if(myRank == 0) printf("After updateUnknowns() %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
 
-			reductionTime += getTime()-lastTime; lastTime = getTime();
-			#pragma omp parallel
-			{
-				int xLower = xBounds[myXRank]; int xUpper = xBounds[myXRank+1];
-				int yLower = yBounds[myYRank]; int yUpper = yBounds[myYRank+1];
-				#pragma omp for
-				for(int x = xLower; x < xUpper; x++) {
-					for(int y = yLower; y < yUpper; y++) {
-						// compute numerical flux on each edge
-						blocks[x][y]->maxTimestep = timestep;
-						blocks[x][y]->computeNumericalFluxesVertical();
-					}
-				}
-				#pragma omp master
-					taskCreateVerticalTime += getTime()-lastTime; lastTime = getTime();
-				//if(myRank == 0) printf("After computeNumericalFluxesVertical() Task Spawning %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
-				chameleon_distributed_taskwait(0);
-			}
-			taskWaitVerticalTime += getTime()-lastTime; lastTime = getTime();
-			//if(myRank == 0) printf("After computeNumericalFluxesVertical() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
-			
-			#pragma omp parallel for
-			for(int x = xLower; x < xUpper; x++) {
-				for(int y = yLower; y < yUpper; y++) {
-					// update the cell values
-					blocks[x][y]->updateUnknowns(timestep);
-				}
-			}
-			updateUnknownsTime += getTime()-lastTime; lastTime = getTime();
-			//if(myRank == 0) printf("After updateUnknowns() %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
+                // Accumulate compute time
+                computeClock = clock() - computeClock;
+                computeTime += (float) computeClock / CLOCKS_PER_SEC;
 
-			// Accumulate compute time
-			computeClock = clock() - computeClock;
-			computeTime += (float) computeClock / CLOCKS_PER_SEC;
+                // Accumulate wall time
+                clock_gettime(CLOCK_MONOTONIC, &endTime);
+                wallTime += (endTime.tv_sec - startTime.tv_sec);
+                wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
-			// Accumulate wall time
-			clock_gettime(CLOCK_MONOTONIC, &endTime);
-			wallTime += (endTime.tv_sec - startTime.tv_sec);
-			wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-			// update simulation time with time step width.
+            }
+            while(localTimestepping && !synchronizedTimestep(blocks,maxTimestepGlobal,xLower,xUpper,yLower,yUpper));
+
+            // update simulation time with time step width.
 			t += timestep;
 			iterations++;
 

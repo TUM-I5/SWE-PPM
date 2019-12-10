@@ -103,7 +103,7 @@
 #include <cmath>
 #include <limits>
 #include <algorithm>
-
+#include "tools/Float2DBuffer.hh"
 template <typename T>
 class SWE_Block {
 	public:
@@ -122,7 +122,12 @@ class SWE_Block {
 		const T& getMomentumVertical();
         T& getModifiableMomentumVertical();
 		const T& getBathymetry();
-        T& getModifiableBathymetry();
+        T& getModifiableBathymetry()
+        float getRoundTimestep(float timestep);
+        void setMaxGlobalTimestep(float timestep);
+        void interpolateGhostlayer(Boundary border);
+        float getTotalLocalTimestep();
+        bool receivedAllGhostlayers();
 		// Default setter methods
 		virtual void setBoundaryType(Boundary boundary, BoundaryType type);
 
@@ -163,15 +168,24 @@ class SWE_Block {
 		// it may be updated as part of the method computeNumericalFluxes()
 		// or updateUnknowns() (depending on the numerical method)
 		float maxTimestep;
+        float maxTimestepLocal; // used for local timestepping
 
+        bool localTimestepping;
+        int stepSize; //is used to determine the localstepsize;
+        int stepSizeCounter; //used to count the steps;
 		// Unknowns
 		T h;
 		T hu;
 		T hv;
 		T b;
 
+		Float2DBuffer bufferH;
+		Float2DBuffer bufferHu;
+		Float2DBuffer bufferHv;
 		// Boundary type at the block edges (uses Boundary as index)
 		BoundaryType boundaryType[4];
+		bool receivedGhostlayer[4];
+		float borderTimestep[4];
 };
 
 /***************************
@@ -191,7 +205,7 @@ SWE_Block<T>::SWE_Block() {
 }
 
 template <typename T>
-SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float originY) :
+SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float originY,bool localTimestepping) :
 		nx(nx),
 		ny(ny),
 		dx(dx),
@@ -201,17 +215,92 @@ SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float
 		h(nx + 2, ny + 2),
 		hu(nx + 2, ny + 2),
 		hv(nx + 2, ny + 2),
-		b(nx + 2, ny + 2) {
+		b(nx + 2, ny + 2),
+		localTimestepping(localTimestepping),
+		bufferH(nx+2, ny+2, localTimestepping, h),
+        bufferHu(nx+2, ny+2, localTimestepping, hu),
+        bufferHv(nx+2, ny+2, localTimestepping, hv){
 	// initialise boundaries
 	for (int i = 0; i < 4; i++) {
 		boundaryType[i] = PASSIVE;
+		receivedGhostlayer[i] = true;
 	}
+
+
+
 }
 
 template <typename T>
 SWE_Block<T>::~SWE_Block() {
 }
+bool SWE_Block<T>::receivedAllGhostlayers() {
+    return receivedGhostlayer[BND_LEFT] && receivedGhostlayer[BND_RIGHT] && receivedGhostlayer[BND_TOP] && receivedGhostlayer[BND_BOTTOM];
+}
+float SWE_Block<T>::interpolateValue(float oldval, float newval, float timestep){
+    return oldval + (newval-oldval)*(timestep/maxTimestepLocal);
+}
 
+void SWE_Block<T>::interpolateGhostlayer(Boundary border,float timestep ){
+
+    switch(border){
+        case BND_LEFT:
+            for(int i = 1; i < ny+2; i++) {
+                h[0][i] = interpolateValue(h[0][i],bufferH[0][i], timestep);
+                hu[0][i] = linterpolateValue(hu[0][i],bufferHu[0][i], timestep);
+                hv[0][i] = linterpolateValue(hv[0][i],bufferHv[0][i], timestep);
+            }
+            break;
+        case BND_RIGHT:
+            for(int i = 1; i < ny+2; i++) {
+                h[nx+1][i] = interpolateValue(h[nx+1][i],bufferH[nx+1][i], timestep);
+                hu[nx+1][i] = interpolateValue(hu[nx+1][i],bufferHu[nx+1][i], timestep);
+                hv[nx+1][i] = interpolateValue(hv[nx+1][i],bufferHv[nx+1][i], timestep);
+            }
+            break;
+        case BND_BOTTOM:
+            for(int i = 1; i < nx+2; i++) {
+                h[i][0] = interpolateValue(h[i][0],bufferH[i][0], timestep);
+                hu[i][0] = interpolateValue(hu[i][0],bufferHu[i][0], timestep);
+                hv[i][0] = interpolateValue(hv[i][0],bufferHv[i][0], timestep);
+            }
+            break;
+        case BND_TOP:
+            for(int i = 1; i < nx+2; i++) {
+                h[i][ny+1] = interpolateValue(h[i][ny+1],bufferH[i][ny+1], timestep);
+                hu[i][ny+1] = interpolateValue(hu[i][ny+1],bufferHu[i][ny+1], timestep);
+                hv[i][ny+1] = interpolateValue(hv[i][ny+1],bufferHv[i][ny+1], timestep);
+            }
+            break;
+    }
+
+}
+
+void SWE_Block<T>::setMaxLocalTimestep(float timestep){
+    maxTimestepLocal = timestep;
+}
+float SWE_Block<T>::getRoundTimestep(float timestep){
+    stepSizeCounter = stepSizeCounter%stepSize;
+
+    if(stepSizeCounter <= 0){
+        //the timestep just started, determine stepsize
+
+        float diff = maxTimestepLocal;
+        for(int i = 1 ; i < 8 ; i*=2){
+            if(diff > std::abs(maxTimestepLocal - (timestep/(float)i))){
+
+                diff = std::abs(maxTimestepLocal - (timestep/(float)i);
+                stepSize = i;
+            }
+        }
+    }
+
+    stepSizeCounter ++;
+    return (float)maxTimestepLocal/stepsize;
+
+}
+float SWE_Block<T>::getTotalLocalTimestep(){
+    return (float)(maxTimestep*stepSizeCounter)/stepSize;
+}
 template <typename T>
 int SWE_Block<T>::getCellCountHorizontal() {
 	return nx;

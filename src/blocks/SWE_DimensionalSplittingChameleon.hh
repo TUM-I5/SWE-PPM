@@ -66,7 +66,7 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		void freeMpiType();
 
 		int neighbourRankId[4];
-		// TODO: remove
+
 		int myRank;
 		void setRank(int rank);
 		MPI_Datatype HORIZONTAL_BOUNDARY;
