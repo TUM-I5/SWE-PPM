@@ -24,6 +24,12 @@ simulate_charm_test:
 
 debug_charm_test:
 	/home/jurek/repository/tum/ccs_tools/bin/charmdebug +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/charm
+run_chameleon:
+	OMP_NUM_THREADS=14  mpirun -np 2 ./build/SWE_intel_release_chameleon_omp_augrie -t 0.1 -n 1 -x 4096 -y 4096 -o ./output/test -i 200
+run_chameleon_asagi:
+	OMP_NUM_THREADS=11 mpirun -np 2 ./build/SWE_intel_release_chameleon_omp_augrie -t 0.1 -n 1 -x 4096 -y 4096 -o ./output/test -u 1 -v 1 -b ~/master/data/tohoku/bath.nc -d ~/master/data/tohoku/displ.nc
+run_chameleon_test:
+	OMP_NUM_THREADS=11 mpirun -np 1 ./build/SWE_intel_release_chameleon_omp_augrie -t 0.01 -n 1 -x 320 -y 320 -o ./output/test
 
 #ampi:
 #	scons writeNetCDF=True openmp=False solver=hybrid parallelization=ampi
@@ -70,7 +76,7 @@ charm_load:
 	scons writeNetCDF=True openmp=false solver=augrie parallelization=charm asagi=false asagiDir=${ASAGI_PATH}  copyenv=true
 
 chameleon:
-	scons writeNetCDF=True compiler=intel openmp=true parallelization=chameleon
+	scons writeNetCDF=True compiler=intel  openmp=true parallelization=chameleon copyenv=true
 
 chameleon_gnu:
 	scons writeNetCDF=True compiler=gnu openmp=true parallelization=chameleon
