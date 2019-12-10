@@ -13,7 +13,7 @@ class Float2DBuffer : public Float2D {
 public:
     Float2DBuffer() :
             Float2D(0, 0) {};
-    Float2DBuffer(int cols, int rows,bool localTimestepping, Float2DNative *realData) :
+    Float2DBuffer(int cols, int rows,bool localTimestepping, Float2DNative &realData) :
             Float2D(cols, rows) {
 
         if(localTimestepping){
@@ -22,8 +22,8 @@ public:
             rawData = data.get();
         }else {
             // If there is no local timestepping buffer points to h |hu | hv
-            data = (*realData).getPointer();
-            rawData = (*realData).getPointer().get();
+            data = realData.getPointer();
+            rawData = realData.getPointer().get();
         }
 
     }

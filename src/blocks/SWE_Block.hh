@@ -129,6 +129,7 @@ class SWE_Block {
         float interpolateValue(float oldval, float newval, float timestep);
         float getTotalLocalTimestep();
         bool receivedAllGhostlayers();
+        void setMaxLocalTimestep(float timestep);
 		// Default setter methods
 		virtual void setBoundaryType(Boundary boundary, BoundaryType type);
 
@@ -299,7 +300,7 @@ float SWE_Block<T>::getRoundTimestep(float timestep){
     }
 
     stepSizeCounter ++;
-    return (float)maxTimestepLocal/stepsize;
+    return (float)maxTimestepLocal/stepSize;
 
 }
 template <typename T>
