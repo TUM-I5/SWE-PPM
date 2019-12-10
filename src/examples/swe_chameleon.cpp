@@ -302,7 +302,7 @@ int main(int argc, char** argv) {
 	// all ranks write their blocks to this write block on rank 0 (using one-sided communication)
 	// This block is then written to get a single output file
 	//printf("%d: Init write block with nxReq:%d, nyReq:%d, dxSim:%f, dySim:%f\n", myRank, nxRequested, nyRequested, dxSimulation, dySimulation);
-	SWE_DimensionalSplittingChameleon writeBlock(nxRequested, nyRequested, dxSimulation, dySimulation, 0, 0);
+	SWE_DimensionalSplittingChameleon writeBlock(nxRequested, nyRequested, dxSimulation, dySimulation, 0, 0, localTimestepping);
 	BoundaryType boundaries[4];
 	boundaries[BND_LEFT] = scenario.getBoundaryType(BND_LEFT);
 	boundaries[BND_RIGHT] = scenario.getBoundaryType(BND_RIGHT);
@@ -376,11 +376,13 @@ int main(int argc, char** argv) {
     MPI_Barrier(MPI_COMM_WORLD);
     //@todo reduce global maximal timestep and set smallest possible timestep in terms of a dividable part of max ts
     float maxLocalTimestep;
+    float timestep = 0;
     if(localTimestepping){
         for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
             for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
-                if(blocks[x][y]->getMaxTimestep() < timestep)
-                    timestep = blocks[x][y]->computeMaxTimestep( 0.01,0.4); //@todo look up the right timestep values
+                float blockTimestep = blocks[x][y]->computeMaxTimestep( 0.01,0.4);
+                if(blockTimestepo > timestep)
+                    timestep = blockTimestep;//@todo look up the right timestep values
             }
         }
 
@@ -419,7 +421,7 @@ int main(int argc, char** argv) {
 	double writeOutputTime = 0;
 
 	float t = 0.0;
-	float timestep;
+
 	int iterations = 0;
 
 	double startTimeWhole = getTime();
@@ -429,6 +431,8 @@ int main(int argc, char** argv) {
 	// loop over the count of requested checkpoints
 	for(int i = 0; i < numberOfCheckPoints; i++) {
 		// Simulate until the checkpoint is reached
+        int xLower = xBounds[myXRank]; int xUpper = xBounds[myXRank+1];
+        int yLower = yBounds[myYRank]; int yUpper = yBounds[myYRank+1];
 		while(t < checkpointInstantOfTime[i] && iterations < iteration_count) {
             do {
                 // Start measurement
@@ -440,8 +444,7 @@ int main(int argc, char** argv) {
 
                 //TODO: exchange bathymetry
 
-                int xLower = xBounds[myXRank]; int xUpper = xBounds[myXRank+1];
-                int yLower = yBounds[myYRank]; int yUpper = yBounds[myYRank+1];
+
                 //#pragma omp parallel for collapse(2)
                 for(int x = xLower; x < xUpper; x++) {
                     for(int y = yLower; y < yUpper; y++) {
