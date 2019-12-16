@@ -14,7 +14,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,14 +187,7 @@
       <workItem from="1575908774982" duration="5065000" />
       <workItem from="1575971836203" duration="22197000" />
       <workItem from="1576075344379" duration="552000" />
-      <workItem from="1576514199512" duration="691000" />
-    </task>
-    <task id="LOCAL-00005" summary="Fixed Upcxx Bug">
-      <created>1560869343804</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1560869343804</updated>
+      <workItem from="1576514199512" duration="1640000" />
     </task>
     <task id="LOCAL-00006" summary="Added HPX Support">
       <created>1561374709109</created>
@@ -530,7 +525,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576003358530</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="Fixed some MORE Errors of Local Timestepping and added debug message">
+      <created>1576514915039</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1576514915040</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -551,7 +553,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Added charm support" />
     <MESSAGE value="Added Commun" />
     <MESSAGE value="Updated Hpx Impletation" />
     <MESSAGE value="Added Hpx Component" />
@@ -576,12 +577,14 @@
     <MESSAGE value="Added Local Timestepping for chameleon&#10;Not yet compiled" />
     <MESSAGE value="Fixed some Errors of Local Timestepping" />
     <MESSAGE value="Fixed some MORE Errors of Local Timestepping" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed some MORE Errors of Local Timestepping" />
+    <MESSAGE value="Fixed some MORE Errors of Local Timestepping and added debug message" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed some MORE Errors of Local Timestepping and added debug message" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2" timestamp="1576003358480">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2" timestamp="1576514914913">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="558" y="172" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576514914913" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576003358480" />
     <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog" timestamp="1576000827352">
       <screen x="1920" y="0" width="1920" height="1080" />

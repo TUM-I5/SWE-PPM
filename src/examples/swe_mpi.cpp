@@ -75,13 +75,17 @@ int main(int argc, char** argv) {
 	args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
 	args.addOption("output-basepath", 'o', "Output base file name");
 
-
+    args.addOption("local-timestepping", 'l', "Output base file name", tools::Args::Required, false);
 	// Declare the variables needed to hold command line input
 	float simulationDuration;
 	int numberOfCheckPoints;
 	int nxRequested;
 	int nyRequested;
+	bool  localTimestepping = false;
 	std::string outputBaseName;
+
+    if(args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1)
+        localTimestepping = true;
 
 	// Declare variables for the output and the simulation time
 	std::string outputFileName;

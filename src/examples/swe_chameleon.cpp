@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
 	args.addOption("y-imbalance", 'v', "Imbalance in y-direction", tools::Args::Required, false);
 	args.addOption("write", 'w', "Write results", tools::Args::Required, false);
 	args.addOption("iteration-count", 'i', "Iteration Count (Overrides t and n)", tools::Args::Required, false);
-
+    args.addOption("local-timestepping", 'l', "Output base file name", tools::Args::Required, false);
 	// Parse command line arguments
 	tools::Args::Result ret = args.parse(argc, argv);
 	switch (ret) {
@@ -110,10 +110,13 @@ int main(int argc, char** argv) {
 	int numberOfCheckPoints = args.getArgument<int>("checkpoint-count");
 	int nxRequested = args.getArgument<int>("resolution-horizontal");
 	int nyRequested = args.getArgument<int>("resolution-vertical");
+	bool localTimestepping = false;
 	std::string outputBaseName = args.getArgument<std::string>("output-basepath");
 	bool write = false;
 	if(args.isSet("write") && args.getArgument<int>("write") == 1)
 		write = true;
+    if(args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1)
+        localTimestepping = true;
 	int iteration_count = 1000000;
 	if(args.isSet("iteration-count")) {
 		iteration_count = args.getArgument<int>("iteration-count");
@@ -138,7 +141,7 @@ int main(int argc, char** argv) {
 		checkpointInstantOfTime[i] = checkpointInstantOfTime[i - 1] + checkpointTimeDelta;
 	}
 
-    bool localTimestepping = true;
+
 	/***************
 	 * INIT BLOCKS *
 	 ***************/

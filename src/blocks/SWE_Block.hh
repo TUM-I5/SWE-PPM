@@ -229,7 +229,8 @@ SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float
 	}
 
 
-
+	stepSizeCounter = 0;
+	stepSize = 1;
 }
 
 template <typename T>
