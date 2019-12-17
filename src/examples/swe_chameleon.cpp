@@ -174,7 +174,7 @@ int main(int argc, char** argv) {
 	int xBlockCount = 32;
 	if(args.isSet("x-blockcount"))
 		xBlockCount = args.getArgument<int>("x-blockcount");
-	int yBlockCount = 32;
+	int yBlockCount = 32; //32
 	if(args.isSet("y-blockcount"))
 		yBlockCount = args.getArgument<int>("y-blockcount");
 	assert(nxRequested % xBlockCount == 0);
@@ -552,9 +552,17 @@ int main(int argc, char** argv) {
                 clock_gettime(CLOCK_MONOTONIC, &endTime);
                 wallTime += (endTime.tv_sec - startTime.tv_sec);
                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
+		bool synchronizedTimestep = true;		
+       	    for(int x = xLower; x < xUpper; x++) {
+		for (int y = yLower; y < yUpper; y++) {
+		    if (blocks[x][y]->getTotalLocalTimestep() < maxLocalTimestep) {
+			synchronizedTimestep= false;
+			break;
+		    }
+		}
+	    }
             }
-            while(localTimestepping && !synchronizedTimestep((SWE_DimensionalSplittingChameleon ***)blocks,maxLocalTimestep,xLower,xUpper,yLower,yUpper));
+            while(localTimestepping && !synchronizedTimestep);
 
             // update simulation time with time step width.
 			t += timestep;
