@@ -408,6 +408,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 
 	if(block->localTimestepping){
         *maxTimestep = block->getRoundTimestep(block->maxTimestep);
+	std::cout << "My timestep is " << *maxTimestep << std::endl;
 	}else {
         *maxTimestep = block->maxTimestep;
 	}
