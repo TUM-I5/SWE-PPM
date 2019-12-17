@@ -12,11 +12,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Fixed some MORE Errors of Local Timestepping and added debug message">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,14 +186,7 @@
       <workItem from="1575908774982" duration="5065000" />
       <workItem from="1575971836203" duration="22197000" />
       <workItem from="1576075344379" duration="552000" />
-      <workItem from="1576514199512" duration="1640000" />
-    </task>
-    <task id="LOCAL-00006" summary="Added HPX Support">
-      <created>1561374709109</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1561374709109</updated>
+      <workItem from="1576514199512" duration="4259000" />
     </task>
     <task id="LOCAL-00007" summary="Fixed Upcxx Bug">
       <created>1561391629198</created>
@@ -532,7 +524,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576514915040</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Fixed some MORE Errors of Local Timestepping and added debug message">
+      <created>1576515852044</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1576515852045</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -581,29 +580,43 @@
     <option name="LAST_COMMIT_MESSAGE" value="Fixed some MORE Errors of Local Timestepping and added debug message" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2" timestamp="1576514914913">
+    <state x="555" y="200" width="800" height="677" key="#Notifications" timestamp="1576543840156">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576514914913" />
+    <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1576515908662">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576515908662" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576003358480" />
-    <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog" timestamp="1576000827352">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state width="446" height="442" key="Diff.GoToChangePopup" timestamp="1576543830112">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state width="446" height="442" key="Diff.GoToChangePopup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543830112" />
+    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog" timestamp="1576543899969">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543899969" />
     <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000827352" />
-    <state x="816" y="329" width="424" height="484" key="FileChooserDialogImpl" timestamp="1576075894312">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl" timestamp="1576543854785">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="776" y="329" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543854785" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576016079181" />
     <state x="816" y="329" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1576075894312" />
     <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1576000765897">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000765897" />
-    <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1576514897710">
+    <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1576543776864">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576514897710" />
+    <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543776864" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576002242187" />
+    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog" timestamp="1576543876717">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543876717" />
     <state x="2577" y="253" key="run.anything.popup" timestamp="1575990692525">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>

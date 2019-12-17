@@ -340,7 +340,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
                 std::cout << "Received timestep " << borderTimestep[border] << "Border : " << border << std::endl;
                 if (borderTimestep[border] >= getTotalLocalTimestep() ){
 
-                    interpolateGhostlayer(static_cast<Boundary>(border), getTotalLocalTimestep());
+                    interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
                     receivedGhostlayer[border] = true;
                 }else {
                     receivedGhostlayer[border] = false;

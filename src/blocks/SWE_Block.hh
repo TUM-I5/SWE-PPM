@@ -242,7 +242,7 @@ bool SWE_Block<T>::receivedAllGhostlayers() {
 }
 template <typename T>
 float SWE_Block<T>::interpolateValue(float oldval, float newval, float timestep){
-    return oldval + (newval-oldval)*(timestep/maxTimestepLocal);
+    return oldval + (newval-oldval)*(getTotalLocalTimestep()/timestep);
 }
 template <typename T>
 void SWE_Block<T>::interpolateGhostlayer(Boundary border,float timestep ){
