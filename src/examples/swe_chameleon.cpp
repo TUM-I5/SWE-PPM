@@ -57,11 +57,11 @@
 
 #include "blocks/SWE_DimensionalSplittingChameleon.hh"
 
-
-bool synchronizedTimestep( SWE_DimensionalSplittingChameleon &blocks[][], float maxTimestepGlobal,int xLower, int xUpper, int yLower, int yUpper){
+bool synchronizedTimestep( SWE_DimensionalSplittingChameleon ** blocks[], float maxTimestepGlobal,int xLower, int xUpper, int yLower, int yUpper){
+    
     for(int x = xLower; x < xUpper; x++) {
         for (int y = yLower; y < yUpper; y++) {
-            if (blocks[x][y].getTotalLocalTimestep() < maxTimestepGlobal) {
+            if (blocks[x][y]->getTotalLocalTimestep() < maxTimestepGlobal) {
                 return false;
             }
         }
@@ -399,6 +399,7 @@ int main(int argc, char** argv) {
                     blocks[x][y]->setMaxLocalTimestep(maxLocalTimestep);
             }
         }
+	std::cout << "Max Local Timestep is " << maxLocalTimestep << std::endl;
     }
 	// Initialize timers
 	std::clock_t computeClock;
@@ -553,7 +554,7 @@ int main(int argc, char** argv) {
                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
             }
-            while(localTimestepping && !synchronizedTimestep(blocks,maxLocalTimestep,xLower,xUpper,yLower,yUpper));
+            while(localTimestepping && !synchronizedTimestep((SWE_DimensionalSplittingChameleon ***)blocks,maxLocalTimestep,xLower,xUpper,yLower,yUpper));
 
             // update simulation time with time step width.
 			t += timestep;
