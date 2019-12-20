@@ -12,10 +12,17 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Fixed some MORE Errors of Local Timestepping and added debug message">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Constants.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/Boundary.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/Boundary.hh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +59,7 @@
   <component name="Git.Settings">
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="UPDATE_TYPE" value="MERGE" />
   </component>
   <component name="ProjectId" id="1OVFf0vkOekH6g0hBK97bG41hNH" />
@@ -186,14 +194,11 @@
       <workItem from="1575908774982" duration="5065000" />
       <workItem from="1575971836203" duration="22197000" />
       <workItem from="1576075344379" duration="552000" />
-      <workItem from="1576514199512" duration="4259000" />
-    </task>
-    <task id="LOCAL-00007" summary="Fixed Upcxx Bug">
-      <created>1561391629198</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1561391629198</updated>
+      <workItem from="1576514199512" duration="5045000" />
+      <workItem from="1576587980065" duration="22687000" />
+      <workItem from="1576670943581" duration="546000" />
+      <workItem from="1576685182933" duration="599000" />
+      <workItem from="1576836494780" duration="12071000" />
     </task>
     <task id="LOCAL-00008" summary="Added communication time for all frameworks">
       <created>1561461212252</created>
@@ -531,7 +536,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576515852045</updated>
     </task>
-    <option name="localTasksCounter" value="56" />
+    <task id="LOCAL-00056" summary="Fixed some MORE Errors of Local Timestepping and added debug message">
+      <created>1576544002915</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1576544002915</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -584,19 +596,19 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1576515908662">
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1576544002853">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576515908662" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576544002853" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576003358480" />
     <state width="446" height="442" key="Diff.GoToChangePopup" timestamp="1576543830112">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="446" height="442" key="Diff.GoToChangePopup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543830112" />
-    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog" timestamp="1576543899969">
+    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog" timestamp="1576589720410">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543899969" />
+    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576589720410" />
     <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000827352" />
     <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl" timestamp="1576543854785">
       <screen x="0" y="27" width="1920" height="1053" />
@@ -608,15 +620,23 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000765897" />
+    <state x="613" y="157" width="683" height="764" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1576845713296">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="613" y="157" width="683" height="764" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576845713296" />
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1576543776864">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543776864" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576002242187" />
-    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog" timestamp="1576543876717">
+    <state x="480" y="27" width="1440" height="1038" key="dock-window-1" timestamp="1576592908777">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543876717" />
+    <state x="480" y="27" width="1440" height="1038" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576592908777" />
+    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog" timestamp="1576589702914">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576589702914" />
     <state x="2577" y="253" key="run.anything.popup" timestamp="1575990692525">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -638,6 +658,10 @@
           <url>file://$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.hh</url>
           <line>44</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/types/BlockConnectInterface.hh</url>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

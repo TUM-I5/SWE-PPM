@@ -6,6 +6,8 @@ const float defaultDryTol = 0.1;
 const float defaultCflNumber = 0.4;
 
 // MPI Tags
+const int MPI_TAG_TIMESTEP = 1;
+
 const int MPI_TAG_OUT_H_LEFT = 10;
 const int MPI_TAG_OUT_B_LEFT = 11;
 const int MPI_TAG_OUT_HU_LEFT = 12;

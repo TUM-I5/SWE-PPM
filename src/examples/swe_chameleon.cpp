@@ -57,17 +57,7 @@
 
 #include "blocks/SWE_DimensionalSplittingChameleon.hh"
 
-bool synchronizedTimestep( SWE_DimensionalSplittingChameleon ** blocks[], float maxTimestepGlobal,int xLower, int xUpper, int yLower, int yUpper){
-    
-    for(int x = xLower; x < xUpper; x++) {
-        for (int y = yLower; y < yUpper; y++) {
-            if (blocks[x][y]->getTotalLocalTimestep() < maxTimestepGlobal) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
+
 int main(int argc, char** argv) {
 
 	/**************
@@ -377,7 +367,7 @@ int main(int argc, char** argv) {
     chameleon_determine_base_addresses((void *)&main);
 
     MPI_Barrier(MPI_COMM_WORLD);
-    //@todo reduce global maximal timestep and set smallest possible timestep in terms of a dividable part of max ts
+
     float maxLocalTimestep;
     float timestep = 0;
     if(localTimestepping){
@@ -385,7 +375,7 @@ int main(int argc, char** argv) {
             for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
                 blocks[x][y]->computeMaxTimestep( 0.01,0.4);
                 if( blocks[x][y]->getMaxTimestep() > timestep)
-                    timestep = blocks[x][y]->getMaxTimestep();//@todo look up the right timestep values
+                    timestep = blocks[x][y]->getMaxTimestep();
             }
         }
 
@@ -427,7 +417,7 @@ int main(int argc, char** argv) {
 	float t = 0.0;
 
 	int iterations = 0;
-
+    bool synchronizedTimestep = true;
 	double startTimeWhole = getTime();
 #ifdef ITT
 	__itt_resume();	
@@ -464,7 +454,7 @@ int main(int argc, char** argv) {
                 //#pragma omp parallel for collapse(2)
                 for(int x = xLower; x < xUpper; x++) {
                     for(int y = yLower; y < yUpper; y++) {
-                        //@todo probably need to change this semantic in order to allow local timestepping
+
                         blocks[x][y]->receiveGhostLayer();
                     }
                 }
@@ -552,17 +542,20 @@ int main(int argc, char** argv) {
                 clock_gettime(CLOCK_MONOTONIC, &endTime);
                 wallTime += (endTime.tv_sec - startTime.tv_sec);
                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-		bool synchronizedTimestep = true;		
-       	    for(int x = xLower; x < xUpper; x++) {
-		for (int y = yLower; y < yUpper; y++) {
-		    if (blocks[x][y]->getTotalLocalTimestep() < maxLocalTimestep) {
-			synchronizedTimestep= false;
-			break;
-		    }
-		}
-	    }
-            }
-            while(localTimestepping && !synchronizedTimestep);
+
+                if(localTimestepping){
+                    //if each block got the maxLocalTimestep the timestep is finished
+                    synchronizedTimestep = true;
+                    for(int x = xLower; x < xUpper; x++) {
+                        for (int y = yLower; y < yUpper; y++) {
+                            if (!blocks[x][y]->hasMaxLocalTimestep()) {
+                                synchronizedTimestep= false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }while(localTimestepping && !synchronizedTimestep);
 
             // update simulation time with time step width.
 			t += timestep;

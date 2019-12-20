@@ -50,7 +50,7 @@
 class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 	public:
 		// Constructor/Destructor
-		SWE_DimensionalSplittingMpi(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY);
+		SWE_DimensionalSplittingMpi(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY,bool localTimestepping);
 		~SWE_DimensionalSplittingMpi() {};
 
 		// Interface methods

@@ -9,6 +9,13 @@ typedef enum Boundary {
 	BND_TOP
 } Boundary;
 
+typedef enum GhostlayerState{
+    GL_UNVALID, //When neighbour has smaller timestep
+    GL_INTER, //When neighbour has bigger timestep
+    GL_SYNC, //When neighbour has same timestep
+    GL_NEXT     //When the next timestep is calculated
+} GhostlayerState;
+
 // available types of boundary conditions
 typedef enum BoundaryType {
 	OUTFLOW,
