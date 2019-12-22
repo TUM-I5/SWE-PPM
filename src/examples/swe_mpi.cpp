@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 
     if(args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1){
         localTimestepping = true;
-        
+
     }
 	// Read in command line arguments
 	simulationDuration = args.getArgument<float>("simulation-duration");

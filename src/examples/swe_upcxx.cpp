@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
 	args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
 	args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
 	args.addOption("output-basepath", 'o', "Output base file name");
-
+    args.addOption("local-timestepping", 'l', "Activate local timestepping", tools::Args::Required, false);
 
 	// Declare the variables needed to hold command line input
 	float simulationDuration;
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
 	int nxRequested;
 	int nyRequested;
 	std::string outputBaseName;
-
+    bool  localTimestepping = false;
 	// Declare variables for the output and the simulation time
 	std::string outputFileName;
 	float t = 0.;
@@ -97,7 +97,10 @@ int main(int argc, char** argv) {
 		case tools::Args::Success:
 			break;
 	}
+    if(args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1){
+        localTimestepping = true;
 
+    }
 	// Read in command line arguments
 	simulationDuration = args.getArgument<float>("simulation-duration");
 	numberOfCheckPoints = args.getArgument<int>("checkpoint-count");
@@ -291,7 +294,14 @@ int main(int argc, char** argv) {
 	/********************
 	 * START SIMULATION *
 	 ********************/
-
+    float maxLocalTimestep;
+    if(localTimestepping){
+        simulation.computeMaxTimestep( 0.01,0.4);
+        float localTimestep = simulation.getMaxTimestep();
+        // reduce over all ranks
+        maxLocalTimestep = upcxx::reduce_all(localTimestep, [](float a, float b) {return std::min(a, b);}).wait();
+        simulation.setMaxLocalTimestep(maxLocalTimestep);
+    }
 
 	// Initialize wall timer
 	struct timespec startTime;
@@ -307,34 +317,38 @@ int main(int argc, char** argv) {
 	for(int i = 0; i < numberOfCheckPoints; i++) {
 		// Simulate until the checkpoint is reached
 		while(t < checkpointInstantOfTime[i]) {
-			// Start measurement
-			clock_gettime(CLOCK_MONOTONIC, &startTime);
+            do{
+                // Start measurement
+                clock_gettime(CLOCK_MONOTONIC, &startTime);
 
-			// set values in ghost cells.
-			// this function blocks until everything has been received
-			simulation.setGhostLayer();
+                // set values in ghost cells.
+                // this function blocks until everything has been received
+                simulation.setGhostLayer();
 
-			// compute numerical flux on each edge
-			simulation.computeNumericalFluxes();
+                // compute numerical flux on each edge
+                simulation.computeNumericalFluxes();
 
-			// max timestep has been reduced over all ranks in computeNumericalFluxes()
-			timestep = simulation.getMaxTimestep();
+                // max timestep has been reduced over all ranks in computeNumericalFluxes()
+                timestep = simulation.getMaxTimestep();
 
-			// update the cell values
-			simulation.updateUnknowns(timestep);
+                // update the cell values
+                simulation.updateUnknowns(timestep);
 
-			// Accumulate wall time
-			clock_gettime(CLOCK_MONOTONIC, &endTime);
-			wallTime += (endTime.tv_sec - startTime.tv_sec);
-			wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+                // Accumulate wall time
+                clock_gettime(CLOCK_MONOTONIC, &endTime);
+                wallTime += (endTime.tv_sec - startTime.tv_sec);
+                wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
-			// update simulation time with time step width.
-			t += timestep;
-			iterations++;
-            clock_gettime(CLOCK_MONOTONIC, &barStartTime);
-			upcxx::barrier();
-            barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
-            barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;
+                // update simulation time with time step width.
+                t += timestep;
+                iterations++;
+                clock_gettime(CLOCK_MONOTONIC, &barStartTime);
+                upcxx::barrier(); //@todo needs to be reworked
+                barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
+                barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;
+
+            }while(localTimestepping && !simulation.hasMaxLocalTimestep());
+
 		}
 
 		if(myUpcxxRank == 0) {

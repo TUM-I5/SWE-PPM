@@ -184,7 +184,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 	upcxx::future<> bottomFuture;
 	upcxx::future<> topFuture;
     clock_gettime(CLOCK_MONOTONIC, &startTime);
-	if (boundaryType[BND_LEFT] == CONNECT) {
+	if (boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
 		assert(neighbourCopyLayer[BND_LEFT].size == ny);
 		assert(neighbourCopyLayer[BND_LEFT].stride == 1);
 
@@ -202,7 +202,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		leftFuture = upcxx::make_future<>();
 	}
 
-	if (boundaryType[BND_RIGHT] == CONNECT) {
+	if (boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
 		assert(neighbourCopyLayer[BND_RIGHT].size == ny);
 		assert(neighbourCopyLayer[BND_RIGHT].stride == 1);
 
@@ -220,7 +220,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		rightFuture = upcxx::make_future<>();
 	}
 
-	if (boundaryType[BND_BOTTOM] == CONNECT) {
+	if (boundaryType[BND_BOTTOM] == CONNECT && isReceivable(BND_BOTTOM)) {
 		assert(neighbourCopyLayer[BND_BOTTOM].size == nx);
 
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_BOTTOM];
@@ -243,7 +243,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		bottomFuture = upcxx::make_future<>(); 
 	}
 
-	if (boundaryType[BND_TOP] == CONNECT) {
+	if (boundaryType[BND_TOP] == CONNECT && isReceivable(BND_TOP)) {
 		assert(neighbourCopyLayer[BND_TOP].size == nx);
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_TOP];
 		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
@@ -265,6 +265,8 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 	}
 	upcxx::when_all(leftFuture, rightFuture, bottomFuture, topFuture).wait();
 
+    checkAllGhostlayers();
+
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     communicationTime += (endTime.tv_sec - startTime.tv_sec);
     communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
@@ -275,6 +277,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
  * maximum allowed time step size
  */
 void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
+    if(!allGhostlayersInSync()) return;
 	// Start compute clocks
 	computeClock = clock();
 	clock_gettime(CLOCK_MONOTONIC, &startTime);
@@ -307,7 +310,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		}
 	}
 
-flopCounter += nx*ny*135;
+    flopCounter += nx*ny*135;
 	// Accumulate compute time -> exclude the reduction
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -316,15 +319,21 @@ flopCounter += nx*ny*135;
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
-	// compute max timestep according to cautious CFL-condition
-	maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
-	maxTimestepGlobal = upcxx::reduce_all(maxTimestep, [](float a, float b) {return std::min(a, b);}).wait();
-    clock_gettime(CLOCK_MONOTONIC, &endTime);
-    reductionTime += (endTime.tv_sec - startTime.tv_sec);
-    reductionTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-	maxTimestep = maxTimestepGlobal;
-	upcxx::barrier();
+    if(localTimestepping){
+
+        maxTimestep = getRoundTimestep(maxTimestep);
+        //std::cout << "My timestep is " << maxTimestep << std::endl;
+    }else {
+        // compute max timestep according to cautious CFL-condition
+        maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+        clock_gettime(CLOCK_MONOTONIC, &startTime);
+        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, [](float a, float b) { return std::min(a, b); }).wait();
+        clock_gettime(CLOCK_MONOTONIC, &endTime);
+        reductionTime += (endTime.tv_sec - startTime.tv_sec);
+        reductionTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+        maxTimestep = maxTimestepGlobal;
+    }
+	//upcxx::barrier();
 
 	// restart compute clocks
 	computeClock = clock();
@@ -373,7 +382,7 @@ flopCounter += nx*ny*135;
 		}
 		#endif // NDEBUG
 	}
-flopCounter += nx*ny*135;	
+    flopCounter += nx*ny*135;
 	// Accumulate compute time
 	computeClock = clock() - computeClock;
 	computeTime += (float) computeClock / CLOCKS_PER_SEC;
@@ -390,6 +399,7 @@ flopCounter += nx*ny*135;
  * since this is the step width used for the intermediary updates after the x-sweep.
  */
 void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
+    if(!allGhostlayersInSync()) return;
 	// Start compute clocks
 	computeClock = clock();
 	clock_gettime(CLOCK_MONOTONIC, &startTime);
