@@ -13,18 +13,14 @@ class Float2DBuffer : public Float2D {
 public:
     Float2DBuffer() :
             Float2D(0, 0) {};
-    Float2DBuffer(int cols, int rows,bool localTimestepping, Float2DNative &realData, bool isUpcxx = false) :
+    Float2DBuffer(int cols, int rows,bool localTimestepping, Float2DNative &realData) :
             Float2D(cols, rows) {
 
         if(localTimestepping){
-            if(!isUpcxx){
-                std::shared_ptr<float> tmp(new float[rows * cols], std::default_delete<float[]>());
-                data = tmp;
-                rawData = data.get();
-            }else{
-                data = upcxx::new_array<float>(rows * cols);
-                rawData = data.local();
-            }
+
+            std::shared_ptr<float> tmp(new float[rows * cols], std::default_delete<float[]>());
+            data = tmp;
+            rawData = data.get();
 
         }else {
             // If there is no local timestepping buffer points to h |hu | hv
@@ -36,11 +32,8 @@ public:
 
     ~Float2DBuffer() {}
 
-    std::shared_ptr<float> getPointer() {
-        return data;
-    }
-
 private:
+
 
     std::shared_ptr<float> data;
 };

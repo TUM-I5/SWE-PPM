@@ -50,7 +50,7 @@
  * @param l_dx Cell width
  * @param l_dy Cell height
  */
-SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, float dx, float dy, float originX, float originY) :
+SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, float dx, float dy, float originX, float originY,bool localTimestepping) :
 		/*
 		 * Important note concerning grid allocations:
 		 * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -61,7 +61,7 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 		 * array[0][0] is then unused.
 		 */
 		// Initialize grid metadata using the base class constructor
-		SWE_Block(nx, ny, dx, dy, originX, originY),
+		SWE_Block(nx, ny, dx, dy, originX, originY, localTimestepping),
 
 		// intermediate state Q after x-sweep
 		hStar(nx + 1, ny + 2),
@@ -93,6 +93,8 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 	flopCounter = 0;
 	communicationTime = 0;
 	reductionTime = 0;
+    upcxxLocalTimestep = upcxx::new_<float>(0.f);
+    localTimestep = upcxxLocalTimestep.local();
 }
 
 void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> p_neighbourCopyLayer[]) {
@@ -100,7 +102,9 @@ void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcx
 		neighbourCopyLayer[i] = p_neighbourCopyLayer[i];
 	}
 }
-
+void SWE_DimensionalSplittingUpcxx::updateLocalTimestep() {
+    *localTimestep = getTotalLocalTimestep();
+}
 /**
  * register the row or column layer next to a boundary as a "copy layer",
  * from which values will be copied into the ghost layer or a neighbour;
@@ -113,6 +117,7 @@ BlockConnectInterface<upcxx::global_ptr<float>> SWE_DimensionalSplittingUpcxx::g
 	interface.pointerB = b.getPointer();
 	interface.pointerHu = hu.getPointer();
 	interface.pointerHv = hv.getPointer();
+	interface.pointerTimestep = upcxxLocalTimestep;
 	switch (boundary) {
 		case BND_LEFT:
 			interface.size = ny;
@@ -194,10 +199,12 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
 
-		auto leftFutH = upcxx::rget(srcBaseH, &h[0][1], ny);
-		auto leftFutHu = upcxx::rget(srcBaseHu, &hu[0][1], ny);
-		auto leftFutHv = upcxx::rget(srcBaseHv, &hv[0][1], ny);
-		leftFuture = upcxx::when_all(leftFutH, leftFutHu, leftFutHv);
+
+		auto leftFutH = upcxx::rget(srcBaseH, &bufferH[0][1], ny);
+		auto leftFutHu = upcxx::rget(srcBaseHu, &bufferHu[0][1], ny);
+		auto leftFutHv = upcxx::rget(srcBaseHv, &bufferHv[0][1], ny);
+		auto leftTsFut = upcxx::rget( iface.pointerTimestep, &borderTimestep[BND_LEFT],1);
+		leftFuture = upcxx::when_all(leftFutH, leftFutHu, leftFutHv,leftTsFut);
 	} else {
 		leftFuture = upcxx::make_future<>();
 	}
@@ -212,10 +219,11 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
 		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
 
-		auto rightFutH = upcxx::rget(srcBaseH, &h[nx + 1][1], ny);
-		auto rightFutHu = upcxx::rget(srcBaseHu, &hu[nx + 1][1], ny);
-		auto rightFutHv = upcxx::rget(srcBaseHv, &hv[nx + 1][1], ny);
-		rightFuture = upcxx::when_all(rightFutH, rightFutHu, rightFutHv);
+		auto rightFutH = upcxx::rget(srcBaseH, &bufferH[nx + 1][1], ny);
+		auto rightFutHu = upcxx::rget(srcBaseHu, &bufferHu[nx + 1][1], ny);
+		auto rightFutHv = upcxx::rget(srcBaseHv, &bufferHv[nx + 1][1], ny);
+        auto rightTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_RIGHT],1);
+		rightFuture = upcxx::when_all(rightFutH, rightFutHu, rightFutHv,rightTsFut);
 	} else {
 		rightFuture = upcxx::make_future<>();
 	}
@@ -230,15 +238,18 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
 		uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
 		auto bottomFutH = upcxx::rget_strided<2>(srcBaseH, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&h[1][0], {{sizeof(float),thisStride}},
+							&bufferH[1][0], {{sizeof(float),thisStride}},
 							{{1,(size_t) nx}});
 		auto bottomFutHu = upcxx::rget_strided<2>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hu[1][0], {{sizeof(float),thisStride}},
+							&bufferHu[1][0], {{sizeof(float),thisStride}},
 							{{1,(size_t) nx}});
 		auto bottomFutHv = upcxx::rget_strided<2>(srcBaseHv, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hv[1][0], {{sizeof(float),thisStride}},
+							&bufferHv[1][0], {{sizeof(float),thisStride}},
 							{{1,(size_t) nx}});
-		bottomFuture = upcxx::when_all(bottomFutH, bottomFutHu, bottomFutHv);
+
+        auto bottomTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_BOTTOM],1);
+
+        bottomFuture = upcxx::when_all(bottomFutH, bottomFutHu, bottomFutHv,bottomTsFut);
 	} else {
 		bottomFuture = upcxx::make_future<>(); 
 	}
@@ -251,15 +262,18 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
         	uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
 		auto topFutH = upcxx::rget_strided<2>(srcBaseH, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&h[1][ny + 1], {{sizeof(float),thisStride}},
+							&bufferH[1][ny + 1], {{sizeof(float),thisStride}},
 							{{1,(size_t) nx}});
 		auto topFutHu = upcxx::rget_strided<2>(srcBaseHu, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hu[1][ny + 1], {{sizeof(float),thisStride}},
+							&bufferHu[1][ny + 1], {{sizeof(float),thisStride}},
 							{{1,(size_t) nx}});
 		auto topFutHv = upcxx::rget_strided<2>(srcBaseHv, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&hv[1][ny + 1], {{sizeof(float),thisStride}},
+							&bufferHv[1][ny + 1], {{sizeof(float),thisStride}},
 							{{1,(size_t) nx}});
-		topFuture = upcxx::when_all(topFutH, topFutHu, topFutHv);
+        auto topTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_TOP],1);
+
+        topFuture = upcxx::when_all(topFutH, topFutHu, topFutHv,topTsFut);
+
 	} else {
 		topFuture = upcxx::make_future<>();
 	}
@@ -322,7 +336,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
     if(localTimestepping){
 
         maxTimestep = getRoundTimestep(maxTimestep);
-        //std::cout << "My timestep is " << maxTimestep << std::endl;
+
     }else {
         // compute max timestep according to cautious CFL-condition
         maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);

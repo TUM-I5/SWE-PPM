@@ -13,11 +13,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/tools/Float2DBufferUpcxx.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tools/Float2DBuffer.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2DBuffer.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/BlockConnectInterface.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/BlockConnectInterface.hh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,6 +199,7 @@
       <workItem from="1576670943581" duration="546000" />
       <workItem from="1576685182933" duration="599000" />
       <workItem from="1576836494780" duration="15222000" />
+      <workItem from="1577111626503" duration="20390000" />
     </task>
     <task id="LOCAL-00009" summary="Added charm support">
       <created>1561461734277</created>
@@ -591,20 +597,22 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1576851973613">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="606" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1577006593817">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576851973613" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576003358480" />
+    <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />
     <state width="446" height="442" key="Diff.GoToChangePopup" timestamp="1576543830112">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="446" height="442" key="Diff.GoToChangePopup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543830112" />
-    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog" timestamp="1576589720410">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="228" y="149" width="1482" height="872" key="DiffContextDialog" timestamp="1577006569067">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="167" y="149" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576589720410" />
     <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000827352" />
+    <state x="228" y="149" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1577006569067" />
     <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl" timestamp="1576543854785">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -624,10 +632,19 @@
     </state>
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543776864" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576002242187" />
-    <state x="480" y="27" width="1440" height="1038" key="dock-window-1" timestamp="1576592908777">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="-161" y="27" width="933" height="878" maximized="true" key="dock-window-1" timestamp="1577114376215">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="480" y="27" width="1440" height="1038" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576592908777" />
+    <state x="-161" y="27" width="933" height="878" maximized="true" key="dock-window-1/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577114376215" />
+    <state x="81" y="27" width="873" height="878" maximized="true" key="dock-window-2" timestamp="1577124163206">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="81" y="27" width="873" height="878" maximized="true" key="dock-window-2/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577124163206" />
+    <state x="551" y="27" width="873" height="878" maximized="true" key="dock-window-3" timestamp="1577124715703">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="551" y="27" width="873" height="878" maximized="true" key="dock-window-3/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577124715703" />
     <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog" timestamp="1576589702914">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>

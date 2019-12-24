@@ -17,6 +17,7 @@ struct BlockConnectInterface {
 	T pointerB;
 	T pointerHu;
 	T pointerHv;
+    T pointerTimestep;
 };
 
 #endif // __BLOCKCONNECTINTERFACE_HH

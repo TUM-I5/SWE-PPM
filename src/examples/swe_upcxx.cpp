@@ -197,7 +197,7 @@ int main(int argc, char** argv) {
 	boundaries[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? CONNECT : scenario.getBoundaryType(BND_TOP);
 
 	// Initialize the simulation block according to the scenario
-	SWE_DimensionalSplittingUpcxx simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY);
+	SWE_DimensionalSplittingUpcxx simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,localTimestepping);
 	simulation.initScenario(scenario, boundaries);
 
 	// calculate neighbours to the current ranks simulation block
@@ -300,6 +300,8 @@ int main(int argc, char** argv) {
         float localTimestep = simulation.getMaxTimestep();
         // reduce over all ranks
         maxLocalTimestep = upcxx::reduce_all(localTimestep, [](float a, float b) {return std::min(a, b);}).wait();
+        std::cout << "Max timestep lel " << maxLocalTimestep << std::endl;
+        maxLocalTimestep = 3*5.17476;
         simulation.setMaxLocalTimestep(maxLocalTimestep);
     }
 
@@ -312,7 +314,7 @@ int main(int argc, char** argv) {
 	t = 0.0;
 
 	float timestep;
-	unsigned int iterations = 0;
+    bool synchedTimestep = false;
 	// loop over the count of requested checkpoints
 	for(int i = 0; i < numberOfCheckPoints; i++) {
 		// Simulate until the checkpoint is reached
@@ -320,10 +322,17 @@ int main(int argc, char** argv) {
             do{
                 // Start measurement
                 clock_gettime(CLOCK_MONOTONIC, &startTime);
-
+                std::cout << myUpcxxRank << " " <<simulation.getTotalLocalTimestep() << " " << simulation.timestepCounter << std::endl;
                 // set values in ghost cells.
                 // this function blocks until everything has been received
+
+
                 simulation.setGhostLayer();
+
+                if(localTimestepping)
+                upcxx::barrier();
+
+
 
                 // compute numerical flux on each edge
                 simulation.computeNumericalFluxes();
@@ -340,14 +349,19 @@ int main(int argc, char** argv) {
                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
                 // update simulation time with time step width.
-                t += timestep;
-                iterations++;
+                synchedTimestep = simulation.hasMaxLocalTimestep();
+                simulation.updateLocalTimestep();
                 clock_gettime(CLOCK_MONOTONIC, &barStartTime);
-                upcxx::barrier(); //@todo needs to be reworked
+
+                upcxx::barrier();
+
+
+
                 barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
                 barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;
 
-            }while(localTimestepping && !simulation.hasMaxLocalTimestep());
+            }while(localTimestepping && !synchedTimestep);
+            t += localTimestepping?maxLocalTimestep:timestep;
 
 		}
 
@@ -368,7 +382,7 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-
+    printf("%iWrite timestep (%fs)\n", myUpcxxRank,t);
     printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs Communication Time: %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime, simulation.communicationTime);
     float sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
     float sumCommTime = upcxx::reduce_all(simulation.communicationTime, upcxx::op_fast_add).wait();

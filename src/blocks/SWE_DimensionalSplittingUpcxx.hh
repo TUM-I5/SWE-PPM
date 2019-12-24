@@ -36,7 +36,7 @@
 #include "types/BlockConnectInterface.hh"
 #include <ctime>
 #include <time.h>
-
+#include "tools/Float2DBufferUpcxx.hh"
 #include <upcxx/upcxx.hpp>
 
 #if WAVE_PROPAGATION_SOLVER==0
@@ -48,11 +48,11 @@
 #include "solvers/AugRie.hpp"
 #endif
 
-class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
+class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBufferUpcxx> {
 	public:
 		// Constructor/Destructor
         SWE_DimensionalSplittingUpcxx();
-		SWE_DimensionalSplittingUpcxx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY);
+		SWE_DimensionalSplittingUpcxx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY, bool localTimestepping=false);
 		~SWE_DimensionalSplittingUpcxx() {};
 
 		// Interface methods
@@ -65,6 +65,7 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 		void connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[]);
 		BlockConnectInterface<upcxx::global_ptr<float>> getCopyLayer(Boundary boundary);
 		void exchangeBathymetry();
+		void updateLocalTimestep();
 
 		float computeTime;
 		float computeTimeWall;
@@ -108,7 +109,10 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx> {
 
 		// Interfaces to neighbouring block copy layers, indexed by Boundary
 		BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[4];
+        //Used to transmit timestep in localtimestepping
+        upcxx::global_ptr<float> upcxxLocalTimestep;
 
+        float * localTimestep;
 		// timer
 		std::clock_t computeClock;
 		struct timespec startTime;

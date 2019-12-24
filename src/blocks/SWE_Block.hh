@@ -105,7 +105,7 @@
 #include <algorithm>
 #include "tools/Float2DBuffer.hh"
 #include <iostream>
-template <typename T>
+template <typename T, typename Buffer = Float2DBuffer>
 class SWE_Block {
 	public:
 		// Default getter methods
@@ -148,8 +148,8 @@ class SWE_Block {
 		
 	//protected:
 		// Constructor/Destructor
-		SWE_Block<T>();
-		SWE_Block<T>(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX = 0, float originY = 0, bool localTimestepping = false);
+		SWE_Block<T, Buffer >();
+		SWE_Block<T , Buffer >(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX = 0, float originY = 0, bool localTimestepping = false);
 		virtual ~SWE_Block() = 0;
 
 		// Default methods
@@ -186,16 +186,16 @@ class SWE_Block {
         int stepSizeCounter; //used to count the steps;
         GhostlayerState receivedGhostlayer[4]; //determines if border received a valid timestep, thus is bigger or same then localtimestep.
         float borderTimestep[4]; //timesteps of each border are put in here
-        int timestepCounter = 0;
+        int timestepCounter =0;
         // Unknowns
 		T h;
 		T hu;
 		T hv;
 		T b;
 
-		Float2DBuffer bufferH; //buffer structure which are necessary for localtimestepping
-		Float2DBuffer bufferHu; // if localTimestepping == false  buffers point to h,hu,hv
-		Float2DBuffer bufferHv;
+		Buffer bufferH; //buffer structure which are necessary for localtimestepping
+		Buffer bufferHu; // if localTimestepping == false  buffers point to h,hu,hv
+		Buffer bufferHv;
 		// Boundary type at the block edges (uses Boundary as index)
 		BoundaryType boundaryType[4];
 
@@ -213,12 +213,12 @@ class SWE_Block {
  * -> computational domain is [1,..,nx]*[1,..,ny]
  * -> plus ghost cell layer
  */
-template <typename T>
-SWE_Block<T>::SWE_Block() {
+template <typename T, typename Buffer>
+SWE_Block <T, Buffer> ::SWE_Block() {
 }
 
-template <typename T>
-SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float originY,bool localTimestepping) :
+template <typename T, typename Buffer>
+SWE_Block <T, Buffer>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float originY,bool localTimestepping) :
 		nx(nx),
 		ny(ny),
 		dx(dx),
@@ -244,41 +244,48 @@ SWE_Block<T>::SWE_Block(int nx, int ny, float dx, float dy, float originX, float
 	stepSize = 1;
 }
 
-template <typename T>
-SWE_Block<T>::~SWE_Block() {
+template <typename T, typename Buffer>
+SWE_Block< T, Buffer>::~SWE_Block() {
 }
-template <typename T>
-bool SWE_Block<T>::hasMaxLocalTimestep(){
+template <typename T, typename Buffer>
+bool SWE_Block <T, Buffer>::hasMaxLocalTimestep(){
     // If block is at the biggest Timestep and received all ghostlayers, then it is ready to write timestep
-
-    if(stepSizeCounter > stepSize  && allGhostlayersInSync()){
-        stepSizeCounter = 0;
+   if(stepSizeCounter == 1 && allGhostlayersInSync()){
         timestepCounter++;
+        return true;
+    }
+    if(stepSizeCounter > stepSize  && allGhostlayersInSync()) {
+        stepSizeCounter = 0;
+    }
+    return false;
+    /*if(stepSizeCounter > stepSize  && allGhostlayersInSync()){
+        stepSizeCounter = 0;
+
         return true;
     }else{
         return false;
-    }
+    }*/
 }
 
-template <typename T>
-bool SWE_Block<T>::allGhostlayersInSync() {
+template <typename T, typename Buffer>
+bool SWE_Block< T, Buffer>::allGhostlayersInSync() {
     return receivedGhostlayer[BND_LEFT] != GL_UNVALID && receivedGhostlayer[BND_RIGHT] != GL_UNVALID
         && receivedGhostlayer[BND_TOP] != GL_UNVALID && receivedGhostlayer[BND_BOTTOM] != GL_UNVALID;
 }
-template <typename T>
-bool SWE_Block<T>::isSendable(Boundary border){
+template <typename T, typename Buffer>
+bool SWE_Block<T, Buffer>::isSendable(Boundary border){
     return receivedGhostlayer[border] != GL_UNVALID;
 }
-template <typename T>
-bool SWE_Block<T>::isReceivable(Boundary border){
+template <typename T, typename Buffer>
+bool SWE_Block< T, Buffer>::isReceivable(Boundary border){
     return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_UNVALID;
 }
-template <typename T>
-float SWE_Block<T>::interpolateValue(float oldval, float newval, float remoteTimestep){
+template <typename T, typename Buffer>
+float SWE_Block< T, Buffer>::interpolateValue(float oldval, float newval, float remoteTimestep){
     return oldval + (newval-oldval)*(getTotalLocalTimestep()/remoteTimestep);
 }
-template <typename T>
-void SWE_Block<T>::checkAllGhostlayers() {
+template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::checkAllGhostlayers() {
     if(localTimestepping){
 
         //if neighbour stepped further than the local block, interpolation is possible, if not, block shall wait for fitting timestep
@@ -313,8 +320,8 @@ void SWE_Block<T>::checkAllGhostlayers() {
         }
     }
 }
-template <typename T>
-void SWE_Block<T>::interpolateGhostlayer(Boundary border,float remoteTimestep){
+template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::interpolateGhostlayer(Boundary border,float remoteTimestep){
 
     switch(border){
         case BND_LEFT:
@@ -348,12 +355,12 @@ void SWE_Block<T>::interpolateGhostlayer(Boundary border,float remoteTimestep){
     }
 
 }
-template <typename T>
-void SWE_Block<T>::setMaxLocalTimestep(float timestep){
+template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::setMaxLocalTimestep(float timestep){
     maxTimestepLocal = timestep;
 }
-template <typename T>
-float SWE_Block<T>::getRoundTimestep(float timestep){
+template <typename T, typename Buffer>
+float SWE_Block< T, Buffer>::getRoundTimestep(float timestep){
     //stepSizeCounter = stepSizeCounter%(stepSize);
 
     if(stepSizeCounter <= 0){
@@ -373,83 +380,83 @@ float SWE_Block<T>::getRoundTimestep(float timestep){
     return (float)maxTimestepLocal/stepSize;
 
 }
-template <typename T>
-float SWE_Block<T>::getTotalLocalTimestep(){
+template <typename T, typename Buffer>
+float SWE_Block< T, Buffer>::getTotalLocalTimestep(){
     //std::cout << "stepsize " << stepSize << std::endl;
     return (float)(maxTimestepLocal*stepSizeCounter)/stepSize;
 }
-template <typename T>
-int SWE_Block<T>::getCellCountHorizontal() {
+template <typename T, typename Buffer>
+int SWE_Block< T, Buffer>::getCellCountHorizontal() {
 	return nx;
 }
 
-template <typename T>
-int SWE_Block<T>::getCellCountVertical() {
+template <typename T, typename Buffer>
+int SWE_Block< T, Buffer>::getCellCountVertical() {
 	return ny;
 }
 
-template <typename T>
-float SWE_Block<T>::getCellSizeHorizontal() {
+template <typename T, typename Buffer>
+float SWE_Block< T, Buffer>::getCellSizeHorizontal() {
 	return dx;
 }
 
-template <typename T>
-float SWE_Block<T>::getCellSizeVertical() {
+template <typename T, typename Buffer>
+float SWE_Block< T, Buffer>::getCellSizeVertical() {
 	return dy;
 }
 
-template <typename T>
-int SWE_Block<T>::getOriginX() {
+template <typename T, typename Buffer>
+int SWE_Block< T, Buffer>::getOriginX() {
 	return originX;
 }
 
-template <typename T>
-int SWE_Block<T>::getOriginY() {
+template <typename T, typename Buffer>
+int SWE_Block< T, Buffer>::getOriginY() {
 	return originY;
 }
 
-template <typename T>
-float SWE_Block<T>::getMaxTimestep() {
+template <typename T, typename Buffer>
+float SWE_Block< T, Buffer>::getMaxTimestep() {
 	return maxTimestep;
 }
 
-template <typename T>
-const T& SWE_Block<T>::getWaterHeight() {
+template <typename T, typename Buffer>
+const T& SWE_Block< T, Buffer>::getWaterHeight() {
 	return h;
 }
 
-template <typename T>
-const T& SWE_Block<T>::getMomentumHorizontal() {
+template <typename T, typename Buffer>
+const T& SWE_Block< T, Buffer>::getMomentumHorizontal() {
 	return hu;
 }
-template <typename T>
-T& SWE_Block<T>::getModifiableWaterHeight() {
+template <typename T, typename Buffer>
+T& SWE_Block< T, Buffer>::getModifiableWaterHeight() {
     return h;
 }
-template <typename T>
-T& SWE_Block<T>::getModifiableMomentumHorizontal() {
+template <typename T, typename Buffer>
+T& SWE_Block< T, Buffer>::getModifiableMomentumHorizontal() {
     return hu;
 }
-template <typename T>
-T& SWE_Block<T>::getModifiableBathymetry() {
+template <typename T, typename Buffer>
+T& SWE_Block< T, Buffer>::getModifiableBathymetry() {
     return b;
 }
-template <typename T>
-T& SWE_Block<T>::getModifiableMomentumVertical() {
+template <typename T, typename Buffer>
+T& SWE_Block< T, Buffer>::getModifiableMomentumVertical() {
     return hv;
 }
-template <typename T>
-const T& SWE_Block<T>::getMomentumVertical() {
+template <typename T, typename Buffer>
+const T& SWE_Block< T, Buffer>::getMomentumVertical() {
 	return hv;
 }
 
-template <typename T>
-const T& SWE_Block<T>::getBathymetry() {
+template <typename T, typename Buffer>
+const T& SWE_Block< T, Buffer>::getBathymetry() {
 	return b;
 }
 
-template <typename T>
-void SWE_Block<T>::setBoundaryType(Boundary boundary, BoundaryType type) {
+template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::setBoundaryType(Boundary boundary, BoundaryType type) {
 	boundaryType[boundary] = type;
 }
 
@@ -459,8 +466,8 @@ void SWE_Block<T>::setBoundaryType(Boundary boundary, BoundaryType type) {
  * @param scenario scenario to use during the setup.
  * @param boundaries array containing the boundary types surrounding the current block
  */
-template <typename T>
-void SWE_Block<T>::initScenario(SWE_Scenario &scenario, BoundaryType boundaries[]) {
+template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::initScenario(SWE_Scenario &scenario, BoundaryType boundaries[]) {
 	float x = 0;
 	float y = 0;
 	for (int i = 1; i < ny + 1; i++) {
@@ -472,7 +479,7 @@ void SWE_Block<T>::initScenario(SWE_Scenario &scenario, BoundaryType boundaries[
 			 *
 			 * Offset by 1/2 to query the value at the center of the current cell
 			 *
-			 * I.e.: If the origin is at 0,0 and the cell width is 1, 
+			 * I.e.: If the origin is at 0,0 and the cell width is 1,
 			 * array index [1][1] will map to the values at 0.5,0.5 ,
 			 * array index [2][2] will map to 1.5,1.5 and so forth.
 			 */
@@ -502,8 +509,8 @@ void SWE_Block<T>::initScenario(SWE_Scenario &scenario, BoundaryType boundaries[
  * @param i_dryTol dry tolerance (dry cells do not affect the time step).
  * @param i_cflNumber CFL number of the used method.
  */
-template <typename T>
-void SWE_Block<T>::computeMaxTimestep( const float dryTol, const float cflNumber) {
+template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::computeMaxTimestep( const float dryTol, const float cflNumber) {
 	// initialize the maximum wave speed
 	float maximumWaveSpeed = (float) 0;
 
@@ -533,8 +540,8 @@ void SWE_Block<T>::computeMaxTimestep( const float dryTol, const float cflNumber
  * Should be called every time a boundary is changed to a OUTFLOW or
  * WALL boundary <b>or</b> the bathymetry changes.
  */
-template <typename T>
-void SWE_Block<T>::applyBoundaryBathymetry() {
+template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::applyBoundaryBathymetry() {
 	// set bathymetry values in the ghost layer if necessary
 	if(boundaryType[BND_LEFT] == OUTFLOW || boundaryType[BND_LEFT] == WALL) {
 		memcpy(b[0], b[1], sizeof(float) * (ny + 2));
@@ -566,8 +573,8 @@ void SWE_Block<T>::applyBoundaryBathymetry() {
  * - set boundary conditions for typs WALL and OUTFLOW
  * - derived classes need to transfer ghost layers
  */
-template <typename T>
-void SWE_Block<T>::applyBoundaryConditions() {
+template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::applyBoundaryConditions() {
 	// CONNECT boundary conditions are set in the calling function setGhostLayer
 	// PASSIVE boundary conditions need to be set by the component using SWE_Block
 
