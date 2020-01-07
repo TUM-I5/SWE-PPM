@@ -28,6 +28,7 @@ float b[];
 float h[];
 float hu[];
 float hv[];
+float timestep;
 }
 ;
  */
@@ -67,7 +68,7 @@ class CMessage_copyLayer:public CkMessage{
 };
 
 /* DECLS: array SWE_DimensionalSplittingCharm: ArrayElement{
-SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile);
+SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping);
 void compute();
 void receiveGhostLeft(copyLayer* impl_msg);
 void receiveGhostRight(copyLayer* impl_msg);
@@ -95,7 +96,7 @@ class CkIndex_SWE_DimensionalSplittingCharm:public CkIndex_ArrayElement{
 
     static int __idx;
     static void __register(const char *s, size_t size);
-    /* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile);
+    /* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping);
      */
     // Entry point registration at startup
     
@@ -108,7 +109,7 @@ class CkIndex_SWE_DimensionalSplittingCharm:public CkIndex_ArrayElement{
     }
 
     
-    static int ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile) { return idx_SWE_DimensionalSplittingCharm_marshall1(); }
+    static int ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping) { return idx_SWE_DimensionalSplittingCharm_marshall1(); }
     
     static void _call_SWE_DimensionalSplittingCharm_marshall1(void* impl_msg, void* impl_obj);
     
@@ -457,10 +458,10 @@ class CkIndex_SWE_DimensionalSplittingCharm:public CkIndex_ArrayElement{
         :CProxyElement_ArrayElement(aid,idx)
     {
 }
-/* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile);
+/* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping);
  */
     
-    void insert(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, int onPE=-1, const CkEntryOptions *impl_e_opts=NULL);
+    void insert(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping, int onPE=-1, const CkEntryOptions *impl_e_opts=NULL);
 /* DECLS: void compute();
  */
     
@@ -586,13 +587,13 @@ PUPmarshall(CProxyElement_SWE_DimensionalSplittingCharm)
         :CProxy_ArrayElement(aid,CK_DELCTOR_ARGS) {}
     CProxy_SWE_DimensionalSplittingCharm(const CkArrayID &aid) 
         :CProxy_ArrayElement(aid) {}
-/* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile);
+/* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping);
  */
     
-    static CkArrayID ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const CkArrayOptions &opts = CkArrayOptions(), const CkEntryOptions *impl_e_opts=NULL);
-    static void      ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const CkArrayOptions &opts, CkCallback _ck_array_creation_cb, const CkEntryOptions *impl_e_opts=NULL);
-    static CkArrayID ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const int s1, const CkEntryOptions *impl_e_opts=NULL);
-    static void ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const int s1, CkCallback _ck_array_creation_cb, const CkEntryOptions *impl_e_opts=NULL);
+    static CkArrayID ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping, const CkArrayOptions &opts = CkArrayOptions(), const CkEntryOptions *impl_e_opts=NULL);
+    static void      ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping, const CkArrayOptions &opts, CkCallback _ck_array_creation_cb, const CkEntryOptions *impl_e_opts=NULL);
+    static CkArrayID ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping, const int s1, const CkEntryOptions *impl_e_opts=NULL);
+    static void ckNew(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping, const int s1, CkCallback _ck_array_creation_cb, const CkEntryOptions *impl_e_opts=NULL);
 
 /* DECLS: void compute();
  */
@@ -791,7 +792,7 @@ PUPmarshall(CProxy_SWE_DimensionalSplittingCharm)
     static void contribute(int dataSize,void *data,CkReduction::reducerType type, CkSectionInfo &sid, const CkCallback &cb, int userData=-1, int fragSize=-1);
     template <typename T>
     static void contribute(std::vector<T> &data, CkReduction::reducerType type, CkSectionInfo &sid, const CkCallback &cb, int userData=-1, int fragSize=-1);
-/* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile);
+/* DECLS: SWE_DimensionalSplittingCharm(int nx, int ny, float dy, float dx, float originX, float originY, int posX, int posY, const BoundaryType *boundaries, const std::string &outputFilename, const std::string &bathymetryFile, const std::string &displacementFile, const bool &localTimestepping);
  */
     
 
@@ -848,55 +849,68 @@ private:                                                                       \
   void compute_end();                                                          \
   void _slist_0();                                                             \
   void _slist_0_end();                                                         \
-  void _serial_0();                                                            \
-  void _while_0();                                                             \
-  void _while_0_end();                                                         \
+  void _if_0();                                                                \
+  void _if_0_end();                                                            \
   void _slist_1();                                                             \
   void _slist_1_end();                                                         \
+  void _serial_0();                                                            \
+  SDAG::Continuation* _when_0();                                               \
+  void _when_0_end();                                                          \
   void _serial_1();                                                            \
+  void _serial_2();                                                            \
+  void _while_0();                                                             \
+  void _while_0_end();                                                         \
+  void _slist_2();                                                             \
+  void _slist_2_end();                                                         \
+  void _serial_3();                                                            \
   void _overlap_0();                                                           \
   void _overlap_0_end();                                                       \
   void _olist_0();                                                             \
   void _olist_0_end(SDAG::CCounter* _co0);                                     \
-  SDAG::Continuation* _when_0(SDAG::CCounter* _co0);                           \
-  void _when_0_end(SDAG::CCounter* _co0, copyLayer* gen1);                     \
-  void _if_0(SDAG::CCounter* _co0, copyLayer* gen1);                           \
-  void _if_0_end(SDAG::CCounter* _co0, copyLayer* gen1);                       \
-  void _slist_2(SDAG::CCounter* _co0, copyLayer* gen1);                        \
-  void _slist_2_end(SDAG::CCounter* _co0, copyLayer* gen1);                    \
-  void _serial_2(SDAG::CCounter* _co0, copyLayer* gen1);                       \
   SDAG::Continuation* _when_1(SDAG::CCounter* _co0);                           \
   void _when_1_end(SDAG::CCounter* _co0, copyLayer* gen1);                     \
   void _if_1(SDAG::CCounter* _co0, copyLayer* gen1);                           \
   void _if_1_end(SDAG::CCounter* _co0, copyLayer* gen1);                       \
   void _slist_3(SDAG::CCounter* _co0, copyLayer* gen1);                        \
   void _slist_3_end(SDAG::CCounter* _co0, copyLayer* gen1);                    \
-  void _serial_3(SDAG::CCounter* _co0, copyLayer* gen1);                       \
+  void _serial_4(SDAG::CCounter* _co0, copyLayer* gen1);                       \
   SDAG::Continuation* _when_2(SDAG::CCounter* _co0);                           \
   void _when_2_end(SDAG::CCounter* _co0, copyLayer* gen1);                     \
   void _if_2(SDAG::CCounter* _co0, copyLayer* gen1);                           \
   void _if_2_end(SDAG::CCounter* _co0, copyLayer* gen1);                       \
   void _slist_4(SDAG::CCounter* _co0, copyLayer* gen1);                        \
   void _slist_4_end(SDAG::CCounter* _co0, copyLayer* gen1);                    \
-  void _serial_4(SDAG::CCounter* _co0, copyLayer* gen1);                       \
+  void _serial_5(SDAG::CCounter* _co0, copyLayer* gen1);                       \
   SDAG::Continuation* _when_3(SDAG::CCounter* _co0);                           \
   void _when_3_end(SDAG::CCounter* _co0, copyLayer* gen1);                     \
   void _if_3(SDAG::CCounter* _co0, copyLayer* gen1);                           \
   void _if_3_end(SDAG::CCounter* _co0, copyLayer* gen1);                       \
   void _slist_5(SDAG::CCounter* _co0, copyLayer* gen1);                        \
   void _slist_5_end(SDAG::CCounter* _co0, copyLayer* gen1);                    \
-  void _serial_5(SDAG::CCounter* _co0, copyLayer* gen1);                       \
-  void _serial_6();                                                            \
-  SDAG::Continuation* _when_4();                                               \
-  void _when_4_end();                                                          \
-  void _serial_7();                                                            \
+  void _serial_6(SDAG::CCounter* _co0, copyLayer* gen1);                       \
+  SDAG::Continuation* _when_4(SDAG::CCounter* _co0);                           \
+  void _when_4_end(SDAG::CCounter* _co0, copyLayer* gen1);                     \
+  void _if_4(SDAG::CCounter* _co0, copyLayer* gen1);                           \
+  void _if_4_end(SDAG::CCounter* _co0, copyLayer* gen1);                       \
+  void _slist_6(SDAG::CCounter* _co0, copyLayer* gen1);                        \
+  void _slist_6_end(SDAG::CCounter* _co0, copyLayer* gen1);                    \
+  void _serial_7(SDAG::CCounter* _co0, copyLayer* gen1);                       \
+  void _serial_8();                                                            \
+  void _if_5();                                                                \
+  void _if_5_end();                                                            \
+  void _slist_7();                                                             \
+  void _slist_7_end();                                                         \
+  SDAG::Continuation* _when_5();                                               \
+  void _when_5_end();                                                          \
+  void _serial_9();                                                            \
+  void _serial_10();                                                           \
 public:                                                                        \
+  void reductionTrigger(Closure_SWE_DimensionalSplittingCharm::reductionTrigger_7_closure* genClosure);\
+  void reductionTrigger();                                                     \
   void receiveGhostLeft(copyLayer* msg_msg);                                   \
   void receiveGhostRight(copyLayer* msg_msg);                                  \
   void receiveGhostBottom(copyLayer* msg_msg);                                 \
   void receiveGhostTop(copyLayer* msg_msg);                                    \
-  void reductionTrigger(Closure_SWE_DimensionalSplittingCharm::reductionTrigger_7_closure* genClosure);\
-  void reductionTrigger();                                                     \
 public:                                                                        \
   SDAG::dep_ptr __dep;                                                         \
   void _sdag_init();                                                           \
@@ -921,6 +935,12 @@ public:                                                                        \
   static int _sdag_reg_SWE_DimensionalSplittingCharm_serial_6();               \
   static int _sdag_idx_SWE_DimensionalSplittingCharm_serial_7();               \
   static int _sdag_reg_SWE_DimensionalSplittingCharm_serial_7();               \
+  static int _sdag_idx_SWE_DimensionalSplittingCharm_serial_8();               \
+  static int _sdag_reg_SWE_DimensionalSplittingCharm_serial_8();               \
+  static int _sdag_idx_SWE_DimensionalSplittingCharm_serial_9();               \
+  static int _sdag_reg_SWE_DimensionalSplittingCharm_serial_9();               \
+  static int _sdag_idx_SWE_DimensionalSplittingCharm_serial_10();              \
+  static int _sdag_reg_SWE_DimensionalSplittingCharm_serial_10();              \
 
 typedef CBaseT1<ArrayElementT<CkIndex1D>, CProxy_SWE_DimensionalSplittingCharm>CBase_SWE_DimensionalSplittingCharm;
 

@@ -17,7 +17,7 @@ simulate_ampi:
 	./charmrun +p4 ./build/SWE_gnu_release_mpi_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/mpi -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
 
 simulate_charm:
-	./charmrun +p4 ./build/SWE_gnu_release_charm_omp_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/charm -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
+	./charmrun +p2  ./build/SWE_gnu_release_charm_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ./data/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ./data/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1 
 
 simulate_charm_test:
 	./charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_charm

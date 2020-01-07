@@ -5,7 +5,7 @@
 SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(CkMigrateMessage *msg) {}
 
 SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, float dx, float dy, float originX, float originY, int posX, int posY,
-							BoundaryType boundaries[], std::string outputFilename, std::string bathymetryFilename, std::string displacementFilename) :
+							BoundaryType boundaries[], std::string outputFilename, std::string bathymetryFilename, std::string displacementFilename,bool localTimestepping) :
 		/*
 		 * Important note concerning grid allocations:
 		 * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -16,7 +16,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 		 * array[0][0] is then unused.
 		 */
 		// Initialize grid metadata using the base class constructor
-		SWE_Block(nx, ny, dx, dy, originX, originY),
+		SWE_Block(nx, ny, dx, dy, originX, originY,localTimestepping),
 
 		// intermediate state Q after x-sweep
 		hStar(nx + 1, ny + 2),
@@ -89,6 +89,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 SWE_DimensionalSplittingCharm::~SWE_DimensionalSplittingCharm() {}
 
 void SWE_DimensionalSplittingCharm::xSweep() {
+
 	// Start compute clocks
 	computeClock = clock();
 	clock_gettime(CLOCK_MONOTONIC, &startTimeCompute);
@@ -129,10 +130,15 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
 
 	// compute max timestep according to cautious CFL-condition
-	maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-    clock_gettime(CLOCK_MONOTONIC, &reducTime);
-	CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
-	contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
+	if(localTimestepping){
+        maxTimestep = getRoundTimestep(maxTimestep);
+	}else {
+        maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+        clock_gettime(CLOCK_MONOTONIC, &reducTime);
+        CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
+        contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
+	}
+
 }
 
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
@@ -240,33 +246,33 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
 		for (int i = 0; i < ny; i++) {
 			if (msg->containsBathymetry)
 				b[0][i + 1] = msg->b[i];
-			h[0][i + 1] = msg->h[i];
-			hu[0][i + 1] = msg->hu[i];
-			hv[0][i + 1] = msg->hv[i];
+			bufferH[0][i + 1] = msg->h[i];
+			bufferHu[0][i + 1] = msg->hu[i];
+			bufferHv[0][i + 1] = msg->hv[i];
 		}
 	} else if (msg->boundary == BND_LEFT && boundaryType[BND_RIGHT] == CONNECT) {
 		for (int i = 0; i < ny; i++) {
 			if (msg->containsBathymetry)
 				b[nx + 1][i + 1] = msg->b[i];
-			h[nx + 1][i + 1] = msg->h[i];
-			hu[nx + 1][i + 1] = msg->hu[i];
-			hv[nx + 1][i + 1] = msg->hv[i];
+			bufferH[nx + 1][i + 1] = msg->h[i];
+            bufferHu[nx + 1][i + 1] = msg->hu[i];
+            bufferHv[nx + 1][i + 1] = msg->hv[i];
 		}
 	} else if (msg->boundary == BND_TOP && boundaryType[BND_BOTTOM] == CONNECT) {
 		for (int i = 0; i < nx; i++) {
 			if (msg->containsBathymetry)
 				b[i + 1][0] = msg->b[i];
-			h[i + 1][0] = msg->h[i];
-			hu[i + 1][0] = msg->hu[i];
-			hv[i + 1][0] = msg->hv[i];
+			bufferH[i + 1][0] = msg->h[i];
+            bufferHu[i + 1][0] = msg->hu[i];
+            bufferHv[i + 1][0] = msg->hv[i];
 		}
 	} else if (msg->boundary == BND_BOTTOM && boundaryType[BND_TOP] == CONNECT) {
 		for (int i = 0; i < nx; i++) {
 			if (msg->containsBathymetry)
 				b[i + 1][ny + 1] = msg->b[i];
-			h[i + 1][ny + 1] = msg->h[i];
-			hu[i + 1][ny + 1] = msg->hu[i];
-			hv[i + 1][ny + 1] = msg->hv[i];
+			bufferH[i + 1][ny + 1] = msg->h[i];
+            bufferHu[i + 1][ny + 1] = msg->hu[i];
+            bufferHv[i + 1][ny + 1] = msg->hv[i];
 		}
 	}
 
@@ -287,7 +293,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 
 	int size, stride, startIndex, endIndex;
 
-	if (boundaryType[BND_LEFT] == CONNECT) {
+	if (boundaryType[BND_LEFT] == CONNECT  && isSendable(BND_LEFT)) {
 		assert(neighbourIndex[BND_LEFT] > -1);
 
 		copyLayer *left = new(sizesVertical, 0) copyLayer();
@@ -309,7 +315,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 		thisProxy[neighbourIndex[BND_LEFT]].receiveGhostRight(left);
 	}
 
-	if (boundaryType[BND_RIGHT] == CONNECT) {
+	if (boundaryType[BND_RIGHT] == CONNECT  && isSendable(BND_RIGHT)) {
 		assert(neighbourIndex[BND_RIGHT] > -1);
 
 		copyLayer *right = new(sizesVertical, 0) copyLayer();
@@ -331,7 +337,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 		thisProxy[neighbourIndex[BND_RIGHT]].receiveGhostLeft(right);
 	}
 
-	if (boundaryType[BND_BOTTOM] == CONNECT) {
+	if (boundaryType[BND_BOTTOM] == CONNECT  && isSendable(BND_BOTTOM)) {
 		assert(neighbourIndex[BND_BOTTOM] > -1);
 
 		copyLayer *bottom = new(sizesHorizontal, 0) copyLayer();
@@ -356,7 +362,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 		thisProxy[neighbourIndex[BND_BOTTOM]].receiveGhostTop(bottom);
 	}
 
-	if (boundaryType[BND_TOP] == CONNECT) {
+	if (boundaryType[BND_TOP] == CONNECT  && isSendable(BND_TOP)) {
 		assert(neighbourIndex[BND_TOP] > -1);
 
 		copyLayer *top = new(sizesHorizontal, 0) copyLayer();

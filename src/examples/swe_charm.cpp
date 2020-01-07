@@ -79,14 +79,14 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 	args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
 	args.addOption("output-basepath", 'o', "Output base file name");
     	args.addOption("chares", 'c', "charecount",args.Required,false);
-
+    args.addOption("local-timestepping", 'l', "Activate local timestepping", tools::Args::Required, false);
 	// Declare the variables needed to hold command line input
 	int nxRequested;
 	int nyRequested;
 	std::string bathymetryFilename;
 	std::string displacementFilename;
 	std::string outputBasename;
-
+    bool  localTimestepping = false;
 	// Declare variables for the output and the simulation time
 	std::string outputFilename;
 	float t = 0.;
@@ -103,6 +103,9 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 			break;
 	}
 
+    if(args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1){
+        localTimestepping = true;
+    }
 	// Read in command line arguments
 	simulationDuration = args.getArgument<float>("simulation-duration");
 	checkpointCount = args.getArgument<int>("checkpoint-count");
@@ -192,10 +195,10 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 		// Spawn chare for the current block and insert it into the proxy array
 #ifdef ASAGI
 		blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, localBlockPositionX[i], localBlockPositionY[i],
-				 boundaries, outputFilename, bathymetryFilename, displacementFilename);
+				 boundaries, outputFilename, bathymetryFilename, displacementFilename, localTimestepping);
 #else
 		blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, localBlockPositionX[i], localBlockPositionY[i],
-				 boundaries, outputFilename, "", "");
+				 boundaries, outputFilename, "", "", localTimestepping);
 #endif
 	}
 	blocks.doneInserting();
