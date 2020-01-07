@@ -14,7 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,14 +195,7 @@
       <workItem from="1577193693775" duration="647000" />
       <workItem from="1577972908351" duration="9000" />
       <workItem from="1577983361240" duration="10000" />
-      <workItem from="1578400902717" duration="7570000" />
-    </task>
-    <task id="LOCAL-00011" summary="Added Commun">
-      <created>1561549265637</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1561549265637</updated>
+      <workItem from="1578400902717" duration="7627000" />
     </task>
     <task id="LOCAL-00012" summary="Added Commun">
       <created>1561587605466</created>
@@ -540,7 +533,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578408838798</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Added Charm LTS (bug fixed)">
+      <created>1578412575813</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1578412575813</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -561,7 +561,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Changed Hpx Completley, added LocalityComponent" />
     <MESSAGE value="No Component Hpx Implementation" />
     <MESSAGE value="Added Charm communication time" />
     <MESSAGE value="Added Half dry scenario" />
@@ -586,17 +585,18 @@
     <MESSAGE value="Fixed LTS implementation&#10;Added Boundaries for LTS&#10;Applied LTS to mpi and chameleon" />
     <MESSAGE value="Added Upcxx LTS (minor bug with barrier)" />
     <MESSAGE value="Added Charm LTS" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Charm LTS" />
+    <MESSAGE value="Added Charm LTS (bug fixed)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Charm LTS (bug fixed)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="200" width="800" height="677" key="#Notifications" timestamp="1576543840156">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1578408838614">
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1578412575752">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578408838614" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578412575752" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576003358480" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />

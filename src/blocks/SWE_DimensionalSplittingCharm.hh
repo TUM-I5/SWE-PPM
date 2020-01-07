@@ -122,6 +122,7 @@ class copyLayer : public CMessage_copyLayer {
 		float *h;
 		float *hu;
 		float *hv;
+		float timestep;
 };
 
 #endif // SWE_DIMENSIONALSPLITTINGCHARM_HH
