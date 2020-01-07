@@ -250,6 +250,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
 			bufferHu[0][i + 1] = msg->hu[i];
 			bufferHv[0][i + 1] = msg->hv[i];
 		}
+        borderTimestep[BND_LEFT] = msg->timestep;
 	} else if (msg->boundary == BND_LEFT && boundaryType[BND_RIGHT] == CONNECT) {
 		for (int i = 0; i < ny; i++) {
 			if (msg->containsBathymetry)
@@ -258,6 +259,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
             bufferHu[nx + 1][i + 1] = msg->hu[i];
             bufferHv[nx + 1][i + 1] = msg->hv[i];
 		}
+        borderTimestep[BND_RIGHT] = msg->timestep;
 	} else if (msg->boundary == BND_TOP && boundaryType[BND_BOTTOM] == CONNECT) {
 		for (int i = 0; i < nx; i++) {
 			if (msg->containsBathymetry)
@@ -266,6 +268,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
             bufferHu[i + 1][0] = msg->hu[i];
             bufferHv[i + 1][0] = msg->hv[i];
 		}
+        borderTimestep[BND_TOP] = msg->timestep;
 	} else if (msg->boundary == BND_BOTTOM && boundaryType[BND_TOP] == CONNECT) {
 		for (int i = 0; i < nx; i++) {
 			if (msg->containsBathymetry)
@@ -274,6 +277,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
             bufferHu[i + 1][ny + 1] = msg->hu[i];
             bufferHv[i + 1][ny + 1] = msg->hv[i];
 		}
+        borderTimestep[BND_BOTTOM] = msg->timestep;
 	}
 
 	// Deallocate the message buffer
@@ -292,7 +296,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 	}
 
 	int size, stride, startIndex, endIndex;
-
+    float totalLocalTimestep = getTotalLocalTimestep();
 	if (boundaryType[BND_LEFT] == CONNECT  && isSendable(BND_LEFT)) {
 		assert(neighbourIndex[BND_LEFT] > -1);
 
@@ -310,7 +314,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 		std::copy(h.getRawPointer() + startIndex, h.getRawPointer() + endIndex, left->h);
 		std::copy(hu.getRawPointer() + startIndex, hu.getRawPointer() + endIndex, left->hu);
 		std::copy(hv.getRawPointer() + startIndex, hv.getRawPointer() + endIndex, left->hv);
-
+        left->timestep = totalLocalTimestep;
 		// Send
 		thisProxy[neighbourIndex[BND_LEFT]].receiveGhostRight(left);
 	}
@@ -332,7 +336,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 		std::copy(h.getRawPointer() + startIndex, h.getRawPointer() + endIndex, right->h);
 		std::copy(hu.getRawPointer() + startIndex, hu.getRawPointer() + endIndex, right->hu);
 		std::copy(hv.getRawPointer() + startIndex, hv.getRawPointer() + endIndex, right->hv);
-
+		right->timestep = totalLocalTimestep;
 		// Send
 		thisProxy[neighbourIndex[BND_RIGHT]].receiveGhostLeft(right);
 	}
@@ -357,7 +361,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 			*(bottom->hu + i) = *(hu.getRawPointer() + startIndex + i * stride);
 			*(bottom->hv + i) = *(hv.getRawPointer() + startIndex + i * stride);
 		}
-
+        bottom->timestep = totalLocalTimestep;
 		// Send
 		thisProxy[neighbourIndex[BND_BOTTOM]].receiveGhostTop(bottom);
 	}
@@ -382,7 +386,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 			*(top->hu + i) = *(hu.getRawPointer() + startIndex + i * stride);
 			*(top->hv + i) = *(hv.getRawPointer() + startIndex + i * stride);
 		}
-
+        top->timestep = totalLocalTimestep;
 		// Send
 		thisProxy[neighbourIndex[BND_TOP]].receiveGhostBottom(top);
 	}
