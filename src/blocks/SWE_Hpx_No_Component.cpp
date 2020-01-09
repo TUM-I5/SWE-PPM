@@ -82,7 +82,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
                                          int nyRequested,
                                          std::string outputBaseName,
                                          std::string const &batFile,
-                                         std::string const &displFile)
+                                         std::string const &displFile,
+                                         bool localTimestepping)
     {
 
         std::string outputFileName;
@@ -198,6 +199,41 @@ HPX_REGISTER_CHANNEL(timestep_type);
     }
     void SWE_Hpx_No_Component::run()
     {
+        float maxLocalTimestep;
+        std::vector<hpx::future<void>> blockFuture;
+        std::vector<float> timesteps;
+        if(localTimestepping){
+            for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeMaxTimestep, 0.01,0.4,block.get()));
+
+            hpx::wait_all(blockFuture);
+
+            blockFuture.clear();
+
+            for(auto & block: simulationBlocks)timesteps.push_back(block->getMaxTimestep());
+
+            float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
+
+            if(localityRank == 0){
+                if(localityCount > 1){
+                    maxLocalTimestep =hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalTimesteps, float localTimestep) -> float {
+                        return std::min(localTimestep,*std::min_element(globalTimesteps.begin(),globalTimesteps.end()));
+                    }),std::move(localityChannel.get()),std::move(minTimestep)).get();
+                    float sendTs = maxLocalTimestep;
+                    localityChannel.set(std::move(sendTs));
+
+                }else {
+                    maxLocalTimestep = minTimestep;
+                }
+
+            } else {
+                localityChannel.set(std::move(minTimestep));
+                maxLocalTimestep = localityChannel.get()[0].get();
+            }
+            hpx::cout << "Reduced timestep " << maxLocalTimestep << std::endl;
+            for(auto & block: simulationBlocks)block->setMaxLocalTimestep(maxLocalTimestep);
+        }
+
+
         std::vector<hpx::future<void>> fut;
         for(auto & block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
         hpx::wait_all(fut);
@@ -222,96 +258,113 @@ HPX_REGISTER_CHANNEL(timestep_type);
         float wallTime = 0.;
         float sumReductionTime = 0.;
         float t = 0.;
-
+        bool synchronizedTimestep = true;
 
         float timestep;
         unsigned int iterations = 0;
-        std::vector<hpx::future<void>> blockFuture;
+
         blockFuture.reserve(simulationBlocks.size());
-        std::vector<float> timesteps;
+
                 timesteps.reserve(simulationBlocks.size());
-std::vector<hpx::future<void>> xsweepFuture(simulationBlocks.size());
+        std::vector<hpx::future<void>> xsweepFuture(simulationBlocks.size());
         // loop over the count of requested checkpoints
         for(int i = 0; i < numberOfCheckPoints; i++) {
             // Simulate until the checkpoint is reached
             while(t < checkpointInstantOfTime[i]) {
-                // Start measurement
-                clock_gettime(CLOCK_MONOTONIC, &startTime);
+                do{
+                    // Start measurement
+                    clock_gettime(CLOCK_MONOTONIC, &startTime);
 
-                // set values in ghost cells.
-                // this function blocks until everything has been received
+                    // set values in ghost cells.
+                    // this function blocks until everything has been received
 
-                blockFuture.clear();
-                for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(setGhostLayer,block.get()));
-                hpx::wait_all(blockFuture);
-                /* hpx::when_each_n(hpx::util::unwrapping([this,&xsweepFuture](int id) -> void {
-                    xsweepFuture[id] = hpx::async(computeXSweep,simulationBlocks[id].get());
-                }),blockFuture.begin(),simulationBlocks.size()).wait();
-                
-		blockFuture.clear();
+                    blockFuture.clear();
+                    for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(setGhostLayer,block.get()));
+                    hpx::wait_all(blockFuture);
+                    /* hpx::when_each_n(hpx::util::unwrapping([this,&xsweepFuture](int id) -> void {
+                        xsweepFuture[id] = hpx::async(computeXSweep,simulationBlocks[id].get());
+                    }),blockFuture.begin(),simulationBlocks.size()).wait();
 
-                hpx::wait_all(xsweepFuture);*/
-		blockFuture.clear();
+                    blockFuture.clear();
 
 
-                for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeXSweep,block.get()));
-                hpx::wait_all(blockFuture);
-
-                timesteps.clear();
-                for(auto & block: simulationBlocks)timesteps.push_back(block->maxTimestepGlobal);
+                     hpx::wait_all(xsweepFuture);*/
+                    blockFuture.clear();
 
 
-                float minTimestep= *std::min_element(timesteps.begin(), timesteps.end());
+                    for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeXSweep,block.get()));
+                    hpx::wait_all(blockFuture);
 
-                float timestep;
-                //barrier
-                clock_gettime(CLOCK_MONOTONIC, &reductionTime);
-                if(localityRank == 0){
-                    if(localityCount > 1){
-                        timestep =hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalTimesteps, float localTimestep) -> float {
-                            return std::min(localTimestep,*std::min_element(globalTimesteps.begin(),globalTimesteps.end()));
-                        }),std::move(localityChannel.get()),std::move(minTimestep)).get();
-                        float sendTs = timestep;
-                        localityChannel.set(std::move(sendTs));
+                    timesteps.clear();
+                    for(auto & block: simulationBlocks)timesteps.push_back(block->maxTimestepGlobal);
 
-                    }else {
-                        timestep = minTimestep;
+
+                    float minTimestep= *std::min_element(timesteps.begin(), timesteps.end());
+
+                    float timestep;
+                    //barrier
+                    if(!localTimestepping){
+
+                        clock_gettime(CLOCK_MONOTONIC, &reductionTime);
+
+                        if(localityRank == 0){
+                            if(localityCount > 1){
+                                timestep =hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalTimesteps, float localTimestep) -> float {
+                                    return std::min(localTimestep,*std::min_element(globalTimesteps.begin(),globalTimesteps.end()));
+                                }),std::move(localityChannel.get()),std::move(minTimestep)).get();
+                                float sendTs = timestep;
+                                localityChannel.set(std::move(sendTs));
+
+                            }else {
+                                timestep = minTimestep;
+                            }
+
+                        } else {
+
+                            localityChannel.set(std::move(minTimestep));
+
+                            timestep = localityChannel.get()[0].get();
+                        }
+                        clock_gettime(CLOCK_MONOTONIC, &endTime);
+                        sumReductionTime += (endTime.tv_sec - reductionTime.tv_sec);
+                        sumReductionTime += (float) (endTime.tv_nsec -reductionTime.tv_nsec) / 1E9;
+                        for(auto & block: simulationBlocks)block->maxTimestepGlobal = timestep;
+
                     }
 
-                } else {
+                    /*for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep,block.get()));
+                    //hpx::wait_all(blockFuture);
+                     hpx::when_each_n(hpx::util::unwrapping([this,&xsweepFuture](int id) -> void {
+                        xsweepFuture[id] = hpx::async(updateUnknowns,simulationBlocks[id].get());
+                    }),blockFuture.begin(),simulationBlocks.size()).wait();
 
-                    localityChannel.set(std::move(minTimestep));
+            blockFuture.clear();
 
-                    timestep = localityChannel.get()[0].get();
-                }
-                clock_gettime(CLOCK_MONOTONIC, &endTime);
-                sumReductionTime += (endTime.tv_sec - reductionTime.tv_sec);
-                sumReductionTime += (float) (endTime.tv_nsec -reductionTime.tv_nsec) / 1E9;
-                for(auto & block: simulationBlocks)block->maxTimestepGlobal = timestep;
+                    hpx::wait_all(xsweepFuture);*/
+                    for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep,block.get()));
+                    hpx::wait_all(blockFuture);
 
-                /*for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep,block.get()));
-                //hpx::wait_all(blockFuture);
-                 hpx::when_each_n(hpx::util::unwrapping([this,&xsweepFuture](int id) -> void {
-                    xsweepFuture[id] = hpx::async(updateUnknowns,simulationBlocks[id].get());
-                }),blockFuture.begin(),simulationBlocks.size()).wait();
-                
-		blockFuture.clear();
+                    blockFuture.clear();
 
-                hpx::wait_all(xsweepFuture);*/
-                for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep,block.get()));
-                hpx::wait_all(blockFuture);
+                    for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(updateUnknowns,block.get()));
+                    hpx::wait_all(blockFuture);
+                    clock_gettime(CLOCK_MONOTONIC, &endTime);
+                    wallTime += (endTime.tv_sec - startTime.tv_sec);
+                    wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+                    if(localTimestepping){
+                        //if each block got the maxLocalTimestep the timestep is finished
+                        synchronizedTimestep = true;
+                        for(auto &block : simulationBlocks){
+                                if (blocks.hasMaxLocalTimestep()) {
+                                    synchronizedTimestep = false;
+                                    break;
+                                }
+                        }
+                    }
 
-                blockFuture.clear();
-
-                for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(updateUnknowns,block.get()));
-                hpx::wait_all(blockFuture);
-                clock_gettime(CLOCK_MONOTONIC, &endTime);
-                wallTime += (endTime.tv_sec - startTime.tv_sec);
-                wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
+                }while(localTimestepping && !synchronizedTimestep );
                 // update simulation time with time step width.
-                t += timestep;
-                iterations++;
+                t += localTimestepping?maxLocalTimestep:timestep;
 
 
             }

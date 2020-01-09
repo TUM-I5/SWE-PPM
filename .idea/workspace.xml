@@ -14,7 +14,12 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Communicator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Communicator.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -195,14 +200,8 @@
       <workItem from="1577193693775" duration="647000" />
       <workItem from="1577972908351" duration="9000" />
       <workItem from="1577983361240" duration="10000" />
-      <workItem from="1578400902717" duration="7627000" />
-    </task>
-    <task id="LOCAL-00012" summary="Added Commun">
-      <created>1561587605466</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1561587605466</updated>
+      <workItem from="1578400902717" duration="8361000" />
+      <workItem from="1578527735717" duration="3833000" />
     </task>
     <task id="LOCAL-00013" summary="Updated Hpx Impletation">
       <created>1561814682550</created>
@@ -540,7 +539,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578412575813</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="Added Charm LTS (bug fixed)">
+      <created>1578412629184</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1578412629184</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -593,10 +599,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1578412575752">
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1578412629126">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578412575752" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578412629126" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576003358480" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />
@@ -629,10 +635,10 @@
     </state>
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543776864" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576002242187" />
-    <state x="2380" y="27" width="1309" height="931" maximized="true" key="dock-window-1" timestamp="1578404076684">
+    <state x="2378" y="27" width="1323" height="935" maximized="true" key="dock-window-1" timestamp="1578527796390">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2380" y="27" width="1309" height="931" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578404076684" />
+    <state x="2378" y="27" width="1323" height="935" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578527796390" />
     <state x="-161" y="27" width="933" height="878" maximized="true" key="dock-window-1/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577114376215" />
     <state x="81" y="27" width="873" height="878" maximized="true" key="dock-window-2" timestamp="1577124163206">
       <screen x="67" y="27" width="1853" height="1053" />
@@ -646,10 +652,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576589702914" />
-    <state x="657" y="274" key="run.anything.popup" timestamp="1578407908619">
+    <state x="657" y="274" key="run.anything.popup" timestamp="1578530079917">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="657" y="274" key="run.anything.popup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578407908619" />
+    <state x="657" y="274" key="run.anything.popup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578530079917" />
     <state x="2577" y="253" key="run.anything.popup/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1575990692525" />
     <state x="2576" y="257" width="672" height="678" key="search.everywhere.popup" timestamp="1575989709816">
       <screen x="1920" y="0" width="1920" height="1080" />

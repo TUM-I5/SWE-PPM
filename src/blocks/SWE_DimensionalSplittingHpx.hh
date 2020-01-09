@@ -42,6 +42,7 @@ struct copyLayerStruct {
     T H;
     T Hu;
     T Hv;
+    float timestep = 0;
     template <typename Archive>
     void serialize(Archive & ar, unsigned)
     {
@@ -50,6 +51,7 @@ struct copyLayerStruct {
         ar & H;
         ar & Hu;
         ar & Hv;
+        ar & timestep;
     }
 };
 typedef communicator<copyLayerStruct<std::vector<float>>> communicator_type;
@@ -59,7 +61,7 @@ public:
     friend  communicator_type;
     // Constructor/Destructor
     SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
-                                float cellSizeVertical, float originX, float originY );
+                                float cellSizeVertical, float originX, float originY ,bool localTimestepping );
     ~SWE_DimensionalSplittingHpx() {};
 
     // Interface methods
@@ -68,7 +70,7 @@ public:
 
     void computeXSweep();
     void computeYSweep();
-    void computeNumericalFluxes();
+
     void updateUnknowns(float dt);
 
     copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary,bool bath);

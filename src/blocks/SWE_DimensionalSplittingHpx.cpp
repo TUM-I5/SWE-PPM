@@ -30,7 +30,7 @@
  *
  */
 #include "SWE_DimensionalSplittingHpx.hh"
-//#include <VT.h>
+
 #include <cassert>
 #include <algorithm>
 #include <omp.h>
@@ -56,7 +56,7 @@
  * @param l_dx Cell width
  * @param l_dy Cell height
  */
-SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX, float originY) :
+SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX, float originY,bool localTimestepping) :
 /*
  * Important note concerning grid allocations:
  * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -67,7 +67,7 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
  * array[0][0] is then unused.
  */
 // Initialize grid metadata using the base class constructor
-        SWE_Block(nx, ny, dx, dy, originX, originY),
+        SWE_Block(nx, ny, dx, dy, originX, originY,localTimestepping),
 
         // intermediate state Q after x-sweep
         hStar(nx + 1, ny + 2),
@@ -97,7 +97,6 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
 
 
 
-   //VT_classdef ("DimensionalSplitting",&classhandle);
     computeTime = 0.;
     computeTimeWall = 0.;
     communicationTime = 0.;
@@ -257,24 +256,24 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
    std::vector<hpx::future<void>>fut;
 
     if (boundaryType[BND_LEFT] == CONNECT) {
-      fut.push_back(comm.get(BND_LEFT,nx,ny,&h,&hu,&hv,&b,true));
+      fut.push_back(comm.get(BND_LEFT,nx,ny,&h,&hu,&hv,&b,borderTimestep,true));
 
 
     }
 
     if (boundaryType[BND_RIGHT] == CONNECT) {
 
-        fut.push_back(comm.get(BND_RIGHT,nx,ny,&h,&hu,&hv,&b,true));
+        fut.push_back(comm.get(BND_RIGHT,nx,ny,&h,&hu,&hv,&b,borderTimestep,true));
 
     }
 
     if (boundaryType[BND_BOTTOM] == CONNECT) {
-        fut.push_back(comm.get(BND_BOTTOM,nx,ny,&h,&hu,&hv,&b,true));
+        fut.push_back(comm.get(BND_BOTTOM,nx,ny,&h,&hu,&hv,&b,borderTimestep,true));
 
     }
 
     if (boundaryType[BND_TOP] == CONNECT) {
-        fut.push_back(comm.get(BND_TOP,nx,ny,&h,&hu,&hv,&b,true));
+        fut.push_back(comm.get(BND_TOP,nx,ny,&h,&hu,&hv,&b,borderTimestep,true));
     }
 
 
@@ -286,9 +285,7 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
 
 hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     // Apply appropriate conditions for OUTFLOW/WALL boundaries
-    int handle;
-VT_funcdef("GhostLayer",classhandle,&handle);
-VT_begin(handle);
+
     SWE_Block::applyBoundaryConditions();
 
 
@@ -305,25 +302,27 @@ VT_begin(handle);
      ********/
     struct timespec startTimeComm;
     clock_gettime(CLOCK_MONOTONIC, &startTimeComm);
-    if (boundaryType[BND_LEFT] == CONNECT && !comm.isLocal(BND_LEFT)) {
+    if (boundaryType[BND_LEFT] == CONNECT && !comm.isLocal(BND_LEFT) && isSendable(BND_LEFT) ) {
 
         int startIndex = ny + 2 + 1;
 
         comm.set(BND_LEFT,  copyLayerStruct<std::vector<float>> {ny,{},
                                                                  std::vector<float>(h.getRawPointer() + startIndex, h.getRawPointer() + startIndex + ny),
                                                                  std::vector<float>(hu.getRawPointer() + startIndex, hu.getRawPointer() + startIndex + ny),
-                                                                 std::vector<float>(hv.getRawPointer() + startIndex, hv.getRawPointer() + startIndex + ny)});
+                                                                 std::vector<float>(hv.getRawPointer() + startIndex, hv.getRawPointer() + startIndex + ny),
+                                                                 getTotalLocalTimestep()});
 
 
     }
-    if (boundaryType[BND_RIGHT] == CONNECT && !comm.isLocal(BND_RIGHT)) {
+    if (boundaryType[BND_RIGHT] == CONNECT && !comm.isLocal(BND_RIGHT) && isSendable(BND_RIGHT)) {
         int startIndex = nx * (ny + 2) + 1;
         comm.set(BND_RIGHT,  copyLayerStruct<std::vector<float>> {ny,{},
                                                                 std::vector<float>(h.getRawPointer() + startIndex, h.getRawPointer() + startIndex + ny),
                                                                 std::vector<float>(hu.getRawPointer() + startIndex, hu.getRawPointer() + startIndex + ny),
-                                                                std::vector<float>(hv.getRawPointer() + startIndex, hv.getRawPointer() + startIndex + ny)});
+                                                                std::vector<float>(hv.getRawPointer() + startIndex, hv.getRawPointer() + startIndex + ny),
+                                                                getTotalLocalTimestep()});
     }
-    if (boundaryType[BND_BOTTOM] == CONNECT && !comm.isLocal(BND_BOTTOM)) {
+    if (boundaryType[BND_BOTTOM] == CONNECT && !comm.isLocal(BND_BOTTOM) && isSendable(BND_BOTTOM)) {
 
         std::vector<float> send_h;
         std::vector<float> send_hu;
@@ -337,9 +336,9 @@ VT_begin(handle);
             send_hv.push_back(hv[i][1]);
         }
 
-        comm.set(BND_BOTTOM,  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv});
+        comm.set(BND_BOTTOM,  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv,getTotalLocalTimestep()});
     }
-    if (boundaryType[BND_TOP] == CONNECT && !comm.isLocal(BND_TOP)) {
+    if (boundaryType[BND_TOP] == CONNECT && !comm.isLocal(BND_TOP) && isSendable(BND_TOP)) {
 
         std::vector<float> send_h;
         std::vector<float> send_hu;
@@ -353,7 +352,7 @@ VT_begin(handle);
             send_hv.push_back(hv[i][ny]);
         }
 
-        comm.set(BND_TOP,  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv});
+        comm.set(BND_TOP,  copyLayerStruct<std::vector<float>> {nx,{},send_h,send_hu,send_hv,getTotalLocalTimestep()});
 
     }
 
@@ -363,28 +362,27 @@ VT_begin(handle);
      **********/
 
     std::vector<hpx::future<void>>fut;
-    if (boundaryType[BND_LEFT] == CONNECT) {
-        fut.push_back(comm.get(BND_LEFT,nx,ny,&h,&hu,&hv,&b));
+    if (boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
+        fut.push_back(comm.get(BND_LEFT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep));
     }
-    if (boundaryType[BND_RIGHT] == CONNECT) {
-        fut.push_back(comm.get(BND_RIGHT,nx,ny,&h,&hu,&hv,&b));
-    }
-
-    if (boundaryType[BND_BOTTOM] == CONNECT) {
-        fut.push_back(comm.get(BND_BOTTOM,nx,ny,&h,&hu,&hv,&b));
+    if (boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
+        fut.push_back(comm.get(BND_RIGHT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep));
     }
 
-    if (boundaryType[BND_TOP] == CONNECT) {
-        fut.push_back(comm.get(BND_TOP,nx,ny,&h,&hu,&hv,&b));
+    if (boundaryType[BND_BOTTOM] == CONNECT && isReceivable(BND_BOTTOM)) {
+        fut.push_back(comm.get(BND_BOTTOM,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep));
+    }
+
+    if (boundaryType[BND_TOP] == CONNECT && isReceivable(BND_TOP)) {
+        fut.push_back(comm.get(BND_TOP,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep));
     }
 
 
    auto ret = hpx::dataflow(hpx::util::unwrapping([this,startTimeComm,handle] ( )-> void {
-
+            checkAllGhostlayers();
             clock_gettime(CLOCK_MONOTONIC, &endTime);
             communicationTime += (endTime.tv_sec - startTimeComm.tv_sec);
             communicationTime += (float) (endTime.tv_nsec - startTimeComm.tv_nsec) / 1E9;
-//VT_end(handle);
 
     }),std::move(fut));
 
@@ -395,9 +393,7 @@ VT_begin(handle);
 
 void SWE_DimensionalSplittingHpx::computeXSweep (){
 
-    int handle;
-//VT_funcdef("XSweep",classhandle,&handle);
-//VT_begin(handle);
+    if(!allGhostlayersInSync()) return;
     computeClock = clock();
     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
@@ -469,13 +465,18 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
 
     maxTimestepGlobal = maxTimestep;
-//VT_end(handle);
+
 }
 void SWE_DimensionalSplittingHpx::computeYSweep (){
-    int handle;
-//VT_funcdef("YSweep",classhandle,&handle);
-    //VT_begin(handle);
-    maxTimestep = maxTimestepGlobal;
+    if(!allGhostlayersInSync()) return;
+
+    if(localTimestepping){
+
+        maxTimestep = getRoundTimestep(maxTimestep);
+        //std::cout << "My timestep is " << maxTimestep << std::endl;
+    }else {
+        maxTimestep = maxTimestepGlobal;
+    }
     float maxVerticalWaveSpeed = (float) 0.;
     computeClock = clock();
     clock_gettime(CLOCK_MONOTONIC, &startTime);
@@ -533,112 +534,9 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
     computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-//VT_end(handle);
+
 }
-/**
- * Compute net updates for the block.
- * The member variable #maxTimestep will be updated with the
- * maximum allowed time step size
- */
-void SWE_DimensionalSplittingHpx::computeNumericalFluxes () {
-    // Start compute clocks
-    computeClock = clock();
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
 
-    //maximum (linearized) wave speed within one iteration
-    float maxHorizontalWaveSpeed = (float) 0.;
-    float maxVerticalWaveSpeed = (float) 0.;
-
-
-        // x-sweep, compute the actual domain plus ghost rows above and below
-        // iterate over cells on the x-axis, leave out the last column (two cells per computation)
-
-
-        for (int x = 0; x < nx + 1; x++) {
-            const int ny_end = ny+2;
-            // iterate over all rows, including ghost layer
-            /*hpx::parallel::for_loop(
-                   hpx::parallel::execution::par,
-                   0,ny_end,
-                    [&x,this,&maxHorizontalWaveSpeed](int y)
-                    {
-                        solver.computeNetUpdates (
-                                h[x][y], h[x + 1][y],
-                                hu[x][y], hu[x + 1][y],
-                                b[x][y], b[x + 1][y],
-                                hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
-                                huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                                maxHorizontalWaveSpeed
-                        );
-                    });
-*/
-            for (int y = 0; y < ny_end; y++) {
-                solver.computeNetUpdates (
-                        h[x][y], h[x + 1][y],
-                        hu[x][y], hu[x + 1][y],
-                        b[x][y], b[x + 1][y],
-                        hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
-                        huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                        maxHorizontalWaveSpeed
-                );
-            }
-        }
-
-
-    // Accumulate compute time -> exclude the reduction
-    computeClock = clock() - computeClock;
-    computeTime += (float) computeClock / CLOCKS_PER_SEC;
-
-    clock_gettime(CLOCK_MONOTONIC, &endTime);
-    computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
-    computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
-    // compute max timestep according to cautious CFL-condition
-    maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-    //MPI_Allreduce(&maxTimestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
-    //maxTimestep = maxTimestepGlobal;
-
-  //  maxTimestep=hpx::lcos::reduce<rand_num_action>(ids,
-    //                                   Max<float>(),maxTimestep).get();
-    // restart compute clocks
-    computeClock = clock();
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
-
-
-        // set intermediary Q* states
-
-        for (int x = 1; x < nx + 1; x++) {
-            for (int y = 0; y < ny + 2; y++) {
-                hStar[x][y] = h[x][y] - (maxTimestep / dx) * (hNetUpdatesLeft[x][y] + hNetUpdatesRight[x][y]);
-                huStar[x][y] = hu[x][y] - (maxTimestep / dx) * (huNetUpdatesLeft[x][y] + huNetUpdatesRight[x][y]);
-            }
-        }
-
-
-        for (int x = 1; x < nx + 1; x++) {
-            const int ny_end = ny+1;
-            // iterate over all rows, including ghost layer
-            for (int y = 0; y < ny_end; y++) {
-                solver.computeNetUpdates (
-                        h[x][y], h[x][y + 1],
-                        hv[x][y], hv[x][y + 1],
-                        b[x][y], b[x][y + 1],
-                        hNetUpdatesBelow[x][y], hNetUpdatesAbove[x][y + 1],
-                        hvNetUpdatesBelow[x][y], hvNetUpdatesAbove[x][y + 1],
-                        maxVerticalWaveSpeed
-                );
-            }
-        }
-
-
-    // Accumulate compute time
-    computeClock = clock() - computeClock;
-    computeTime += (float) computeClock / CLOCKS_PER_SEC;
-
-    clock_gettime(CLOCK_MONOTONIC, &endTime);
-    computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
-    computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-}
 
 /**
  * Updates the unknowns with the already computed net-updates.
@@ -647,10 +545,8 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes () {
  * since this is the step width used for the intermediary updates after the x-sweep.
  */
 void SWE_DimensionalSplittingHpx::updateUnknowns (float dt) {
-    
-    int handle;
-//VT_funcdef("updateUnknowns",classhandle,&handle);
-//VT_begin(handle);
+    if(!allGhostlayersInSync()) return;
+
 	// Start compute clocks
     computeClock = clock();
     clock_gettime(CLOCK_MONOTONIC, &startTime);
@@ -673,5 +569,5 @@ void SWE_DimensionalSplittingHpx::updateUnknowns (float dt) {
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
     computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-//VT_end(handle);
+
 }

@@ -83,6 +83,7 @@ int hpx_main(boost::program_options::variables_map& vm)
     std::string outputBaseName;
     std::string batFile;
     std::string displFile;
+    bool  localTimestepping = false;
     // Define command line arguments
     tools::Args args;
 
@@ -96,7 +97,7 @@ int hpx_main(boost::program_options::variables_map& vm)
     args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
     args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
     args.addOption("output-basepath", 'o', "Output base file name");
-
+    args.addOption("local-timestepping", 'l', "Activate local timestepping", tools::Args::Required, false);
 
     // Declare the variables needed to hold command line input
 
@@ -135,6 +136,7 @@ int hpx_main(boost::program_options::variables_map& vm)
     nyRequested = vm["resolution-vertical"].as<int>();
     totalRanks = vm["blocks"].as<int>();
     outputBaseName = vm["output-basepath"].as<std::string>();
+    localTimestepping = vm["local-timestepping"].as<bool>();
 #ifdef ASAGI
     batFile = vm["bathymetry-file"].as<std::string>();
    displFile = vm["displacement-file"].as<std::string>();
@@ -148,7 +150,7 @@ int hpx_main(boost::program_options::variables_map& vm)
     hpx::cout << "Locality " << localityNumber << "of " << localityCount << " Localities" << std::endl;
 
     SWE_Hpx_No_Component comp(totalRanks,localityNumber,localityCount,simulationDuration,numberOfCheckPoints,
-                         nxRequested,nyRequested,outputBaseName,batFile,displFile );
+                         nxRequested,nyRequested,outputBaseName,batFile,displFile,localTimestepping );
 
     comp.run();
 
