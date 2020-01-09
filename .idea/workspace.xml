@@ -17,8 +17,7 @@
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tools/Communicator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Communicator.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -202,6 +201,7 @@
       <workItem from="1577983361240" duration="10000" />
       <workItem from="1578400902717" duration="8361000" />
       <workItem from="1578527735717" duration="3833000" />
+      <workItem from="1578576148241" duration="2741000" />
     </task>
     <task id="LOCAL-00013" summary="Updated Hpx Impletation">
       <created>1561814682550</created>
@@ -599,10 +599,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1578412629126">
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1578531694923">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578412629126" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578531694923" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576003358480" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />
@@ -610,10 +610,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="446" height="442" key="Diff.GoToChangePopup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543830112" />
-    <state x="228" y="149" width="1482" height="872" key="DiffContextDialog" timestamp="1577006569067">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="167" y="149" width="1482" height="872" key="DiffContextDialog" timestamp="1578531692430">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576589720410" />
+    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578531692430" />
     <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000827352" />
     <state x="228" y="149" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1577006569067" />
     <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl" timestamp="1576543854785">
@@ -635,10 +635,10 @@
     </state>
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543776864" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576002242187" />
-    <state x="2378" y="27" width="1323" height="935" maximized="true" key="dock-window-1" timestamp="1578527796390">
+    <state x="2378" y="27" width="1323" height="935" maximized="true" key="dock-window-1" timestamp="1578576253746">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2378" y="27" width="1323" height="935" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578527796390" />
+    <state x="2378" y="27" width="1323" height="935" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1578576253746" />
     <state x="-161" y="27" width="933" height="878" maximized="true" key="dock-window-1/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577114376215" />
     <state x="81" y="27" width="873" height="878" maximized="true" key="dock-window-2" timestamp="1577124163206">
       <screen x="67" y="27" width="1853" height="1053" />

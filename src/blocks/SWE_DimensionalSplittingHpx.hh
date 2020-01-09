@@ -70,7 +70,7 @@ public:
 
     void computeXSweep();
     void computeYSweep();
-
+    void computeNumericalFluxes();
     void updateUnknowns(float dt);
 
     copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary,bool bath);

@@ -256,24 +256,24 @@ void SWE_DimensionalSplittingHpx::exchangeBathymetry() {
    std::vector<hpx::future<void>>fut;
 
     if (boundaryType[BND_LEFT] == CONNECT) {
-      fut.push_back(comm.get(BND_LEFT,nx,ny,&h,&hu,&hv,&b,borderTimestep,true));
+      fut.push_back(comm.get(BND_LEFT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep,true));
 
 
     }
 
     if (boundaryType[BND_RIGHT] == CONNECT) {
 
-        fut.push_back(comm.get(BND_RIGHT,nx,ny,&h,&hu,&hv,&b,borderTimestep,true));
+        fut.push_back(comm.get(BND_RIGHT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep,true));
 
     }
 
     if (boundaryType[BND_BOTTOM] == CONNECT) {
-        fut.push_back(comm.get(BND_BOTTOM,nx,ny,&h,&hu,&hv,&b,borderTimestep,true));
+        fut.push_back(comm.get(BND_BOTTOM,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep,true));
 
     }
 
     if (boundaryType[BND_TOP] == CONNECT) {
-        fut.push_back(comm.get(BND_TOP,nx,ny,&h,&hu,&hv,&b,borderTimestep,true));
+        fut.push_back(comm.get(BND_TOP,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep,true));
     }
 
 
@@ -363,7 +363,7 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
 
     std::vector<hpx::future<void>>fut;
     if (boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
-        fut.push_back(comm.get(BND_LEFT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep));
+        fut.push_back(comm.get(BND_LEFT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,(float* )borderTimestep));
     }
     if (boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
         fut.push_back(comm.get(BND_RIGHT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep));
@@ -378,7 +378,7 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     }
 
 
-   auto ret = hpx::dataflow(hpx::util::unwrapping([this,startTimeComm,handle] ( )-> void {
+   auto ret = hpx::dataflow(hpx::util::unwrapping([this,startTimeComm] ( )-> void {
             checkAllGhostlayers();
             clock_gettime(CLOCK_MONOTONIC, &endTime);
             communicationTime += (endTime.tv_sec - startTimeComm.tv_sec);
@@ -390,6 +390,10 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     return ret;
 }
 
+void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
+     computeXSweep();
+     computeYSweep();
+}
 
 void SWE_DimensionalSplittingHpx::computeXSweep (){
 

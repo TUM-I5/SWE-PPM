@@ -36,7 +36,8 @@ public:
                       int nyRequested,
                       std::string outputBaseName,
                       std::string const &batFile,
-                      std::string const &displFile);
+                      std::string const &displFile,
+                      bool localTimestepping);
     void run();
 
 
@@ -47,6 +48,7 @@ private:
         int localityCount;
         localityChannel_type localityChannel;
         std::vector<std::shared_ptr<SWE_DimensionalSplittingHpx>> simulationBlocks;
+        bool localTimestepping;
 };
 
 

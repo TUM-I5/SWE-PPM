@@ -8,8 +8,8 @@
 #include <hpx/include/lcos.hpp>
 #include "types/Boundary.hh"
 #include <array>
+#include "tools/Float2DBuffer.hh"
 #include "tools/Float2DNative.hh"
-
 #include <hpx/include/iostreams.hpp>
 
 class SWE_DimensionalSplittingHpx;
@@ -100,12 +100,12 @@ struct communicator
     bool isLocal(Boundary n){
         return neighbourInfo[n] < 0;
     }
-    hpx::future<void> get_remote(Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b,float *borderTimestep, bool bat){
+    hpx::future<void> get_remote(Boundary n,int nx, int ny,Float2DBuffer * h,Float2DBuffer * hu,Float2DBuffer * hv,Float2DNative * b,float *borderTimestep, bool bat){
 
         return hpx::dataflow(
-                hpx::util::unwrapping([] (T border,Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b,float *borderTimestep, bool bat) -> void{
+                hpx::util::unwrapping([] (T border,Boundary n,int nx, int ny,Float2DBuffer * h,Float2DBuffer * hu,Float2DBuffer * hv,Float2DNative * b,float *borderTimestep, bool bat) -> void{
                     if (n == BND_LEFT) {
-                        (*borderTimestep)[BND_LEFT] = border.timestep;
+                        borderTimestep[BND_LEFT] = border.timestep;
                         if(!bat){
 
 
@@ -125,7 +125,7 @@ struct communicator
                     }
 
                     if (n == BND_RIGHT) {
-                        (*borderTimestep)[BND_RIGHT] = border.timestep;
+                        borderTimestep[BND_RIGHT] = border.timestep;
                         if(!bat){
 
                             for(int i= 0; i < border.size; i++){
@@ -146,7 +146,7 @@ struct communicator
                     }
 
                     if (n == BND_BOTTOM) {
-                        (*borderTimestep)[BND_BOTTOM] = border.timestep;
+                        borderTimestep[BND_BOTTOM] = border.timestep;
                         if(!bat){
 
                             for(int i= 0; i < border.size; i++){
@@ -166,7 +166,7 @@ struct communicator
                     }
 
                     if (n == BND_TOP) {
-                        (*borderTimestep)[BND_TOP] = border.timestep;
+                        borderTimestep[BND_TOP] = border.timestep;
                         if(!bat){
 
                             for(int i= 0; i < border.size; i++){
@@ -187,9 +187,9 @@ struct communicator
                     }
                 }),recv[n].get(hpx::launch::async),n,nx,ny,h,hu,hv,b,borderTimestep,bat);
     }
-    hpx::future<void> get_local(Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b, float * borderTimestep bool bat){
+    hpx::future<void> get_local(Boundary n,int nx, int ny,Float2DBuffer * h,Float2DBuffer * hu,Float2DBuffer * hv,Float2DNative * b, float * borderTimestep, bool bat){
         if(n == BND_LEFT){
-            (*borderTimestep)[BND_LEFT] = neighbourBlocks[n]->getTotalLocalTimestep();
+            borderTimestep[BND_LEFT] = neighbourBlocks[n]->getTotalLocalTimestep();
             int startIndexSender =  (neighbourBlocks[n]->nx)* (ny + 2) + 1;
             int startIndexReceiver = 1;
 
@@ -205,7 +205,7 @@ struct communicator
         }
 
         if(n == BND_RIGHT){
-            (*borderTimestep)[BND_RIGHT] = neighbourBlocks[n]->getTotalLocalTimestep();
+            borderTimestep[BND_RIGHT] = neighbourBlocks[n]->getTotalLocalTimestep();
             int startIndexSender =  ny + 2 + 1;
             int startIndexReceiver = (nx + 1) * (ny + 2) + 1;
 
@@ -221,7 +221,7 @@ struct communicator
         }
 
         if(n == BND_TOP) {
-            (*borderTimestep)[BND_TOP] = neighbourBlocks[n]->getTotalLocalTimestep();
+            borderTimestep[BND_TOP] = neighbourBlocks[n]->getTotalLocalTimestep();
             if(!bat){
                 for (int i = 0; i < nx; i++) {
                     (*h)[i + 1][ny + 1] = neighbourBlocks[n]->h[i + 1][1];
@@ -237,7 +237,7 @@ struct communicator
 
         }
         if(n == BND_BOTTOM){
-            (*borderTimestep)[BND_BOTTOM] = neighbourBlocks[n]->getTotalLocalTimestep();
+            borderTimestep[BND_BOTTOM] = neighbourBlocks[n]->getTotalLocalTimestep();
             if(!bat){
                 for(int i = 0; i < nx ; i++){
                     (*h)[i+1][0] = neighbourBlocks[n]->h[i+1][neighbourBlocks[n]->ny];
@@ -252,7 +252,7 @@ struct communicator
         }
         return hpx::make_ready_future();
     }
-    hpx::future<void> get(Boundary n,int nx, int ny,Float2DNative * h,Float2DNative * hu,Float2DNative * hv,Float2DNative * b,float *borderTimestep, bool bat = false)
+    hpx::future<void> get(Boundary n,int nx, int ny,Float2DBuffer * h,Float2DBuffer * hu,Float2DBuffer * hv,Float2DNative * b,float *borderTimestep, bool bat = false)
     {
         // Get our data from our neighbor, we return a future to allow the
         // algorithm to synchronize.

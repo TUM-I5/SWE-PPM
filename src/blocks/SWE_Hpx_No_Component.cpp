@@ -40,6 +40,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
     void computeXSweep(SWE_DimensionalSplittingHpx* simulation){
         simulation->computeXSweep();
     }
+    void computeMaxTimestep(SWE_DimensionalSplittingHpx* simulation, const float dryTol, const float cflNumber){
+        simulation->computeMaxTimestep(dryTol,cflNumber);
+    }
     void computeYSweep(SWE_DimensionalSplittingHpx* simulation){
         simulation->computeYSweep();
     }
@@ -101,6 +104,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
         this->localityCount = localityCount;
         this->numberOfCheckPoints = numberOfCheckPoints;
         this->simulationDuration = simulationDuration;
+        this->localTimestepping = localTimestepping;
         // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
         float* checkpointInstantOfTime = new float[numberOfCheckPoints];
         // Time delta is the time between any two checkpoints
@@ -170,7 +174,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                                                             blockCountY, myHpxRank);
 
             simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingHpx>(new SWE_DimensionalSplittingHpx(nxLocal, nyLocal, dxSimulation, dySimulation,
-                                                                   localOriginX, localOriginY)));
+                                                                   localOriginX, localOriginY,localTimestepping)));
 
             simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
         }
@@ -203,7 +207,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
         std::vector<hpx::future<void>> blockFuture;
         std::vector<float> timesteps;
         if(localTimestepping){
-            for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeMaxTimestep, 0.01,0.4,block.get()));
+            for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeMaxTimestep, block.get(),0.01,0.4));
 
             hpx::wait_all(blockFuture);
 
@@ -355,7 +359,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                         //if each block got the maxLocalTimestep the timestep is finished
                         synchronizedTimestep = true;
                         for(auto &block : simulationBlocks){
-                                if (blocks.hasMaxLocalTimestep()) {
+                                if (block->hasMaxLocalTimestep()) {
                                     synchronizedTimestep = false;
                                     break;
                                 }
