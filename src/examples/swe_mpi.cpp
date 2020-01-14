@@ -270,6 +270,7 @@ int main(int argc, char** argv) {
         MPI_Allreduce(&localTimestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
         //maxLocalTimestep = 3*5.17476;
         simulation.setMaxLocalTimestep(maxLocalTimestep);
+        std::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
     }
 
 	// Initialize wall timer

@@ -196,17 +196,25 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 }
 
             }
-            std::cout << "Rank "<< i << " Neighbours " << refinedNeighbours[0] << " " << refinedNeighbours[1] << " " << refinedNeighbours[2] << " "<< refinedNeighbours[3] << std::endl;
+            hpx::cout << "Rank "<< i << " Neighbours " << refinedNeighbours[0] << " " << refinedNeighbours[1] << " " << refinedNeighbours[2] << " "<< refinedNeighbours[3] << std::endl;
             simulationBlocks[i-startPoint]->connectNeighbours(communicator_type(myHpxRank,totalHpxRanks,refinedNeighbours,neighbourBlocks));
         }
 
     }
     void SWE_Hpx_No_Component::run()
     {
+
+
+
+        std::vector<hpx::future<void>> fut;
+        for(auto & block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
+        hpx::wait_all(fut);
+
         float maxLocalTimestep;
         std::vector<hpx::future<void>> blockFuture;
         std::vector<float> timesteps;
         if(localTimestepping){
+
             for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeMaxTimestep, block.get(),0.01,0.4));
 
             hpx::wait_all(blockFuture);
@@ -233,14 +241,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 localityChannel.set(std::move(minTimestep));
                 maxLocalTimestep = localityChannel.get()[0].get();
             }
-            hpx::cout << "Reduced timestep " << maxLocalTimestep << std::endl;
+            hpx::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
             for(auto & block: simulationBlocks)block->setMaxLocalTimestep(maxLocalTimestep);
         }
-
-
-        std::vector<hpx::future<void>> fut;
-        for(auto & block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
-        hpx::wait_all(fut);
 
 
         // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
@@ -269,13 +272,15 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
         blockFuture.reserve(simulationBlocks.size());
 
-                timesteps.reserve(simulationBlocks.size());
+        timesteps.reserve(simulationBlocks.size());
         std::vector<hpx::future<void>> xsweepFuture(simulationBlocks.size());
         // loop over the count of requested checkpoints
         for(int i = 0; i < numberOfCheckPoints; i++) {
             // Simulate until the checkpoint is reached
             while(t < checkpointInstantOfTime[i]) {
                 do{
+
+                    
                     // Start measurement
                     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
@@ -305,7 +310,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
                     float minTimestep= *std::min_element(timesteps.begin(), timesteps.end());
 
-                    float timestep;
+
                     //barrier
                     if(!localTimestepping){
 
@@ -355,6 +360,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                     clock_gettime(CLOCK_MONOTONIC, &endTime);
                     wallTime += (endTime.tv_sec - startTime.tv_sec);
                     wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+
                     if(localTimestepping){
                         //if each block got the maxLocalTimestep the timestep is finished
                         synchronizedTimestep = true;
@@ -370,13 +376,11 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 // update simulation time with time step width.
                 t += localTimestepping?maxLocalTimestep:timestep;
 
-
             }
 
             if(localityRank == 0) {
                 printf("Write timestep (%fs)\n", t);
             }
-            //hpx::cout <<"Write timestep " << t<<"s" << std::endl;
 
         }
 

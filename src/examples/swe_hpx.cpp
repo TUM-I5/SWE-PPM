@@ -147,7 +147,7 @@ int hpx_main(boost::program_options::variables_map& vm)
     int localityCount = hpx::get_num_localities().get();
     int localityNumber = hpx::get_locality_id();
 
-    hpx::cout << "Locality " << localityNumber << "of " << localityCount << " Localities" << std::endl;
+    hpx::cout << "Locality " << localityNumber << " of " << localityCount << " Localities" << std::endl;
 
     SWE_Hpx_No_Component comp(totalRanks,localityNumber,localityCount,simulationDuration,numberOfCheckPoints,
                          nxRequested,nyRequested,outputBaseName,batFile,displFile,localTimestepping );
@@ -176,8 +176,10 @@ int main(int argc, char** argv) {
      ("checkpoint-count,n", value<int>()->default_value(100),"Number of simulation snapshots to be written")
      ("resolution-horizontal",value<int>()->default_value(100), "Number of simulation cells in horizontal direction")
      ("resolution-vertical", value<int>()->default_value(100),"Number of simulated cells in y-direction")
-     ("output-basepath,o", value<std::string>()->default_value("lolo"),"Output base file name")
-            ("blocks,", value<int>()->default_value(1),"Number of swe blocks")
+     ("output-basepath,o", value<std::string>()->default_value("hpx_output"),"Output base file name")
+            ("blocks", value<int>()->default_value(1),"Number of swe blocks")
+            ("local-timestepping", value<bool>()->default_value(false),"Number of swe blocks")
+
     ;
 
     // Initialize and run HPX, this example requires to run hpx_main on all

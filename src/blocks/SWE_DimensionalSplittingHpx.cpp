@@ -363,7 +363,7 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
 
     std::vector<hpx::future<void>>fut;
     if (boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
-        fut.push_back(comm.get(BND_LEFT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,(float* )borderTimestep));
+        fut.push_back(comm.get(BND_LEFT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep));
     }
     if (boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
         fut.push_back(comm.get(BND_RIGHT,nx,ny,&bufferH,&bufferHu,&bufferHv,&b,borderTimestep));
@@ -398,6 +398,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 void SWE_DimensionalSplittingHpx::computeXSweep (){
 
     if(!allGhostlayersInSync()) return;
+
     computeClock = clock();
     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
@@ -470,6 +471,7 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
 
     maxTimestepGlobal = maxTimestep;
 
+
 }
 void SWE_DimensionalSplittingHpx::computeYSweep (){
     if(!allGhostlayersInSync()) return;
@@ -477,7 +479,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
     if(localTimestepping){
 
         maxTimestep = getRoundTimestep(maxTimestep);
-        //std::cout << "My timestep is " << maxTimestep << std::endl;
+
     }else {
         maxTimestep = maxTimestepGlobal;
     }

@@ -13,6 +13,9 @@ simulate_upcxx_test:
 simulate_mpi:
 	mpirun -np 8 ./build/SWE_gnu_release_mpi_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ./data/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ./data/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1 
 
+simulate_hpx:
+	./build/SWE_gnu_release_hpx_hybrid_vec -e 1000 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./mpi -b ./data/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ./data/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 8 --local-timestepping 1
+
 simulate_ampi:
 	./charmrun +p4 ./build/SWE_gnu_release_mpi_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/mpi -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
 
@@ -61,7 +64,7 @@ upcxx_rad:
 upcxx_debug:
 	scons compileMode=debug writeNetCDF=True openmp=false solver=hybrid parallelization=upcxx asagi=true asagiDir=${ASAGI_PATH} copyenv=true
 hpx:
-	scons writeNetCDF=True openmp=false solver=hybrid parallelization=hpx asagi=true asagiDir=${ASAGI_PATH} copyenv=true
+	scons writeNetCDF=True openmp=false solver=hybrid parallelization=hpx asagi=true asagiDir=${ASAGI_PATH} copyenv=true vectorize=true
 hpx_rad:
 	scons writeNetCDF=False openmp=false solver=hybrid parallelization=hpx asagi=false asagiDir=${ASAGI_PATH} copyenv=true
 hpx_load:
