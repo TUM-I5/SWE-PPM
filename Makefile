@@ -5,13 +5,13 @@ simulate_smp:
 	./build/SWE_gnu_release_none_omp_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/tohu_1m_new -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
 
 simulate_upcxx:
-	${UPCXX_PATH}/bin/upcxx-run -n 16 ./build/SWE_gnu_release_upcxx_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ./data/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ./data/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
+	${UPCXX_PATH}/bin/upcxx-run -n 8 ./build/SWE_gnu_release_upcxx_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ./data/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ./data/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 0
 
 simulate_upcxx_test:
 	${UPCXX_PATH}/bin/upcxx-run -n 4 ./build/SWE_gnu_release_upcxx_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_upcxx
 
 simulate_mpi:
-	mpirun -np 8 ./build/SWE_gnu_release_mpi_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ./data/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ./data/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1 
+	mpirun -np 8 ./build/SWE_gnu_release_mpi_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ./data/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ./data/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 0
 
 simulate_hpx:
 	./build/SWE_gnu_release_hpx_hybrid_vec -e 1000 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./mpi -b ./data/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ./data/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 8 --local-timestepping 1

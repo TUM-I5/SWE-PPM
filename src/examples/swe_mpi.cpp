@@ -271,6 +271,7 @@ int main(int argc, char** argv) {
         //maxLocalTimestep = 3*5.17476;
         simulation.setMaxLocalTimestep(maxLocalTimestep);
         std::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
+        maxLocalTimestep = 3*5.17476;
     }
 
 	// Initialize wall timer

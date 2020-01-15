@@ -18,6 +18,8 @@ struct BlockConnectInterface {
 	T pointerHu;
 	T pointerHv;
     T pointerTimestep;
+    upcxx::global_ptr<std::atomic<bool>> ready;
+    int rank;
 };
 
 #endif // __BLOCKCONNECTINTERFACE_HH

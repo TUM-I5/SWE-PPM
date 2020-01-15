@@ -300,7 +300,7 @@ int main(int argc, char** argv) {
         float localTimestep = simulation.getMaxTimestep();
         // reduce over all ranks
         maxLocalTimestep = upcxx::reduce_all(localTimestep, [](float a, float b) {return std::min(a, b);}).wait();
-        std::cout << "Max timestep lel " << maxLocalTimestep << std::endl;
+        std::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
         maxLocalTimestep = 3*5.17476;
         simulation.setMaxLocalTimestep(maxLocalTimestep);
     }
@@ -322,15 +322,16 @@ int main(int argc, char** argv) {
             do{
                 // Start measurement
                 clock_gettime(CLOCK_MONOTONIC, &startTime);
-                std::cout << myUpcxxRank << " " <<simulation.getTotalLocalTimestep() << " " << simulation.timestepCounter << std::endl;
+                //std::cout << myUpcxxRank << " " <<simulation.getTotalLocalTimestep() << " " << simulation.timestepCounter << " " << simulation.iteration<< std::endl;
+                //std::cout <<"Rank: "<< myUpcxxRank<< " C: " << simulation.timestepCounter<< " | " <<simulation.dataReady[0] << " "<<simulation.dataReady[1] << " "<<simulation.dataReady[2] << " "<<simulation.dataReady[3] << std::endl;
                 // set values in ghost cells.
                 // this function blocks until everything has been received
 
-
+                upcxx::barrier();
                 simulation.setGhostLayer();
 
-                if(localTimestepping)
-                upcxx::barrier();
+               // if(localTimestepping)
+               //
 
 
 
@@ -349,18 +350,17 @@ int main(int argc, char** argv) {
                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
                 // update simulation time with time step width.
-                synchedTimestep = simulation.hasMaxLocalTimestep();
-                simulation.updateLocalTimestep();
+
                 clock_gettime(CLOCK_MONOTONIC, &barStartTime);
 
-                upcxx::barrier();
+               // upcxx::barrier();
 
 
 
                 barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
                 barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;
 
-            }while(localTimestepping && !synchedTimestep);
+            }while(localTimestepping && !simulation.hasMaxLocalTimestep());
             t += localTimestepping?maxLocalTimestep:timestep;
 
 		}

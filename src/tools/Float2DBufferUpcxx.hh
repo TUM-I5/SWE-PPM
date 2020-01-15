@@ -34,7 +34,9 @@ public:
 
     }
     ~Float2DBufferUpcxx() {}
-
+    upcxx::global_ptr<float> getPointer() const {
+        return data;
+    }
 private:
 
     upcxx::global_ptr<float> data;

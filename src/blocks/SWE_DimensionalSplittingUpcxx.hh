@@ -60,12 +60,12 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBuffe
 		void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
 		void computeNumericalFluxes();
 		void updateUnknowns(float dt);
-
+        void notifyNeighbours(bool sync);
 		// Upcxx specific
 		void connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[]);
 		BlockConnectInterface<upcxx::global_ptr<float>> getCopyLayer(Boundary boundary);
 		void exchangeBathymetry();
-		void updateLocalTimestep();
+
 
 		float computeTime;
 		float computeTimeWall;
@@ -73,8 +73,8 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBuffe
         float reductionTime;
 		float getFlops();
 		float flopCounter = 0;
-
-	private:
+        int iteration = 0;
+	//private:
 #if WAVE_PROPAGATION_SOLVER==0
     //! Hybrid solver (f-wave + augmented)
     //solver::Hybrid<float> solver;
@@ -111,8 +111,9 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBuffe
 		BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[4];
         //Used to transmit timestep in localtimestepping
         upcxx::global_ptr<float> upcxxLocalTimestep;
-
-        float * localTimestep;
+        upcxx::global_ptr<std::atomic<bool>> upcxxDataReady;
+        std::atomic<bool> *dataReady;
+        float * upcxxBorderTimestep;
 		// timer
 		std::clock_t computeClock;
 		struct timespec startTime;

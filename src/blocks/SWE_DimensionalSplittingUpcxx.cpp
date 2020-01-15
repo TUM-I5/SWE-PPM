@@ -93,8 +93,14 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 	flopCounter = 0;
 	communicationTime = 0;
 	reductionTime = 0;
-    upcxxLocalTimestep = upcxx::new_<float>(0.f);
-    localTimestep = upcxxLocalTimestep.local();
+
+    upcxxLocalTimestep = upcxx::new_array<float>(4);
+    upcxxBorderTimestep = upcxxLocalTimestep.local();
+    upcxxDataReady= upcxx::new_array<std::atomic<bool>>(4);
+    dataReady = upcxxDataReady.local();
+    for (int i = 0; i < 4; i++) {
+        dataReady[i] = false;
+    }
 }
 
 void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> p_neighbourCopyLayer[]) {
@@ -102,9 +108,7 @@ void SWE_DimensionalSplittingUpcxx::connectBoundaries(BlockConnectInterface<upcx
 		neighbourCopyLayer[i] = p_neighbourCopyLayer[i];
 	}
 }
-void SWE_DimensionalSplittingUpcxx::updateLocalTimestep() {
-    *localTimestep = getTotalLocalTimestep();
-}
+
 /**
  * register the row or column layer next to a boundary as a "copy layer",
  * from which values will be copied into the ghost layer or a neighbour;
@@ -113,33 +117,64 @@ void SWE_DimensionalSplittingUpcxx::updateLocalTimestep() {
 BlockConnectInterface<upcxx::global_ptr<float>> SWE_DimensionalSplittingUpcxx::getCopyLayer(Boundary boundary) {
 	struct BlockConnectInterface<upcxx::global_ptr<float>> interface;
 	interface.boundary = boundary;
-	interface.pointerH = h.getPointer();
+	interface.pointerH = bufferH.getPointer();
 	interface.pointerB = b.getPointer();
-	interface.pointerHu = hu.getPointer();
-	interface.pointerHv = hv.getPointer();
-	interface.pointerTimestep = upcxxLocalTimestep;
-	switch (boundary) {
-		case BND_LEFT:
+	interface.pointerHu = bufferHu.getPointer();
+	interface.pointerHv = bufferHv.getPointer();
+	interface.pointerTimestep = upcxxLocalTimestep+boundary;
+    interface.ready = upcxxDataReady+boundary;
+    interface.rank =  upcxx::rank_me();
+ 	switch (boundary) {
+		/*case BND_LEFT:
 			interface.size = ny;
 			interface.stride = 1;
 			interface.startIndex = ny + 2 + 1;
+
 			break;
 		case BND_RIGHT:
 			interface.size = ny;
 			interface.stride = 1;
 			interface.startIndex = nx * (ny + 2) + 1;
+
 			break;
 		case BND_BOTTOM:
 			interface.size = nx;
 			interface.stride = ny + 2;
 			interface.startIndex = ny + 2 + 1;
+
 			break;
 		case BND_TOP:
 			interface.size = nx;
 			interface.stride = ny + 2;
 			interface.startIndex = ny + 2 + ny;
-			break;
+
+			break;*/
+        case BND_LEFT:
+            interface.size = ny;
+            interface.stride = 1;
+            interface.startIndex =  1;
+
+            break;
+        case BND_RIGHT:
+            interface.size = ny;
+            interface.stride = 1;
+            interface.startIndex = (nx + 1) * (ny + 2) + 1;
+
+            break;
+        case BND_BOTTOM:
+            interface.size = nx;
+            interface.stride = ny + 2;
+            interface.startIndex = ny + 2;
+
+            break;
+        case BND_TOP:
+            interface.size = nx;
+            interface.stride = ny + 2;
+            interface.startIndex = ny + 2 + ny + 1;
+
+            break;
 	};
+
 	return interface;
 }
 
@@ -173,7 +208,52 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 		}
 	}
 }
+void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync){
+    if(boundaryType[BND_LEFT] == CONNECT ){
+        rpc_ff(neighbourCopyLayer[BND_LEFT].rank, [sync]( upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = sync;}, neighbourCopyLayer[BND_LEFT].ready);
+    }
+    if(boundaryType[BND_RIGHT] == CONNECT ){
+        rpc_ff(neighbourCopyLayer[BND_RIGHT].rank, [sync]( upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = sync;}, neighbourCopyLayer[BND_RIGHT].ready);
+    }
+    if(boundaryType[BND_TOP] == CONNECT ){
+        rpc_ff(neighbourCopyLayer[BND_TOP].rank, [sync]( upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = sync;}, neighbourCopyLayer[BND_TOP].ready);
+    }
+    if(boundaryType[BND_BOTTOM] == CONNECT ){
+        rpc_ff(neighbourCopyLayer[BND_BOTTOM].rank, [sync]( upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = sync;}, neighbourCopyLayer[BND_BOTTOM].ready);
+    }
+    if(sync){
+        while((dataReady[BND_LEFT] &&
+               dataReady[BND_RIGHT] &&
+               dataReady[BND_TOP] &&
+               dataReady[BND_BOTTOM]) != true) {
+            for(int i = 0; i < 4 ; i++){
+                if(boundaryType[i] != CONNECT || isReceivable((Boundary)i) ){
 
+                    dataReady[i] = true; //only set true the ones who are either not sending anymore or not connected.
+                }
+            }
+            //   std::cout << receivedLayer[BND_LEFT] << " "<< receivedLayer[BND_RIGHT] << " "<< receivedLayer[BND_TOP] << " "<< receivedLayer[BND_BOTTOM] << " " << std::endl;
+
+            upcxx::progress();
+        }
+    }else {
+        while((!dataReady[BND_LEFT] &&
+               !dataReady[BND_RIGHT] &&
+               !dataReady[BND_TOP] &&
+               !dataReady[BND_BOTTOM]) != true) {
+            for(int i = 0; i < 4 ; i++){
+                if(boundaryType[i] != CONNECT || isReceivable((Boundary)i) ){
+
+                    dataReady[i] = false;
+                }
+            }
+            //   std::cout << receivedLayer[BND_LEFT] << " "<< receivedLayer[BND_RIGHT] << " "<< receivedLayer[BND_TOP] << " "<< receivedLayer[BND_BOTTOM] << " " << std::endl;
+
+            upcxx::progress();
+        }
+    }
+    //std::cout <<"Rank: "<< upcxx::rank_me()<< " C: " <<timestepCounter<< " | " <<dataReady[0] << " "<<dataReady[1] << " "<<dataReady[2] << " "<<dataReady[3] << std::endl;
+}
 /*
  * The UPCXX version of setGhostLayer() will use the BlockConnectInterfaces of its neighbours
  * to receive the ghost layers at CONNECT boundaries.
@@ -189,101 +269,183 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 	upcxx::future<> bottomFuture;
 	upcxx::future<> topFuture;
     clock_gettime(CLOCK_MONOTONIC, &startTime);
-	if (boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
-		assert(neighbourCopyLayer[BND_LEFT].size == ny);
-		assert(neighbourCopyLayer[BND_LEFT].stride == 1);
-
-		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_LEFT];
-
-		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
-		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
-		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
 
 
-		auto leftFutH = upcxx::rget(srcBaseH, &bufferH[0][1], ny);
-		auto leftFutHu = upcxx::rget(srcBaseHu, &bufferHu[0][1], ny);
-		auto leftFutHv = upcxx::rget(srcBaseHv, &bufferHv[0][1], ny);
-		auto leftTsFut = upcxx::rget( iface.pointerTimestep, &borderTimestep[BND_LEFT],1);
-		leftFuture = upcxx::when_all(leftFutH, leftFutHu, leftFutHv,leftTsFut);
-	} else {
-		leftFuture = upcxx::make_future<>();
-	}
+    notifyNeighbours(true);
 
-	if (boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
-		assert(neighbourCopyLayer[BND_RIGHT].size == ny);
-		assert(neighbourCopyLayer[BND_RIGHT].stride == 1);
 
-		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_RIGHT];
 
-		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
-		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
-		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+    upcxx::barrier();
+    float totalLocalTimestep = getTotalLocalTimestep();
 
-		auto rightFutH = upcxx::rget(srcBaseH, &bufferH[nx + 1][1], ny);
-		auto rightFutHu = upcxx::rget(srcBaseHu, &bufferHu[nx + 1][1], ny);
-		auto rightFutHv = upcxx::rget(srcBaseHv, &bufferHv[nx + 1][1], ny);
-        auto rightTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_RIGHT],1);
-		rightFuture = upcxx::when_all(rightFutH, rightFutHu, rightFutHv,rightTsFut);
-	} else {
-		rightFuture = upcxx::make_future<>();
-	}
+    if (boundaryType[BND_LEFT] == CONNECT && isSendable(BND_LEFT) ) {
 
-	if (boundaryType[BND_BOTTOM] == CONNECT && isReceivable(BND_BOTTOM)) {
-		assert(neighbourCopyLayer[BND_BOTTOM].size == nx);
+            assert(neighbourCopyLayer[BND_LEFT].size == ny);
+            assert(neighbourCopyLayer[BND_LEFT].stride == 1);
 
-		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_BOTTOM];
+            BlockConnectInterface <upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_LEFT];
 
-		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
-		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
-		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
-		uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
-		auto bottomFutH = upcxx::rget_strided<2>(srcBaseH, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&bufferH[1][0], {{sizeof(float),thisStride}},
-							{{1,(size_t) nx}});
-		auto bottomFutHu = upcxx::rget_strided<2>(srcBaseHu, {{static_cast<uint>(sizeof(float) * iface.stride)}},
-							&bufferHu[1][0], {{sizeof(float),thisStride}},
-							{{1,(size_t) nx}});
-		auto bottomFutHv = upcxx::rget_strided<2>(srcBaseHv, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&bufferHv[1][0], {{sizeof(float),thisStride}},
-							{{1,(size_t) nx}});
+            upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
+            upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
+            upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
 
-        auto bottomTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_BOTTOM],1);
 
-        bottomFuture = upcxx::when_all(bottomFutH, bottomFutHu, bottomFutHv,bottomTsFut);
-	} else {
-		bottomFuture = upcxx::make_future<>(); 
-	}
+            int startIndex = ny + 2 + 1;
+        /*    auto leftFutH = upcxx::rget(srcBaseH, &bufferH[0][1], ny);
+            auto leftFutHu = upcxx::rget(srcBaseHu, &bufferHu[0][1], ny);
+            auto leftFutHv = upcxx::rget(srcBaseHv, &bufferHv[0][1], ny);
+            auto leftTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_LEFT], 1);*/
 
-	if (boundaryType[BND_TOP] == CONNECT && isReceivable(BND_TOP)) {
-		assert(neighbourCopyLayer[BND_TOP].size == nx);
-		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_TOP];
-		upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
-		upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
-		upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
-        	uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
-		auto topFutH = upcxx::rget_strided<2>(srcBaseH, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&bufferH[1][ny + 1], {{sizeof(float),thisStride}},
-							{{1,(size_t) nx}});
-		auto topFutHu = upcxx::rget_strided<2>(srcBaseHu, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&bufferHu[1][ny + 1], {{sizeof(float),thisStride}},
-							{{1,(size_t) nx}});
-		auto topFutHv = upcxx::rget_strided<2>(srcBaseHv, {{sizeof(float),static_cast<uint>(sizeof(float) * iface.stride)}},
-							&bufferHv[1][ny + 1], {{sizeof(float),thisStride}},
-							{{1,(size_t) nx}});
-        auto topTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_TOP],1);
+            auto leftFutH = upcxx::rput(h.getRawPointer()+startIndex,srcBaseH,ny);
+            auto leftFutHu = upcxx::rput(hu.getRawPointer()+startIndex,srcBaseHu,ny);
+            auto leftFutHv = upcxx::rput(hv.getRawPointer()+startIndex,srcBaseHv,ny);
+            auto leftFutTs = upcxx::rput( &totalLocalTimestep,iface.pointerTimestep,1);
 
-        topFuture = upcxx::when_all(topFutH, topFutHu, topFutHv,topTsFut);
+            leftFuture = upcxx::when_all(leftFutH, leftFutHu, leftFutHv, leftFutTs);
 
-	} else {
-		topFuture = upcxx::make_future<>();
-	}
+    } else {
+        leftFuture = upcxx::make_future<>();
+
+    }
+
+
+    if (boundaryType[BND_RIGHT] == CONNECT && isSendable(BND_RIGHT) ) {
+
+            assert(neighbourCopyLayer[BND_RIGHT].size == ny);
+            assert(neighbourCopyLayer[BND_RIGHT].stride == 1);
+
+            BlockConnectInterface <upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_RIGHT];
+
+            upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
+            upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
+            upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+
+            int startIndex = nx * (ny + 2) + 1;
+
+           /* auto rightFutH = upcxx::rget(srcBaseH, &bufferH[nx + 1][1], ny);
+            auto rightFutHu = upcxx::rget(srcBaseHu, &bufferHu[nx + 1][1], ny);
+            auto rightFutHv = upcxx::rget(srcBaseHv, &bufferHv[nx + 1][1], ny);
+            auto rightTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_RIGHT], 1);*/
+
+            auto rightFutH = upcxx::rput(h.getRawPointer()+startIndex,srcBaseH,ny);
+            auto rightFutHu = upcxx::rput(hu.getRawPointer()+startIndex,srcBaseHu,ny);
+            auto rightFutHv = upcxx::rput(hv.getRawPointer()+startIndex,srcBaseHv,ny);
+            auto rightFutTs = upcxx::rput( &totalLocalTimestep,iface.pointerTimestep,1);
+            rightFuture = upcxx::when_all(rightFutH, rightFutHu, rightFutHv, rightFutTs);
+
+    } else {
+        rightFuture = upcxx::make_future<>();
+
+    }
+    if (boundaryType[BND_BOTTOM] == CONNECT && isSendable(BND_BOTTOM)) {
+
+            assert(neighbourCopyLayer[BND_BOTTOM].size == nx);
+
+            BlockConnectInterface <upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_BOTTOM];
+
+            upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
+            upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
+            upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+            uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
+            auto bottomFutH = upcxx::rput_strided<2>(
+                    &h[1][1], {{sizeof(float), thisStride}},
+                    srcBaseH,
+                    {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
+                    {{1, (size_t) nx}}
+                    );
+            auto bottomFutHu = upcxx::rput_strided<2>(
+                    &hu[1][1], {{sizeof(float), thisStride}},
+                    srcBaseHu,
+                    {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
+                    {{1, (size_t) nx}}
+            );
+            auto bottomFutHv = upcxx::rput_strided<2>(
+                    &hv[1][1], {{sizeof(float), thisStride}},
+                    srcBaseHv,
+                    {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
+                    {{1, (size_t) nx}}
+            );
+            /*
+            auto bottomFutHu = upcxx::rget_strided<2>(srcBaseHu,
+                                                      {{static_cast<uint>(sizeof(float) * iface.stride)}},
+                                                      &bufferHu[1][0], {{sizeof(float), thisStride}},
+                                                      {{1, (size_t) nx}});
+            auto bottomFutHv = upcxx::rget_strided<2>(srcBaseHv,
+                                                      {{sizeof(float), static_cast<uint>(sizeof(float) *
+                                                                                         iface.stride)}},
+                                                      &bufferHv[1][0], {{sizeof(float), thisStride}},
+                                                      {{1, (size_t) nx}});
+*/
+            auto bottomFutTs = upcxx::rput( &totalLocalTimestep,iface.pointerTimestep,1);
+
+            bottomFuture = upcxx::when_all(bottomFutH, bottomFutHu, bottomFutHv,  bottomFutTs);
+
+
+    } else {
+        bottomFuture = upcxx::make_future<>();
+
+    }
+    if (boundaryType[BND_TOP] == CONNECT && isSendable(BND_TOP)) {
+
+            assert(neighbourCopyLayer[BND_TOP].size == nx);
+            BlockConnectInterface <upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_TOP];
+            upcxx::global_ptr<float> srcBaseH = iface.pointerH + iface.startIndex;
+            upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
+            upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
+            uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
+           /* auto topFutH = upcxx::rget_strided<2>(srcBaseH, {{sizeof(float), static_cast<uint>(sizeof(float) *
+                                                                                               iface.stride)}},
+                                                  &bufferH[1][ny + 1], {{sizeof(float), thisStride}},
+                                                  {{1, (size_t) nx}});
+            auto topFutHu = upcxx::rget_strided<2>(srcBaseHu, {{sizeof(float), static_cast<uint>(sizeof(float) *
+                                                                                                 iface.stride)}},
+                                                   &bufferHu[1][ny + 1], {{sizeof(float), thisStride}},
+                                                   {{1, (size_t) nx}});
+            auto topFutHv = upcxx::rget_strided<2>(srcBaseHv, {{sizeof(float), static_cast<uint>(sizeof(float) *
+                                                                                                 iface.stride)}},
+                                                   &bufferHv[1][ny + 1], {{sizeof(float), thisStride}},
+                                                   {{1, (size_t) nx}});
+            auto topTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_TOP], 1);*/
+            auto topFutH = upcxx::rput_strided<2>(
+                    &h[1][ny], {{sizeof(float), thisStride}},
+                    srcBaseH,
+                    {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
+                    {{1, (size_t) nx}}
+            );
+            auto topFutHu = upcxx::rput_strided<2>(
+                    &hu[1][ny], {{sizeof(float), thisStride}},
+                    srcBaseHu,
+                    {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
+                    {{1, (size_t) nx}}
+            );
+            auto topFutHv = upcxx::rput_strided<2>(
+                    &hv[1][ny], {{sizeof(float), thisStride}},
+                    srcBaseHv,
+                    {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
+                    {{1, (size_t) nx}}
+            );
+
+            auto topFutTs = upcxx::rput( &totalLocalTimestep,iface.pointerTimestep,1);
+            topFuture = upcxx::when_all(topFutH, topFutHu, topFutHv, topFutTs);
+
+    } else {
+        topFuture = upcxx::make_future<>();
+
+    }
+
+
 	upcxx::when_all(leftFuture, rightFuture, bottomFuture, topFuture).wait();
-
+    upcxx::barrier();
+    notifyNeighbours(false);
+    for(int i = 0; i < 4; i++){
+        borderTimestep[i]=upcxxBorderTimestep[i];
+    }
     checkAllGhostlayers();
 
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     communicationTime += (endTime.tv_sec - startTime.tv_sec);
     communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+    iteration++;
 }
 /**
  * Compute net updates for the block.
