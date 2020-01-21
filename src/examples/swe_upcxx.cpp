@@ -327,7 +327,8 @@ int main(int argc, char** argv) {
                 // set values in ghost cells.
                 // this function blocks until everything has been received
 
-                upcxx::barrier();
+                //upcxx::barrier();
+
                 simulation.setGhostLayer();
 
                // if(localTimestepping)

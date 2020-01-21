@@ -18,7 +18,10 @@ struct BlockConnectInterface {
 	T pointerHu;
 	T pointerHv;
     T pointerTimestep;
-    upcxx::global_ptr<std::atomic<bool>> ready;
+    upcxx::global_ptr<std::atomic<bool>> dataTransmitted;
+    upcxx::global_ptr<std::atomic<bool>> dataReady;
+    upcxx::global_ptr<int> iteration;
+
     int rank;
 };
 

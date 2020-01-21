@@ -30,6 +30,7 @@
 #include <cassert>
 #include <algorithm>
 #include <omp.h>
+#include <unistd.h>
 
 /*
  * Constructor of a SWE_DimensionalSplitting Block.
@@ -98,8 +99,13 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
     upcxxBorderTimestep = upcxxLocalTimestep.local();
     upcxxDataReady= upcxx::new_array<std::atomic<bool>>(4);
     dataReady = upcxxDataReady.local();
+    upcxxDataTransmitted= upcxx::new_array<std::atomic<bool>>(4);
+    dataTransmitted = upcxxDataTransmitted.local();
+    upcxxIteration = upcxx::new_<int>(0);
+
     for (int i = 0; i < 4; i++) {
         dataReady[i] = false;
+        dataTransmitted[i] = false;
     }
 }
 
@@ -122,43 +128,22 @@ BlockConnectInterface<upcxx::global_ptr<float>> SWE_DimensionalSplittingUpcxx::g
 	interface.pointerHu = bufferHu.getPointer();
 	interface.pointerHv = bufferHv.getPointer();
 	interface.pointerTimestep = upcxxLocalTimestep+boundary;
-    interface.ready = upcxxDataReady+boundary;
+    interface.dataReady = upcxxDataReady+boundary;
+    interface.dataTransmitted = upcxxDataTransmitted+boundary;
     interface.rank =  upcxx::rank_me();
+    interface.iteration = upcxxIteration;
  	switch (boundary) {
-		/*case BND_LEFT:
-			interface.size = ny;
-			interface.stride = 1;
-			interface.startIndex = ny + 2 + 1;
 
-			break;
-		case BND_RIGHT:
-			interface.size = ny;
-			interface.stride = 1;
-			interface.startIndex = nx * (ny + 2) + 1;
-
-			break;
-		case BND_BOTTOM:
-			interface.size = nx;
-			interface.stride = ny + 2;
-			interface.startIndex = ny + 2 + 1;
-
-			break;
-		case BND_TOP:
-			interface.size = nx;
-			interface.stride = ny + 2;
-			interface.startIndex = ny + 2 + ny;
-
-			break;*/
         case BND_LEFT:
             interface.size = ny;
-            interface.stride = 1;
-            interface.startIndex =  1;
 
+            interface.stride = 1;
+            interface.startIndex = (nx + 1) * (ny + 2) + 1;
             break;
         case BND_RIGHT:
             interface.size = ny;
             interface.stride = 1;
-            interface.startIndex = (nx + 1) * (ny + 2) + 1;
+            interface.startIndex =  1;
 
             break;
         case BND_BOTTOM:
@@ -182,77 +167,115 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 	if (boundaryType[BND_LEFT] == CONNECT) {
 		assert(neighbourCopyLayer[BND_LEFT].size == ny);
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_LEFT];
-		for (int i = 0; i < ny; i++) {
-			b[0][i + 1] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
-		}
+
+        int startIndex = ny + 2 + 1;
+        upcxx::rput(b.getRawPointer()+startIndex,iface.pointerB + iface.startIndex ,ny).wait();
 	}
 	if (boundaryType[BND_RIGHT] == CONNECT) {
 		assert(neighbourCopyLayer[BND_RIGHT].size == ny);
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_RIGHT];
-		for (int i = 0; i < ny; i++) {
-			b[nx + 1][i + 1] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
-		}
+
+        int startIndex = nx * (ny + 2) + 1;
+
+        upcxx::rput(b.getRawPointer()+startIndex,iface.pointerB + iface.startIndex,ny).wait();
 	}
 	if (boundaryType[BND_BOTTOM] == CONNECT) {
+
 		assert(neighbourCopyLayer[BND_BOTTOM].size == nx);
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_BOTTOM];
-		for (int i = 0; i < nx; i++) {
-			b[i + 1][0] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
-		}
+
+        uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
+        upcxx::rput_strided<2>(
+                &b[1][1], {{sizeof(float), thisStride}},
+                iface.pointerB + iface.startIndex,
+                {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
+                {{1, (size_t) nx}}
+        ).wait();
+
 	}
 	if (boundaryType[BND_TOP] == CONNECT) {
+
 		assert(neighbourCopyLayer[BND_TOP].size == nx);
 		BlockConnectInterface<upcxx::global_ptr<float>> iface = neighbourCopyLayer[BND_TOP];
-		for (int i = 0; i < nx; i++){
-			b[i + 1][ny + 1] = rget(iface.pointerB + iface.startIndex + iface.stride * i).wait();
-		}
+
+        uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
+
+        upcxx::rput_strided<2>(
+                &b[1][ny], {{sizeof(float), thisStride}},
+                iface.pointerB + iface.startIndex,
+                {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
+                {{1, (size_t) nx}}
+        ).wait();
 	}
 }
 void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync){
+    if(!upcxx::rank_me()){
+   //     usleep(1000000);
+    }
+
     if(boundaryType[BND_LEFT] == CONNECT ){
-        rpc_ff(neighbourCopyLayer[BND_LEFT].rank, [sync]( upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = sync;}, neighbourCopyLayer[BND_LEFT].ready);
+        rpc_ff(neighbourCopyLayer[BND_LEFT].rank,
+                [](upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = true;},
+                sync?
+                neighbourCopyLayer[BND_LEFT].dataReady:
+                neighbourCopyLayer[BND_LEFT].dataTransmitted);
     }
     if(boundaryType[BND_RIGHT] == CONNECT ){
-        rpc_ff(neighbourCopyLayer[BND_RIGHT].rank, [sync]( upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = sync;}, neighbourCopyLayer[BND_RIGHT].ready);
+        rpc_ff(neighbourCopyLayer[BND_RIGHT].rank,
+               [](upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = true;},
+               sync?
+               neighbourCopyLayer[BND_RIGHT].dataReady:
+               neighbourCopyLayer[BND_RIGHT].dataTransmitted);
     }
     if(boundaryType[BND_TOP] == CONNECT ){
-        rpc_ff(neighbourCopyLayer[BND_TOP].rank, [sync]( upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = sync;}, neighbourCopyLayer[BND_TOP].ready);
+        rpc_ff(neighbourCopyLayer[BND_TOP].rank,
+               [](upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = true;},
+               sync?
+               neighbourCopyLayer[BND_TOP].dataReady:
+               neighbourCopyLayer[BND_TOP].dataTransmitted);
     }
     if(boundaryType[BND_BOTTOM] == CONNECT ){
-        rpc_ff(neighbourCopyLayer[BND_BOTTOM].rank, [sync]( upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = sync;}, neighbourCopyLayer[BND_BOTTOM].ready);
+        rpc_ff(neighbourCopyLayer[BND_BOTTOM].rank,
+               [](upcxx::global_ptr<std::atomic<bool>> dataFlag) -> void{*(dataFlag.local()) = true;},
+               sync?
+               neighbourCopyLayer[BND_BOTTOM].dataReady:
+               neighbourCopyLayer[BND_BOTTOM].dataTransmitted);
     }
+
+    std::atomic<bool>* flag;
     if(sync){
-        while((dataReady[BND_LEFT] &&
-               dataReady[BND_RIGHT] &&
-               dataReady[BND_TOP] &&
-               dataReady[BND_BOTTOM]) != true) {
-            for(int i = 0; i < 4 ; i++){
-                if(boundaryType[i] != CONNECT || isReceivable((Boundary)i) ){
+        flag = dataReady;
+       // std::cout <<"Befor first sync Rank: "<< upcxx::rank_me()<< " | " <<flag[BND_LEFT] << " "<<flag[1] << " "<<flag[2] << " "<<flag[3] << std::endl;
+    } else{
+        flag = dataTransmitted;
+       // std::cout <<"Befor second sync Rank: "<< upcxx::rank_me()<< " | " <<flag[BND_LEFT] << " "<<flag[1] << " "<<flag[2] << " "<<flag[3] << std::endl;
 
-                    dataReady[i] = true; //only set true the ones who are either not sending anymore or not connected.
-                }
-            }
-            //   std::cout << receivedLayer[BND_LEFT] << " "<< receivedLayer[BND_RIGHT] << " "<< receivedLayer[BND_TOP] << " "<< receivedLayer[BND_BOTTOM] << " " << std::endl;
-
-            upcxx::progress();
-        }
-    }else {
-        while((!dataReady[BND_LEFT] &&
-               !dataReady[BND_RIGHT] &&
-               !dataReady[BND_TOP] &&
-               !dataReady[BND_BOTTOM]) != true) {
-            for(int i = 0; i < 4 ; i++){
-                if(boundaryType[i] != CONNECT || isReceivable((Boundary)i) ){
-
-                    dataReady[i] = false;
-                }
-            }
-            //   std::cout << receivedLayer[BND_LEFT] << " "<< receivedLayer[BND_RIGHT] << " "<< receivedLayer[BND_TOP] << " "<< receivedLayer[BND_BOTTOM] << " " << std::endl;
-
-            upcxx::progress();
-        }
     }
-    //std::cout <<"Rank: "<< upcxx::rank_me()<< " C: " <<timestepCounter<< " | " <<dataReady[0] << " "<<dataReady[1] << " "<<dataReady[2] << " "<<dataReady[3] << std::endl;
+
+        while(!flag[BND_LEFT] ||
+               !flag[BND_RIGHT] ||
+               !flag[BND_TOP] ||
+               !flag[BND_BOTTOM]) {
+            for(int i = 0; i < 4 ; i++){
+                if(boundaryType[i] != CONNECT || isReceivable((Boundary)i) ){
+
+                    flag[i] = true; //only set true the ones who are either not sending anymore or not connected.
+                }
+            }
+            //   std::cout << receivedLayer[BND_LEFT] << " "<< receivedLayer[BND_RIGHT] << " "<< receivedLayer[BND_TOP] << " "<< receivedLayer[BND_BOTTOM] << " " << std::endl;
+
+            upcxx::progress();
+
+        }
+    if(sync){
+       // std::cout <<"After first sync Rank: "<< upcxx::rank_me()<< " | " <<flag[BND_LEFT] << " "<<flag[1] << " "<<flag[2] << " "<<flag[3] << std::endl;
+    } else{
+       // std::cout <<"After second sync Rank: "<< upcxx::rank_me()<< " | " <<flag[BND_LEFT] << " "<<flag[1] << " "<<flag[2] << " "<<flag[3] << std::endl;
+
+    }
+
+
+    //std::cout <<"Rank: "<< upcxx::rank_me()<< " C: " <<timestepCounter<< " | " <<flag[0] << " "<<flag[1] << " "<<flag[2] << " "<<flag[3] << std::endl;
 }
 /*
  * The UPCXX version of setGhostLayer() will use the BlockConnectInterfaces of its neighbours
@@ -264,20 +287,24 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
 	SWE_Block::applyBoundaryConditions();
 
-	upcxx::future<> leftFuture;
-	upcxx::future<> rightFuture;
-	upcxx::future<> bottomFuture;
-	upcxx::future<> topFuture;
+	upcxx::future<> leftFuture = upcxx::make_future<>();
+	upcxx::future<> rightFuture = upcxx::make_future<>();
+	upcxx::future<> bottomFuture = upcxx::make_future<>();
+	upcxx::future<> topFuture = upcxx::make_future<>();
     clock_gettime(CLOCK_MONOTONIC, &startTime);
 
 
     notifyNeighbours(true);
 
+    for(int i = 0; i < 4; i++){
 
 
-    upcxx::barrier();
+        dataReady[i] = false;
+    }
+
+   // upcxx::barrier();
     float totalLocalTimestep = getTotalLocalTimestep();
-
+    std::cout << upcxx::rank_me() << " Send Data at: " << iteration<< std::endl;
     if (boundaryType[BND_LEFT] == CONNECT && isSendable(BND_LEFT) ) {
 
             assert(neighbourCopyLayer[BND_LEFT].size == ny);
@@ -291,21 +318,14 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 
 
             int startIndex = ny + 2 + 1;
-        /*    auto leftFutH = upcxx::rget(srcBaseH, &bufferH[0][1], ny);
-            auto leftFutHu = upcxx::rget(srcBaseHu, &bufferHu[0][1], ny);
-            auto leftFutHv = upcxx::rget(srcBaseHv, &bufferHv[0][1], ny);
-            auto leftTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_LEFT], 1);*/
 
             auto leftFutH = upcxx::rput(h.getRawPointer()+startIndex,srcBaseH,ny);
             auto leftFutHu = upcxx::rput(hu.getRawPointer()+startIndex,srcBaseHu,ny);
             auto leftFutHv = upcxx::rput(hv.getRawPointer()+startIndex,srcBaseHv,ny);
             auto leftFutTs = upcxx::rput( &totalLocalTimestep,iface.pointerTimestep,1);
-
-            leftFuture = upcxx::when_all(leftFutH, leftFutHu, leftFutHv, leftFutTs);
-
-    } else {
-        leftFuture = upcxx::make_future<>();
-
+            auto leftIteration = upcxx::rput( &iteration,iface.iteration,1);
+            leftFuture = upcxx::when_all(leftFutH, leftFutHu, leftFutHv, leftFutTs,leftIteration);
+            
     }
 
 
@@ -322,19 +342,12 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 
             int startIndex = nx * (ny + 2) + 1;
 
-           /* auto rightFutH = upcxx::rget(srcBaseH, &bufferH[nx + 1][1], ny);
-            auto rightFutHu = upcxx::rget(srcBaseHu, &bufferHu[nx + 1][1], ny);
-            auto rightFutHv = upcxx::rget(srcBaseHv, &bufferHv[nx + 1][1], ny);
-            auto rightTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_RIGHT], 1);*/
-
             auto rightFutH = upcxx::rput(h.getRawPointer()+startIndex,srcBaseH,ny);
             auto rightFutHu = upcxx::rput(hu.getRawPointer()+startIndex,srcBaseHu,ny);
             auto rightFutHv = upcxx::rput(hv.getRawPointer()+startIndex,srcBaseHv,ny);
             auto rightFutTs = upcxx::rput( &totalLocalTimestep,iface.pointerTimestep,1);
-            rightFuture = upcxx::when_all(rightFutH, rightFutHu, rightFutHv, rightFutTs);
-
-    } else {
-        rightFuture = upcxx::make_future<>();
+            auto rightIteration = upcxx::rput( &iteration,iface.iteration,1);
+            rightFuture = upcxx::when_all(rightFutH, rightFutHu, rightFutHv, rightFutTs,rightIteration);
 
     }
     if (boundaryType[BND_BOTTOM] == CONNECT && isSendable(BND_BOTTOM)) {
@@ -365,24 +378,11 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
                     {{sizeof(float), static_cast<uint>(sizeof(float) *iface.stride)}},
                     {{1, (size_t) nx}}
             );
-            /*
-            auto bottomFutHu = upcxx::rget_strided<2>(srcBaseHu,
-                                                      {{static_cast<uint>(sizeof(float) * iface.stride)}},
-                                                      &bufferHu[1][0], {{sizeof(float), thisStride}},
-                                                      {{1, (size_t) nx}});
-            auto bottomFutHv = upcxx::rget_strided<2>(srcBaseHv,
-                                                      {{sizeof(float), static_cast<uint>(sizeof(float) *
-                                                                                         iface.stride)}},
-                                                      &bufferHv[1][0], {{sizeof(float), thisStride}},
-                                                      {{1, (size_t) nx}});
-*/
+
             auto bottomFutTs = upcxx::rput( &totalLocalTimestep,iface.pointerTimestep,1);
 
             bottomFuture = upcxx::when_all(bottomFutH, bottomFutHu, bottomFutHv,  bottomFutTs);
 
-
-    } else {
-        bottomFuture = upcxx::make_future<>();
 
     }
     if (boundaryType[BND_TOP] == CONNECT && isSendable(BND_TOP)) {
@@ -393,19 +393,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
             upcxx::global_ptr<float> srcBaseHu = iface.pointerHu + iface.startIndex;
             upcxx::global_ptr<float> srcBaseHv = iface.pointerHv + iface.startIndex;
             uint thisStride = static_cast<uint>(sizeof(float) * (ny + 2));
-           /* auto topFutH = upcxx::rget_strided<2>(srcBaseH, {{sizeof(float), static_cast<uint>(sizeof(float) *
-                                                                                               iface.stride)}},
-                                                  &bufferH[1][ny + 1], {{sizeof(float), thisStride}},
-                                                  {{1, (size_t) nx}});
-            auto topFutHu = upcxx::rget_strided<2>(srcBaseHu, {{sizeof(float), static_cast<uint>(sizeof(float) *
-                                                                                                 iface.stride)}},
-                                                   &bufferHu[1][ny + 1], {{sizeof(float), thisStride}},
-                                                   {{1, (size_t) nx}});
-            auto topFutHv = upcxx::rget_strided<2>(srcBaseHv, {{sizeof(float), static_cast<uint>(sizeof(float) *
-                                                                                                 iface.stride)}},
-                                                   &bufferHv[1][ny + 1], {{sizeof(float), thisStride}},
-                                                   {{1, (size_t) nx}});
-            auto topTsFut = upcxx::rget(iface.pointerTimestep, &borderTimestep[BND_TOP], 1);*/
+
             auto topFutH = upcxx::rput_strided<2>(
                     &h[1][ny], {{sizeof(float), thisStride}},
                     srcBaseH,
@@ -428,20 +416,23 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
             auto topFutTs = upcxx::rput( &totalLocalTimestep,iface.pointerTimestep,1);
             topFuture = upcxx::when_all(topFutH, topFutHu, topFutHv, topFutTs);
 
-    } else {
-        topFuture = upcxx::make_future<>();
-
     }
 
 
-	upcxx::when_all(leftFuture, rightFuture, bottomFuture, topFuture).wait();
-    upcxx::barrier();
+    upcxx::when_all(leftFuture, rightFuture, bottomFuture, topFuture).wait();
+
     notifyNeighbours(false);
     for(int i = 0; i < 4; i++){
         borderTimestep[i]=upcxxBorderTimestep[i];
-    }
-    checkAllGhostlayers();
+        dataTransmitted[i] = false;
 
+    }
+   /* while(*upcxxIteration.local() !=iteration){
+        upcxx::progress();
+    }*/
+    std::cout << upcxx::rank_me() << " got Data at: " << *upcxxIteration.local() << " and is " << iteration<< std::endl;
+    checkAllGhostlayers();
+   // *upcxxIteration.local() = -1;
     clock_gettime(CLOCK_MONOTONIC, &endTime);
     communicationTime += (endTime.tv_sec - startTime.tv_sec);
     communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;

@@ -112,7 +112,10 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBuffe
         //Used to transmit timestep in localtimestepping
         upcxx::global_ptr<float> upcxxLocalTimestep;
         upcxx::global_ptr<std::atomic<bool>> upcxxDataReady;
+        upcxx::global_ptr<std::atomic<bool>> upcxxDataTransmitted;
+        upcxx::global_ptr<int> upcxxIteration;
         std::atomic<bool> *dataReady;
+        std::atomic<bool> *dataTransmitted;
         float * upcxxBorderTimestep;
 		// timer
 		std::clock_t computeClock;
