@@ -1,5 +1,5 @@
 module SWE_DimensionalSplittingCharm {
-	include "types/BlockConnectInterface.hh";
+	//include "types/BlockConnectInterface.hh";
 	include "types/Boundary.hh";
 	include "scenarios/SWE_Scenario.hh";
 	include "tools/Float2DNative.hh";

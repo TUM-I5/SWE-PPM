@@ -412,16 +412,16 @@ void SWE_DimensionalSplittingCharm::setGhostLayer() {
 	empty3->isDummy = true;
 
 	// Send out dummy messages to trigger the next timestep
-	if (boundaryType[BND_LEFT] != CONNECT) {
+	if (boundaryType[BND_LEFT] != CONNECT || !isSendable(BND_LEFT)) {
 		thisProxy[thisIndex].receiveGhostLeft(empty0);
 	}
-	if (boundaryType[BND_RIGHT] != CONNECT) {
+	if (boundaryType[BND_RIGHT] != CONNECT || !isSendable(BND_RIGHT)) {
 		thisProxy[thisIndex].receiveGhostRight(empty1);
 	}
-	if (boundaryType[BND_BOTTOM] != CONNECT) {
+	if (boundaryType[BND_BOTTOM] != CONNECT || !isSendable(BND_BOTTOM)) {
 		thisProxy[thisIndex].receiveGhostBottom(empty2);
 	}
-	if (boundaryType[BND_TOP] != CONNECT) {
+	if (boundaryType[BND_TOP] != CONNECT || !isSendable(BND_TOP)) {
 		thisProxy[thisIndex].receiveGhostTop(empty3);
 	}
 }
