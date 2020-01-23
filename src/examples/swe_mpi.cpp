@@ -214,6 +214,9 @@ int main(int argc, char** argv) {
 	myNeighbours[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? myMpiRank + blockCountY : -1;
 	myNeighbours[BND_BOTTOM] = (localBlockPositionY > 0) ? myMpiRank - 1 : -1;
 	myNeighbours[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? myMpiRank + 1 : -1;
+
+    std::cout << myMpiRank << " | " << myNeighbours[BND_LEFT] << " " << myNeighbours[BND_RIGHT]  << " " << myNeighbours[BND_BOTTOM] << " " << myNeighbours[BND_TOP] << std::endl;
+
 	simulation.connectNeighbours(myNeighbours);
 
 	simulation.exchangeBathymetry();
@@ -269,9 +272,10 @@ int main(int argc, char** argv) {
         // reduce over all ranks
         MPI_Allreduce(&localTimestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
         //maxLocalTimestep = 3*5.17476;
-        simulation.setMaxLocalTimestep(maxLocalTimestep);
-        std::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
         maxLocalTimestep = 3*5.17476;
+        simulation.setMaxLocalTimestep(maxLocalTimestep);
+       // std::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
+
     }
 
 	// Initialize wall timer
@@ -294,7 +298,7 @@ int main(int argc, char** argv) {
 
                 // this is an implicit block (mpi recv in setGhostLayer()
                 simulation.setGhostLayer();
-
+                //std::cout << myMpiRank << " " <<simulation.getTotalLocalTimestep() << " " << simulation.timestepCounter << " " << simulation.iteration<< std::endl;
                 // compute numerical flux on each edge
                 simulation.computeNumericalFluxes();
 

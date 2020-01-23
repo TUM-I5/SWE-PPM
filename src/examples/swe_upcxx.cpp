@@ -206,6 +206,8 @@ int main(int argc, char** argv) {
 	int bottomNeighborRank = (localBlockPositionY > 0) ? myUpcxxRank - 1 : -1;
 	int topNeighborRank = (localBlockPositionY < blockCountY - 1) ? myUpcxxRank + 1 : -1;
 
+
+	std::cout << myUpcxxRank << " | " << leftNeighborRank << " " << rightNeighborRank << " " << bottomNeighborRank << " " << topNeighborRank << std::endl;
 	/****************************************
 	 * BROADCAST COPY LAYER GLOBAL POINTERS *
 	 ****************************************/
@@ -235,6 +237,7 @@ int main(int argc, char** argv) {
 	upcxx::rput(simulation.getCopyLayer(BND_LEFT), rightInterfaceRegistry + myUpcxxRank).wait();
 	upcxx::rput(simulation.getCopyLayer(BND_TOP), bottomInterfaceRegistry + myUpcxxRank).wait();
 	upcxx::rput(simulation.getCopyLayer(BND_BOTTOM), topInterfaceRegistry + myUpcxxRank).wait();
+
 	upcxx::barrier();
 
 	Interface interfaces[4];
@@ -300,8 +303,9 @@ int main(int argc, char** argv) {
         float localTimestep = simulation.getMaxTimestep();
         // reduce over all ranks
         maxLocalTimestep = upcxx::reduce_all(localTimestep, [](float a, float b) {return std::min(a, b);}).wait();
-        std::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
+
         maxLocalTimestep = 3*5.17476;
+        //std::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
         simulation.setMaxLocalTimestep(maxLocalTimestep);
     }
 
@@ -314,7 +318,7 @@ int main(int argc, char** argv) {
 	t = 0.0;
 
 	float timestep;
-    bool synchedTimestep = false;
+
 	// loop over the count of requested checkpoints
 	for(int i = 0; i < numberOfCheckPoints; i++) {
 		// Simulate until the checkpoint is reached
@@ -322,7 +326,7 @@ int main(int argc, char** argv) {
             do{
                 // Start measurement
                 clock_gettime(CLOCK_MONOTONIC, &startTime);
-                //std::cout << myUpcxxRank << " " <<simulation.getTotalLocalTimestep() << " " << simulation.timestepCounter << " " << simulation.iteration<< std::endl;
+                //
                 //std::cout <<"Rank: "<< myUpcxxRank<< " C: " << simulation.timestepCounter<< " | " <<simulation.dataReady[0] << " "<<simulation.dataReady[1] << " "<<simulation.dataReady[2] << " "<<simulation.dataReady[3] << std::endl;
                 // set values in ghost cells.
                 // this function blocks until everything has been received
@@ -330,6 +334,7 @@ int main(int argc, char** argv) {
                 //upcxx::barrier();
 
                 simulation.setGhostLayer();
+                //std::cout << myUpcxxRank << " " <<simulation.getTotalLocalTimestep() << " " << simulation.timestepCounter << " " << simulation.iteration<< std::endl;
 
                // if(localTimestepping)
                //
@@ -383,7 +388,6 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-    printf("%iWrite timestep (%fs)\n", myUpcxxRank,t);
     printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs Communication Time: %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime, simulation.communicationTime);
     float sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
     float sumCommTime = upcxx::reduce_all(simulation.communicationTime, upcxx::op_fast_add).wait();
