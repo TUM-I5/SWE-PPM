@@ -14,14 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Constants.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constants.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/BlockConnectInterface.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/BlockConnectInterface.hh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -214,14 +207,7 @@
       <workItem from="1579610675051" duration="9967000" />
       <workItem from="1579689514658" duration="5370000" />
       <workItem from="1579706373614" duration="1220000" />
-      <workItem from="1579715913692" duration="23498000" />
-    </task>
-    <task id="LOCAL-00016" summary="Changed Hpx Completley, added LocalityComponent">
-      <created>1561923755047</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1561923755047</updated>
+      <workItem from="1579715913692" duration="24125000" />
     </task>
     <task id="LOCAL-00017" summary="Changed Hpx Completley, added LocalityComponent">
       <created>1561930395039</created>
@@ -559,7 +545,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579618954781</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="upcxx gts works without barrier&#10;upcxx lts has some bugs in it">
+      <created>1579743629822</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1579743629822</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -580,7 +573,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Removed haly dry scenario for now" />
     <MESSAGE value="Fixed charm communication measuring bug" />
     <MESSAGE value="Added loop parallelization" />
     <MESSAGE value="Added Reduction Time analysis" />
@@ -605,18 +597,19 @@
     <MESSAGE value="Fixed HPX lts bugs" />
     <MESSAGE value="Fixed final HPX lts bug" />
     <MESSAGE value="added upcxx experimental" />
-    <option name="LAST_COMMIT_MESSAGE" value="added upcxx experimental" />
+    <MESSAGE value="upcxx gts works without barrier&#10;upcxx lts has some bugs in it" />
+    <option name="LAST_COMMIT_MESSAGE" value="upcxx gts works without barrier&#10;upcxx lts has some bugs in it" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="200" width="800" height="677" key="#Notifications" timestamp="1576543840156">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="2478" y="149" width="909" height="807" key="CommitChangelistDialog2" timestamp="1579618954616">
+    <state x="2478" y="149" width="909" height="807" key="CommitChangelistDialog2" timestamp="1579743629288">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1579097747056" />
-    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579618954616" />
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579743629288" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />
     <state width="446" height="442" key="Diff.GoToChangePopup" timestamp="1576543830112">

@@ -8,7 +8,7 @@
 #endif
 
 template <typename T>
-struct BlockConnectInterface {
+struct BlockConnectInterfaceUpcxx {
 	Boundary boundary;
 	int size;
 	int stride;
@@ -24,5 +24,17 @@ struct BlockConnectInterface {
 
     int rank;
 };
-
+template <typename T>
+struct BlockConnectInterface {
+    Boundary boundary;
+    int size;
+    int stride;
+    int startIndex;
+    T pointerH;
+    T pointerB;
+    T pointerHu;
+    T pointerHv;
+    T pointerTimestep;
+   
+};
 #endif // __BLOCKCONNECTINTERFACE_HH
