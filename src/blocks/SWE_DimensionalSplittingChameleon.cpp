@@ -458,9 +458,19 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 
 	//maximum (linearized) wave speed within one iteration
 	float maxVerticalWaveSpeed = (float) 0.;
-	solver::AugRie<float> localSolver = block->solver;
+#if WAVE_PROPAGATION_SOLVER==0
+    solver::HLLEFun<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER==1
+    //! F-wave Riemann solver
+    solver::FWave<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> localSolver = block->solver;
+#endif
 
-	// set intermediary Q* states
+
+
+    // set intermediary Q* states
 	//#pragma omp for collapse(2)
 	for (int x = 1; x < block->nx + 1; x++) {
 		for (int y = 0; y < block->ny + 2; y++) {
