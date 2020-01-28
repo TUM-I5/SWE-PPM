@@ -81,16 +81,18 @@ module SWE_DimensionalSplittingCharm {
 					    updateUnknowns(maxTimestep);
                     }
 
-                    if(!localTimestepping || hasMaxLocalTimestep()){
+
 
                         // Once the simulation state progressed one iteration, increase the simulation time accordingly
-                        currentSimulationTime +=localTimestepping?maxTimestepLocal:maxTimestep;
+
                         // If a checkpoint was reached after the last step, write current state
-                        if (currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
+                        if ( (!localTimestepping || hasMaxLocalTimestep()) && currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
                             // Exclude I/O from the time measurement, therefore accumulate now
                             clock_gettime(CLOCK_MONOTONIC, &endTime);
                             wallTime += (endTime.tv_sec - startTime.tv_sec);
                             wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+
+                            currentSimulationTime +=localTimestepping?maxTimestepLocal:maxTimestep;
 
                             if(thisIndex == 0) {
                                 CkPrintf("Write timestep (%fs)\n", currentSimulationTime);
@@ -100,6 +102,7 @@ module SWE_DimensionalSplittingCharm {
 
                             // Restart wall clock
                             clock_gettime(CLOCK_MONOTONIC, &startTime);
+
                         }
 
                         // If there is an iteration to go, propagate copy layers anew
@@ -122,7 +125,7 @@ module SWE_DimensionalSplittingCharm {
                             mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime,reductionTime);
                         }
 					}
-				}
+
 			}
 		};
 
