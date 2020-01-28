@@ -84,15 +84,16 @@ module SWE_DimensionalSplittingCharm {
 
 
                         // Once the simulation state progressed one iteration, increase the simulation time accordingly
-
+                        if((!localTimestepping || hasMaxLocalTimestep()) ){
+                            currentSimulationTime +=localTimestepping?maxTimestepLocal:maxTimestep;
+                        }
                         // If a checkpoint was reached after the last step, write current state
-                        if ( (!localTimestepping || hasMaxLocalTimestep()) && currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
+                        if (  currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
                             // Exclude I/O from the time measurement, therefore accumulate now
                             clock_gettime(CLOCK_MONOTONIC, &endTime);
                             wallTime += (endTime.tv_sec - startTime.tv_sec);
                             wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
-                            currentSimulationTime +=localTimestepping?maxTimestepLocal:maxTimestep;
 
                             if(thisIndex == 0) {
                                 CkPrintf("Write timestep (%fs)\n", currentSimulationTime);
