@@ -233,13 +233,7 @@ void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
 	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
 	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
 }
-void SWE_DimensionalSplittingCharm::printFlops(double flop){
-            wallTime += (endTime.tv_sec - startTime.tv_sec);
-            wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-	    
-            CkPrintf("Rank %i : Flops: %fGFLOPS:\n", thisIndex,flop/(wallTime*1000000000));
 
-}
 void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
 	// LEFT ghost layer consists of values from the left neighbours RIGHT copy layer etc.
 	if (msg->boundary == BND_RIGHT && boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
@@ -268,7 +262,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
             bufferHu[i + 1][0] = msg->hu[i];
             bufferHv[i + 1][0] = msg->hv[i];
 		}
-        borderTimestep[BND_TOP] = msg->timestep;
+        borderTimestep[BND_BOTTOM] = msg->timestep;
 	} else if (msg->boundary == BND_BOTTOM && boundaryType[BND_TOP] == CONNECT && isReceivable(BND_TOP)) {
 		for (int i = 0; i < nx; i++) {
 			if (msg->containsBathymetry)
@@ -277,15 +271,17 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
             bufferHu[i + 1][ny + 1] = msg->hu[i];
             bufferHv[i + 1][ny + 1] = msg->hv[i];
 		}
-        borderTimestep[BND_BOTTOM] = msg->timestep;
+        borderTimestep[BND_TOP] = msg->timestep;
 	}
 
 	// Deallocate the message buffer
 	delete msg;
 }
 
-void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
-	// The array sizes for copy layers of either orientation, set bathymetry array to length zero
+void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry)
+    if(sendBathymetry)            CkPrintf("Rank %i : SENDING BATHYMETRY LELE:\n", thisIndex);
+
+// The array sizes for copy layers of either orientation, set bathymetry array to length zero
 	int sizesVertical[] = {0, ny, ny, ny};
 	int sizesHorizontal[] = {0, nx, nx, nx};
 
@@ -406,11 +402,10 @@ void SWE_DimensionalSplittingCharm::setGhostLayer() {
 	copyLayer *empty1 = new(sizesEmpty, 0) copyLayer();
 	copyLayer *empty2 = new(sizesEmpty, 0) copyLayer();
 	copyLayer *empty3 = new(sizesEmpty, 0) copyLayer();
-	empty0->isDummy = true;
-	empty1->isDummy = true;
-	empty2->isDummy = true;
-	empty3->isDummy = true;
-
+	empty0->boundary = -1;
+    empty1->boundary = -1;
+    empty2->boundary = -1;
+    empty3->boundary = -1;
 	// Send out dummy messages to trigger the next timestep
 	if (boundaryType[BND_LEFT] != CONNECT || !isReceivable(BND_LEFT)) {
 		thisProxy[thisIndex].receiveGhostLeft(empty0);

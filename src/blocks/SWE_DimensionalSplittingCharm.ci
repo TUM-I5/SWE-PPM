@@ -46,21 +46,21 @@ module SWE_DimensionalSplittingCharm {
 				}
 				overlap {
 					when receiveGhostLeft(copyLayer *msg)
-						if (!msg->isDummy) {
-							serial { processCopyLayer(msg); }
-						}
+
+						serial { processCopyLayer(msg); }
+
 					when receiveGhostRight(copyLayer *msg)
-						if (!msg->isDummy) {
-							serial { processCopyLayer(msg); }
-						}
+
+						serial { processCopyLayer(msg); }
+
 					when receiveGhostBottom(copyLayer *msg)
-						if (!msg->isDummy) {
-							serial { processCopyLayer(msg); }
-						}
+
+						serial { processCopyLayer(msg); }
+
 					when receiveGhostTop(copyLayer *msg)
-						if (!msg->isDummy) {
-							serial { processCopyLayer(msg); }
-						}
+
+						serial { processCopyLayer(msg); }
+
 				}
 				serial {
 				     checkAllGhostlayers(); // after receiving all Ghostlayers we can processes them
@@ -137,7 +137,7 @@ module SWE_DimensionalSplittingCharm {
 		entry void receiveGhostTop(copyLayer *msg);
 
 		entry void reductionTrigger();
-        entry [reductiontarget] void printFlops(double flop);
+
 		// entry methods
 		entry [reductiontarget] void reduceWaveSpeed(float maxWaveSpeed);
 	};
