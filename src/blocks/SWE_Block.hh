@@ -286,6 +286,7 @@ float SWE_Block< T, Buffer>::interpolateValue(float oldval, float newval, float 
 }
 template <typename T, typename Buffer>
 void SWE_Block< T, Buffer>::checkAllGhostlayers() {
+    std::cout << "| "  << " " << borderTimestep[0] << " " << borderTimestep[1]<< " " << borderTimestep[2]<< " " << borderTimestep[3] << std::endl;
     if(localTimestepping){
 
         //if neighbour stepped further than the local block, interpolation is possible, if not, block shall wait for fitting timestep
