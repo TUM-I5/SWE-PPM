@@ -369,14 +369,13 @@ int main(int argc, char** argv) {
     MPI_Barrier(MPI_COMM_WORLD);
 
     float maxLocalTimestep;
-    float timestep = 0;
+    float timestep = std::numeric_limits<float>::max();
     if(localTimestepping){
         for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
             for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
                 blocks[x][y]->computeMaxTimestep( 0.01,0.4);
-                if( blocks[x][y]->getMaxTimestep() > timestep)
-                    timestep = blocks[x][y]->getMaxTimestep();
-            }
+                    timestep = std::min(timestep,blocks[x][y]->getMaxTimestep());
+
         }
 
 
@@ -488,17 +487,15 @@ int main(int argc, char** argv) {
                 if(!localTimestepping){
                     for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
                         for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
-                            if(blocks[x][y]->getMaxTimestep() < timestep)
-                                timestep = blocks[x][y]->getMaxTimestep();
-                        }
+
+                                timestep = std::min(timestep,blocks[x][y]->getMaxTimestep());
+
                     }
 
                     // reduce over all ranks
                     float maxTimestepGlobal;
                     MPI_Allreduce(&timestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD); //@todo no need to reduction with localtimestepping (maybe)
                     timestep = maxTimestepGlobal;
-                }else {
-                    timestep = maxLocalTimestep;
                 }
 
                 reductionTime += getTime()-lastTime; lastTime = getTime();
@@ -549,8 +546,8 @@ int main(int argc, char** argv) {
                     for(int x = xLower; x < xUpper; x++) {
                         for (int y = yLower; y < yUpper; y++) {
                             if (!blocks[x][y]->hasMaxLocalTimestep()) {
-                                synchronizedTimestep= false;
-                                break;
+                                synchronizedTimestep = false;
+                                //do not break ! since we need to set all layers for the next timestep !!!!!!!!
                             }
                         }
                     }
