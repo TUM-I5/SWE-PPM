@@ -42,8 +42,9 @@ module SWE_DimensionalSplittingCharm {
 			}
 			while(currentCheckpoint < checkpointCount) {
 				serial {
-					sendCopyLayers(true);
+					sendCopyLayers(firstIteration);
 					setGhostLayer();
+					firstIteration = false;
 				}
 				overlap {
 					when receiveGhostLeft(copyLayer *msg)

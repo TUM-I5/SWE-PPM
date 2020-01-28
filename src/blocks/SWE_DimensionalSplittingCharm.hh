@@ -111,6 +111,7 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 		float communicationTime;
         float reductionTime;
 		float flopCounter;
+		bool firstIteration;
 };
 
 class copyLayer : public CMessage_copyLayer {
