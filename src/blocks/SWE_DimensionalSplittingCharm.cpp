@@ -403,10 +403,10 @@ void SWE_DimensionalSplittingCharm::setGhostLayer() {
 	copyLayer *empty1 = new(sizesEmpty, 0) copyLayer();
 	copyLayer *empty2 = new(sizesEmpty, 0) copyLayer();
 	copyLayer *empty3 = new(sizesEmpty, 0) copyLayer();
-	empty0->boundary = -1;
-    empty1->boundary = -1;
-    empty2->boundary = -1;
-    empty3->boundary = -1;
+	empty0->isDummy = true;
+    empty1->isDummy = true;
+    empty2->isDummy = true;
+    empty3->isDummy = true;
 	// Send out dummy messages to trigger the next timestep
 	if (boundaryType[BND_LEFT] != CONNECT || !isReceivable(BND_LEFT)) {
 		thisProxy[thisIndex].receiveGhostLeft(empty0);
