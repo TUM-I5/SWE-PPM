@@ -278,7 +278,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
 	delete msg;
 }
 
-void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry)
+void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry){
     if(sendBathymetry){CkPrintf("Rank %i : SENDING BATHYMETRY LELE:\n", thisIndex);}
 
 // The array sizes for copy layers of either orientation, set bathymetry array to length zero
