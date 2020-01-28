@@ -37,7 +37,14 @@
 #include <time.h>
 #include <mpi.h>
 
+#if WAVE_PROPAGATION_SOLVER==0
+//#include "solvers/Hybrid.hpp"
+#include "solvers/HLLEFun.hpp"
+#elif WAVE_PROPAGATION_SOLVER==1
+#include "solvers/FWave.hpp"
+#elif WAVE_PROPAGATION_SOLVER==2
 #include "solvers/AugRie.hpp"
+#endif
 
 class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 	public:
@@ -71,8 +78,17 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		void setRank(int rank);
 		MPI_Datatype HORIZONTAL_BOUNDARY;
 
-		solver::AugRie<float> solver;
-
+#if WAVE_PROPAGATION_SOLVER==0
+    //! Hybrid solver (f-wave + augmented)
+    //solver::Hybrid<float> solver;
+    solver::HLLEFun<float> solver;
+#elif WAVE_PROPAGATION_SOLVER==1
+    //! F-wave Riemann solver
+    solver::FWave<float> solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> solver;
+#endif
 		// Temporary values after x-sweep and before y-sweep
 		Float2DNative hStar;
 		Float2DNative huStar;

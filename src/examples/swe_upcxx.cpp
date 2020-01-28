@@ -304,8 +304,6 @@ int main(int argc, char** argv) {
         // reduce over all ranks
         maxLocalTimestep = upcxx::reduce_all(localTimestep, [](float a, float b) {return std::min(a, b);}).wait();
 
-        maxLocalTimestep = 3*5.17476;
-        //std::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
         simulation.setMaxLocalTimestep(maxLocalTimestep);
     }
 
@@ -326,19 +324,8 @@ int main(int argc, char** argv) {
             do{
                 // Start measurement
                 clock_gettime(CLOCK_MONOTONIC, &startTime);
-                //
-                //std::cout <<"Rank: "<< myUpcxxRank<< " C: " << simulation.timestepCounter<< " | " <<simulation.dataReady[0] << " "<<simulation.dataReady[1] << " "<<simulation.dataReady[2] << " "<<simulation.dataReady[3] << std::endl;
-                // set values in ghost cells.
-                // this function blocks until everything has been received
-
-                //upcxx::barrier();
 
                 simulation.setGhostLayer();
-                //std::cout << myUpcxxRank << " " <<simulation.getTotalLocalTimestep() << " " << simulation.timestepCounter << " " << simulation.iteration<< std::endl;
-
-               // if(localTimestepping)
-               //
-
 
 
                 // compute numerical flux on each edge
@@ -358,10 +345,6 @@ int main(int argc, char** argv) {
                 // update simulation time with time step width.
 
                 clock_gettime(CLOCK_MONOTONIC, &barStartTime);
-
-               // upcxx::barrier();
-
-
 
                 barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
                 barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;

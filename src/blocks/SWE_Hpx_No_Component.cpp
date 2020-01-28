@@ -133,9 +133,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
 
         int startPoint = localityRank * ranksPerLocality;
-        hpx::cout << "Locality Rank " << localityRank << std::endl;
-        hpx::cout << "Total Ranks " << totalHpxRanks << std::endl;
-        hpx::cout << "Start point " << startPoint << std::endl;
+
         for(int i = startPoint ; i < startPoint+ ranksPerLocality; i++) {
             auto myHpxRank = i;
             int localBlockPositionX = myHpxRank / blockCountY;
@@ -196,7 +194,6 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 }
 
             }
-            hpx::cout << "Rank "<< i << " Neighbours " << refinedNeighbours[0] << " " << refinedNeighbours[1] << " " << refinedNeighbours[2] << " "<< refinedNeighbours[3] << std::endl;
             simulationBlocks[i-startPoint]->connectNeighbours(communicator_type(myHpxRank,totalHpxRanks,refinedNeighbours,neighbourBlocks));
         }
 
@@ -241,7 +238,6 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 localityChannel.set(std::move(minTimestep));
                 maxLocalTimestep = localityChannel.get()[0].get();
             }
-            hpx::cout << "Max local Timestep: " << maxLocalTimestep << std::endl;
             for(auto & block: simulationBlocks)block->setMaxLocalTimestep(maxLocalTimestep);
         }
 

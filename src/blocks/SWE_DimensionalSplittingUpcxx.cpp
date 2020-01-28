@@ -265,7 +265,6 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 
     float totalLocalTimestep = getTotalLocalTimestep();
 
-    //std::cout << upcxx::rank_me()<<" | " << iteration << " | "  << getTotalLocalTimestep() << " | "<< isReceivable((Boundary)0) << " | "<< isReceivable((Boundary)1) << " | "<< isReceivable((Boundary)2)<< " | "<< isReceivable((Boundary)3)<<" || "<< isSendable((Boundary)0) << " | "<< isSendable((Boundary)1) << " | "<< isSendable((Boundary)2)<< " | "<< isSendable((Boundary)3)<<"\n";
 
     if (boundaryType[BND_LEFT] == CONNECT && isSendable(BND_LEFT) ) {
 
@@ -387,7 +386,6 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
         borderTimestep[i]=upcxxBorderTimestep[i];
         dataTransmitted[i] = false;
     }
-   // std::cout << upcxx::rank_me() << " | " << iteration << " | "<< borderTimestep[0] << " " << borderTimestep[1] << " " << borderTimestep[2] << " " << borderTimestep[3] << "\n";
     checkAllGhostlayers();
 
     clock_gettime(CLOCK_MONOTONIC, &endTime);

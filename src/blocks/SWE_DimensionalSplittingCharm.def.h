@@ -2,7 +2,6 @@
 
 
 
-
 /* ---------------- method closures -------------- */
 #ifndef CK_TEMPLATES_ONLY
 #endif /* CK_TEMPLATES_ONLY */
@@ -61,37 +60,14 @@
 
 #ifndef CK_TEMPLATES_ONLY
 
-    struct Closure_SWE_DimensionalSplittingCharm::printFlops_8_closure : public SDAG::Closure {
-            double flop;
-
-
-      printFlops_8_closure() {
-        init();
-      }
-      printFlops_8_closure(CkMigrateMessage*) {
-        init();
-      }
-            double & getP0() { return flop;}
-      void pup(PUP::er& __p) {
-        __p | flop;
-        packClosure(__p);
-      }
-      virtual ~printFlops_8_closure() {
-      }
-      PUPable_decl(SINGLE_ARG(printFlops_8_closure));
-    };
-#endif /* CK_TEMPLATES_ONLY */
-
-#ifndef CK_TEMPLATES_ONLY
-
-    struct Closure_SWE_DimensionalSplittingCharm::reduceWaveSpeed_9_closure : public SDAG::Closure {
+    struct Closure_SWE_DimensionalSplittingCharm::reduceWaveSpeed_8_closure : public SDAG::Closure {
             float maxWaveSpeed;
 
 
-      reduceWaveSpeed_9_closure() {
+      reduceWaveSpeed_8_closure() {
         init();
       }
-      reduceWaveSpeed_9_closure(CkMigrateMessage*) {
+      reduceWaveSpeed_8_closure(CkMigrateMessage*) {
         init();
       }
             float & getP0() { return maxWaveSpeed;}
@@ -99,15 +75,14 @@
         __p | maxWaveSpeed;
         packClosure(__p);
       }
-      virtual ~reduceWaveSpeed_9_closure() {
+      virtual ~reduceWaveSpeed_8_closure() {
       }
-      PUPable_decl(SINGLE_ARG(reduceWaveSpeed_9_closure));
+      PUPable_decl(SINGLE_ARG(reduceWaveSpeed_8_closure));
     };
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
 #endif /* CK_TEMPLATES_ONLY */
-
 
 
 
@@ -116,6 +91,7 @@
 /* DEFS: message copyLayer{
 Boundary boundary;
 bool containsBathymetry;
+bool isDummy;
 float b[];
 float h[];
 float hu[];
@@ -217,7 +193,6 @@ void receiveGhostRight(copyLayer* impl_msg);
 void receiveGhostBottom(copyLayer* impl_msg);
 void receiveGhostTop(copyLayer* impl_msg);
 void reductionTrigger();
-void printFlops(double flop);
 void reduceWaveSpeed(float maxWaveSpeed);
 SWE_DimensionalSplittingCharm(CkMigrateMessage* impl_msg);
 };
@@ -415,46 +390,6 @@ void CProxyElement_SWE_DimensionalSplittingCharm::reductionTrigger(const CkEntry
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
-/* DEFS: void printFlops(double flop);
- */
-void CProxyElement_SWE_DimensionalSplittingCharm::printFlops(double flop, const CkEntryOptions *impl_e_opts) 
-{
-  ckCheck();
-  //Marshall: double flop
-  int impl_off=0;
-  { //Find the size of the PUP'd data
-    PUP::sizer implP;
-    implP|flop;
-    impl_off+=implP.size();
-  }
-  CkMarshallMsg *impl_msg=CkAllocateMarshallMsg(impl_off,impl_e_opts);
-  { //Copy over the PUP'd data
-    PUP::toMem implP((void *)impl_msg->msgBuf);
-    implP|flop;
-  }
-  UsrToEnv(impl_msg)->setMsgtype(ForArrayEltMsg);
-  CkArrayMessage *impl_amsg=(CkArrayMessage *)impl_msg;
-  impl_amsg->array_setIfNotThere(CkArray_IfNotThere_buffer);
-  ckSend(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_printFlops_marshall8(),0);
-}
-void CkIndex_SWE_DimensionalSplittingCharm::_call_redn_wrapper_printFlops_marshall8(void* impl_msg, void* impl_obj_void)
-{
-  SWE_DimensionalSplittingCharm* impl_obj = static_cast<SWE_DimensionalSplittingCharm*> (impl_obj_void);
-  char* impl_buf = (char*)((CkReductionMsg*)impl_msg)->getData();
-  /*Unmarshall pup'd fields: double flop*/
-  PUP::fromMem implP(impl_buf);
-  /* non two-param case */
-  PUP::detail::TemporaryObjectHolder<double> flop;
-  implP|flop;
-  impl_buf+=CK_ALIGN(implP.size(),16);
-  /*Unmarshall arrays:*/
-  impl_obj->printFlops(std::move(flop.t));
-  delete (CkReductionMsg*)impl_msg;
-}
-
-#endif /* CK_TEMPLATES_ONLY */
-
-#ifndef CK_TEMPLATES_ONLY
 /* DEFS: void reduceWaveSpeed(float maxWaveSpeed);
  */
 void CProxyElement_SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed, const CkEntryOptions *impl_e_opts) 
@@ -475,9 +410,9 @@ void CProxyElement_SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveS
   UsrToEnv(impl_msg)->setMsgtype(ForArrayEltMsg);
   CkArrayMessage *impl_amsg=(CkArrayMessage *)impl_msg;
   impl_amsg->array_setIfNotThere(CkArray_IfNotThere_buffer);
-  ckSend(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_reduceWaveSpeed_marshall9(),0);
+  ckSend(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_reduceWaveSpeed_marshall8(),0);
 }
-void CkIndex_SWE_DimensionalSplittingCharm::_call_redn_wrapper_reduceWaveSpeed_marshall9(void* impl_msg, void* impl_obj_void)
+void CkIndex_SWE_DimensionalSplittingCharm::_call_redn_wrapper_reduceWaveSpeed_marshall8(void* impl_msg, void* impl_obj_void)
 {
   SWE_DimensionalSplittingCharm* impl_obj = static_cast<SWE_DimensionalSplittingCharm*> (impl_obj_void);
   char* impl_buf = (char*)((CkReductionMsg*)impl_msg)->getData();
@@ -1063,86 +998,6 @@ PUPable_def(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reductionTrigger_7
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
-/* DEFS: void printFlops(double flop);
- */
-void CProxy_SWE_DimensionalSplittingCharm::printFlops(double flop, const CkEntryOptions *impl_e_opts) 
-{
-  ckCheck();
-  //Marshall: double flop
-  int impl_off=0;
-  { //Find the size of the PUP'd data
-    PUP::sizer implP;
-    implP|flop;
-    impl_off+=implP.size();
-  }
-  CkMarshallMsg *impl_msg=CkAllocateMarshallMsg(impl_off,impl_e_opts);
-  { //Copy over the PUP'd data
-    PUP::toMem implP((void *)impl_msg->msgBuf);
-    implP|flop;
-  }
-  UsrToEnv(impl_msg)->setMsgtype(ForArrayEltMsg);
-  CkArrayMessage *impl_amsg=(CkArrayMessage *)impl_msg;
-  impl_amsg->array_setIfNotThere(CkArray_IfNotThere_buffer);
-  ckBroadcast(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_printFlops_marshall8(),0);
-}
-
-// Entry point registration function
-int CkIndex_SWE_DimensionalSplittingCharm::reg_printFlops_marshall8() {
-  int epidx = CkRegisterEp("printFlops(double flop)",
-      _call_printFlops_marshall8, CkMarshallMsg::__idx, __idx, 0+CK_EP_NOKEEP);
-  CkRegisterMarshallUnpackFn(epidx, _callmarshall_printFlops_marshall8);
-  CkRegisterMessagePupFn(epidx, _marshallmessagepup_printFlops_marshall8);
-
-  return epidx;
-}
-
-
-// Redn wrapper registration function
-int CkIndex_SWE_DimensionalSplittingCharm::reg_redn_wrapper_printFlops_marshall8() {
-  return CkRegisterEp("redn_wrapper_printFlops(CkReductionMsg *impl_msg)",
-      _call_redn_wrapper_printFlops_marshall8, CkMarshallMsg::__idx, __idx, 0);
-}
-
-void CkIndex_SWE_DimensionalSplittingCharm::_call_printFlops_marshall8(void* impl_msg, void* impl_obj_void)
-{
-  SWE_DimensionalSplittingCharm* impl_obj = static_cast<SWE_DimensionalSplittingCharm*>(impl_obj_void);
-  CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
-  char *impl_buf=impl_msg_typed->msgBuf;
-  /*Unmarshall pup'd fields: double flop*/
-  PUP::fromMem implP(impl_buf);
-  PUP::detail::TemporaryObjectHolder<double> flop;
-  implP|flop;
-  impl_buf+=CK_ALIGN(implP.size(),16);
-  /*Unmarshall arrays:*/
-  impl_obj->printFlops(std::move(flop.t));
-}
-int CkIndex_SWE_DimensionalSplittingCharm::_callmarshall_printFlops_marshall8(char* impl_buf, void* impl_obj_void) {
-  SWE_DimensionalSplittingCharm* impl_obj = static_cast<SWE_DimensionalSplittingCharm*>(impl_obj_void);
-  /*Unmarshall pup'd fields: double flop*/
-  PUP::fromMem implP(impl_buf);
-  PUP::detail::TemporaryObjectHolder<double> flop;
-  implP|flop;
-  impl_buf+=CK_ALIGN(implP.size(),16);
-  /*Unmarshall arrays:*/
-  impl_obj->printFlops(std::move(flop.t));
-  return implP.size();
-}
-void CkIndex_SWE_DimensionalSplittingCharm::_marshallmessagepup_printFlops_marshall8(PUP::er &implDestP,void *impl_msg) {
-  CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
-  char *impl_buf=impl_msg_typed->msgBuf;
-  /*Unmarshall pup'd fields: double flop*/
-  PUP::fromMem implP(impl_buf);
-  PUP::detail::TemporaryObjectHolder<double> flop;
-  implP|flop;
-  impl_buf+=CK_ALIGN(implP.size(),16);
-  /*Unmarshall arrays:*/
-  if (implDestP.hasComments()) implDestP.comment("flop");
-  implDestP|flop;
-}
-PUPable_def(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::printFlops_8_closure))
-#endif /* CK_TEMPLATES_ONLY */
-
-#ifndef CK_TEMPLATES_ONLY
 /* DEFS: void reduceWaveSpeed(float maxWaveSpeed);
  */
 void CProxy_SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed, const CkEntryOptions *impl_e_opts) 
@@ -1163,27 +1018,27 @@ void CProxy_SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed, c
   UsrToEnv(impl_msg)->setMsgtype(ForArrayEltMsg);
   CkArrayMessage *impl_amsg=(CkArrayMessage *)impl_msg;
   impl_amsg->array_setIfNotThere(CkArray_IfNotThere_buffer);
-  ckBroadcast(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_reduceWaveSpeed_marshall9(),0);
+  ckBroadcast(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_reduceWaveSpeed_marshall8(),0);
 }
 
 // Entry point registration function
-int CkIndex_SWE_DimensionalSplittingCharm::reg_reduceWaveSpeed_marshall9() {
+int CkIndex_SWE_DimensionalSplittingCharm::reg_reduceWaveSpeed_marshall8() {
   int epidx = CkRegisterEp("reduceWaveSpeed(float maxWaveSpeed)",
-      _call_reduceWaveSpeed_marshall9, CkMarshallMsg::__idx, __idx, 0+CK_EP_NOKEEP);
-  CkRegisterMarshallUnpackFn(epidx, _callmarshall_reduceWaveSpeed_marshall9);
-  CkRegisterMessagePupFn(epidx, _marshallmessagepup_reduceWaveSpeed_marshall9);
+      _call_reduceWaveSpeed_marshall8, CkMarshallMsg::__idx, __idx, 0+CK_EP_NOKEEP);
+  CkRegisterMarshallUnpackFn(epidx, _callmarshall_reduceWaveSpeed_marshall8);
+  CkRegisterMessagePupFn(epidx, _marshallmessagepup_reduceWaveSpeed_marshall8);
 
   return epidx;
 }
 
 
 // Redn wrapper registration function
-int CkIndex_SWE_DimensionalSplittingCharm::reg_redn_wrapper_reduceWaveSpeed_marshall9() {
+int CkIndex_SWE_DimensionalSplittingCharm::reg_redn_wrapper_reduceWaveSpeed_marshall8() {
   return CkRegisterEp("redn_wrapper_reduceWaveSpeed(CkReductionMsg *impl_msg)",
-      _call_redn_wrapper_reduceWaveSpeed_marshall9, CkMarshallMsg::__idx, __idx, 0);
+      _call_redn_wrapper_reduceWaveSpeed_marshall8, CkMarshallMsg::__idx, __idx, 0);
 }
 
-void CkIndex_SWE_DimensionalSplittingCharm::_call_reduceWaveSpeed_marshall9(void* impl_msg, void* impl_obj_void)
+void CkIndex_SWE_DimensionalSplittingCharm::_call_reduceWaveSpeed_marshall8(void* impl_msg, void* impl_obj_void)
 {
   SWE_DimensionalSplittingCharm* impl_obj = static_cast<SWE_DimensionalSplittingCharm*>(impl_obj_void);
   CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
@@ -1196,7 +1051,7 @@ void CkIndex_SWE_DimensionalSplittingCharm::_call_reduceWaveSpeed_marshall9(void
   /*Unmarshall arrays:*/
   impl_obj->reduceWaveSpeed(std::move(maxWaveSpeed.t));
 }
-int CkIndex_SWE_DimensionalSplittingCharm::_callmarshall_reduceWaveSpeed_marshall9(char* impl_buf, void* impl_obj_void) {
+int CkIndex_SWE_DimensionalSplittingCharm::_callmarshall_reduceWaveSpeed_marshall8(char* impl_buf, void* impl_obj_void) {
   SWE_DimensionalSplittingCharm* impl_obj = static_cast<SWE_DimensionalSplittingCharm*>(impl_obj_void);
   /*Unmarshall pup'd fields: float maxWaveSpeed*/
   PUP::fromMem implP(impl_buf);
@@ -1207,7 +1062,7 @@ int CkIndex_SWE_DimensionalSplittingCharm::_callmarshall_reduceWaveSpeed_marshal
   impl_obj->reduceWaveSpeed(std::move(maxWaveSpeed.t));
   return implP.size();
 }
-void CkIndex_SWE_DimensionalSplittingCharm::_marshallmessagepup_reduceWaveSpeed_marshall9(PUP::er &implDestP,void *impl_msg) {
+void CkIndex_SWE_DimensionalSplittingCharm::_marshallmessagepup_reduceWaveSpeed_marshall8(PUP::er &implDestP,void *impl_msg) {
   CkMarshallMsg *impl_msg_typed=(CkMarshallMsg *)impl_msg;
   char *impl_buf=impl_msg_typed->msgBuf;
   /*Unmarshall pup'd fields: float maxWaveSpeed*/
@@ -1219,7 +1074,7 @@ void CkIndex_SWE_DimensionalSplittingCharm::_marshallmessagepup_reduceWaveSpeed_
   if (implDestP.hasComments()) implDestP.comment("maxWaveSpeed");
   implDestP|maxWaveSpeed;
 }
-PUPable_def(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reduceWaveSpeed_9_closure))
+PUPable_def(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reduceWaveSpeed_8_closure))
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
@@ -1326,31 +1181,6 @@ void CProxySection_SWE_DimensionalSplittingCharm::reductionTrigger(const CkEntry
 #endif /* CK_TEMPLATES_ONLY */
 
 #ifndef CK_TEMPLATES_ONLY
-/* DEFS: void printFlops(double flop);
- */
-void CProxySection_SWE_DimensionalSplittingCharm::printFlops(double flop, const CkEntryOptions *impl_e_opts) 
-{
-  ckCheck();
-  //Marshall: double flop
-  int impl_off=0;
-  { //Find the size of the PUP'd data
-    PUP::sizer implP;
-    implP|flop;
-    impl_off+=implP.size();
-  }
-  CkMarshallMsg *impl_msg=CkAllocateMarshallMsg(impl_off,impl_e_opts);
-  { //Copy over the PUP'd data
-    PUP::toMem implP((void *)impl_msg->msgBuf);
-    implP|flop;
-  }
-  UsrToEnv(impl_msg)->setMsgtype(ForArrayEltMsg);
-  CkArrayMessage *impl_amsg=(CkArrayMessage *)impl_msg;
-  impl_amsg->array_setIfNotThere(CkArray_IfNotThere_buffer);
-  ckSend(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_printFlops_marshall8(),0);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-#ifndef CK_TEMPLATES_ONLY
 /* DEFS: void reduceWaveSpeed(float maxWaveSpeed);
  */
 void CProxySection_SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed, const CkEntryOptions *impl_e_opts) 
@@ -1371,7 +1201,7 @@ void CProxySection_SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveS
   UsrToEnv(impl_msg)->setMsgtype(ForArrayEltMsg);
   CkArrayMessage *impl_amsg=(CkArrayMessage *)impl_msg;
   impl_amsg->array_setIfNotThere(CkArray_IfNotThere_buffer);
-  ckSend(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_reduceWaveSpeed_marshall9(),0);
+  ckSend(impl_amsg, CkIndex_SWE_DimensionalSplittingCharm::idx_reduceWaveSpeed_marshall8(),0);
 }
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -1408,13 +1238,9 @@ void CkIndex_SWE_DimensionalSplittingCharm::__register(const char *s, size_t siz
   // REG: void reductionTrigger();
   idx_reductionTrigger_void();
 
-  // REG: void printFlops(double flop);
-  idx_printFlops_marshall8();
-  idx_redn_wrapper_printFlops_marshall8();
-
   // REG: void reduceWaveSpeed(float maxWaveSpeed);
-  idx_reduceWaveSpeed_marshall9();
-  idx_redn_wrapper_reduceWaveSpeed_marshall9();
+  idx_reduceWaveSpeed_marshall8();
+  idx_redn_wrapper_reduceWaveSpeed_marshall8();
 
   // REG: SWE_DimensionalSplittingCharm(CkMigrateMessage* impl_msg);
   idx_SWE_DimensionalSplittingCharm_CkMigrateMessage();
@@ -1503,7 +1329,7 @@ void SWE_DimensionalSplittingCharm::_serial_0() {
                      CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
                      contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
                  
-#line 1507 "SWE_DimensionalSplittingCharm.def.h"
+#line 1333 "SWE_DimensionalSplittingCharm.def.h"
   } // end serial block
   _TRACE_END_EXECUTE(); 
   _when_0();
@@ -1545,7 +1371,7 @@ void SWE_DimensionalSplittingCharm::_serial_1() {
                     maxTimestepLocal = maxTimestep;
                     CkPrintf("Reduced local Timestep %f\n", maxTimestepLocal);
                  
-#line 1549 "SWE_DimensionalSplittingCharm.def.h"
+#line 1375 "SWE_DimensionalSplittingCharm.def.h"
   } // end serial block
   _TRACE_END_EXECUTE(); 
   _when_0_end();
@@ -1561,7 +1387,7 @@ void SWE_DimensionalSplittingCharm::_serial_2() {
 
     clock_gettime(CLOCK_MONOTONIC, &startTime);
    
-#line 1565 "SWE_DimensionalSplittingCharm.def.h"
+#line 1391 "SWE_DimensionalSplittingCharm.def.h"
   } // end serial block
   _TRACE_END_EXECUTE(); 
   _while_0();
@@ -1611,10 +1437,11 @@ void SWE_DimensionalSplittingCharm::_serial_3() {
   { // begin serial block
 #line 35 "SWE_DimensionalSplittingCharm.ci"
 
-     sendCopyLayers(true);
+     sendCopyLayers(firstIteration);
      setGhostLayer();
+     firstIteration = false;
     
-#line 1618 "SWE_DimensionalSplittingCharm.def.h"
+#line 1445 "SWE_DimensionalSplittingCharm.def.h"
   } // end serial block
   _TRACE_END_EXECUTE(); 
   _overlap_0();
@@ -1663,7 +1490,7 @@ SDAG::Continuation* SWE_DimensionalSplittingCharm::_when_1(SDAG::CCounter* _co0)
   SDAG::Buffer* buf0 = __dep->tryFindMessage(1, false, 0, 0);
   if (buf0) {
     __dep->removeMessage(buf0);
-    _if_1(_co0, static_cast<copyLayer*>(static_cast<SDAG::MsgClosure*>(buf0->cl)->msg));
+    _serial_4(_co0, static_cast<copyLayer*>(static_cast<SDAG::MsgClosure*>(buf0->cl)->msg));
     delete buf0;
     return 0;
   } else {
@@ -1691,43 +1518,6 @@ void SWE_DimensionalSplittingCharm::_when_1_end(SDAG::CCounter* _co0, copyLayer*
 
 
 #ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_1(SDAG::CCounter* _co0, copyLayer* gen1) {
-  {
-    {
-      copyLayer*& msg = gen1;
-      if (!msg->isDummy) {
-        _slist_3(_co0, gen1);
-      } else {
-        _if_1_end(_co0, gen1);
-      }
-    }
-  }
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_1_end(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _when_1_end(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_3(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _serial_4(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_3_end(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _if_1_end(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
 void SWE_DimensionalSplittingCharm::_serial_4(SDAG::CCounter* _co0, copyLayer* gen1) {
   _TRACE_BEGIN_EXECUTE_DETAILED(-1, -1, (_sdag_idx_SWE_DimensionalSplittingCharm_serial_4()), CkMyPe(), 0, ckGetArrayIndex().getProjectionID(), this); 
   {
@@ -1736,12 +1526,12 @@ void SWE_DimensionalSplittingCharm::_serial_4(SDAG::CCounter* _co0, copyLayer* g
       { // begin serial block
 #line 42 "SWE_DimensionalSplittingCharm.ci"
  processCopyLayer(msg); 
-#line 1740 "SWE_DimensionalSplittingCharm.def.h"
+#line 1530 "SWE_DimensionalSplittingCharm.def.h"
       } // end serial block
     }
   }
   _TRACE_END_EXECUTE(); 
-  _slist_3_end(_co0, gen1);
+  _when_1_end(_co0, gen1);
 }
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -1751,7 +1541,7 @@ SDAG::Continuation* SWE_DimensionalSplittingCharm::_when_2(SDAG::CCounter* _co0)
   SDAG::Buffer* buf0 = __dep->tryFindMessage(2, false, 0, 0);
   if (buf0) {
     __dep->removeMessage(buf0);
-    _if_2(_co0, static_cast<copyLayer*>(static_cast<SDAG::MsgClosure*>(buf0->cl)->msg));
+    _serial_5(_co0, static_cast<copyLayer*>(static_cast<SDAG::MsgClosure*>(buf0->cl)->msg));
     delete buf0;
     return 0;
   } else {
@@ -1779,57 +1569,20 @@ void SWE_DimensionalSplittingCharm::_when_2_end(SDAG::CCounter* _co0, copyLayer*
 
 
 #ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_2(SDAG::CCounter* _co0, copyLayer* gen1) {
-  {
-    {
-      copyLayer*& msg = gen1;
-      if (!msg->isDummy) {
-        _slist_4(_co0, gen1);
-      } else {
-        _if_2_end(_co0, gen1);
-      }
-    }
-  }
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_2_end(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _when_2_end(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_4(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _serial_5(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_4_end(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _if_2_end(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
 void SWE_DimensionalSplittingCharm::_serial_5(SDAG::CCounter* _co0, copyLayer* gen1) {
   _TRACE_BEGIN_EXECUTE_DETAILED(-1, -1, (_sdag_idx_SWE_DimensionalSplittingCharm_serial_5()), CkMyPe(), 0, ckGetArrayIndex().getProjectionID(), this); 
   {
     {
       copyLayer*& msg = gen1;
       { // begin serial block
-#line 46 "SWE_DimensionalSplittingCharm.ci"
+#line 44 "SWE_DimensionalSplittingCharm.ci"
  processCopyLayer(msg); 
-#line 1828 "SWE_DimensionalSplittingCharm.def.h"
+#line 1581 "SWE_DimensionalSplittingCharm.def.h"
       } // end serial block
     }
   }
   _TRACE_END_EXECUTE(); 
-  _slist_4_end(_co0, gen1);
+  _when_2_end(_co0, gen1);
 }
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -1839,7 +1592,7 @@ SDAG::Continuation* SWE_DimensionalSplittingCharm::_when_3(SDAG::CCounter* _co0)
   SDAG::Buffer* buf0 = __dep->tryFindMessage(3, false, 0, 0);
   if (buf0) {
     __dep->removeMessage(buf0);
-    _if_3(_co0, static_cast<copyLayer*>(static_cast<SDAG::MsgClosure*>(buf0->cl)->msg));
+    _serial_6(_co0, static_cast<copyLayer*>(static_cast<SDAG::MsgClosure*>(buf0->cl)->msg));
     delete buf0;
     return 0;
   } else {
@@ -1867,57 +1620,20 @@ void SWE_DimensionalSplittingCharm::_when_3_end(SDAG::CCounter* _co0, copyLayer*
 
 
 #ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_3(SDAG::CCounter* _co0, copyLayer* gen1) {
-  {
-    {
-      copyLayer*& msg = gen1;
-      if (!msg->isDummy) {
-        _slist_5(_co0, gen1);
-      } else {
-        _if_3_end(_co0, gen1);
-      }
-    }
-  }
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_3_end(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _when_3_end(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_5(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _serial_6(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_5_end(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _if_3_end(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
 void SWE_DimensionalSplittingCharm::_serial_6(SDAG::CCounter* _co0, copyLayer* gen1) {
   _TRACE_BEGIN_EXECUTE_DETAILED(-1, -1, (_sdag_idx_SWE_DimensionalSplittingCharm_serial_6()), CkMyPe(), 0, ckGetArrayIndex().getProjectionID(), this); 
   {
     {
       copyLayer*& msg = gen1;
       { // begin serial block
-#line 50 "SWE_DimensionalSplittingCharm.ci"
+#line 46 "SWE_DimensionalSplittingCharm.ci"
  processCopyLayer(msg); 
-#line 1916 "SWE_DimensionalSplittingCharm.def.h"
+#line 1632 "SWE_DimensionalSplittingCharm.def.h"
       } // end serial block
     }
   }
   _TRACE_END_EXECUTE(); 
-  _slist_5_end(_co0, gen1);
+  _when_3_end(_co0, gen1);
 }
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -1927,7 +1643,7 @@ SDAG::Continuation* SWE_DimensionalSplittingCharm::_when_4(SDAG::CCounter* _co0)
   SDAG::Buffer* buf0 = __dep->tryFindMessage(4, false, 0, 0);
   if (buf0) {
     __dep->removeMessage(buf0);
-    _if_4(_co0, static_cast<copyLayer*>(static_cast<SDAG::MsgClosure*>(buf0->cl)->msg));
+    _serial_7(_co0, static_cast<copyLayer*>(static_cast<SDAG::MsgClosure*>(buf0->cl)->msg));
     delete buf0;
     return 0;
   } else {
@@ -1955,57 +1671,20 @@ void SWE_DimensionalSplittingCharm::_when_4_end(SDAG::CCounter* _co0, copyLayer*
 
 
 #ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_4(SDAG::CCounter* _co0, copyLayer* gen1) {
-  {
-    {
-      copyLayer*& msg = gen1;
-      if (!msg->isDummy) {
-        _slist_6(_co0, gen1);
-      } else {
-        _if_4_end(_co0, gen1);
-      }
-    }
-  }
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_4_end(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _when_4_end(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_6(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _serial_7(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_6_end(SDAG::CCounter* _co0, copyLayer* gen1) {
-  _if_4_end(_co0, gen1);
-}
-#endif /* CK_TEMPLATES_ONLY */
-
-
-#ifndef CK_TEMPLATES_ONLY
 void SWE_DimensionalSplittingCharm::_serial_7(SDAG::CCounter* _co0, copyLayer* gen1) {
   _TRACE_BEGIN_EXECUTE_DETAILED(-1, -1, (_sdag_idx_SWE_DimensionalSplittingCharm_serial_7()), CkMyPe(), 0, ckGetArrayIndex().getProjectionID(), this); 
   {
     {
       copyLayer*& msg = gen1;
       { // begin serial block
-#line 54 "SWE_DimensionalSplittingCharm.ci"
+#line 48 "SWE_DimensionalSplittingCharm.ci"
  processCopyLayer(msg); 
-#line 2004 "SWE_DimensionalSplittingCharm.def.h"
+#line 1683 "SWE_DimensionalSplittingCharm.def.h"
       } // end serial block
     }
   }
   _TRACE_END_EXECUTE(); 
-  _slist_6_end(_co0, gen1);
+  _when_4_end(_co0, gen1);
 }
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -2014,49 +1693,49 @@ void SWE_DimensionalSplittingCharm::_serial_7(SDAG::CCounter* _co0, copyLayer* g
 void SWE_DimensionalSplittingCharm::_serial_8() {
   _TRACE_BEGIN_EXECUTE_DETAILED(-1, -1, (_sdag_idx_SWE_DimensionalSplittingCharm_serial_8()), CkMyPe(), 0, ckGetArrayIndex().getProjectionID(), this); 
   { // begin serial block
-#line 57 "SWE_DimensionalSplittingCharm.ci"
+#line 50 "SWE_DimensionalSplittingCharm.ci"
 
          checkAllGhostlayers();
      if(allGhostlayersInSync()){
          xSweep();
      }
     
-#line 2025 "SWE_DimensionalSplittingCharm.def.h"
+#line 1704 "SWE_DimensionalSplittingCharm.def.h"
   } // end serial block
   _TRACE_END_EXECUTE(); 
-  _if_5();
+  _if_1();
 }
 #endif /* CK_TEMPLATES_ONLY */
 
 
 #ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_5() {
+void SWE_DimensionalSplittingCharm::_if_1() {
   if (!localTimestepping) {
-    _slist_7();
+    _slist_3();
   } else {
-    _if_5_end();
+    _if_1_end();
   }
 }
 #endif /* CK_TEMPLATES_ONLY */
 
 
 #ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_if_5_end() {
+void SWE_DimensionalSplittingCharm::_if_1_end() {
   _serial_10();
 }
 #endif /* CK_TEMPLATES_ONLY */
 
 
 #ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_7() {
+void SWE_DimensionalSplittingCharm::_slist_3() {
   _when_5();
 }
 #endif /* CK_TEMPLATES_ONLY */
 
 
 #ifndef CK_TEMPLATES_ONLY
-void SWE_DimensionalSplittingCharm::_slist_7_end() {
-  _if_5_end();
+void SWE_DimensionalSplittingCharm::_slist_3_end() {
+  _if_1_end();
 }
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -2081,7 +1760,7 @@ SDAG::Continuation* SWE_DimensionalSplittingCharm::_when_5() {
 
 #ifndef CK_TEMPLATES_ONLY
 void SWE_DimensionalSplittingCharm::_when_5_end() {
-  _slist_7_end();
+  _slist_3_end();
 }
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -2099,15 +1778,16 @@ void SWE_DimensionalSplittingCharm::_serial_9() {
 void SWE_DimensionalSplittingCharm::_serial_10() {
   _TRACE_BEGIN_EXECUTE_DETAILED(-1, -1, (_sdag_idx_SWE_DimensionalSplittingCharm_serial_10()), CkMyPe(), 0, ckGetArrayIndex().getProjectionID(), this); 
   { // begin serial block
-#line 68 "SWE_DimensionalSplittingCharm.ci"
+#line 61 "SWE_DimensionalSplittingCharm.ci"
 
                     if(allGhostlayersInSync()){
          ySweep();
          updateUnknowns(maxTimestep);
                     }
-                    if(!localTimestepping || hasMaxLocalTimestep()){
-                        currentSimulationTime +=localTimestepping?maxTimestepLocal:maxTimestep;
-                        if (currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
+                        if((!localTimestepping || hasMaxLocalTimestep()) ){
+                            currentSimulationTime +=localTimestepping?maxTimestepLocal:maxTimestep;
+                        }
+                        if ( currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
                             clock_gettime(CLOCK_MONOTONIC, &endTime);
                             wallTime += (endTime.tv_sec - startTime.tv_sec);
                             wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
@@ -2132,9 +1812,8 @@ void SWE_DimensionalSplittingCharm::_serial_10() {
                             CkPrintf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", thisIndex, computeTime, computeTimeWall, wallTime);
                             mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime,reductionTime);
                         }
-     }
-    
-#line 2138 "SWE_DimensionalSplittingCharm.def.h"
+     
+#line 1817 "SWE_DimensionalSplittingCharm.def.h"
   } // end serial block
   _TRACE_END_EXECUTE(); 
   _slist_2_end();
@@ -2280,12 +1959,10 @@ void SWE_DimensionalSplittingCharm::__sdag_register() { // Potentially missing S
   (void)_sdag_idx_SWE_DimensionalSplittingCharm_serial_10();
   PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::compute_2_closure));
   PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reductionTrigger_7_closure));
-  PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::printFlops_8_closure));
-  PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reduceWaveSpeed_9_closure));
+  PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reduceWaveSpeed_8_closure));
   PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::compute_2_closure));
   PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reductionTrigger_7_closure));
-  PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::printFlops_8_closure));
-  PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reduceWaveSpeed_9_closure));
+  PUPable_reg(SINGLE_ARG(Closure_SWE_DimensionalSplittingCharm::reduceWaveSpeed_8_closure));
 }
 #endif /* CK_TEMPLATES_ONLY */
 
@@ -2463,10 +2140,10 @@ void _registerSWE_DimensionalSplittingCharm(void)
 
 
 
-
 /* REG: message copyLayer{
 Boundary boundary;
 bool containsBathymetry;
+bool isDummy;
 float b[];
 float h[];
 float hu[];
@@ -2485,7 +2162,6 @@ void receiveGhostRight(copyLayer* impl_msg);
 void receiveGhostBottom(copyLayer* impl_msg);
 void receiveGhostTop(copyLayer* impl_msg);
 void reductionTrigger();
-void printFlops(double flop);
 void reduceWaveSpeed(float maxWaveSpeed);
 SWE_DimensionalSplittingCharm(CkMigrateMessage* impl_msg);
 };

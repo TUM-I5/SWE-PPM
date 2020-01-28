@@ -1,38 +1,41 @@
-all: test clean
+all: mpi upcxx charm chameleon_asagi hpx
 
 ASAGI_PATH = $(HOME)/ASAGI/
 simulate_smp:
-        ./build/SWE_gnu_release_none_omp_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/tohu_1m_new -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
+	./build/SWE_gnu_release_none_omp_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/tohu_1m_new -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
 
 simulate_upcxx:
-        ${UPCXX_PATH}/bin/upcxx-run -n 16 ./build/SWE_gnu_release_upcxx_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
+	${UPCXX_PATH}/bin/upcxx-run -n 16 ./build/SWE_gnu_release_upcxx_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
 
 simulate_upcxx_test:
-        ${UPCXX_PATH}/bin/upcxx-run -n 4 ./build/SWE_gnu_release_upcxx_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_upcxx
+	${UPCXX_PATH}/bin/upcxx-run -n 4 ./build/SWE_gnu_release_upcxx_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_upcxx
 
 simulate_mpi:
-        mpirun -np 4 ./build/SWE_gnu_release_mpi_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
+	mpirun -np 4 ./build/SWE_gnu_release_mpi_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
 
 simulate_hpx:
-        ./build/SWE_gnu_release_hpx_hybrid_vec -e 1000 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 2 --local-timestepping 0
+	./build/SWE_gnu_release_hpx_hybrid_vec -e 1000 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 2 --local-timestepping 0
 
 simulate_ampi:
-        ./charmrun +p4 ./build/SWE_gnu_release_mpi_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/mpi -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
+	./charmrun +p4 ./build/SWE_gnu_release_mpi_hybrid -t 3600 -n 20 -x 1000 -y 1000 -o ~/storage/tsunami/simulation/mpi -b /home/jurek/storage/tsunami/tohu_bath.nc -d /home/jurek/storage/tsunami/tohu_displ.nc
 
 simulate_charm:
-        mpirun -n 4  ./build/SWE_gnu_release_charm_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
+	mpirun -n 4  ./build/SWE_gnu_release_charm_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
 
 simulate_charm_test:
-        ./charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_charm
+	./charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_charm
 
 debug_charm_test:
-        /home/jurek/repository/tum/ccs_tools/bin/charmdebug +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/charm
+	/home/jurek/repository/tum/ccs_tools/bin/charmdebug +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/charm
+
 run_chameleon:
-        OMP_NUM_THREADS=14  mpirun -np 2 ./build/SWE_intel_release_chameleon_omp_augrie -t 0.1 -n 1 -x 4096 -y 4096 -o ./output/test -i 200
+	OMP_NUM_THREADS=14  mpirun -np 2 ./build/SWE_intel_release_chameleon_omp_augrie -t 0.1 -n 1 -x 4096 -y 4096 -o ./output/test -i 200
+
 run_chameleon_asagi:
-        OMP_NUM_THREADS=11 mpirun -np 2 ./build/SWE_intel_release_chameleon_omp_augrie -t 0.1 -n 1 -x 4096 -y 4096 -o ./output/test -u 1 -v 1 -b ~/maste${DATA_PATH}/tohoku/bath.nc -d ~/maste${DATA_PATH}/tohoku/displ.nc
+	OMP_NUM_THREADS=11 mpirun -np 2 ./build/SWE_intel_release_chameleon_omp_augrie -t 0.1 -n 1 -x 4096 -y 4096 -o ./output/test -u 1 -v 1 -b ~/maste${DATA_PATH}/tohoku/bath.nc -d ~/maste${DATA_PATH}/tohoku/displ.nc
+
 run_chameleon_test:
-        I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=11 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -np 2 ./build/SWE_intel_release_chameleon_omp_augrie -t 1.0 -n 1 -x 320 -y 320 -l 1 -o ./output/test
+	I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=11 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -np 2 ./build/SWE_intel_release_chameleon_omp_augrie -t 1.0 -n 1 -x 320 -y 320 -l 1 -o ./output/test
 
 #ampi:
 #	scons writeNetCDF=True openmp=False solver=hybrid parallelization=ampi
@@ -79,13 +82,13 @@ charm_load:
 	scons writeNetCDF=True openmp=false solver=augrie parallelization=charm asagi=false asagiDir=${ASAGI_PATH}  copyenv=true
 
 chameleon:
-	scons writeNetCDF=True compiler=intel  openmp=true parallelization=chameleon copyenv=true
+	scons writeNetCDF=True compiler=intel solver=hybrid openmp=true parallelization=chameleon copyenv=true
 
 chameleon_gnu:
-	scons writeNetCDF=True compiler=gnu openmp=true parallelization=chameleon
+	scons writeNetCDF=True compiler=gnu solver=hybrid openmp=true parallelization=chameleon
 
 chameleon_asagi:
-	scons writeNetCDF=True compiler=intel openmp=true parallelization=chameleon asagi=true asagiDir=${ASAGI_PATH}
+	scons writeNetCDF=True compiler=intel solver=hybrid openmp=true parallelization=chameleon asagi=true asagiDir=${ASAGI_PATH} copyenv=true vectorize=true
 
 chameleon_debug:
 	scons writeNetCDF=True compiler=intel openmp=true parallelization=chameleon compileMode=debug
@@ -131,6 +134,7 @@ ncgen_test:
 	ncgen -o test/testFriction.nc test/res/testFriction.cdl
 
 clean:
+    rm -f build/*
 	rm -f test/runner
 	rm -f test/gdb
 	rm -f test/*.cpp
