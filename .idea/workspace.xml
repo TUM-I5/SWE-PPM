@@ -14,6 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -214,14 +215,7 @@
       <workItem from="1579706373614" duration="1220000" />
       <workItem from="1579715913692" duration="27424000" />
       <workItem from="1580034239620" duration="24000" />
-      <workItem from="1580208521393" duration="3739000" />
-    </task>
-    <task id="LOCAL-00025" summary="Fixed charm communication measuring bug">
-      <created>1562232312715</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1562232312715</updated>
+      <workItem from="1580208521393" duration="4160000" />
     </task>
     <task id="LOCAL-00026" summary="Added loop parallelization">
       <created>1562249707228</created>
@@ -559,7 +553,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580212237749</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Charm work in progress">
+      <created>1580212272226</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1580212272226</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -612,10 +613,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1580212237692">
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1580212272168">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580212237692" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580212272168" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579745687984" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />

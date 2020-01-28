@@ -236,46 +236,47 @@ void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
 
 void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
 	// LEFT ghost layer consists of values from the left neighbours RIGHT copy layer etc.
-	if (msg->boundary == BND_RIGHT && boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
-		for (int i = 0; i < ny; i++) {
-			if (msg->containsBathymetry)
-				b[0][i + 1] = msg->b[i];
-			bufferH[0][i + 1] = msg->h[i];
-			bufferHu[0][i + 1] = msg->hu[i];
-			bufferHv[0][i + 1] = msg->hv[i];
-		}
-        borderTimestep[BND_LEFT] = msg->timestep;
-	} else if (msg->boundary == BND_LEFT && boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
-		for (int i = 0; i < ny; i++) {
-			if (msg->containsBathymetry)
-				b[nx + 1][i + 1] = msg->b[i];
-			bufferH[nx + 1][i + 1] = msg->h[i];
-            bufferHu[nx + 1][i + 1] = msg->hu[i];
-            bufferHv[nx + 1][i + 1] = msg->hv[i];
-		}
-        borderTimestep[BND_RIGHT] = msg->timestep;
-	} else if (msg->boundary == BND_TOP && boundaryType[BND_BOTTOM] == CONNECT && isReceivable(BND_BOTTOM)) {
-		for (int i = 0; i < nx; i++) {
-			if (msg->containsBathymetry)
-				b[i + 1][0] = msg->b[i];
-			bufferH[i + 1][0] = msg->h[i];
-            bufferHu[i + 1][0] = msg->hu[i];
-            bufferHv[i + 1][0] = msg->hv[i];
-		}
-        borderTimestep[BND_BOTTOM] = msg->timestep;
-	} else if (msg->boundary == BND_BOTTOM && boundaryType[BND_TOP] == CONNECT && isReceivable(BND_TOP)) {
-		for (int i = 0; i < nx; i++) {
-			if (msg->containsBathymetry)
-				b[i + 1][ny + 1] = msg->b[i];
-			bufferH[i + 1][ny + 1] = msg->h[i];
-            bufferHu[i + 1][ny + 1] = msg->hu[i];
-            bufferHv[i + 1][ny + 1] = msg->hv[i];
-		}
-        borderTimestep[BND_TOP] = msg->timestep;
-	}
-
+	if(!msg->isDummy){
+        if (msg->boundary == BND_RIGHT && boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
+            for (int i = 0; i < ny; i++) {
+                if (msg->containsBathymetry)
+                    b[0][i + 1] = msg->b[i];
+                bufferH[0][i + 1] = msg->h[i];
+                bufferHu[0][i + 1] = msg->hu[i];
+                bufferHv[0][i + 1] = msg->hv[i];
+            }
+            borderTimestep[BND_LEFT] = msg->timestep;
+        } else if (msg->boundary == BND_LEFT && boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
+            for (int i = 0; i < ny; i++) {
+                if (msg->containsBathymetry)
+                    b[nx + 1][i + 1] = msg->b[i];
+                bufferH[nx + 1][i + 1] = msg->h[i];
+                bufferHu[nx + 1][i + 1] = msg->hu[i];
+                bufferHv[nx + 1][i + 1] = msg->hv[i];
+            }
+            borderTimestep[BND_RIGHT] = msg->timestep;
+        } else if (msg->boundary == BND_TOP && boundaryType[BND_BOTTOM] == CONNECT && isReceivable(BND_BOTTOM)) {
+            for (int i = 0; i < nx; i++) {
+                if (msg->containsBathymetry)
+                    b[i + 1][0] = msg->b[i];
+                bufferH[i + 1][0] = msg->h[i];
+                bufferHu[i + 1][0] = msg->hu[i];
+                bufferHv[i + 1][0] = msg->hv[i];
+            }
+            borderTimestep[BND_BOTTOM] = msg->timestep;
+        } else if (msg->boundary == BND_BOTTOM && boundaryType[BND_TOP] == CONNECT && isReceivable(BND_TOP)) {
+            for (int i = 0; i < nx; i++) {
+                if (msg->containsBathymetry)
+                    b[i + 1][ny + 1] = msg->b[i];
+                bufferH[i + 1][ny + 1] = msg->h[i];
+                bufferHu[i + 1][ny + 1] = msg->hu[i];
+                bufferHv[i + 1][ny + 1] = msg->hv[i];
+            }
+            borderTimestep[BND_TOP] = msg->timestep;
+        }
+    }
+    delete msg;
 	// Deallocate the message buffer
-	delete msg;
 }
 
 void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry){
