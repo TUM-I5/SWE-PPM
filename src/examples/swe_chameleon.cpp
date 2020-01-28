@@ -486,12 +486,12 @@ int main(int argc, char** argv) {
                 //if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
                 if(!localTimestepping){
                     for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
-                        for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
+                        for (int y = yBounds[myYRank]; y < yBounds[myYRank + 1]; y++) {
 
-                                timestep = std::min(timestep,blocks[x][y]->getMaxTimestep());
+                            timestep = std::min(timestep, blocks[x][y]->getMaxTimestep());
 
+                        }
                     }
-
                     // reduce over all ranks
                     float maxTimestepGlobal;
                     MPI_Allreduce(&timestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD); //@todo no need to reduction with localtimestepping (maybe)
