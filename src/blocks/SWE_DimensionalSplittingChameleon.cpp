@@ -359,7 +359,17 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 	//maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
 	float maxVerticalWaveSpeed = (float) 0.;
-	solver::AugRie<float> localSolver = block->solver;
+
+#if WAVE_PROPAGATION_SOLVER==0
+    solver::HLLEFun<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER==1
+    //! F-wave Riemann solver
+    solver::FWave<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> localSolver = block->solver;
+#endif
+
 
 	// x-sweep, compute the actual domain plus ghost rows above and below
 	// iterate over cells on the x-axis, leave out the last column (two cells per computation)
