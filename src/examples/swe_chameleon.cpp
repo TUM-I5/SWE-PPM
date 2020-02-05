@@ -273,7 +273,7 @@ int main(int argc, char** argv) {
 			if(myRank < numRanks - xRankCount)
 				blocks[x][y]->neighbourRankId[BND_TOP] = myRank+xRankCount;
 
-            std::cout << myRank << " | " << lblocks[x][y]->neighbourRankId[BND_LEFT] << " " << blocks[x][y]->neighbourRankId[BND_RIGHT]<< " " << blocks[x][y]->neighbourRankId[BND_BOTTOM] << " " << blocks[x][y]->neighbourRankId[BND_TOP] << std::endl;
+            std::cout << myRank << " | " << blocks[x][y]->neighbourRankId[BND_LEFT] << " " << blocks[x][y]->neighbourRankId[BND_RIGHT]<< " " << blocks[x][y]->neighbourRankId[BND_BOTTOM] << " " << blocks[x][y]->neighbourRankId[BND_TOP] << std::endl;
 		}
 	}
 	for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
