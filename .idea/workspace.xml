@@ -12,9 +12,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Found Chameleon implemenation bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,11 +65,13 @@
     <property name="ChangesTree.GroupingKeys" value="directory&#10;repository" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" />
+    <property name="two.files.diff.last.used.folder" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -214,14 +216,11 @@
       <workItem from="1579706373614" duration="1220000" />
       <workItem from="1579715913692" duration="27424000" />
       <workItem from="1580034239620" duration="24000" />
-      <workItem from="1580208521393" duration="12588000" />
-    </task>
-    <task id="LOCAL-00037" summary="Added charm chares change">
-      <created>1562771558768</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1562771558768</updated>
+      <workItem from="1580208521393" duration="12673000" />
+      <workItem from="1580224104076" duration="4903000" />
+      <workItem from="1580480497045" duration="21000" />
+      <workItem from="1580862886204" duration="28000" />
+      <workItem from="1580863300832" duration="785000" />
     </task>
     <task id="LOCAL-00038" summary="Added charm chares change">
       <created>1562772350004</created>
@@ -559,7 +558,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580221229388</updated>
     </task>
-    <option name="localTasksCounter" value="86" />
+    <task id="LOCAL-00086" summary="Found Chameleon implemenation bug">
+      <created>1580221543936</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1580221543937</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -612,10 +618,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1580221229338">
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2" timestamp="1580228198397">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580221229338" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580228198397" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579745687984" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />
@@ -623,16 +629,16 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="446" height="442" key="Diff.GoToChangePopup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543830112" />
-    <state x="167" y="149" width="1482" height="872" key="DiffContextDialog" timestamp="1580220757126">
+    <state x="167" y="149" width="1536" height="891" key="DiffContextDialog" timestamp="1580229173711">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="167" y="149" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580220757126" />
+    <state x="167" y="149" width="1536" height="891" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580229173711" />
     <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000827352" />
     <state x="228" y="149" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1577006569067" />
-    <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl" timestamp="1580219633444">
+    <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl" timestamp="1580862912705">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580219633444" />
+    <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580862912705" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579648171620" />
     <state x="816" y="329" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1576075894312" />
     <state x="2350" y="164" key="SettingsEditor" timestamp="1579716034703">
