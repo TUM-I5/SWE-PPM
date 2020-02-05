@@ -440,14 +440,14 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 	clock_gettime(CLOCK_MONOTONIC, &endTime);
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
+    maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
     if(localTimestepping){
 
         maxTimestep = getRoundTimestep(maxTimestep);
 
     }else {
         // compute max timestep according to cautious CFL-condition
-        maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+
         clock_gettime(CLOCK_MONOTONIC, &startTime);
         maxTimestepGlobal = upcxx::reduce_all(maxTimestep, [](float a, float b) { return std::min(a, b); }).wait();
         clock_gettime(CLOCK_MONOTONIC, &endTime);

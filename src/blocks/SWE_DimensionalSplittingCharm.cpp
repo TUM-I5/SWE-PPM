@@ -129,12 +129,12 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 	clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
 	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
 	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
-
+    maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
 	// compute max timestep according to cautious CFL-condition
 	if(localTimestepping){
         maxTimestep = getRoundTimestep(maxTimestep);
 	}else {
-        maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+
         clock_gettime(CLOCK_MONOTONIC, &reducTime);
         CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
         contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
