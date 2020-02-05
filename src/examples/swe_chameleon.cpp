@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
 	args.addOption("x-imbalance", 'u', "Imbalance in x-direction", tools::Args::Required, false);
 	args.addOption("y-imbalance", 'v', "Imbalance in y-direction", tools::Args::Required, false);
 	args.addOption("write", 'w', "Write results", tools::Args::Required, false);
-	args.addOption("iteration-count", 'i', "Iteration Count (Overrides t and n)", tools::Args::Required, false);
+	//args.addOption("iteration-count", 'i', "Iteration Count (Overrides t and n)", tools::Args::Required, false);
     args.addOption("local-timestepping", 'l', "Output base file name", tools::Args::Required, false);
 	// Parse command line arguments
 	tools::Args::Result ret = args.parse(argc, argv);
