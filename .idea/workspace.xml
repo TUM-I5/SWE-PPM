@@ -12,9 +12,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Found Chameleon implemenation bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,14 +222,7 @@
       <workItem from="1580862886204" duration="28000" />
       <workItem from="1580863300832" duration="785000" />
       <workItem from="1580896719843" duration="594000" />
-      <workItem from="1580913253757" duration="968000" />
-    </task>
-    <task id="LOCAL-00041" summary="Merged some More">
-      <created>1574810989151</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1574810989151</updated>
+      <workItem from="1580913253757" duration="1209000" />
     </task>
     <task id="LOCAL-00042" summary="Merged some More More">
       <created>1574811077853</created>
@@ -567,7 +560,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580914022356</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="Found Chameleon implemenation bug">
+      <created>1580914241482</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1580914241483</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -620,10 +620,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2" timestamp="1580914022283">
+    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2" timestamp="1580914291740">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914022283" />
+    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914291740" />
     <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580896730813" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579745687984" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
@@ -632,9 +632,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="446" height="442" key="Diff.GoToChangePopup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543830112" />
-    <state x="167" y="149" width="1536" height="891" key="DiffContextDialog" timestamp="1580229173711">
+    <state x="167" y="149" width="1536" height="891" key="DiffContextDialog" timestamp="1580914290668">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
     <state x="167" y="149" width="1536" height="891" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580229173711" />
     <state x="2087" y="125" width="1653" height="855" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000827352" />
     <state x="228" y="149" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1577006569067" />
@@ -650,9 +651,10 @@
     <state x="430" y="187" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1579175083244" />
     <state x="2350" y="164" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579716034703" />
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1579706720290" />
-    <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1576000765897">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="588" y="308" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1580914313599">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
+    <state x="588" y="308" key="Vcs.Push.Dialog.v2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914313599" />
     <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1576000765897" />
     <state x="613" y="157" width="683" height="764" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1576845713296">
       <screen x="0" y="27" width="1920" height="1053" />
