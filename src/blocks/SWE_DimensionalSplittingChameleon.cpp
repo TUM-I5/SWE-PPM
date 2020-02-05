@@ -328,7 +328,9 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	int code = MPI_Waitall(16, recvReqs, stati);
 	if(code != MPI_SUCCESS)
 		printf("%d: No success %d\n", myRank, code);
-
+    int myRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+    std::cout << myRank << " | "  << " " << borderTimestep[0] << " " << borderTimestep[1]<< " " << borderTimestep[2]<< " " << borderTimestep[3] << std::endl;
 	checkAllGhostlayers();
 
 	//if(leftReceive)
