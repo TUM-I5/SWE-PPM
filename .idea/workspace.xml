@@ -14,8 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,14 +224,7 @@
       <workItem from="1580896719843" duration="594000" />
       <workItem from="1580913253757" duration="1482000" />
       <workItem from="1580915110719" duration="118000" />
-      <workItem from="1580920588335" duration="3892000" />
-    </task>
-    <task id="LOCAL-00048" summary="Fixed some MORE Errors of Local Timestepping">
-      <created>1576002684616</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1576002684616</updated>
+      <workItem from="1580920588335" duration="3936000" />
     </task>
     <task id="LOCAL-00049" summary="Fixed some MORE Errors of Local Timestepping">
       <created>1576002963273</created>
@@ -570,7 +562,14 @@
       <option name="project" value="LOCAL" />
       <updated>1580923537726</updated>
     </task>
-    <option name="localTasksCounter" value="97" />
+    <task id="LOCAL-00097" summary="Fixed bug with weird posiiton of timestep calculation">
+      <created>1580925026894</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1580925026894</updated>
+    </task>
+    <option name="localTasksCounter" value="98" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -591,7 +590,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Added Bat support" />
     <MESSAGE value="Fixed more locality bug" />
     <MESSAGE value="Added charm chares change" />
     <MESSAGE value="Merged with Cameleon Repo" />
@@ -616,18 +614,19 @@
     <MESSAGE value="        Charm work in progress" />
     <MESSAGE value="Clean and updated Makefile&#10;Finished Charm" />
     <MESSAGE value="Found Chameleon implemenation bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Found Chameleon implemenation bug" />
+    <MESSAGE value="Fixed bug with weird posiiton of timestep calculation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed bug with weird posiiton of timestep calculation" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="200" width="800" height="677" key="#Notifications" timestamp="1576543840156">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2" timestamp="1580923537664">
+    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2" timestamp="1580925026834">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580923537664" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580925026834" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579745687984" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />

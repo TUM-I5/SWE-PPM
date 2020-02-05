@@ -387,14 +387,14 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes () {
 	clock_gettime(CLOCK_MONOTONIC, &endTime);
 	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
 	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
+    maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
     if(localTimestepping){
 
         maxTimestep = getRoundTimestep(maxTimestep);
         //std::cout << "My timestep is " << maxTimestep << std::endl;
     }else {
         // compute max timestep according to cautious CFL-condition
-        maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+
         clock_gettime(CLOCK_MONOTONIC, &startTime);
         MPI_Allreduce(&maxTimestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
         clock_gettime(CLOCK_MONOTONIC, &endTime);
