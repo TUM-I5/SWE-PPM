@@ -183,7 +183,13 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	MPI_Request req;
     float totalLocalTimestep = getTotalLocalTimestep();
 
+
+    int myRank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
+
 	if (boundaryType[BND_LEFT] == CONNECT && isSendable(BND_LEFT)) {
+	    std::cout << myRank << " | " << "send left timestep " << totalLocalTimestep << std::endl;
+
 		int startIndex = ny + 2 + 1;
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_LEFT],  MPI_TAG_TIMESTEP_LEFT, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
@@ -198,7 +204,9 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 		MPI_Request_free(&req);
 	}
 	if (boundaryType[BND_RIGHT] == CONNECT && isSendable(BND_RIGHT)) {
-		int startIndex = nx * (ny + 2) + 1;
+        std::cout << myRank << " | " << "send right timestep " << totalLocalTimestep << std::endl;
+
+        int startIndex = nx * (ny + 2) + 1;
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_RIGHT],  MPI_TAG_TIMESTEP_RIGHT, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 
@@ -207,6 +215,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 
 		MPI_Isend(hu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagHU, MPI_COMM_WORLD, &req);
 		MPI_Request_free(&req);
+
 
 		MPI_Isend(hv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagHV, MPI_COMM_WORLD, &req);
 		MPI_Request_free(&req);
