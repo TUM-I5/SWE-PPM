@@ -188,7 +188,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 
 	if (boundaryType[BND_LEFT] == CONNECT && isSendable(BND_LEFT)) {
-	    std::cout << myRank << " | " << "send left timestep " << totalLocalTimestep << std::endl;
+	    //std::cout << myRank << " | " << "send left timestep " << totalLocalTimestep << std::endl;
 
 		int startIndex = ny + 2 + 1;
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_LEFT],  MPI_TAG_TIMESTEP_LEFT, MPI_COMM_WORLD, &req);
@@ -204,7 +204,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 		MPI_Request_free(&req);
 	}
 	if (boundaryType[BND_RIGHT] == CONNECT && isSendable(BND_RIGHT)) {
-        std::cout << myRank << " | " << "send right timestep " << totalLocalTimestep << std::endl;
+        //std::cout << myRank << " | " << "send right timestep " << totalLocalTimestep << std::endl;
 
         int startIndex = nx * (ny + 2) + 1;
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_RIGHT],  MPI_TAG_TIMESTEP_RIGHT, MPI_COMM_WORLD, &req);
@@ -221,7 +221,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 		MPI_Request_free(&req);
 	}
 	if (boundaryType[BND_BOTTOM] == CONNECT && isSendable(BND_BOTTOM)) {
-        std::cout << myRank << " | " << "send bottom timestep " << totalLocalTimestep << std::endl;
+       // std::cout << myRank << " | " << "send bottom timestep " << totalLocalTimestep << std::endl;
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM],  MPI_TAG_TIMESTEP_BOTTOM, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 		//int code = 
@@ -239,7 +239,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 
 	}
 	if (boundaryType[BND_TOP] == CONNECT && isSendable(BND_TOP))  {
-        std::cout << myRank << " | " << "send top timestep " << totalLocalTimestep << std::endl;
+        //std::cout << myRank << " | " << "send top timestep " << totalLocalTimestep << std::endl;
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_TOP],  MPI_TAG_TIMESTEP_TOP, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 
@@ -341,8 +341,8 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 		printf("%d: No success %d\n", myRank, code);
     int myRank;
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
-    for(int i = 0; i < 4 ; i++)borderTimestep[i] = std::max(0, borderTimestep[i]);
-    std::cout << myRank << " | "  << " " << borderTimestep[0] << " " << borderTimestep[1]<< " " << borderTimestep[2]<< " " << borderTimestep[3] << std::endl;
+    //for(int i = 0; i < 4 ; i++)borderTimestep[i] = std::max(0, borderTimestep[i]);
+    //std::cout << myRank << " | "  << " " << borderTimestep[0] << " " << borderTimestep[1]<< " " << borderTimestep[2]<< " " << borderTimestep[3] << std::endl;
 	checkAllGhostlayers();
 
 	//if(leftReceive)
