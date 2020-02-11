@@ -221,6 +221,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 		MPI_Request_free(&req);
 	}
 	if (boundaryType[BND_BOTTOM] == CONNECT && isSendable(BND_BOTTOM)) {
+        std::cout << myRank << " | " << "send bottom timestep " << totalLocalTimestep << std::endl;
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM],  MPI_TAG_TIMESTEP_BOTTOM, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 		//int code = 
@@ -238,6 +239,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 
 	}
 	if (boundaryType[BND_TOP] == CONNECT && isSendable(BND_TOP))  {
+        std::cout << myRank << " | " << "send top timestep " << totalLocalTimestep << std::endl;
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_TOP],  MPI_TAG_TIMESTEP_TOP, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 
