@@ -496,7 +496,7 @@ int main(int argc, char** argv) {
                     }
                     // reduce over all ranks
                     float maxTimestepGlobal;
-                    MPI_Allreduce(&timestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD); //@todo no need to reduction with localtimestepping (maybe)
+                    MPI_Allreduce(&timestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
                     timestep = maxTimestepGlobal;
                 }
 
@@ -560,10 +560,10 @@ int main(int argc, char** argv) {
             t += localTimestepping?maxLocalTimestep:timestep;
 			iterations++;
 
-			if(myRank == 0)
-				printf("Step, current time:%f\n", t);
-		}
 
+		}
+        if(myRank == 0)
+            printf("Write timestep (%fs)\n", t);
 		// write output
 		if(write) {
 			MPI_Win_fence(0, writeBlockWin_h);

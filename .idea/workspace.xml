@@ -12,9 +12,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="&#10;dsafd">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,14 +225,7 @@
       <workItem from="1580913253757" duration="1482000" />
       <workItem from="1580915110719" duration="118000" />
       <workItem from="1580920588335" duration="4024000" />
-      <workItem from="1581440762299" duration="2871000" />
-    </task>
-    <task id="LOCAL-00054" summary="Fixed some MORE Errors of Local Timestepping and added debug message">
-      <created>1576514915039</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1576514915040</updated>
+      <workItem from="1581440762299" duration="4404000" />
     </task>
     <task id="LOCAL-00055" summary="Fixed some MORE Errors of Local Timestepping and added debug message">
       <created>1576515852044</created>
@@ -570,7 +563,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581444009797</updated>
     </task>
-    <option name="localTasksCounter" value="103" />
+    <task id="LOCAL-00103" summary="&#10;dsafd">
+      <created>1581444198736</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1581444198736</updated>
+    </task>
+    <option name="localTasksCounter" value="104" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -623,11 +623,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2" timestamp="1581444189468">
+    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2" timestamp="1581444198673">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1581444189468" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1581444198673" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579745687984" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1577006593817" />
@@ -668,10 +668,10 @@
     </state>
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580922356935" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579700332116" />
-    <state x="1991" y="27" width="1385" height="950" maximized="true" key="dock-window-1" timestamp="1580922558159">
+    <state x="2443" y="27" width="1397" height="953" maximized="true" key="dock-window-1" timestamp="1581460500983">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="1991" y="27" width="1385" height="950" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580922558159" />
+    <state x="2443" y="27" width="1397" height="953" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1581460500983" />
     <state x="4" y="27" width="1267" height="921" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579725103613" />
     <state x="-161" y="27" width="933" height="878" maximized="true" key="dock-window-1/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577114376215" />
     <state x="429" y="0" width="1369" height="1011" key="dock-window-2" timestamp="1580034263596">
