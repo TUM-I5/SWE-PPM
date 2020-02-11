@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
 		write = true;
     if(args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1)
         localTimestepping = true;
-	int :nxRequested = 1000000;
+	int iteration_count = 1000000;
 	if(args.isSet("iteration-count")) {
 		iteration_count = args.getArgument<int>("iteration-count");
 		numberOfCheckPoints = 1;
