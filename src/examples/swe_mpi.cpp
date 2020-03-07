@@ -36,7 +36,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <limits.h>
-
+#include "tools/CollectorMpi.hpp"
 #include "tools/args.hh"
 
 #ifdef WRITENETCDF
@@ -367,7 +367,10 @@ int main(int argc, char** argv) {
                     << "Communication Time(Total): " << sumCommTime << "s" << std::endl
                     << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl
                     << "Barrier Time(Total): " << sumBarrierTime << "s" << std::endl;
+        CollectorMpi::getInstance().setMasterSettings(true, "MpiTest.log");
+
     }
+    CollectorMpi::getInstance().logResults();
 	simulation.freeMpiType();
 	MPI_Finalize();
 

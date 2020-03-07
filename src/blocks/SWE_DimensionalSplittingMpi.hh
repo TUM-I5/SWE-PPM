@@ -36,7 +36,7 @@
 #include "blocks/SWE_Block.hh"
 #include "scenarios/SWE_Scenario.hh"
 #include "tools/Float2DNative.hh"
-
+#include "tools/CollectorMpi.hpp"
 #include <mpi.h>
 #if WAVE_PROPAGATION_SOLVER==0
 //#include "solvers/Hybrid.hpp"

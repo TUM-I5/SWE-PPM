@@ -377,6 +377,7 @@ if env['parallelization'] in ['starpu']:
 
 # Select the compiler (MPI and/or Intel, GNU is default)
 if env['parallelization'] in ['mpi', 'mpi_with_cuda']:
+    env.Append(CCFLAGS=['-std=c++11'])
     if env['compiler'] == 'cray':
         env['CXX'] = 'CC'
     else:
