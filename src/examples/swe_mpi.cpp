@@ -36,7 +36,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <limits.h>
-#include "tools/CollectorMpi.hpp"
+#include "tools/CollectorChameleon.hpp"
 #include "tools/args.hh"
 
 #ifdef WRITENETCDF

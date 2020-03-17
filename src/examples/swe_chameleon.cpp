@@ -416,7 +416,7 @@ int main(int argc, char** argv) {
 	double writeOutputTime = 0;
 
 	float t = 0.0;
-
+    CollectorChameleon collector;
 	int iterations = 0;
     bool synchronizedTimestep = true;
 	double startTimeWhole = getTime();
@@ -434,7 +434,7 @@ int main(int argc, char** argv) {
                 clock_gettime(CLOCK_MONOTONIC, &startTime);
                 commClock = clock();
                 lastTime = getTime();
-
+                collector.startCounter(Collector::CTR_WALL);
                 timestep = std::numeric_limits<float>::max();
 
                 //TODO: exchange bathymetry
@@ -487,6 +487,7 @@ int main(int argc, char** argv) {
                 taskWaitHorizontalTime += getTime()-lastTime; lastTime = getTime();
                 //if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
                 if(!localTimestepping){
+                    collector.startCounter(Collector::CTR_REDUCE);
                     for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
                         for (int y = yBounds[myYRank]; y < yBounds[myYRank + 1]; y++) {
 
@@ -498,6 +499,7 @@ int main(int argc, char** argv) {
                     float maxTimestepGlobal;
                     MPI_Allreduce(&timestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
                     timestep = maxTimestepGlobal;
+                    collector.stopCounter(Collector::CTR_REDUCE);
                 }
 
                 reductionTime += getTime()-lastTime; lastTime = getTime();
@@ -541,7 +543,7 @@ int main(int argc, char** argv) {
                 clock_gettime(CLOCK_MONOTONIC, &endTime);
                 wallTime += (endTime.tv_sec - startTime.tv_sec);
                 wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
+                collector.stopCounter(Collector::CTR_WALL);
                 if(localTimestepping){
                     //if each block got the maxLocalTimestep the timestep is finished
                     synchronizedTimestep = true;
@@ -608,6 +610,7 @@ int main(int argc, char** argv) {
 	float minTime=1000000.; float maxTime=0.;float avgTime=0.; int blockCount = 0;
 	for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
 		for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
+		    collector += blocks[x][y].collector;
 			if(blocks[x][y]->computeTimeWall < minTime)
 				minTime = blocks[x][y]->computeTimeWall;
 			if(blocks[x][y]->computeTimeWall > maxTime)
@@ -627,8 +630,12 @@ int main(int argc, char** argv) {
 
 	//printf("SMP : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", blocks[xBounds[myXRank]][myYRank]->computeTime, blocks[xBounds[myXRank]][myYRank]->computeTimeWall, wallTime);
 	double wallTimeWhole = getTime() - startTimeWhole;
-	if(myRank == 0)
-		printf("Iterations: %d\n", iterations);
+
+	if(myRank == 0){
+        printf("Iterations: %d\n", iterations);
+        collector.setMasterSettings(true, "TestChameleon.log");
+	}
+    collector.logResults();
 	printf("RESULT: Chameleon: Computation ended, walltime:%f\n", wallTimeWhole);
 
 	printf("%d: setGhostLayerTime=%f\n", myRank, (float)setGhostLayerTime);

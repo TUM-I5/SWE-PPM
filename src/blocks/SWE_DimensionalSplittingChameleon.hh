@@ -36,7 +36,7 @@
 #include <ctime>
 #include <time.h>
 #include <mpi.h>
-
+#include "tools/CollectorChameleon.hpp"
 #if WAVE_PROPAGATION_SOLVER==0
 //#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
@@ -110,6 +110,7 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		double computeClock;
 		struct timespec startTime;
 		struct timespec endTime;
+        CollectorChameleon collector;
 };
 
 double getTime();

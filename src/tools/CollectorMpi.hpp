@@ -15,7 +15,7 @@ public:
 
         return instance;
     }
-private:
+protected:
     CollectorMpi () {};
     CollectorMpi(CollectorMpi const&);              // Don't Implement
     void operator=(CollectorMpi const&); // Don't implement

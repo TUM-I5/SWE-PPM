@@ -125,7 +125,7 @@ void SWE_DimensionalSplittingChameleon::freeMpiType() {
 void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
 	SWE_Block::applyBoundaryConditions();
-
+    collector.startCounter(Collector::CTR_EXCHANGE);
 	if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK  && isReceivable(BND_RIGHT)) {
 	    borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
 		for(int i = 1; i < ny+2; i++) {
@@ -254,6 +254,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 		//printf("%d: Sent to top %d, %f at %f\n", myRank, neighbourRankId[BND_TOP], h[1][ny], originX);
 
 	}
+    collector.stopCounter(Collector::CTR_EXCHANGE);
 }
 
 void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
@@ -278,7 +279,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	int rightReceive = 0;
 	int bottomReceive = 0;
 	int topReceive = 0;
-
+    collector.startCounter(Collector::CTR_EXCHANGE);
 	if (boundaryType[BND_LEFT] == CONNECT  && isReceivable(BND_LEFT)) {
 		int startIndex = 1;
 
@@ -344,7 +345,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
     //for(int i = 0; i < 4 ; i++)borderTimestep[i] = std::max(0, borderTimestep[i]);
     //std::cout << myRank << " | "  << " " << borderTimestep[0] << " " << borderTimestep[1]<< " " << borderTimestep[2]<< " " << borderTimestep[3] << std::endl;
 	checkAllGhostlayers();
-
+    collector.stopCounter(Collector::CTR_EXCHANGE);
 	//if(leftReceive)
 	//	printf("%d: Received left from %d\n", myRank, neighbourRankId[BND_LEFT]);
 	//if(rightReceive)
@@ -401,7 +402,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 					);
 		}
 	}
-
+    collector.addFlops(nx*ny*135);
 	// compute max timestep according to cautious CFL-condition
 	block->maxTimestep = (float) .4 * (block->dx / maxHorizontalWaveSpeed);
 
@@ -507,7 +508,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 					);
 		}
 	}
-	
+    collector.addFlops(nx*ny*135);
 	#ifndef NDEBUG
 	if(block->maxTimestep >= (float) .7 * (block->dy / maxVerticalWaveSpeed)) {
 		printf("%d: %f, %f, %f\n", block->myRank, block->maxTimestep, block->dy, maxVerticalWaveSpeed);

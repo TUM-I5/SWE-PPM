@@ -12,16 +12,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/tools/CollectorUpcxx.hpp" afterDir="false" />
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Finished but not test">
+      <change afterPath="$PROJECT_DIR$/src/tools/CollectorChameleon.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tools/Collector.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Collector.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tools/CollectorMpi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorMpi.hpp" afterDir="false" />
     </list>
@@ -239,14 +236,7 @@
       <workItem from="1583178469689" duration="36000" />
       <workItem from="1583178814688" duration="2524000" />
       <workItem from="1583602693695" duration="8999000" />
-      <workItem from="1584447372127" duration="5980000" />
-    </task>
-    <task id="LOCAL-00056" summary="Fixed some MORE Errors of Local Timestepping and added debug message">
-      <created>1576544002915</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1576544002915</updated>
+      <workItem from="1584447372127" duration="9256000" />
     </task>
     <task id="LOCAL-00057" summary="Fixed LTS implementation&#10;Added Boundaries for LTS&#10;Applied LTS to mpi and chameleon">
       <created>1576851973825</created>
@@ -584,7 +574,14 @@
       <option name="project" value="LOCAL" />
       <updated>1581460504617</updated>
     </task>
-    <option name="localTasksCounter" value="105" />
+    <task id="LOCAL-00105" summary="Finished CollectorMpi.hpp and CollectorUpcxx.hpp&#10;Removed redundant measurement code and replaced with collectors">
+      <created>1584454484418</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1584454484418</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -605,7 +602,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Added charm chares change" />
     <MESSAGE value="Merged with Cameleon Repo" />
     <MESSAGE value="Added barrier implementation again" />
     <MESSAGE value="Merged SWE_Block" />
@@ -630,18 +626,19 @@
     <MESSAGE value="Found Chameleon implemenation bug" />
     <MESSAGE value="Fixed bug with weird posiiton of timestep calculation" />
     <MESSAGE value="&#10;dsafd" />
-    <option name="LAST_COMMIT_MESSAGE" value="&#10;dsafd" />
+    <MESSAGE value="Finished CollectorMpi.hpp and CollectorUpcxx.hpp&#10;Removed redundant measurement code and replaced with collectors" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished CollectorMpi.hpp and CollectorUpcxx.hpp&#10;Removed redundant measurement code and replaced with collectors" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="200" width="800" height="677" key="#Notifications" timestamp="1576543840156">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
-    <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2" timestamp="1583611737958">
-      <screen x="67" y="27" width="1853" height="1053" />
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1584460612546">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1581460504564" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584460612546" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579745687984" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />

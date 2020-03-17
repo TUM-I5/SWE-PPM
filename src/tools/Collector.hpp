@@ -22,7 +22,16 @@ protected:
 
 public:
     enum COUNTERS {CTR_EXCHANGE,CTR_BARRIER,CTR_REDUCE,CTR_WALL};
+    Collector& operator+=(const Collector& other){
+        flop_ctr += other.flop_ctr;
+        for(int i = 0; i < 4; i++){
+            total_ctrs[i] += other.total_ctrs[i];
+        }
+        return *this;
+    }
+
     Collector():flop_ctr(0.0f),group_flop_ctr(0.0f),is_master(false),log_name("swe_counter.log") {};
+
 
     void setMasterSettings(bool master,std::string log_name){
         is_master = master;
