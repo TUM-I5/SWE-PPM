@@ -89,11 +89,6 @@ SWE_DimensionalSplittingUpcxx::SWE_DimensionalSplittingUpcxx(int nx, int ny, flo
 		hvNetUpdatesBelow(nx + 1, ny + 2),
 		hvNetUpdatesAbove(nx + 1, ny + 2) {
 
-	computeTime = 0.;
-	computeTimeWall = 0.;
-	flopCounter = 0;
-	communicationTime = 0;
-	reductionTime = 0;
 
     upcxxLocalTimestep = upcxx::new_array<float>(4);
     upcxxBorderTimestep = upcxxLocalTimestep.local();
@@ -255,8 +250,8 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 	upcxx::future<> rightFuture = upcxx::make_future<>();
 	upcxx::future<> bottomFuture = upcxx::make_future<>();
 	upcxx::future<> topFuture = upcxx::make_future<>();
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
 
+    CollectorUpcxx::getInstance().startCounter(CollectorUpcxx::CTR_EXCHANGE);
     notifyNeighbours(true);
 
     for(int i = 0; i < 4; i++){
@@ -387,10 +382,8 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
         dataTransmitted[i] = false;
     }
     checkAllGhostlayers();
+    CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_EXCHANGE);
 
-    clock_gettime(CLOCK_MONOTONIC, &endTime);
-    communicationTime += (endTime.tv_sec - startTime.tv_sec);
-    communicationTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
     iteration++;
 }
 /**
@@ -401,8 +394,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
     if(!allGhostlayersInSync()) return;
 	// Start compute clocks
-	computeClock = clock();
-	clock_gettime(CLOCK_MONOTONIC, &startTime);
+
 
 	//maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
@@ -431,15 +423,9 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 			}
 		}
 	}
+    CollectorUpcxx::getInstance().addFlops(nx*ny*135);
 
-    flopCounter += nx*ny*135;
-	// Accumulate compute time -> exclude the reduction
-	computeClock = clock() - computeClock;
-	computeTime += (float) computeClock / CLOCKS_PER_SEC;
 
-	clock_gettime(CLOCK_MONOTONIC, &endTime);
-	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
-	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
     if(localTimestepping){
 
@@ -447,19 +433,14 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 
     }else {
         // compute max timestep according to cautious CFL-condition
+        CollectorUpcxx::getInstance().startCounter(CollectorUpcxx::CTR_REDUCE);
 
-        clock_gettime(CLOCK_MONOTONIC, &startTime);
-        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, [](float a, float b) { return std::min(a, b); }).wait();
-        clock_gettime(CLOCK_MONOTONIC, &endTime);
-        reductionTime += (endTime.tv_sec - startTime.tv_sec);
-        reductionTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, upcxx::op_fast_min).wait();
+
+        CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_REDUCE);
         maxTimestep = maxTimestepGlobal;
     }
-	//upcxx::barrier();
 
-	// restart compute clocks
-	computeClock = clock();
-	clock_gettime(CLOCK_MONOTONIC, &startTime);
 
 	#pragma omp parallel private(solver)
 	{
@@ -504,14 +485,9 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
 		}
 		#endif // NDEBUG
 	}
-    flopCounter += nx*ny*135;
-	// Accumulate compute time
-	computeClock = clock() - computeClock;
-	computeTime += (float) computeClock / CLOCKS_PER_SEC;
 
-	clock_gettime(CLOCK_MONOTONIC, &endTime);
-	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
-	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+    CollectorUpcxx::getInstance().addFlops(nx*ny*135);
+
 }
 
 /**
@@ -522,9 +498,6 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
  */
 void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
     if(!allGhostlayersInSync()) return;
-	// Start compute clocks
-	computeClock = clock();
-	clock_gettime(CLOCK_MONOTONIC, &startTime);
 
 	// this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
 	assert(std::abs(dt - maxTimestep) < 0.00001);
@@ -538,13 +511,5 @@ void SWE_DimensionalSplittingUpcxx::updateUnknowns (float dt) {
 	}
 
 	// Accumulate compute time
-	computeClock = clock() - computeClock;
-	computeTime += (float) computeClock / CLOCKS_PER_SEC;
+}
 
-	clock_gettime(CLOCK_MONOTONIC, &endTime);
-	computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
-	computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-}
-float SWE_DimensionalSplittingUpcxx::getFlops(){
-    return flopCounter;
-}

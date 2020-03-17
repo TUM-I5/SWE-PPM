@@ -27,9 +27,11 @@ public:
 
 
     void collect ()  {
-        double reduce_ctr = total_ctrs[CTR_REDUCE].count();
+        double reduce_ctr   = total_ctrs[CTR_REDUCE].count();
         double exchange_ctr = total_ctrs[CTR_EXCHANGE].count();
+        double wall_ctr     = total_ctrs[CTR_WALL].count();
 
+        MPI_Allreduce(&wall_ctr,&result_ctrs[CTR_WALL] , 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
         MPI_Allreduce(&reduce_ctr,&result_ctrs[CTR_REDUCE] , 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         MPI_Allreduce(&exchange_ctr, &result_ctrs[CTR_EXCHANGE], 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
         MPI_Allreduce(&flop_ctr, &group_flop_ctr, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);

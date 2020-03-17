@@ -64,11 +64,6 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 		void connectNeighbours(int neighbourRankId[]);
 		void exchangeBathymetry();
 
-		float computeTime;
-		float computeTimeWall;
-        float communicationTime;
-        float reductionTime;
-        float getFlops();
     int iteration = 0;
 	private:
 #if WAVE_PROPAGATION_SOLVER==0
@@ -85,7 +80,7 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 
 		// Max timestep reduced over all upcxx ranks
 		float maxTimestepGlobal;
-		float flopCounter = 0;
+
 		// Temporary values after x-sweep and before y-sweep
 		Float2DNative hStar;
 		Float2DNative huStar;
@@ -117,9 +112,5 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
 		// Custom data types for bottom/top border which are requrired due to the stride
 		MPI_Datatype HORIZONTAL_BOUNDARY;
 
-		// timer
-		std::clock_t computeClock;
-		struct timespec startTime;
-		struct timespec endTime;
 };
 #endif /* SWEDIMENSIONALSPLITTINGMPI_HH_ */

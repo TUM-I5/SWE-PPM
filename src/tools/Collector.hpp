@@ -16,7 +16,7 @@ protected:
     double group_flop_ctr;
     bool is_master;
     std::string log_name;
-    std::array<std::chrono::nanoseconds	,4> total_ctrs;
+    std::array<std::chrono::duration<float> ,4> total_ctrs;
     std::array<double, 4> result_ctrs;
     std::array<std::chrono::steady_clock::time_point,4> measure_ctrs;
 
@@ -39,16 +39,34 @@ public:
     }
     void printCounter(){
         std::cout   << "Flop count: " << group_flop_ctr << std::endl
-                    << "Flops: " << ((float)group_flop_ctr/result_ctrs[CTR_WALL]) << "GFLOPS"<< std::endl
+                    << "Flops: " << ((float)1e-9*group_flop_ctr/result_ctrs[CTR_WALL]) << "GFLOPS"<< std::endl
+                    << "Wall Time: " << result_ctrs[CTR_WALL] << "s"<< std::endl
                     << "Communication Time: " << result_ctrs[CTR_EXCHANGE] << "s" << std::endl
                     << "Reduction Time: " << result_ctrs[CTR_REDUCE] << "s" << std::endl;
     }
     virtual void collect () = 0;
     void writeLog(){
+        std::ifstream tmp(log_name);
+        bool exists = false;
+        if(tmp.good()){ // logfile does exist
+            exists = true;
+        }
+        tmp.close();
+
         std::ofstream logfile;
-        logfile.open (log_name);
+
+        logfile.open (log_name, std::ios_base::app);
+        if(!exists){
+            logfile   <<  "FLOP_COUNT"
+                      << "," << "FLOPS"
+                      << "," << "WALL_TIME"
+                      << "," << "COMMUNICATION_TIME"
+                      << "," << "REDUCTION_TIME"  << std::endl;
+
+        }
         logfile   <<  group_flop_ctr
                   << "," << ((float)group_flop_ctr/result_ctrs[CTR_WALL])
+                  << "," << result_ctrs[CTR_WALL]
                   << "," << result_ctrs[CTR_EXCHANGE]
                   << "," << result_ctrs[CTR_REDUCE]  << std::endl;
         logfile.close();

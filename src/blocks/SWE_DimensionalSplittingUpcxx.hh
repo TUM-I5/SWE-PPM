@@ -37,6 +37,7 @@
 #include <ctime>
 #include <time.h>
 #include "tools/Float2DBufferUpcxx.hh"
+#include "tools/CollectorUpcxx.hpp"
 #include <upcxx/upcxx.hpp>
 
 #if WAVE_PROPAGATION_SOLVER==0
@@ -67,12 +68,6 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBuffe
 		void exchangeBathymetry();
 
 
-		float computeTime;
-		float computeTimeWall;
-		float communicationTime;
-        float reductionTime;
-		float getFlops();
-		float flopCounter = 0;
         int iteration = 0;
 	//private:
 #if WAVE_PROPAGATION_SOLVER==0
@@ -118,8 +113,6 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBuffe
         std::atomic<bool> *dataTransmitted;
         float * upcxxBorderTimestep;
 		// timer
-		std::clock_t computeClock;
-		struct timespec startTime;
-		struct timespec endTime;
+
 };
 #endif /* SWEDIMENSIONALSPLITTINGUPCXX_HH_ */

@@ -88,7 +88,6 @@ int main(int argc, char** argv) {
 
 	// Declare variables for the output and the simulation time
 	std::string outputFileName;
-	float t = 0.;
 
 	// Parse command line arguments
 	tools::Args::Result ret = args.parse(argc, argv);
@@ -274,16 +273,11 @@ int main(int argc, char** argv) {
 
         simulation.setMaxLocalTimestep(maxLocalTimestep);
 
-
     }
 
 	// Initialize wall timer
-	struct timespec startTime;
-	struct timespec endTime;
-    struct timespec barStartTime;
-	float wallTime = 0.;
-    float barrierTime = 0.;
-	t = 0.0;
+
+	float t = 0.0;
 
 	float timestep;
 
@@ -293,8 +287,7 @@ int main(int argc, char** argv) {
 		while(t < checkpointInstantOfTime[i]) {
 		    do{
                 // Start measurement
-                clock_gettime(CLOCK_MONOTONIC, &startTime);
-
+                CollectorMpi::getInstance().startCounter(CollectorMpi::CTR_WALL);
                 // this is an implicit block (mpi recv in setGhostLayer()
                 simulation.setGhostLayer();
 
@@ -304,28 +297,14 @@ int main(int argc, char** argv) {
                 // max timestep has been reduced over all ranks in computeNumericalFluxes()
                 timestep = simulation.getMaxTimestep();
 
-
-            //
                 // update the cell values
                 simulation.updateUnknowns(timestep);
 
                 // Accumulate wall time
-                clock_gettime(CLOCK_MONOTONIC, &endTime);
-                wallTime += (endTime.tv_sec - startTime.tv_sec);
-                wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
-                // update simulation time with time step width.
-
-
-                clock_gettime(CLOCK_MONOTONIC, &barStartTime);
-                //MPI_Barrier(MPI_COMM_WORLD);
-                barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
-                barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;
-
-
+                CollectorMpi::getInstance().stopCounter(CollectorMpi::CTR_WALL);
 
             }while(localTimestepping && !simulation.hasMaxLocalTimestep());
-
+            // update simulation time with time step width.
             t += localTimestepping?maxLocalTimestep:timestep;
         }
 
@@ -346,30 +325,10 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-	printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs Communication Time: %fs\n", myMpiRank, simulation.computeTime, simulation.computeTimeWall, wallTime, simulation.communicationTime);
-    float flop = simulation.getFlops();
-    float commTime = simulation.communicationTime;
-    float reductionTime = simulation.reductionTime;
-    float sumFlops;
-	float sumCommTime;
-	float sumReductionTime;
-    float sumBarrierTime;
-    MPI_Allreduce(&flop, &sumFlops, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-    MPI_Allreduce(&commTime, &sumCommTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-    MPI_Allreduce(&reductionTime, &sumReductionTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-    MPI_Allreduce(&barrierTime, &sumBarrierTime, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-
     if(myMpiRank == 0){
-        std::cout   << "Rank: " << myMpiRank << std::endl
-                    << "Flop count: " << sumFlops << std::endl
-                    << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
-                    << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl
-                    << "Communication Time(Total): " << sumCommTime << "s" << std::endl
-                    << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl
-                    << "Barrier Time(Total): " << sumBarrierTime << "s" << std::endl;
         CollectorMpi::getInstance().setMasterSettings(true, "MpiTest.log");
-
     }
+
     CollectorMpi::getInstance().logResults();
 	simulation.freeMpiType();
 	MPI_Finalize();

@@ -52,7 +52,7 @@
 
 #include "blocks/SWE_DimensionalSplittingUpcxx.hh"
 #include <upcxx/upcxx.hpp>
-
+#include "tools/CollectorUpcxx.hpp"
 int main(int argc, char** argv) {
 
 
@@ -308,11 +308,7 @@ int main(int argc, char** argv) {
     }
 
 	// Initialize wall timer
-	struct timespec startTime;
-	struct timespec endTime;
-    struct timespec barStartTime;
-	float wallTime = 0.;
-    float barrierTime = 0.;
+
 	t = 0.0;
 
 	float timestep;
@@ -323,8 +319,8 @@ int main(int argc, char** argv) {
 		while(t < checkpointInstantOfTime[i]) {
             do{
                 // Start measurement
-                clock_gettime(CLOCK_MONOTONIC, &startTime);
 
+                CollectorUpcxx::getInstance().startCounter(CollectorUpcxx::CTR_WALL);
                 simulation.setGhostLayer();
 
 
@@ -338,18 +334,9 @@ int main(int argc, char** argv) {
                 simulation.updateUnknowns(timestep);
 
                 // Accumulate wall time
-                clock_gettime(CLOCK_MONOTONIC, &endTime);
-                wallTime += (endTime.tv_sec - startTime.tv_sec);
-                wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
-
-                // update simulation time with time step width.
-
-                clock_gettime(CLOCK_MONOTONIC, &barStartTime);
-
-                barrierTime += (endTime.tv_sec - barStartTime.tv_sec);
-                barrierTime += (float) (endTime.tv_nsec - barStartTime.tv_nsec) / 1E9;
-
+                CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_WALL);
             }while(localTimestepping && !simulation.hasMaxLocalTimestep());
+            // update simulation time with time step width.
             t += localTimestepping?maxLocalTimestep:timestep;
 
 		}
@@ -371,20 +358,11 @@ int main(int argc, char** argv) {
 	 * FINALIZE *
 	 ************/
 
-    printf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs Communication Time: %fs\n", myUpcxxRank, simulation.computeTime, simulation.computeTimeWall, wallTime, simulation.communicationTime);
-    float sumFlops = upcxx::reduce_all(simulation.getFlops(), upcxx::op_fast_add).wait();
-    float sumCommTime = upcxx::reduce_all(simulation.communicationTime, upcxx::op_fast_add).wait();
-    float sumReductionTime = upcxx::reduce_all(simulation.reductionTime, upcxx::op_fast_add).wait();
-    float sumBarrierTime = upcxx::reduce_all(barrierTime, upcxx::op_fast_add).wait();
     if(myUpcxxRank == 0){
-    std::cout   << "Rank: " << myUpcxxRank << std::endl
-            << "Flop count: " << sumFlops << std::endl
-            << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl
-            << "Flops(Single): "<< ((float)simulation.getFlops())/(wallTime*1000000000) << std::endl
-            << "Communication Time(Total): " << sumCommTime << "s" << std::endl
-            << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl
-            << "Barrier Time(Total): " << sumBarrierTime << "s" << std::endl;
-}
+        CollectorUpcxx::getInstance().setMasterSettings(true, "UpcxxTest.log");
+    }
+
+    CollectorUpcxx::getInstance().logResults();
     upcxx::finalize();
 
 	return 0;
