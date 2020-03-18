@@ -16,7 +16,7 @@ protected:
     double group_flop_ctr;
     bool is_master;
     std::string log_name;
-    std::array<std::chrono::duration<float> ,4> total_ctrs;
+    std::array<std::chrono::duration<double> ,4> total_ctrs;
     std::array<double, 4> result_ctrs;
     std::array<std::chrono::steady_clock::time_point,4> measure_ctrs;
 
@@ -31,7 +31,6 @@ public:
     }
 
     Collector():flop_ctr(0.0f),group_flop_ctr(0.0f),is_master(false),log_name("swe_counter.log") {};
-
 
     void setMasterSettings(bool master,std::string log_name){
         is_master = master;

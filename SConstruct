@@ -320,7 +320,9 @@ if env['parallelization'] in ['charm', 'ampi']:
                            src_suffix='.ci')
 
     env.Append(BUILDERS={'charmBuilder': charmBuilder})
+
     env.charmBuilder("src/blocks/SWE_DimensionalSplittingCharm.ci")
+
     ################################
 # Chameleon specific
 ################################

@@ -11,6 +11,7 @@ mainmodule swe_charm {
 		entry swe_charm(CkArgMsg *msg);
 
 		entry void done(int index,float flop, float commTime, float wallTime,float reductionTime);
+		entry void done1(collectorMsg *collector);
 		entry void exit();
 	};
 };

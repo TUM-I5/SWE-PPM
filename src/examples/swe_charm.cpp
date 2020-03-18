@@ -39,7 +39,7 @@
 #else
 #include "writer/VtkWriter.hh"
 #endif
-
+#include "blocks/SWE_DimensionalSplittingCharm.hh"
 #include "tools/args.hh"
 #include "tools/Float2D.hh"
 #include "tools/Logger.hh"
@@ -90,7 +90,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 	// Declare variables for the output and the simulation time
 	std::string outputFilename;
 	float t = 0.;
-
+    mainCollector.setMasterSettings(true, "TestCharm.log");
 	// Parse command line arguments
 	tools::Args::Result ret = args.parse(msg->argc, msg->argv);
 	switch (ret)
@@ -215,6 +215,15 @@ void swe_charm::done(int index,float flop, float commTime, float wallTime ,float
         CkPrintf("Reduction Time(Total): %fs\n", sumReductionTime);
         exit();
 	}
+
+}
+void swe_charm::done1(collectorMsg *collector) {
+    mainCollector += CollectorCharm::deserialize(collector->deserialized);
+    delete collector;
+    if (--chareCount == 0){
+        mainCollector.logResults();
+        exit();
+    }
 
 }
 void swe_charm::exit() {

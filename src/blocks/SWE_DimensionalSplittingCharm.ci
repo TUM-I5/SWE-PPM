@@ -3,6 +3,7 @@ module SWE_DimensionalSplittingCharm {
 	include "types/Boundary.hh";
 	include "scenarios/SWE_Scenario.hh";
 	include "tools/Float2DNative.hh";
+    include "tools/CollectorCharm.hpp";
 
 	message copyLayer {
 		Boundary boundary;
@@ -125,7 +126,13 @@ module SWE_DimensionalSplittingCharm {
 
                             CkPrintf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", thisIndex, computeTime, computeTimeWall, wallTime);
 
-                            mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime,reductionTime);
+                            //mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime,reductionTime);
+                            double test [5];
+                             collectorMsg *msg = new (new double[5])collectorMsg;
+
+                            collector.serialize(msg->deserialized);
+
+                            mainProxy.done1(msg);
                         }
 					}
 

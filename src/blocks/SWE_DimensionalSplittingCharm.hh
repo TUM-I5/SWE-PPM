@@ -17,6 +17,7 @@
 #include "types/Boundary.hh"
 #include "writer/NetCdfWriter.hh"
 #include "tools/Float2DNative.hh"
+#include "tools/CollectorCharm.hpp"
 #if WAVE_PROPAGATION_SOLVER==0
 //#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
@@ -112,6 +113,7 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
         float reductionTime;
 		float flopCounter;
 		bool firstIteration;
+		CollectorCharm collector;
 };
 
 class copyLayer : public CMessage_copyLayer {
@@ -124,6 +126,12 @@ class copyLayer : public CMessage_copyLayer {
 		float *hu;
 		float *hv;
 		float timestep;
+};
+class collectorMsg : public CMessage_collectorMsg {
+public:
+
+    double *deserialized;
+
 };
 
 #endif // SWE_DIMENSIONALSPLITTINGCHARM_HH
