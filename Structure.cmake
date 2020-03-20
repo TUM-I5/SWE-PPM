@@ -1,0 +1,10 @@
+
+set(SOURCE src)
+set(BLOCKS ${SOURCE}/blocks)
+set(EXAMPLES ${SOURCE}/examples)
+set(OPENGL ${SOURCE}/opengl)
+set(SCENARIOS ${SOURCE}/scenarios)
+set(SOLVERS ${SOURCE}/solvers)
+set(TOOLS ${SOURCE}/tools)
+set(TYPES ${SOURCE}/types)
+set(WRITER ${SOURCE}/writer)

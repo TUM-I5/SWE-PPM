@@ -33,13 +33,9 @@
  *  - resolution
  */
 
-#include <cassert>
+
 #include <string>
-#include <ctime>
-#include <time.h>
-#include <unistd.h>
-#include <limits.h>
-#include <algorithm>
+
 #include "tools/args.hh"
 
 #ifdef WRITENETCDF
@@ -54,20 +50,15 @@
 #include "scenarios/SWE_simple_scenarios.hh"
 #endif
 
-//#include "blocks/SWE_DimensionalSplittingHpx.hh"
 
 #include "blocks/SWE_Hpx_No_Component.hpp"
 
 #include <hpx/hpx_init.hpp>
-#include <hpx/include/compute.hpp>
-#include <hpx/include/lcos.hpp>
-#include <hpx/include/async.hpp>
-#include <hpx/include/components.hpp>
-#include <hpx/include/parallel_algorithm.hpp>
-#include <hpx/lcos/broadcast.hpp>
-#include <hpx/util/unwrap.hpp>
 
 
+
+#include <hpx/collectives/broadcast.hpp>
+HPX_REGISTER_ALLREDUCE(double, reduction_test);
 int hpx_main(boost::program_options::variables_map& vm)
 {
 
@@ -84,54 +75,9 @@ int hpx_main(boost::program_options::variables_map& vm)
     std::string batFile;
     std::string displFile;
     bool  localTimestepping = false;
-    // Define command line arguments
-    tools::Args args;
-
-#ifdef ASAGI
-    args.addOption("bathymetry-file", 'b', "File containing the bathymetry");
-	args.addOption("displacement-file", 'd', "File containing the displacement");
-#endif
-
-    args.addOption("simulation-duration", 'e', "Time in seconds to simulate");
-    args.addOption("checkpoint-count", 'n', "Number of simulation snapshots to be written");
-    args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
-    args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
-    args.addOption("output-basepath", 'o', "Output base file name");
-    args.addOption("local-timestepping", 'l', "Activate local timestepping", tools::Args::Required, false);
-
-    // Declare the variables needed to hold command line input
-
-    // Declare variables for the output and the simulation time
-
-
-/*
-    // Parse command line arguments
-    tools::Args::Result ret = args.parse(argc, argv);
-    switch (ret)
-    {
-        case tools::Args::Error:
-            return hpx::finalize();
-        case tools::Args::Help:
-            return hpx::finalize();
-        case tools::Args::Success:
-            break;
-    }
-    // Read in command line arguments
-    simulationDuration = args.getArgument<float>("simulation-duration");
-    numberOfCheckPoints = args.getArgument<int>("checkpoint-count");
-    nxRequested = args.getArgument<int>("resolution-horizontal");
-    nyRequested = args.getArgument<int>("resolution-vertical");
-    outputBaseName = args.getArgument<std::string>("output-basepath");
-
-#ifdef ASAGI
-   batFile = args.getArgument<std::string>("bathymetry-file");
-   displFile = args.getArgument<std::string>("displacement-file");
-#endif
-*/
 
     simulationDuration =  vm["simulation-duration"].as<float>();
-
-       numberOfCheckPoints = vm["checkpoint-count"].as<int>();
+    numberOfCheckPoints = vm["checkpoint-count"].as<int>();
     nxRequested = vm["resolution-horizontal"].as<int>();
     nyRequested = vm["resolution-vertical"].as<int>();
     totalRanks = vm["blocks"].as<int>();

@@ -28,10 +28,9 @@
 #include <hpx/include/lcos.hpp>
 #include <hpx/include/async.hpp>
 #include <hpx/include/components.hpp>
-
 #include <hpx/include/parallel_algorithm.hpp>
-
 #include <hpx/include/iostreams.hpp>
+#include "tools/CollectorHpx.hpp"
 template <typename T>
 struct copyLayerStruct {
 
@@ -74,38 +73,13 @@ public:
     void updateUnknowns(float dt);
 
     copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary,bool bath);
-    // Hpx specific
-    void freeHpxType();
+
     void connectNeighbours(communicator_type comm);
     void exchangeBathymetry();
 
-    float computeTime;
-    float computeTimeWall;
-    float communicationTime;
-    float flopCounter;
+    CollectorHpx collector;
     float maxTimestepGlobal;
 
-    int classhandle;
-    void printH(int rank){
-        hpx::cout << "H OF " <<rank << std::endl;
-        for (int y = 0; y < ny+2; y++) {
-
-            for (int x = 0; x < nx +2; x++) {
-                hpx::cout << " " << h[x][y];
-            }
-            hpx::cout << std::endl;
-        }
-    }
-    void printB(int rank){
-        hpx::cout << "B OF " <<rank << std::endl;
-        for (int y = 0; y < ny+2; y++) {
-
-            for (int x = 0; x < nx +2; x++) {
-                hpx::cout << " " << b[x][y];
-            }
-            hpx::cout << std::endl;
-        }
-    }
 private:
 #if WAVE_PROPAGATION_SOLVER==0
     //! Hybrid solver (f-wave + augmented)
@@ -149,10 +123,6 @@ private:
 
 
 
-    // timer
-    std::clock_t computeClock;
-    struct timespec startTime;
-    struct timespec endTime;
 
 };
 

@@ -205,27 +205,17 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 	blocks.compute();
 }
 
-void swe_charm::done(int index,float flop, float commTime, float wallTime ,float reductionTime) {
-    sumFlops += flop;
-    sumCommTime += commTime;
-    sumReductionTime += reductionTime;
-	if (--chareCount == 0){
-        CkPrintf("Flops(Total): %fGFLOPS\n",(sumFlops/(wallTime*1000000000)));
-        CkPrintf("Communication Time(Total): %fs\n", sumCommTime);
-        CkPrintf("Reduction Time(Total): %fs\n", sumReductionTime);
-        exit();
-	}
+void swe_charm::done(int index,double ctr_flop, double ctr_exchange, double ctr_barrier,double ctr_reduce,double ctr_wall) {
+    double serialized[5] = {ctr_flop,  ctr_exchange, ctr_barrier, ctr_reduce, ctr_wall};
+    mainCollector += CollectorCharm::deserialize(serialized);
 
-}
-void swe_charm::done1(collectorMsg *collector) {
-    mainCollector += CollectorCharm::deserialize(collector->deserialized);
-    delete collector;
     if (--chareCount == 0){
         mainCollector.logResults();
         exit();
     }
 
 }
+
 void swe_charm::exit() {
 	CkExit();
 }

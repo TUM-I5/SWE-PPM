@@ -24,13 +24,14 @@ public:
     enum COUNTERS {CTR_EXCHANGE,CTR_BARRIER,CTR_REDUCE,CTR_WALL};
     Collector& operator+=(const Collector& other){
         flop_ctr += other.flop_ctr;
-        for(int i = 0; i < 4; i++){
+        for(int i = 0; i < 3; i++){
             total_ctrs[i] += other.total_ctrs[i];
         }
+        total_ctrs[CTR_WALL] = std::max(total_ctrs[CTR_WALL], other.total_ctrs[CTR_WALL]); //so we dont add WALL time together
         return *this;
     }
 
-    Collector():flop_ctr(0.0f),group_flop_ctr(0.0f),is_master(false),log_name("swe_counter.log") {};
+    Collector():flop_ctr(0.0f),group_flop_ctr(0.0f),result_ctrs{}, total_ctrs{},is_master(false),log_name("swe_counter.log") {};
 
     void setMasterSettings(bool master,std::string log_name){
         is_master = master;
@@ -52,7 +53,7 @@ public:
                     << "Communication Time: " << result_ctrs[CTR_EXCHANGE] << "s" << std::endl
                     << "Reduction Time: " << result_ctrs[CTR_REDUCE] << "s" << std::endl;
     }
-    virtual void collect () = 0;
+    virtual void collect () =0;
     void writeLog(){
         std::ifstream tmp(log_name);
         bool exists = false;

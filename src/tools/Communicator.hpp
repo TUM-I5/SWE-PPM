@@ -4,15 +4,17 @@
 
 #ifndef SWE_BENCHMARK_COMMUNICATOR_HPP
 #define SWE_BENCHMARK_COMMUNICATOR_HPP
-#include "blocks/SWE_DimensionalSplittingHpx.hh"
+
 #include <hpx/include/lcos.hpp>
 #include "types/Boundary.hh"
 #include <array>
 #include "tools/Float2DBuffer.hh"
 #include "tools/Float2DNative.hh"
 #include <hpx/include/iostreams.hpp>
+#include <blocks/SWE_DimensionalSplittingHpx.hh>
 
 class SWE_DimensionalSplittingHpx;
+
 template <typename T>
 struct communicator
 {

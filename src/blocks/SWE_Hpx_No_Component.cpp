@@ -24,13 +24,13 @@
 
 #include "scenarios/SWE_simple_scenarios.hh"
 #endif
-
+#include "tools/CollectorHpx.hpp"
 
 
 
 typedef float timestep_type;
 
-HPX_REGISTER_CHANNEL_DECLARATION(timestep_type);
+//HPX_REGISTER_CHANNEL_DECLARATION(timestep_type);
 HPX_REGISTER_CHANNEL(timestep_type);
 
 
@@ -201,8 +201,10 @@ HPX_REGISTER_CHANNEL(timestep_type);
     void SWE_Hpx_No_Component::run()
     {
 
-
-
+        CollectorHpx collector;
+        if(localityRank == 0){
+            collector.setMasterSettings(true,"HpxTest.log");
+        }
         std::vector<hpx::future<void>> fut;
         for(auto & block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
         hpx::wait_all(fut);
@@ -253,13 +255,6 @@ HPX_REGISTER_CHANNEL(timestep_type);
         }
 
 
-        // Initialize wall timer
-        struct timespec startTime;
-        struct timespec reductionTime;
-        struct timespec endTime;
-
-        float wallTime = 0.;
-        float sumReductionTime = 0.;
         float t = 0.;
         bool synchronizedTimestep = true;
 
@@ -278,8 +273,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
                     
                     // Start measurement
-                    clock_gettime(CLOCK_MONOTONIC, &startTime);
-
+                    collector.startCounter(Collector::CTR_WALL);
                     // set values in ghost cells.
                     // this function blocks until everything has been received
 
@@ -310,7 +304,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                     //barrier
                     if(!localTimestepping){
 
-                        clock_gettime(CLOCK_MONOTONIC, &reductionTime);
+                        collector.startCounter(Collector::CTR_REDUCE);
 
                         if(localityRank == 0){
                             if(localityCount > 1){
@@ -330,9 +324,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
                             timestep = localityChannel.get()[0].get();
                         }
-                        clock_gettime(CLOCK_MONOTONIC, &endTime);
-                        sumReductionTime += (endTime.tv_sec - reductionTime.tv_sec);
-                        sumReductionTime += (float) (endTime.tv_nsec -reductionTime.tv_nsec) / 1E9;
+                        collector.stopCounter(Collector::CTR_REDUCE);
+
                         for(auto & block: simulationBlocks)block->maxTimestepGlobal = timestep;
 
                     }
@@ -353,9 +346,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
                     for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(updateUnknowns,block.get()));
                     hpx::wait_all(blockFuture);
-                    clock_gettime(CLOCK_MONOTONIC, &endTime);
-                    wallTime += (endTime.tv_sec - startTime.tv_sec);
-                    wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
+
+                    collector.stopCounter(Collector::CTR_WALL);
 
                     if(localTimestepping){
                         //if each block got the maxLocalTimestep the timestep is finished
@@ -380,57 +372,11 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
         }
 
-float totalCommTime = 0;
-    float sumFlops = 0;
     for(auto &block: simulationBlocks){
-        //block.printResult();
-        totalCommTime += block->communicationTime;
-        sumFlops += block->flopCounter;
+        collector += block->collector;
     }
-                if(localityRank == 0){
-                    if(localityCount > 1){
-                        sumFlops +=hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalFlops) -> float {
-                        return std::accumulate(globalFlops.begin(),globalFlops.end(),0.0);
-			}),std::move(localityChannel.get())).get();
-			 float sendTs= sumFlops;
-			 localityChannel.set(std::move(sendTs));	
-			}	
-                } else {
-                    localityChannel.set(std::move(sumFlops));
-                    localityChannel.get()[0].get();	
-		}
 
-                if(localityRank == 0){
-                    if(localityCount > 1){
-                        totalCommTime +=hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalFlops) -> float {
-                        return std::accumulate(globalFlops.begin(),globalFlops.end(),0.0);
-			}),std::move(localityChannel.get())).get();
-
-			 float sendTs= totalCommTime;
-			 localityChannel.set(std::move(sendTs));	
-			}	
-                } else {
-                    localityChannel.set(std::move(totalCommTime));
-                    localityChannel.get()[0].get();	
-                }
-                if(localityRank == 0){
-                    if(localityCount > 1){
-                        sumReductionTime +=hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalFlops) -> float {
-                        return std::accumulate(globalFlops.begin(),globalFlops.end(),0.0);
-			}),std::move(localityChannel.get())).get();
-
-			}	
-                } else {
-                    localityChannel.set(std::move(sumReductionTime));
-                }
-if(localityRank == 0){
-    hpx::cout   << "Flop count: " << sumFlops << std::endl
-                << "Flops(Total): " << ((float)sumFlops)/(wallTime*1000000000) << "GFLOPS"<< std::endl;
-    hpx::cout   << "Total Time (Wall): "<< wallTime <<"s"<<hpx::endl;
-    hpx::cout   << "Communication Time(Total): "<< totalCommTime <<"s"<<hpx::endl
-                << "Reduction Time(Total): " << sumReductionTime << "s" << std::endl;
-}
-
+    collector.logResults();
 
 
     }

@@ -94,26 +94,9 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 
 		// Interfaces to neighbouring block copy layers, indexed by Boundary
 		int neighbourIndex[4];
-
-		// timer
-		std::clock_t computeClock;
-
-		struct timespec startTime;
-		struct timespec commTime;
-        struct timespec reducTime;
-		struct timespec endTime;
-
-		struct timespec startTimeCompute;
-		struct timespec endTimeCompute;
-
-		float computeTime;
-		float computeTimeWall;
-		float wallTime;
-		float communicationTime;
-        float reductionTime;
-		float flopCounter;
 		bool firstIteration;
-		CollectorCharm collector;
+
+		CollectorCharm *collector;
 };
 
 class copyLayer : public CMessage_copyLayer {

@@ -12,11 +12,13 @@ public:
     CollectorCharm(){};
 
     void collect ()  {
-        //everything is collected by the main chare anyways, no need for reduction
+        group_flop_ctr = flop_ctr;
+        for(int i = 0; i < 4; i++){
+            result_ctrs[i] = total_ctrs[i].count();
+        }
     };
 
     double * serialize(double *arr){
-        //return collectorMessage{flop_ctr, {total_ctrs[CTR_EXCHANGE].count(),total_ctrs[CTR_BARRIER].count(),total_ctrs[CTR_REDUCE].count(),total_ctrs[CTR_WALL].count()}};
 
         arr[0] = flop_ctr;
         for(int i = 0 ; i< 4 ; i++){
@@ -25,7 +27,7 @@ public:
         return arr;
     }
     static CollectorCharm deserialize(double *arr){
-        //return collectorMessage{flop_ctr, {total_ctrs[CTR_EXCHANGE].count(),total_ctrs[CTR_BARRIER].count(),total_ctrs[CTR_REDUCE].count(),total_ctrs[CTR_WALL].count()}};
+
         CollectorCharm instance;
         instance.flop_ctr = arr[0];
         for(int i = 0 ; i< 4 ; i++){

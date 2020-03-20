@@ -33,7 +33,7 @@ simulate_charm:
 	mpirun -n 4  ./build/SWE_gnu_release_charm_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
 
 simulate_charm_rad:
-	mpirun -n  4 ./build/SWE_gnu_release_charm_hybrid -t 10 -n 20 -x 1000 -y 1000 -o ./mpi -l 1
+	${CHARM_PATH}/bin/charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 10 -n 20 -x 1000 -y 1000 -o ./mpi -l 0
 simulate_charm_test:
 	./charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_charm
 

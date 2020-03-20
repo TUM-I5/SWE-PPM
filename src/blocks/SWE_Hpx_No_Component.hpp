@@ -12,11 +12,12 @@
 #include <hpx/include/components.hpp>
 #include <hpx/include/iostreams.hpp>
 #include <hpx/include/serialization.hpp>
-#include <hpx/lcos/broadcast.hpp>
+#include <hpx/collectives/broadcast.hpp>
+#include <hpx/util/unwrap.hpp>
+
 
 #include "SWE_DimensionalSplittingHpx.hh"
 #include "tools/LocalityChannel.hpp"
-#include <hpx/util/unwrap.hpp>
 
 
 #include <utility>

@@ -46,11 +46,6 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 	currentSimulationTime = 0.;
 	currentCheckpoint = 0;
 
-	computeTime = 0.;
-	wallTime = 0.;
-	communicationTime = 0;
-    flopCounter = 0;
-    reductionTime = 0;
 	neighbourIndex[BND_LEFT] = (posX > 0) ? thisIndex - blockCountY : -1;
 	neighbourIndex[BND_RIGHT] = (posX < blockCountX - 1) ? thisIndex + blockCountY : -1;
 	neighbourIndex[BND_BOTTOM] = (posY > 0) ? thisIndex - 1 : -1;
@@ -76,7 +71,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 	// Initialize writer
 	BoundarySize boundarySize = {{1, 1, 1, 1}};
 	writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY);
-
+    collector = new CollectorCharm();
 	// output at t=0
 	writeTimestep();
 
@@ -90,10 +85,6 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 SWE_DimensionalSplittingCharm::~SWE_DimensionalSplittingCharm() {}
 
 void SWE_DimensionalSplittingCharm::xSweep() {
-
-	// Start compute clocks
-	computeClock = clock();
-	clock_gettime(CLOCK_MONOTONIC, &startTimeCompute);
 	
 	// maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
@@ -121,21 +112,17 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 			}
 		}
 	}
-    	flopCounter += nx*ny*135; //HLLESOLVER flops;
-	// Accumulate compute time -> exclude the reduction
-	computeClock = clock() - computeClock;
-	computeTime += (float) computeClock / CLOCKS_PER_SEC;
 
-	clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
-	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
-	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
+    collector->addFlops(nx*ny*135);
+
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
 	// compute max timestep according to cautious CFL-condition
 	if(localTimestepping){
         maxTimestep = getRoundTimestep(maxTimestep);
 	}else {
 
-        clock_gettime(CLOCK_MONOTONIC, &reducTime);
+
+        collector->startCounter(Collector::CTR_REDUCE);
         CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
         contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
 	}
@@ -145,15 +132,12 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
 	maxTimestep = maxWaveSpeed;
 	reductionTrigger();
-    clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
-    reductionTime += (endTimeCompute.tv_sec - reducTime.tv_sec);
-    reductionTime += (float) (endTimeCompute.tv_nsec - reducTime.tv_nsec) / 1E9;
+
+    collector->stopCounter(Collector::CTR_REDUCE);
+
 }
 
 void SWE_DimensionalSplittingCharm::ySweep() {
-	// Start compute clocks
-	computeClock = clock();
-	clock_gettime(CLOCK_MONOTONIC, &startTimeCompute);
 
 	float maxVerticalWaveSpeed = (float) 0.;
 
@@ -199,21 +183,12 @@ void SWE_DimensionalSplittingCharm::ySweep() {
 		}
 		#endif // NDEBUG
 	}
-    	flopCounter += nx*ny*135; //HLLESOLVER flops;
-	// Accumulate compute time
-	computeClock = clock() - computeClock;
-	computeTime += (float) computeClock / CLOCKS_PER_SEC;
 
-	clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
-	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
-	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
+    collector->addFlops(nx*ny*135);
+
 }
 
 void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
-//	std::cout << "Flop " << solver.flopcounter << std::endl;
-	// Start compute clocks
-	computeClock = clock();
-	clock_gettime(CLOCK_MONOTONIC, &startTimeCompute);
 
 	// this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
 	assert(std::abs(dt - maxTimestep) < 0.00001);
@@ -226,13 +201,6 @@ void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
 		}
 	}
 
-	// Accumulate compute time
-	computeClock = clock() - computeClock;
-	computeTime += (float) computeClock / CLOCKS_PER_SEC;
-
-	clock_gettime(CLOCK_MONOTONIC, &endTimeCompute);
-	computeTimeWall += (endTimeCompute.tv_sec - startTimeCompute.tv_sec);
-	computeTimeWall += (float) (endTimeCompute.tv_nsec - startTimeCompute.tv_nsec) / 1E9;
 }
 
 void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {

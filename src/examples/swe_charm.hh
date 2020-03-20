@@ -8,8 +8,8 @@ class swe_charm : public CBase_swe_charm {
 		swe_charm(CkArgMsg *msg);
 		swe_charm(CkMigrateMessage *msg);
 
-		void done(int index,float flop, float commTime, float wallTime,float reductionTime);
-		void done1(collectorMsg *collector);
+		void done(int index,double ctr_flop, double ctr_exchange, double ctr_barrier,double ctr_reduce,double ctr_wall);
+
 		void exit();
 		int chareCount;
     float sumFlops;

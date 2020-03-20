@@ -258,7 +258,7 @@ if env['parallelization'] == 'upcxx':
     upcxxPpFlags = check_output([upcxxMeta, 'PPFLAGS']).split()
     upcxxLdFlags = check_output([upcxxMeta, 'LDFLAGS']).split()
     upcxxLibFlags = check_output([upcxxMeta, 'LIBFLAGS']).split()
-
+    print(upcxxLdFlags)
     # SCons likes special formats!
     # cut the -D/-I/-L/-l prefixes from the options
     upcxxDefines = [i[2:] for i in upcxxPpFlags if i.startswith("-D")]

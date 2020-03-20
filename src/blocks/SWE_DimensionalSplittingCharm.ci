@@ -39,13 +39,15 @@ module SWE_DimensionalSplittingCharm {
 
 
 				// Start the wall clock
-				clock_gettime(CLOCK_MONOTONIC, &startTime);
+				collector->startCounter(Collector::CTR_WALL);
 			}
 			while(currentCheckpoint < checkpointCount) {
 				serial {
+					collector->startCounter(Collector::CTR_EXCHANGE);
 					sendCopyLayers(firstIteration);
 					setGhostLayer();
 					firstIteration = false;
+
 				}
 				overlap {
 					when receiveGhostLeft(copyLayer *msg)
@@ -68,6 +70,7 @@ module SWE_DimensionalSplittingCharm {
 				serial {
 				     checkAllGhostlayers(); // after receiving all Ghostlayers we can processes them
 					// The xSweep will trigger the reduction and accumulate compute time
+					 collector->stopCounter(Collector::CTR_EXCHANGE);
 					if(allGhostlayersInSync()){
 					    xSweep();
 					}
@@ -92,11 +95,8 @@ module SWE_DimensionalSplittingCharm {
                         }
                         // If a checkpoint was reached after the last step, write current state
                         if (  currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
-                            // Exclude I/O from the time measurement, therefore accumulate now
-                            clock_gettime(CLOCK_MONOTONIC, &endTime);
-                            wallTime += (endTime.tv_sec - startTime.tv_sec);
-                            wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
+                             collector->stopCounter(Collector::CTR_WALL);
 
                             if(thisIndex == 0) {
                                 CkPrintf("Write timestep (%fs)\n", currentSimulationTime);
@@ -105,34 +105,27 @@ module SWE_DimensionalSplittingCharm {
                             currentCheckpoint++;
 
                             // Restart wall clock
-                            clock_gettime(CLOCK_MONOTONIC, &startTime);
 
+                             collector->startCounter(Collector::CTR_WALL);
                         }
 
                         // If there is an iteration to go, propagate copy layers anew
                         if (currentSimulationTime < simulationDuration) {
-                            clock_gettime(CLOCK_MONOTONIC, &commTime);
+
+                            collector->startCounter(Collector::CTR_EXCHANGE);
                             sendCopyLayers(false);
                             setGhostLayer();
-                            clock_gettime(CLOCK_MONOTONIC, &endTime);
-                                communicationTime += (endTime.tv_sec - commTime.tv_sec);
-                                communicationTime += (float) (endTime.tv_nsec - commTime.tv_nsec) / 1E9;
+
                         } else {
-                            // Accumulate wall time
-                            clock_gettime(CLOCK_MONOTONIC, &endTime);
-                            wallTime += (endTime.tv_sec - startTime.tv_sec);
-                            wallTime += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
 
-                            CkPrintf("Rank %i : Compute Time (CPU): %fs - (WALL): %fs | Total Time (Wall): %fs\n", thisIndex, computeTime, computeTimeWall, wallTime);
+                            collector->stopCounter(Collector::CTR_WALL);
 
-                            //mainProxy.done(thisIndex,flopCounter,communicationTime,wallTime,reductionTime);
-                            double test [5];
-                             collectorMsg *msg = new (new double[5])collectorMsg;
+                            double serialize[5];
+                            collector->serialize(serialize);
 
-                            collector.serialize(msg->deserialized);
 
-                            mainProxy.done1(msg);
+                            mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
                         }
 					}
 

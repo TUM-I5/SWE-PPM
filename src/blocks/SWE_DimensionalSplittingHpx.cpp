@@ -33,8 +33,7 @@
 
 #include <cassert>
 #include <algorithm>
-#include <omp.h>
-#include <typeinfo>
+
 #include <hpx/include/parallel_transform_reduce.hpp>
 #include <utility>
 /*
@@ -96,11 +95,6 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
        {
 
 
-
-    computeTime = 0.;
-    computeTimeWall = 0.;
-    communicationTime = 0.;
-    flopCounter = 0;
 }
 
 
@@ -114,7 +108,7 @@ this->comm = comm;
 
 typedef copyLayerStruct<std::vector<float>> communication_type;
 
-HPX_REGISTER_CHANNEL_DECLARATION(communication_type);
+//HPX_REGISTER_CHANNEL_DECLARATION(communication_type);
 HPX_REGISTER_CHANNEL(communication_type);
 
 
@@ -300,8 +294,7 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     /*********
      * SEND *
      ********/
-    struct timespec startTimeComm;
-    clock_gettime(CLOCK_MONOTONIC, &startTimeComm);
+    collector.startCounter(Collector::CTR_EXCHANGE);
     if (boundaryType[BND_LEFT] == CONNECT && !comm.isLocal(BND_LEFT) && isSendable(BND_LEFT) ) {
 
         int startIndex = ny + 2 + 1;
@@ -378,12 +371,9 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
     }
 
 
-   auto ret = hpx::dataflow(hpx::util::unwrapping([this,startTimeComm] ( )-> void {
+   auto ret = hpx::dataflow(hpx::util::unwrapping([this] ( )-> void {
             checkAllGhostlayers();
-            clock_gettime(CLOCK_MONOTONIC, &endTime);
-            communicationTime += (endTime.tv_sec - startTimeComm.tv_sec);
-            communicationTime += (float) (endTime.tv_nsec - startTimeComm.tv_nsec) / 1E9;
-
+            collector.stopCounter(Collector::CTR_EXCHANGE);
     }),std::move(fut));
 
 
@@ -399,8 +389,6 @@ void SWE_DimensionalSplittingHpx::computeXSweep (){
 
     if(!allGhostlayersInSync()) return;
 
-    computeClock = clock();
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
 
     //maximum (linearized) wave speed within one iteration
     float maxHorizontalWaveSpeed = (float) 0.;
@@ -456,15 +444,8 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
     }
 
 
-    flopCounter += nx*ny*135;
+    collector.addFlops(nx*ny*135);
 
-    // Accumulate compute time -> exclude the reduction
-    computeClock = clock() - computeClock;
-    computeTime += (float) computeClock / CLOCKS_PER_SEC;
-
-    clock_gettime(CLOCK_MONOTONIC, &endTime);
-    computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
-    computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
     // compute max timestep according to cautious CFL-condition
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
@@ -484,8 +465,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
         maxTimestep = maxTimestepGlobal;
     }
     float maxVerticalWaveSpeed = (float) 0.;
-    computeClock = clock();
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
+
 
 
     // set intermediary Q* states
@@ -531,15 +511,8 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
             );
         }
     }
+    collector.addFlops(nx*ny*135);
 
-    flopCounter += nx*ny*135;
-    // Accumulate compute time
-    computeClock = clock() - computeClock;
-    computeTime += (float) computeClock / CLOCKS_PER_SEC;
-
-    clock_gettime(CLOCK_MONOTONIC, &endTime);
-    computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
-    computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
 }
 
@@ -553,10 +526,6 @@ void SWE_DimensionalSplittingHpx::computeYSweep (){
 void SWE_DimensionalSplittingHpx::updateUnknowns (float dt) {
     if(!allGhostlayersInSync()) return;
 
-	// Start compute clocks
-    computeClock = clock();
-    clock_gettime(CLOCK_MONOTONIC, &startTime);
-
     // this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
     assert(std::abs(dt - maxTimestep) < 0.00001);
     //update cell averages with the net-updates
@@ -567,13 +536,5 @@ void SWE_DimensionalSplittingHpx::updateUnknowns (float dt) {
             hv[x][y] = hv[x][y] - (maxTimestep / dx) * (hvNetUpdatesBelow[x][y] + hvNetUpdatesAbove[x][y]);
         }
     }
-
-    // Accumulate compute time
-    computeClock = clock() - computeClock;
-    computeTime += (float) computeClock / CLOCKS_PER_SEC;
-
-    clock_gettime(CLOCK_MONOTONIC, &endTime);
-    computeTimeWall += (endTime.tv_sec - startTime.tv_sec);
-    computeTimeWall += (float) (endTime.tv_nsec - startTime.tv_nsec) / 1E9;
 
 }
