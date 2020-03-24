@@ -176,6 +176,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
             simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
         }
+
         for(int i = startPoint ; i < startPoint+ ranksPerLocality; i++) {
             auto myHpxRank = i;
             int localBlockPositionX = myHpxRank / blockCountY;
@@ -185,6 +186,8 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
             std::array<int,4> refinedNeighbours;
             std::array<std::shared_ptr<SWE_DimensionalSplittingHpx>, 4> neighbourBlocks;
+
+
             for(int j = 0; j < 4 ; j++){
                 if(myNeighbours[j] >= startPoint && myNeighbours[j] < (startPoint+ranksPerLocality)){
                     refinedNeighbours[j] = -2;
@@ -192,9 +195,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 }else {
                     refinedNeighbours[j] = myNeighbours[j];
                 }
-
             }
-            simulationBlocks[i-startPoint]->connectNeighbours(communicator_type(myHpxRank,totalHpxRanks,refinedNeighbours,neighbourBlocks));
+
+            simulationBlocks[i-startPoint]->connectNeighbours(SWE_DimensionalSplittingHpx::communicator_type(myHpxRank,totalHpxRanks,refinedNeighbours,neighbourBlocks));
         }
 
     }
@@ -202,16 +205,22 @@ HPX_REGISTER_CHANNEL(timestep_type);
     {
 
         CollectorHpx collector;
+        std::vector<hpx::future<void>> fut;
+        std::vector<hpx::future<void>> blockFuture;
+        std::vector<float> timesteps;
+        float maxLocalTimestep;
+
+
         if(localityRank == 0){
             collector.setMasterSettings(true,"HpxTest.log");
         }
-        std::vector<hpx::future<void>> fut;
+
+
+
         for(auto & block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
         hpx::wait_all(fut);
 
-        float maxLocalTimestep;
-        std::vector<hpx::future<void>> blockFuture;
-        std::vector<float> timesteps;
+
         if(localTimestepping){
 
             for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeMaxTimestep, block.get(),0.01,0.4));
@@ -298,7 +307,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                     for(auto & block: simulationBlocks)timesteps.push_back(block->maxTimestepGlobal);
 
 
-                    float minTimestep= *std::min_element(timesteps.begin(), timesteps.end());
+                    float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
 
 
                     //barrier
@@ -336,7 +345,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                         xsweepFuture[id] = hpx::async(updateUnknowns,simulationBlocks[id].get());
                     }),blockFuture.begin(),simulationBlocks.size()).wait();
 
-            blockFuture.clear();
+                    blockFuture.clear();
 
                     hpx::wait_all(xsweepFuture);*/
                     for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep,block.get()));

@@ -22,9 +22,6 @@ file(GLOB WRITER_FILES ${WRITER}/*)
 file(GLOB TYPE_FILES ${TYPES}/*)
 
 
-
-
-
 foreach( build_type ${BUILDS})
     unset(SOURCE_FILES)
     include(Build${build_type}.cmake)

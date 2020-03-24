@@ -53,10 +53,11 @@ struct copyLayerStruct {
         ar & timestep;
     }
 };
-typedef communicator<copyLayerStruct<std::vector<float>>> communicator_type;
+
 class SWE_DimensionalSplittingHpx : public SWE_Block<Float2DNative> {
 
 public:
+    typedef communicator<copyLayerStruct<std::vector<float>>,SWE_DimensionalSplittingHpx> communicator_type;
     friend  communicator_type;
     // Constructor/Destructor
     SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,

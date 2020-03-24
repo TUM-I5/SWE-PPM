@@ -18,40 +18,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/BuildDefault.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BuildHpx.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BuildMpi.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BuildUpcxx.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FindNetCDF.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FindUPCXX.cmake" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Structure.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BuildCharm.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SConstruct" beforeDir="false" afterPath="$PROJECT_DIR$/SConstruct" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/charmrun" beforeDir="false" afterPath="$PROJECT_DIR$/charmrun" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/test.0.vts" beforeDir="false" afterPath="$PROJECT_DIR$/output/test.0.vts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/test.1.vts" beforeDir="false" afterPath="$PROJECT_DIR$/output/test.1.vts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/test.2.vts" beforeDir="false" afterPath="$PROJECT_DIR$/output/test.2.vts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/test.3.vts" beforeDir="false" afterPath="$PROJECT_DIR$/output/test.3.vts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/test.4.vts" beforeDir="false" afterPath="$PROJECT_DIR$/output/test.4.vts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output/test.5.vts" beforeDir="false" afterPath="$PROJECT_DIR$/output/test.5.vts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BuildHpx.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/BuildHpx.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BuildUpcxx.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/BuildUpcxx.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.ci" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.ci" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/Collector.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Collector.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/CollectorCharm.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorCharm.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/CollectorHpx.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorHpx.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tools/Communicator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Communicator.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -122,7 +96,7 @@
       <recent name="$PROJECT_DIR$/src/types" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.swe_benchmark_hpx">
+  <component name="RunManager" selected="CMake Application.swe_benchmark_upcxx">
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -313,14 +287,9 @@
       <workItem from="1584527501531" duration="11343000" />
       <workItem from="1584614087388" duration="25697000" />
       <workItem from="1584643962168" duration="381000" />
-      <workItem from="1584701363314" duration="13803000" />
-    </task>
-    <task id="LOCAL-00059" summary="Added Charm LTS">
-      <created>1578408838797</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1578408838798</updated>
+      <workItem from="1584701363314" duration="14619000" />
+      <workItem from="1584963463453" duration="3728000" />
+      <workItem from="1585054422374" duration="3145000" />
     </task>
     <task id="LOCAL-00060" summary="Added Charm LTS (bug fixed)">
       <created>1578412575813</created>
@@ -658,7 +627,14 @@
       <option name="project" value="LOCAL" />
       <updated>1584527518165</updated>
     </task>
-    <option name="localTasksCounter" value="108" />
+    <task id="LOCAL-00108" summary="Added Collect for all frameworks&#10;Chameleon not tested but very confident that it works&#10;Added Cmake support for all frameworks besides charm">
+      <created>1584734867091</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1584734867091</updated>
+    </task>
+    <option name="localTasksCounter" value="109" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -679,7 +655,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Merged SWE_Block" />
     <MESSAGE value="Merged some More" />
     <MESSAGE value="Merged some More More" />
     <MESSAGE value="Added Local Timestepping for chameleon&#10;Not yet compiled" />
@@ -704,7 +679,8 @@
     <MESSAGE value="Finished CollectorMpi.hpp and CollectorUpcxx.hpp&#10;Removed redundant measurement code and replaced with collectors" />
     <MESSAGE value="Finished but not tested chameleonCollector" />
     <MESSAGE value="Finished but not tested CollectorCharm.hpp" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finished but not tested CollectorCharm.hpp" />
+    <MESSAGE value="Added Collect for all frameworks&#10;Chameleon not tested but very confident that it works&#10;Added Cmake support for all frameworks besides charm" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Collect for all frameworks&#10;Chameleon not tested but very confident that it works&#10;Added Cmake support for all frameworks besides charm" />
   </component>
   <component name="WindowStateProjectService">
     <state x="555" y="200" width="800" height="677" key="#Notifications" timestamp="1576543840156">
@@ -720,11 +696,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1584734852015">
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1584734866913">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734852015" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734866913" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579745687984" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
@@ -743,43 +719,50 @@
     </state>
     <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584624349658" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579648171620" />
-    <state x="816" y="329" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1576075894312" />
-    <state width="1874" height="286" key="GridCell.Tab.0.bottom" timestamp="1584734852040">
+    <state width="1874" height="286" key="GridCell.Tab.0.bottom" timestamp="1584965135317">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="286" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734852040" />
+    <state width="1874" height="286" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584965135317" />
     <state width="1807" height="278" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584713390116" />
-    <state width="1874" height="286" key="GridCell.Tab.0.center" timestamp="1584734852040">
+    <state width="1874" height="354" key="GridCell.Tab.0.bottom/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
+    <state width="1874" height="286" key="GridCell.Tab.0.center" timestamp="1584965135317">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="286" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734852040" />
+    <state width="1874" height="286" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584965135317" />
     <state width="1807" height="278" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584713390116" />
-    <state width="1874" height="286" key="GridCell.Tab.0.left" timestamp="1584734852039">
+    <state width="1874" height="354" key="GridCell.Tab.0.center/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
+    <state width="1874" height="286" key="GridCell.Tab.0.left" timestamp="1584965135317">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="286" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734852039" />
+    <state width="1874" height="286" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584965135317" />
     <state width="1807" height="278" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584713390116" />
-    <state width="1874" height="286" key="GridCell.Tab.0.right" timestamp="1584734852040">
+    <state width="1874" height="354" key="GridCell.Tab.0.left/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
+    <state width="1874" height="286" key="GridCell.Tab.0.right" timestamp="1584965135317">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="286" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734852040" />
+    <state width="1874" height="286" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584965135317" />
     <state width="1807" height="278" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584713390116" />
-    <state width="1874" height="354" key="GridCell.Tab.1.bottom" timestamp="1584734752946">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state width="1874" height="354" key="GridCell.Tab.0.right/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
+    <state width="1874" height="354" key="GridCell.Tab.1.bottom" timestamp="1584737631288">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1874" height="354" key="GridCell.Tab.1.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752946" />
-    <state width="1874" height="354" key="GridCell.Tab.1.center" timestamp="1584734752946">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state width="1874" height="354" key="GridCell.Tab.1.bottom/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631288" />
+    <state width="1874" height="354" key="GridCell.Tab.1.center" timestamp="1584737631288">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1874" height="354" key="GridCell.Tab.1.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752946" />
-    <state width="1874" height="354" key="GridCell.Tab.1.left" timestamp="1584734752945">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state width="1874" height="354" key="GridCell.Tab.1.center/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631288" />
+    <state width="1874" height="354" key="GridCell.Tab.1.left" timestamp="1584737631287">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1874" height="354" key="GridCell.Tab.1.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752945" />
-    <state width="1874" height="354" key="GridCell.Tab.1.right" timestamp="1584734752946">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state width="1874" height="354" key="GridCell.Tab.1.left/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
+    <state width="1874" height="354" key="GridCell.Tab.1.right" timestamp="1584737631288">
+      <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state width="1874" height="354" key="GridCell.Tab.1.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752946" />
+    <state width="1874" height="354" key="GridCell.Tab.1.right/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631288" />
     <state x="430" y="187" key="SettingsEditor" timestamp="1580920612527">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -799,10 +782,10 @@
     </state>
     <state x="761" y="487" width="464" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584537714717" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579700332116" />
-    <state x="160" y="0" width="1336" height="1011" maximized="true" key="dock-window-1" timestamp="1584718094877">
+    <state x="540" y="27" width="1380" height="632" key="dock-window-1" timestamp="1584964239924">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="1987" y="27" width="1413" height="723" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584707020462" />
+    <state x="540" y="27" width="1380" height="632" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584964239924" />
     <state x="160" y="0" width="1336" height="1011" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584718094877" />
     <state x="-161" y="27" width="933" height="878" maximized="true" key="dock-window-1/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577114376215" />
     <state x="429" y="0" width="1369" height="1011" key="dock-window-2" timestamp="1580034263596">

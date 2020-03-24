@@ -1,4 +1,4 @@
-SET(HPX_DIR ~/hpx_build/lib/cmake/HPX)
+SET(HPX_DIR $ENV{HPX_PATH}/lib/cmake/HPX)
 
 find_package(HPX REQUIRED)
 set(BLOCK_FILES ${BLOCKS}/SWE_Block.hh ${BLOCKS}/SWE_DimensionalSplittingHpx.hh ${BLOCKS}/SWE_DimensionalSplittingHpx.cpp

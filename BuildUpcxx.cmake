@@ -1,4 +1,4 @@
-SET(UPCXX_INSTALL ~/upcxx)
+SET(UPCXX_INSTALL $ENV{UPCXX_PATH})
 
 include(FindUPCXX.cmake)  #@todo use find_package(UPCXX) instead (only works with UPCXX >= 2019.9)
 set(upcxx_compile_options -DUPCXX)

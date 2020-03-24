@@ -56,10 +56,11 @@
 #include <hpx/hpx_init.hpp>
 
 
-
+#include <hpx/program_options/variables_map.hpp>
+#include <hpx/program_options/options_description.hpp>
 #include <hpx/collectives/broadcast.hpp>
 HPX_REGISTER_ALLREDUCE(double, reduction_test);
-int hpx_main(boost::program_options::variables_map& vm)
+int hpx_main(hpx::program_options::variables_map& vm)
 {
 
 
@@ -74,7 +75,7 @@ int hpx_main(boost::program_options::variables_map& vm)
     std::string outputBaseName;
     std::string batFile;
     std::string displFile;
-    bool  localTimestepping = false;
+    bool  localTimestepping;
 
     simulationDuration =  vm["simulation-duration"].as<float>();
     numberOfCheckPoints = vm["checkpoint-count"].as<int>();
@@ -85,7 +86,7 @@ int hpx_main(boost::program_options::variables_map& vm)
     localTimestepping = vm["local-timestepping"].as<bool>();
 #ifdef ASAGI
     batFile = vm["bathymetry-file"].as<std::string>();
-   displFile = vm["displacement-file"].as<std::string>();
+    displFile = vm["displacement-file"].as<std::string>();
 #endif
 
 
@@ -109,7 +110,7 @@ int main(int argc, char** argv) {
     /**************
      * INIT INPUT *
      **************/
-    using namespace boost::program_options;
+    using namespace hpx::program_options;
 
     options_description desc_commandline;
 
@@ -123,10 +124,8 @@ int main(int argc, char** argv) {
      ("resolution-horizontal",value<int>()->default_value(100), "Number of simulation cells in horizontal direction")
      ("resolution-vertical", value<int>()->default_value(100),"Number of simulated cells in y-direction")
      ("output-basepath,o", value<std::string>()->default_value("hpx_output"),"Output base file name")
-            ("blocks", value<int>()->default_value(1),"Number of swe blocks")
-            ("local-timestepping", value<bool>()->default_value(false),"Number of swe blocks")
-
-    ;
+     ("blocks", value<int>()->default_value(1),"Number of swe blocks")
+     ("local-timestepping", value<bool>()->default_value(false),"Number of swe blocks");
 
     // Initialize and run HPX, this example requires to run hpx_main on all
     // localities
