@@ -199,6 +199,7 @@ class SWE_Block {
 		// Boundary type at the block edges (uses Boundary as index)
 		BoundaryType boundaryType[4];
 
+    void copyGhostlayer(Boundary border);
 };
 
 /***************************
@@ -258,13 +259,7 @@ bool SWE_Block <T, Buffer>::hasMaxLocalTimestep(){
         stepSizeCounter = 0;
     }
     return false;
-    /*if(stepSizeCounter > stepSize  && allGhostlayersInSync()){
-        stepSizeCounter = 0;
 
-        return true;
-    }else{
-        return false;
-    }*/
 }
 
 template <typename T, typename Buffer>
@@ -282,7 +277,8 @@ bool SWE_Block< T, Buffer>::isReceivable(Boundary border){
 }
 template <typename T, typename Buffer>
 float SWE_Block< T, Buffer>::interpolateValue(float oldval, float newval, float remoteTimestep){
-    return oldval + (newval-oldval)*(getTotalLocalTimestep()/remoteTimestep);
+
+    return getTotalLocalTimestep() == remoteTimestep?newval:(oldval + (newval-oldval)*(getTotalLocalTimestep()/remoteTimestep));
 }
 template <typename T, typename Buffer>
 void SWE_Block< T, Buffer>::checkAllGhostlayers() {
@@ -296,7 +292,8 @@ void SWE_Block< T, Buffer>::checkAllGhostlayers() {
                 if (borderTimestep[border] == getTotalLocalTimestep()){
                     //This case the neighbor progressed as much as local block did and thus the received Ghostlayer is valid and we can expect
                     // a new timestep incoming in the next iteration.
-                    interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
+                    //interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
+                    copyGhostlayer(static_cast<Boundary>(border));
                     receivedGhostlayer[border] = GL_SYNC;
                 }else if ((borderTimestep[border] > getTotalLocalTimestep()) && stepSizeCounter != 0 ){
                     //This case we need to interpolate and thus do not expect a new timestep in the next iteration.
@@ -357,16 +354,54 @@ void SWE_Block< T, Buffer>::interpolateGhostlayer(Boundary border,float remoteTi
 
 }
 template <typename T, typename Buffer>
+void SWE_Block< T, Buffer>::copyGhostlayer(Boundary border){
+    int startIndex ;
+    int endIndex;
+    switch(border){
+        case BND_LEFT:
+
+            startIndex = 1;
+            endIndex = startIndex + ny;
+
+            std::copy(bufferH.getRawPointer() + startIndex,bufferH.getRawPointer() + endIndex, h.getRawPointer() + startIndex);
+            std::copy(bufferHu.getRawPointer() + startIndex,bufferHu.getRawPointer() + endIndex, hu.getRawPointer() + startIndex);
+            std::copy(bufferHv.getRawPointer() + startIndex,bufferHv.getRawPointer() + endIndex, hv.getRawPointer() + startIndex);
+
+            break;
+        case BND_RIGHT:
+             startIndex = (nx + 1) * (ny + 2) + 1;
+             endIndex = startIndex + ny;
+
+            std::copy(bufferH.getRawPointer() + startIndex,bufferH.getRawPointer() + endIndex, h.getRawPointer() + startIndex);
+            std::copy(bufferHu.getRawPointer() + startIndex,bufferHu.getRawPointer() + endIndex, hu.getRawPointer() + startIndex);
+            std::copy(bufferHv.getRawPointer() + startIndex,bufferHv.getRawPointer() + endIndex, hv.getRawPointer() + startIndex);
+            break;
+        case BND_BOTTOM:
+            for(int i = 1; i < nx+2; i++) {
+                h[i][0] = bufferH[i][0];
+                hu[i][0] = bufferHu[i][0];
+                hv[i][0] = bufferHv[i][0];
+
+            }
+            break;
+        case BND_TOP:
+            for(int i = 1; i < nx+2; i++) {
+                h[i][ny+1] = bufferH[i][ny+1];
+                hu[i][ny+1] = bufferHu[i][ny+1];
+                hv[i][ny+1] = bufferHv[i][ny+1];
+            }
+            break;
+    }
+
+}
+template <typename T, typename Buffer>
 void SWE_Block< T, Buffer>::setMaxLocalTimestep(float timestep){
     maxTimestepLocal = timestep;
 }
 template <typename T, typename Buffer>
 float SWE_Block< T, Buffer>::getRoundTimestep(float timestep){
-    //stepSizeCounter = stepSizeCounter%(stepSize);
 
     if(stepSizeCounter <= 0){
-        //the timestep just started, determine stepsize
-        //std::cout << "Calculated timestep :" << timestep << std::endl;
         float diff = maxTimestepLocal;
         for(int i = 1 ; i < maxDivisor ; i*=2){
             float newDiff = std::abs(maxTimestepLocal/i - timestep);

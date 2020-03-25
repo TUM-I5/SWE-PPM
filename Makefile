@@ -1,5 +1,4 @@
 
-ASAGI_PATH = $(HOME)/ASAGI/
 
 all: 	mpi upcxx charm chameleon_asagi hpx
 
@@ -10,7 +9,7 @@ simulate_upcxx:
 	${UPCXX_PATH}/bin/upcxx-run -n 16 ./build/SWE_gnu_release_upcxx_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
 
 simulate_upcxx_rad:
-	${UPCXX_PATH}/bin/upcxx-run -n 4 ./build/SWE_gnu_release_upcxx_hybrid_vec -t 10 -n 20 -x 1000 -y 1000 -o ./mpi -l 0
+	${UPCXX_PATH}/bin/upcxx-run -n 4 ./build/SWE_gnu_release_upcxx_hybrid_vec -t 20 -n 20 -x 1000 -y 1000 -o ./upcxx -l 1
 simulate_upcxx_test:
 	${UPCXX_PATH}/bin/upcxx-run -n 4 ./build/SWE_gnu_release_upcxx_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_upcxx
 
@@ -18,7 +17,7 @@ simulate_mpi:
 	mpirun -np 4 ./build/SWE_gnu_release_mpi_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
 
 simulate_mpi_rad:
-	mpirun -np 4 ./build/SWE_gnu_release_mpi_hybrid -t 10 -n 20 -x 1000 -y 1000 -o ./mpi -l 0
+	mpirun -np 4 ./build/SWE_gnu_release_mpi_hybrid -t 20 -n 20 -x 1000 -y 1000 -o ./mpi -l 1
 simulate_hpx:
 	./build/SWE_gnu_release_hpx_hybrid_vec -e 1000 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 2 --local-timestepping 0
 
@@ -33,7 +32,7 @@ simulate_charm:
 	mpirun -n 4  ./build/SWE_gnu_release_charm_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
 
 simulate_charm_rad:
-	${CHARM_PATH}/bin/charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 10 -n 20 -x 1000 -y 1000 -o ./mpi -l 0
+	${CHARM_PATH}/bin/charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 40 -n 40 -x 1000 -y 1000 -o ./charm -l 0
 simulate_charm_test:
 	./charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_charm
 
@@ -66,7 +65,7 @@ mpi:
 mpi_load:
 	scons writeNetCDF=True openmp=false solver=augrie parallelization=mpi asagi=false asagiDir=${ASAGI_PATH} copyenv=true
 mpi_rad:
-	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=false asagiDir=${ASAGI_PATH} copyenv=true
+	scons writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=false copyenv=true
 mpi_debug:
 	scons compileMode=debug writeNetCDF=True openmp=false solver=hybrid parallelization=mpi asagi=true asagiDir=${ASAGI_PATH} copyenv=true vectorize=true
 

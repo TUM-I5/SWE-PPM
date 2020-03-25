@@ -371,19 +371,19 @@ int main(int argc, char** argv) {
     MPI_Barrier(MPI_COMM_WORLD);
 
     float maxLocalTimestep;
-    float timestep = std::numeric_limits<float>::max();
+    float timestep =0;
     if(localTimestepping){
         for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
             for (int y = yBounds[myYRank]; y < yBounds[myYRank + 1]; y++) {
                 blocks[x][y]->computeMaxTimestep(0.01, 0.4);
-                timestep = std::min(timestep, blocks[x][y]->getMaxTimestep());
+                timestep = std::max(timestep, blocks[x][y]->getMaxTimestep());
 
             }
         }
 
     // reduce over all ranks
 
-        MPI_Allreduce(&timestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+        MPI_Allreduce(&timestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
 
         for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
             for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {

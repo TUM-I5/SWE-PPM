@@ -236,7 +236,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
             if(localityRank == 0){
                 if(localityCount > 1){
                     maxLocalTimestep =hpx::dataflow(hpx::util::unwrapping([](std::vector<float> globalTimesteps, float localTimestep) -> float {
-                        return std::min(localTimestep,*std::min_element(globalTimesteps.begin(),globalTimesteps.end()));
+                        return std::max(localTimestep,*std::max_element(globalTimesteps.begin(),globalTimesteps.end()));
                     }),std::move(localityChannel.get()),std::move(minTimestep)).get();
                     float sendTs = maxLocalTimestep;
                     localityChannel.set(std::move(sendTs));

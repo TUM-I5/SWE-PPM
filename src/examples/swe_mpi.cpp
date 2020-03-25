@@ -269,7 +269,7 @@ int main(int argc, char** argv) {
         simulation.computeMaxTimestep( 0.01,0.4);
         float localTimestep = simulation.getMaxTimestep();
         // reduce over all ranks
-        MPI_Allreduce(&localTimestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+        MPI_Allreduce(&localTimestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
 
         simulation.setMaxLocalTimestep(maxLocalTimestep);
 

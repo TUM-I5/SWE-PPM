@@ -74,7 +74,7 @@ class SWE_DimensionalSplittingCharm : public CBase_SWE_DimensionalSplittingCharm
 		NetCdfWriter *writer;
 		float currentSimulationTime;
 		int currentCheckpoint;
-
+        int receiveCounter = 0;
 		// Temporary values after x-sweep and before y-sweep
 		Float2DNative hStar;
 		Float2DNative huStar;

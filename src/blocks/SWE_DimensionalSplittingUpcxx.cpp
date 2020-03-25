@@ -132,12 +132,12 @@ BlockConnectInterface<upcxx::global_ptr<float>> SWE_DimensionalSplittingUpcxx::g
         case BND_LEFT:
             interface.size = ny;
             interface.stride = 1;
-            interface.startIndex = (nx + 1) * (ny + 2) + 1;
+            interface.startIndex =  1;
             break;
         case BND_RIGHT:
             interface.size = ny;
             interface.stride = 1;
-            interface.startIndex =  1;
+            interface.startIndex = (nx + 1) * (ny + 2) + 1;
             break;
         case BND_BOTTOM:
             interface.size = nx;
@@ -378,7 +378,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
 
     for(int i = 0; i < 4; i++){
         if(isReceivable((Boundary)i))
-        borderTimestep[i]=upcxxBorderTimestep[i];
+        borderTimestep[i]  = upcxxBorderTimestep[i];
         dataTransmitted[i] = false;
     }
     checkAllGhostlayers();
@@ -435,7 +435,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes () {
         // compute max timestep according to cautious CFL-condition
         CollectorUpcxx::getInstance().startCounter(CollectorUpcxx::CTR_REDUCE);
 
-        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, upcxx::op_fast_min).wait();
+        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, [](float a, float b) {return std::min(a, b);}).wait();
 
         CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_REDUCE);
         maxTimestep = maxTimestepGlobal;

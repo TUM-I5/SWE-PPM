@@ -302,7 +302,7 @@ int main(int argc, char** argv) {
         simulation.computeMaxTimestep( 0.01,0.4);
         float localTimestep = simulation.getMaxTimestep();
         // reduce over all ranks
-        maxLocalTimestep = upcxx::reduce_all(localTimestep, [](float a, float b) {return std::min(a, b);}).wait();
+        maxLocalTimestep = upcxx::reduce_all(localTimestep, [](float a, float b) {return std::max(a, b);}).wait();
 
         simulation.setMaxLocalTimestep(maxLocalTimestep);
     }
@@ -322,7 +322,6 @@ int main(int argc, char** argv) {
 
                 CollectorUpcxx::getInstance().startCounter(CollectorUpcxx::CTR_WALL);
                 simulation.setGhostLayer();
-
 
                 // compute numerical flux on each edge
                 simulation.computeNumericalFluxes();
