@@ -27,7 +27,7 @@ module SWE_DimensionalSplittingCharm {
                 serial{
                      computeMaxTimestep( 0.01,0.4);
                      CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
-                     contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
+                     contribute(sizeof(float), &maxTimestep, CkReduction::max_float, cb);
                  }
                  when reductionTrigger()
                  serial {
@@ -44,9 +44,12 @@ module SWE_DimensionalSplittingCharm {
 			while(currentCheckpoint < checkpointCount) {
 				serial {
 					collector->startCounter(Collector::CTR_EXCHANGE);
-					sendCopyLayers(firstIteration);
-					setGhostLayer();
-					firstIteration = false;
+
+                    sendCopyLayers(firstIteration);
+                    setGhostLayer();
+                    firstIteration = false;
+
+
 
 				}
 				overlap {
@@ -101,6 +104,7 @@ module SWE_DimensionalSplittingCharm {
                             if(thisIndex == 0) {
                                 CkPrintf("Write timestep (%fs)\n", currentSimulationTime);
                             }
+
                             writeTimestep();
                             currentCheckpoint++;
 
@@ -110,20 +114,12 @@ module SWE_DimensionalSplittingCharm {
                         }
 
                         // If there is an iteration to go, propagate copy layers anew
-                        if (currentSimulationTime < simulationDuration) {
-
-                            collector->startCounter(Collector::CTR_EXCHANGE);
-                            sendCopyLayers(false);
-                            setGhostLayer();
-
-                        } else {
-
+                        if (currentSimulationTime >= simulationDuration) {
 
                             collector->stopCounter(Collector::CTR_WALL);
 
                             double serialize[5];
                             collector->serialize(serialize);
-
 
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
                         }

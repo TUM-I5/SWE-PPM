@@ -204,9 +204,12 @@ void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {
 }
 
 void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
+
 	// LEFT ghost layer consists of values from the left neighbours RIGHT copy layer etc.
+
 	if(!msg->isDummy){
         if (msg->boundary == BND_RIGHT && boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
+
             for (int i = 0; i < ny; i++) {
                 if (msg->containsBathymetry)
                     b[0][i + 1] = msg->b[i];
@@ -264,13 +267,13 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry){
 	int size, stride, startIndex, endIndex;
     float totalLocalTimestep = getTotalLocalTimestep();
 	if (boundaryType[BND_LEFT] == CONNECT  && isSendable(BND_LEFT)) {
-		assert(neighbourIndex[BND_LEFT] > -1);
+
+        assert(neighbourIndex[BND_LEFT] > -1);
 
 		copyLayer *left = new(sizesVertical, 0) copyLayer();
 		left->containsBathymetry = sendBathymetry;
 		left->boundary = BND_LEFT;
 		left->isDummy = false;
-
 		// Fill left (stride 1, contiguous storage due to Float2D being column-major)
 		size = ny;
 		startIndex = ny + 2 + 1;
@@ -286,13 +289,14 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry){
 	}
 
 	if (boundaryType[BND_RIGHT] == CONNECT  && isSendable(BND_RIGHT)) {
+
 		assert(neighbourIndex[BND_RIGHT] > -1);
 
 		copyLayer *right = new(sizesVertical, 0) copyLayer();
+
 		right->containsBathymetry = sendBathymetry;
 		right->boundary = BND_RIGHT;
 		right->isDummy = false;
-
 		// Fill right (stride 1, contiguous storage due to Float2D being column-major)
 		size = ny;
 		startIndex = nx * (ny + 2) + 1;
@@ -303,7 +307,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry){
 		std::copy(hu.getRawPointer() + startIndex, hu.getRawPointer() + endIndex, right->hu);
 		std::copy(hv.getRawPointer() + startIndex, hv.getRawPointer() + endIndex, right->hv);
 		right->timestep = totalLocalTimestep;
-		// Send
+
 		thisProxy[neighbourIndex[BND_RIGHT]].receiveGhostLeft(right);
 	}
 
@@ -360,6 +364,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry){
 
 void SWE_DimensionalSplittingCharm::writeTimestep() {
 	writer->writeTimeStep(h, hu, hv, currentSimulationTime);
+
 }
 
 void SWE_DimensionalSplittingCharm::setGhostLayer() {
@@ -373,10 +378,15 @@ void SWE_DimensionalSplittingCharm::setGhostLayer() {
 	copyLayer *empty2 = new(sizesEmpty, 0) copyLayer();
 	copyLayer *empty3 = new(sizesEmpty, 0) copyLayer();
 	empty0->isDummy = true;
+    empty1->boundary = BND_LEFT;
+
     empty1->isDummy = true;
+    empty0->boundary = BND_RIGHT;
     empty2->isDummy = true;
+    empty3->boundary = BND_BOTTOM;
     empty3->isDummy = true;
-	// Send out dummy messages to trigger the next timestep
+	empty2->boundary = BND_TOP;
+    // Send out dummy messages to trigger the next timestep
 	if (boundaryType[BND_LEFT] != CONNECT || !isReceivable(BND_LEFT)) {
 		thisProxy[thisIndex].receiveGhostLeft(empty0);
 	}
