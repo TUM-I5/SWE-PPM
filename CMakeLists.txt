@@ -39,7 +39,7 @@ foreach( build_type ${BUILDS})
                 DEPENDENCIES ${NETCDF_LIBRARIES})
     else()
         add_executable(swe_benchmark_${build_type} ${SOURCE_FILES})
-        target_include_directories(swe_benchmark_${build_type} PUBLIC "${${build_type}_include_directories}" )
+        target_include_directories(swe_benchmark_${build_type} PUBLIC "${${build_type}_include_directories}" ${NETCDF_INCLUDE_DIRS} )
         target_link_libraries(swe_benchmark_${build_type} ${NETCDF_LIBRARIES} "${${build_type}_link_libraries}" )
     endif()
     #

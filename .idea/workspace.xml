@@ -2,11 +2,11 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
+      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
     </generated>
   </component>
@@ -17,11 +17,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="asdfasd">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,14 +133,14 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.block_component_component" />
-      <item itemvalue="CMake Application.execute_mpi" />
-      <item itemvalue="CMake Application.no_component_component" />
       <item itemvalue="CMake Application.swe-benchmark" />
+      <item itemvalue="CMake Application.block_component_component" />
+      <item itemvalue="CMake Application.no_component_component" />
       <item itemvalue="CMake Application.swe_benchmark_default" />
       <item itemvalue="CMake Application.swe_benchmark_hpx" />
       <item itemvalue="CMake Application.swe_benchmark_mpi" />
       <item itemvalue="CMake Application.swe_benchmark_upcxx" />
+      <item itemvalue="CMake Application.execute_mpi" />
     </list>
   </component>
   <component name="ServiceViewManager">
@@ -283,20 +281,9 @@
       <workItem from="1584963463453" duration="3728000" />
       <workItem from="1585054422374" duration="3546000" />
       <workItem from="1585137539214" duration="28421000" />
-    </task>
-    <task id="LOCAL-00062" summary="Fixed HPX lts bugs">
-      <created>1578579065804</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1578579065804</updated>
-    </task>
-    <task id="LOCAL-00063" summary="Fixed final HPX lts bug">
-      <created>1579007434411</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1579007434412</updated>
+      <workItem from="1585173296273" duration="72000" />
+      <workItem from="1585337593436" duration="1246000" />
+      <workItem from="1585339700722" duration="180000" />
     </task>
     <task id="LOCAL-00064" summary="added upcxx experimental">
       <created>1579618954780</created>
@@ -627,7 +614,21 @@
       <option name="project" value="LOCAL" />
       <updated>1585166780152</updated>
     </task>
-    <option name="localTasksCounter" value="111" />
+    <task id="LOCAL-00111" summary="Fixed CHARM bug with double send of messages&#10;&#10;what kind of retard implemented this ?!">
+      <created>1585173357735</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1585173357736</updated>
+    </task>
+    <task id="LOCAL-00112" summary="asdfasd">
+      <created>1585337786470</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1585337786471</updated>
+    </task>
+    <option name="localTasksCounter" value="113" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -648,8 +649,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Added Local Timestepping for chameleon&#10;Not yet compiled" />
-    <MESSAGE value="Fixed some Errors of Local Timestepping" />
     <MESSAGE value="Fixed some MORE Errors of Local Timestepping" />
     <MESSAGE value="Fixed some MORE Errors of Local Timestepping and added debug message" />
     <MESSAGE value="Fixed LTS implementation&#10;Added Boundaries for LTS&#10;Applied LTS to mpi and chameleon" />
@@ -673,13 +672,11 @@
     <MESSAGE value="Added Collect for all frameworks&#10;Chameleon not tested but very confident that it works&#10;Added Cmake support for all frameworks besides charm" />
     <MESSAGE value="Cleaned HPX implementation&#10;Added cmake support" />
     <MESSAGE value="Improved Performance of local timestepping&#10;fixed bug in upcxx implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improved Performance of local timestepping&#10;fixed bug in upcxx implementation" />
+    <MESSAGE value="Fixed CHARM bug with double send of messages&#10;&#10;what kind of retard implemented this ?!" />
+    <MESSAGE value="asdfasd" />
+    <option name="LAST_COMMIT_MESSAGE" value="asdfasd" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="555" y="200" width="800" height="677" key="#Notifications" timestamp="1576543840156">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="555" y="200" width="800" height="677" key="#Notifications/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543840156" />
     <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585152381830">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -689,18 +686,14 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585166779889">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="2478" y="149" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585338073763">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585166779889" />
-    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585072465784" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585173357474" />
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585338073763" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state width="446" height="442" key="Diff.GoToChangePopup" timestamp="1576543830112">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state width="446" height="442" key="Diff.GoToChangePopup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1576543830112" />
     <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog" timestamp="1585169203507">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
