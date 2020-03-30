@@ -610,7 +610,7 @@ int main(int argc, char** argv) {
 	float minTime=1000000.; float maxTime=0.;float avgTime=0.; int blockCount = 0;
 	for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
 		for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
-		    collector += blocks[x][y].collector;
+		    collector += blocks[x][y]->collector;
 			if(blocks[x][y]->computeTimeWall < minTime)
 				minTime = blocks[x][y]->computeTimeWall;
 			if(blocks[x][y]->computeTimeWall > maxTime)

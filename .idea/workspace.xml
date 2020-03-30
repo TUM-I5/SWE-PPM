@@ -2,11 +2,11 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
+      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
     </generated>
   </component>
@@ -17,10 +17,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="asdfasd">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -286,14 +285,7 @@
       <workItem from="1585337593436" duration="1246000" />
       <workItem from="1585339700722" duration="1138000" />
       <workItem from="1585403755002" duration="651000" />
-      <workItem from="1585569626890" duration="88000" />
-    </task>
-    <task id="LOCAL-00065" summary="upcxx gts works without barrier&#10;upcxx lts has some bugs in it">
-      <created>1579743629822</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1579743629822</updated>
+      <workItem from="1585569626890" duration="322000" />
     </task>
     <task id="LOCAL-00066" summary="upcxx gts works without barrier&#10;upcxx lts has some bugs in it">
       <created>1579744182048</created>
@@ -631,7 +623,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585339885463</updated>
     </task>
-    <option name="localTasksCounter" value="114" />
+    <task id="LOCAL-00114" summary="asdfasd">
+      <created>1585569718380</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1585569718381</updated>
+    </task>
+    <option name="localTasksCounter" value="115" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -689,19 +688,19 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585339885354">
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585569802264">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585339885354" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569802264" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585338073763" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog" timestamp="1585169203507">
+    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog" timestamp="1585569778781">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
-    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585169203507" />
+    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569778781" />
     <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585072444316" />
     <state x="228" y="149" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1577006569067" />
     <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl" timestamp="1585169202904">
@@ -753,16 +752,25 @@
     </state>
     <state width="1874" height="354" key="GridCell.Tab.1.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752946" />
     <state width="1874" height="354" key="GridCell.Tab.1.right/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631288" />
+    <state x="182" y="92" width="1536" height="894" key="MergeDialog" timestamp="1585569750978">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="182" y="92" width="1536" height="894" key="MergeDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569750978" />
+    <state x="665" y="257" width="580" height="564" key="MultipleFileMergeDialog" timestamp="1585569750982">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="665" y="257" width="580" height="564" key="MultipleFileMergeDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569750982" />
     <state x="430" y="187" key="SettingsEditor" timestamp="1580920612527">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="430" y="187" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580920612527" />
     <state x="2350" y="164" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579716034703" />
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1580915228026" />
-    <state x="588" y="308" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1580914313599">
+    <state x="588" y="308" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1585569817768">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="588" y="308" key="Vcs.Push.Dialog.v2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914313599" />
+    <state x="588" y="308" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569817768" />
     <state x="613" y="157" width="683" height="764" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1584535012545">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -789,10 +797,10 @@
     </state>
     <state x="2362" y="27" width="1449" height="874" maximized="true" key="dock-window-3/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585165560877" />
     <state x="551" y="27" width="873" height="878" maximized="true" key="dock-window-3/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577124715703" />
-    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog" timestamp="1580220709963">
+    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog" timestamp="1585569787459">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580220709963" />
+    <state x="602" y="332" width="706" height="413" key="git4idea.merge.GitPullDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569787459" />
     <state x="657" y="274" key="run.anything.popup" timestamp="1585163484839">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
