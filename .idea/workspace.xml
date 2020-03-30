@@ -2,11 +2,11 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
     </generated>
   </component>
@@ -17,9 +17,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="asdfasd">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +87,7 @@
       <recent name="$PROJECT_DIR$/src/types" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.swe_benchmark_upcxx">
+  <component name="RunManager" selected="CMake Application.swe_benchmark_hpx">
     <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -133,14 +134,14 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.swe-benchmark" />
       <item itemvalue="CMake Application.block_component_component" />
+      <item itemvalue="CMake Application.execute_mpi" />
       <item itemvalue="CMake Application.no_component_component" />
+      <item itemvalue="CMake Application.swe-benchmark" />
       <item itemvalue="CMake Application.swe_benchmark_default" />
       <item itemvalue="CMake Application.swe_benchmark_hpx" />
       <item itemvalue="CMake Application.swe_benchmark_mpi" />
       <item itemvalue="CMake Application.swe_benchmark_upcxx" />
-      <item itemvalue="CMake Application.execute_mpi" />
     </list>
   </component>
   <component name="ServiceViewManager">
@@ -283,14 +284,9 @@
       <workItem from="1585137539214" duration="28421000" />
       <workItem from="1585173296273" duration="72000" />
       <workItem from="1585337593436" duration="1246000" />
-      <workItem from="1585339700722" duration="180000" />
-    </task>
-    <task id="LOCAL-00064" summary="added upcxx experimental">
-      <created>1579618954780</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1579618954781</updated>
+      <workItem from="1585339700722" duration="1138000" />
+      <workItem from="1585403755002" duration="651000" />
+      <workItem from="1585569626890" duration="88000" />
     </task>
     <task id="LOCAL-00065" summary="upcxx gts works without barrier&#10;upcxx lts has some bugs in it">
       <created>1579743629822</created>
@@ -628,7 +624,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585337786471</updated>
     </task>
-    <option name="localTasksCounter" value="113" />
+    <task id="LOCAL-00113" summary="asdfasd">
+      <created>1585339885462</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1585339885463</updated>
+    </task>
+    <option name="localTasksCounter" value="114" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -686,11 +689,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="2478" y="149" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585338073763">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585339885354">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585173357474" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585339885354" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585338073763" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />

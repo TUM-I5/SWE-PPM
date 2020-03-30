@@ -402,7 +402,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 					);
 		}
 	}
-    collector.addFlops(nx*ny*135);
+    block->collector.addFlops(block->nx*block->ny*135);
 	// compute max timestep according to cautious CFL-condition
 	block->maxTimestep = (float) .4 * (block->dx / maxHorizontalWaveSpeed);
 
@@ -508,7 +508,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 					);
 		}
 	}
-    collector.addFlops(nx*ny*135);
+    block->collector.addFlops(block->nx*block->ny*135);
 	#ifndef NDEBUG
 	if(block->maxTimestep >= (float) .7 * (block->dy / maxVerticalWaveSpeed)) {
 		printf("%d: %f, %f, %f\n", block->myRank, block->maxTimestep, block->dy, maxVerticalWaveSpeed);
