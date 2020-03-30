@@ -288,7 +288,7 @@ if env['parallelization'] == 'hpx':
     else:
         print("Found BOOST install at: " + boostInstall)
 
-    hwInstall = os.environ['HWLOC_ROOT']
+    hwInstall = os.environ['HWLOC_BASE']
     if hwInstall == '':
         print(sys.stderr,
               'No HWLOC installation found. Did you set $HWLOC_ROOT?')
@@ -501,17 +501,18 @@ if env['parallelization'] == 'upcxx':
     env.Append(LIBPATH=upcxxLibPaths)
 if env['parallelization'] == 'hpx':
 
-    boostInstallLib = boostInstall+ '/lib/'
+    boostInstallLib = boostInstall+ '/stage/lib/'
     hpxInstallLib = hpxInstall + '/lib/'
+    hpxInstallLib = hpxInstall + '/lib64/'
     #boostInstallLib = boostInstall
     hwInstallLib = hwInstall + '/lib/'
-    hpxIncDir=[hpxInstall+'/include',boostInstall+'/include', hwInstall+'/include']
+    hpxIncDir=[hpxInstall+'/include',boostInstall, hwInstall+'/include']
     init_lib = File(hpxInstallLib+'libhpx_init.a')
     hpxLinDir=[init_lib,'libhpx.so','libhpx_iostreams.so'
         ,'libboost_atomic.so'
         ,'libboost_filesystem.so'
         ,'libboost_program_options.so'
-        ,'libboost_regex.so'
+        #,'libboost_regex.so'
         ,'libboost_system.so','-lpthread'
                #$(TCMALLOC_ROOT)/libtcmalloc_minimal.so
         ,'libhwloc.so', '-ldl' ,'-lrt']

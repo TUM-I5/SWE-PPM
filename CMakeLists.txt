@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(BUILDS Default Mpi Upcxx Hpx)
 
-#set(BUILDS Hpx)
+set(BUILDS Hpx Mpi)
 
 include_directories(src)
 include(FindNetCDF.cmake)
@@ -43,7 +43,6 @@ foreach( build_type ${BUILDS})
     endif()
     #
     target_include_directories(swe_benchmark_${build_type} PUBLIC "${${build_type}_include_directories}" ${NETCDF_INCLUDE_DIRS} )
-
     target_compile_options(swe_benchmark_${build_type} PUBLIC "${${build_type}_compile_options}" )#-O3 -std=c++14 -fmessage-length=0 -mtune=native -fstrict-aliasing -fargument-noalias)
     #
 
