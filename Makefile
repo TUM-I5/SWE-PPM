@@ -22,6 +22,8 @@ simulate_mpi_rad:
 simulate_hpx:
 	./build/SWE_gnu_release_hpx_hybrid_vec -e 1000 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 2 --local-timestepping 0
 
+simulate_hpx_rad:
+	mpirun -np 2 ./build/SWE_gnu_release_hpx_hybrid_vec -e 20 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./output/hpx --blocks 4 --local-timestepping 0
 
 simulate_chameleon:
 	I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=11 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -np 2 ./build/SWE_gnu_release_chameleon_omp_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -u 1 -v 1 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
