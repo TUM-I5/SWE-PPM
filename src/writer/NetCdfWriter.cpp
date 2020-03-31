@@ -96,7 +96,7 @@ NetCdfWriter::NetCdfWriter( const std::string &i_baseName,
 
 	//variables, fastest changing index is on the right (C syntax), will be mirrored by the library
 	int dims[] = {l_timeDim, l_yDim, l_xDim};
-	nc_def_var(dataFile, "h",  NC_FLOAT, 3, dims, &hVar);
+	nc_def_var(dataFile, "ah",  NC_FLOAT, 3, dims, &hVar);//@todo changed h to ah just for paraview
 	nc_def_var(dataFile, "hu", NC_FLOAT, 3, dims, &huVar);
 	nc_def_var(dataFile, "hv", NC_FLOAT, 3, dims, &hvVar);
 	nc_def_var(dataFile, "b",  NC_FLOAT, 2, &dims[1], &bVar);
