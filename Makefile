@@ -104,7 +104,7 @@ chameleon:
 	scons writeNetCDF=True solver=hybrid openmp=true parallelization=chameleon copyenv=true
 
 chameleon_gnu:
-	scons writeNetCDF=True compiler=gnu solver=hybrid openmp=true parallelization=chameleon
+	scons writeNetCDF=True compiler=gnu solver=hybrid openmp=false parallelization=chameleon
 
 chameleon_asagi:
 	scons writeNetCDF=True solver=hybrid openmp=true parallelization=chameleon asagi=true asagiDir=${ASAGI_PATH} copyenv=true vectorize=true

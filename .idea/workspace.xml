@@ -2,11 +2,11 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
     </generated>
   </component>
@@ -17,9 +17,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="asdfasd">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,12 +72,12 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/experimental/swe-benchmark/src/examples/swe_upcxx.cpp" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/blocks/SWE_DimensionalSplittingChameleon.cpp" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
-    <property name="two.files.diff.last.used.file" value="$USER_HOME$/experimental/swe-benchmark/src/examples/swe_upcxx.cpp" />
+    <property name="two.files.diff.last.used.file" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/blocks/SWE_DimensionalSplittingChameleon.cpp" />
     <property name="two.files.diff.last.used.folder" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src" />
   </component>
   <component name="RecentsManager">
@@ -86,48 +86,48 @@
       <recent name="$PROJECT_DIR$/src/types" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.swe_benchmark_hpx">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
+  <component name="RunManager" selected="CMake Application.execute_mpi">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="block_component_component" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="block_component_component" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="execute_mpi" type="CMakeRunConfiguration" factoryName="Application" activateToolWindowBeforeRun="false" PROGRAM_PARAMS="-n 8 cmake-build-release/swe_benchmark_mpi -t 40 -n 10 -x 1000 -y 1000 -o ./mpi -l 1 " WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="swe_benchmark" TARGET_NAME="swe_benchmark_mpi" CONFIG_NAME="Debug" RUN_PATH="/usr/bin/mpirun">
+    <configuration name="execute_mpi" type="CMakeRunConfiguration" factoryName="Application" activateToolWindowBeforeRun="false" PROGRAM_PARAMS="-n 8 cmake-build-release/swe_benchmark_mpi -t 40 -n 10 -x 1000 -y 1000 -o ./mpi -l 1 " WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="swe_benchmark" TARGET_NAME="swe_benchmark_mpi" CONFIG_NAME="Release" RUN_PATH="/usr/bin/mpirun">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="no_component_component" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="no_component_component" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe-benchmark" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_default" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe-benchmark" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_default" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_default" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_default" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_default" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_default" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_hpx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--simulation-duration 30 --checkpoint-count 5 --resolution-horizontal 100 --resolution-vertical 100 -output-basepath output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_hpx" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_hpx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--simulation-duration 30 --checkpoint-count 5 --resolution-horizontal 100 --resolution-vertical 100 -output-basepath output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_hpx" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_mpi" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_mpi" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_mpi" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_mpi" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_upcxx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_upcxx" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_upcxx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_upcxx" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -286,13 +286,7 @@
       <workItem from="1585339700722" duration="1138000" />
       <workItem from="1585403755002" duration="651000" />
       <workItem from="1585569626890" duration="322000" />
-    </task>
-    <task id="LOCAL-00066" summary="upcxx gts works without barrier&#10;upcxx lts has some bugs in it">
-      <created>1579744182048</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1579744182048</updated>
+      <workItem from="1585654107637" duration="7719000" />
     </task>
     <task id="LOCAL-00067" summary="upcxx gts works without barrier&#10;upcxx lts has some bugs in it">
       <created>1579744337217</created>
@@ -630,7 +624,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585569718381</updated>
     </task>
-    <option name="localTasksCounter" value="115" />
+    <task id="LOCAL-00115" summary="modified writer">
+      <created>1585658047862</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1585658047862</updated>
+    </task>
+    <option name="localTasksCounter" value="116" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -651,7 +652,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Fixed some MORE Errors of Local Timestepping" />
     <MESSAGE value="Fixed some MORE Errors of Local Timestepping and added debug message" />
     <MESSAGE value="Fixed LTS implementation&#10;Added Boundaries for LTS&#10;Applied LTS to mpi and chameleon" />
     <MESSAGE value="Added Upcxx LTS (minor bug with barrier)" />
@@ -676,7 +676,8 @@
     <MESSAGE value="Improved Performance of local timestepping&#10;fixed bug in upcxx implementation" />
     <MESSAGE value="Fixed CHARM bug with double send of messages&#10;&#10;what kind of retard implemented this ?!" />
     <MESSAGE value="asdfasd" />
-    <option name="LAST_COMMIT_MESSAGE" value="asdfasd" />
+    <MESSAGE value="modified writer" />
+    <option name="LAST_COMMIT_MESSAGE" value="modified writer" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585152381830">
@@ -688,48 +689,47 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585569802264">
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585658047684">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569802264" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585658047684" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585338073763" />
     <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog" timestamp="1585569778781">
+    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog" timestamp="1585672053686">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
-    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569778781" />
+    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585672053686" />
     <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585072444316" />
-    <state x="228" y="149" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1577006569067" />
-    <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl" timestamp="1585169202904">
+    <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl" timestamp="1585672053228">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585169202904" />
+    <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585672053228" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579648171620" />
-    <state width="1874" height="116" key="GridCell.Tab.0.bottom" timestamp="1585173197619">
+    <state width="1874" height="116" key="GridCell.Tab.0.bottom" timestamp="1585657927686">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="116" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585173197619" />
+    <state width="1874" height="116" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585657927686" />
     <state width="1807" height="267" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150506130" />
     <state width="1874" height="354" key="GridCell.Tab.0.bottom/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="116" key="GridCell.Tab.0.center" timestamp="1585173197619">
+    <state width="1874" height="116" key="GridCell.Tab.0.center" timestamp="1585657927686">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="116" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585173197619" />
+    <state width="1874" height="116" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585657927686" />
     <state width="1807" height="267" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150506130" />
     <state width="1874" height="354" key="GridCell.Tab.0.center/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="116" key="GridCell.Tab.0.left" timestamp="1585173197619">
+    <state width="1874" height="116" key="GridCell.Tab.0.left" timestamp="1585657927685">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="116" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585173197619" />
+    <state width="1874" height="116" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585657927685" />
     <state width="1807" height="267" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150506130" />
     <state width="1874" height="354" key="GridCell.Tab.0.left/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="116" key="GridCell.Tab.0.right" timestamp="1585173197619">
+    <state width="1874" height="116" key="GridCell.Tab.0.right" timestamp="1585657927686">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="116" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585173197619" />
+    <state width="1874" height="116" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585657927686" />
     <state width="1807" height="267" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150506130" />
     <state width="1874" height="354" key="GridCell.Tab.0.right/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
     <state width="1874" height="354" key="GridCell.Tab.1.bottom" timestamp="1584737631288">

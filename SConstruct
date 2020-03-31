@@ -346,8 +346,8 @@ if env['parallelization'] in ['chameleon']:
     env.Append(LINKFLAGS=['-L'+libfabricPath])
     env.Append(LINKFLAGS=['-lchameleon'])
     env.Append(LINKFLAGS=['-lfabric'])
-    env.Append(LINKFLAGS=['-lifcore'])
-    env.Append(LINKFLAGS=['-lirng'])
+   # env.Append(LINKFLAGS=['-lifcore'])
+   # env.Append(LINKFLAGS=['-lirng'])
     env.Append(RPATH=[chameleonPath+'/lib/'])
 
 ################################
