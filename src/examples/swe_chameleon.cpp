@@ -633,7 +633,7 @@ int main(int argc, char** argv) {
 
 	if(myRank == 0){
         printf("Iterations: %d\n", iterations);
-        collector.setMasterSettings(true, "TestChameleon.log");
+        collector.setMasterSettings(true, outputBaseName+".log");
 	}
     collector.logResults();
 	printf("RESULT: Chameleon: Computation ended, walltime:%f\n", wallTimeWhole);

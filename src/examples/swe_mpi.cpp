@@ -326,7 +326,7 @@ int main(int argc, char** argv) {
 	 ************/
 
     if(myMpiRank == 0){
-        CollectorMpi::getInstance().setMasterSettings(true, "MpiTest.log");
+        CollectorMpi::getInstance().setMasterSettings(true, outputBaseName+".log");
     }
 
     CollectorMpi::getInstance().logResults();

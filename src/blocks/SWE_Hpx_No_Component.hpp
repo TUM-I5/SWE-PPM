@@ -49,6 +49,7 @@ private:
         int localityCount;
         localityChannel_type localityChannel;
         std::vector<std::shared_ptr<SWE_DimensionalSplittingHpx>> simulationBlocks;
+        std::string outputBaseName;
         bool localTimestepping;
 };
 

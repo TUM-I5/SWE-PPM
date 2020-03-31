@@ -105,6 +105,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
         this->numberOfCheckPoints = numberOfCheckPoints;
         this->simulationDuration = simulationDuration;
         this->localTimestepping = localTimestepping;
+        this->outputBaseName = outputBaseName;
         // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
         float* checkpointInstantOfTime = new float[numberOfCheckPoints];
         // Time delta is the time between any two checkpoints
@@ -212,7 +213,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
 
         if(localityRank == 0){
-            collector.setMasterSettings(true,"HpxTest.log");
+            collector.setMasterSettings(true,outputBaseName+".log");
         }
 
 

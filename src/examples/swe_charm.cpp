@@ -90,7 +90,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 	// Declare variables for the output and the simulation time
 	std::string outputFilename;
 	float t = 0.;
-    mainCollector.setMasterSettings(true, "TestCharm.log");
+
 	// Parse command line arguments
 	tools::Args::Result ret = args.parse(msg->argc, msg->argv);
 	switch (ret)
@@ -116,7 +116,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 	displacementFilename = args.getArgument<std::string>("displacement-file");
 #endif
 	outputBasename = args.getArgument<std::string>("output-basepath");
-
+    mainCollector.setMasterSettings(true, outputBasename+".log");
 	// Initialize Scenario
 #ifdef ASAGI
 	SWE_AsagiScenario scenario(bathymetryFilename, displacementFilename);

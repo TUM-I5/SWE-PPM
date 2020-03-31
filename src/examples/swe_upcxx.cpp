@@ -358,7 +358,7 @@ int main(int argc, char** argv) {
 	 ************/
 
     if(myUpcxxRank == 0){
-        CollectorUpcxx::getInstance().setMasterSettings(true, "UpcxxTest.log");
+        CollectorUpcxx::getInstance().setMasterSettings(true, outputBaseName+".log");
     }
 
     CollectorUpcxx::getInstance().logResults();
