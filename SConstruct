@@ -405,6 +405,8 @@ elif env['parallelization'] == 'charm':
     env['CXX'] = charmInstall + '/bin/charmc' # ' -balancer NeighborLB'
 elif env['parallelization'] == 'upcxx':
     env['CXX'] = check_output([upcxxMeta, 'CXX']).replace("\n", "")
+elif env['parallelization'] == 'hpx':
+    env['CXX'] = 'mpicxx'
 elif env['parallelization'] == 'chameleon':
     env['CXX'] = 'mpicxx'
     #env['CXX'] = env['LINKERFORPROGRAMS'] = env.Detect(['mpiCC', 'mpicxx'])
