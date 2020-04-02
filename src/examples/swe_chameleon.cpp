@@ -369,7 +369,11 @@ int main(int argc, char** argv) {
     chameleon_determine_base_addresses((void *)&main);
 
     MPI_Barrier(MPI_COMM_WORLD);
-
+    for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
+        for (int y = yBounds[myYRank]; y < yBounds[myYRank + 1]; y++) {
+            blocks[x][y]->exchangeBathymetry();
+        }
+    }
     float maxLocalTimestep;
     float timestep =0;
     if(localTimestepping){

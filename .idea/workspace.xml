@@ -17,14 +17,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Added variable path for log">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +60,7 @@
     <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
+    <option name="SIGN_OFF_COMMIT" value="true" />
     <option name="UPDATE_TYPE" value="MERGE" />
   </component>
   <component name="ProjectId" id="1OVFf0vkOekH6g0hBK97bG41hNH" />
@@ -77,12 +75,12 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/blocks/SWE_DimensionalSplittingChameleon.cpp" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/scenarios/SWE_simple_scenarios.hh" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
-    <property name="two.files.diff.last.used.file" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/blocks/SWE_DimensionalSplittingChameleon.cpp" />
+    <property name="two.files.diff.last.used.file" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/scenarios/SWE_simple_scenarios.hh" />
     <property name="two.files.diff.last.used.folder" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src" />
   </component>
   <component name="RecentsManager">
@@ -291,14 +289,9 @@
       <workItem from="1585339700722" duration="1138000" />
       <workItem from="1585403755002" duration="651000" />
       <workItem from="1585569626890" duration="322000" />
-      <workItem from="1585654107637" duration="11760000" />
-    </task>
-    <task id="LOCAL-00068" summary="Upcxx finished &#10;Charm work in progress">
-      <created>1579745052224</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1579745052224</updated>
+      <workItem from="1585654107637" duration="12984000" />
+      <workItem from="1585747633398" duration="7706000" />
+      <workItem from="1585842957634" duration="1058000" />
     </task>
     <task id="LOCAL-00069" summary="Charm work in progress">
       <created>1579745688365</created>
@@ -636,7 +629,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585672781285</updated>
     </task>
-    <option name="localTasksCounter" value="117" />
+    <task id="LOCAL-00117" summary="Added variable path for log">
+      <created>1585678447445</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1585678447445</updated>
+    </task>
+    <option name="localTasksCounter" value="118" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -657,7 +657,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Fixed LTS implementation&#10;Added Boundaries for LTS&#10;Applied LTS to mpi and chameleon" />
     <MESSAGE value="Added Upcxx LTS (minor bug with barrier)" />
     <MESSAGE value="Added Charm LTS" />
     <MESSAGE value="Added Charm LTS (bug fixed)" />
@@ -682,7 +681,8 @@
     <MESSAGE value="asdfasd" />
     <MESSAGE value="modified writer" />
     <MESSAGE value="some bug in chameleon" />
-    <option name="LAST_COMMIT_MESSAGE" value="some bug in chameleon" />
+    <MESSAGE value="Added variable path for log" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added variable path for log" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585152381830">
@@ -694,48 +694,47 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585672781224">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="2478" y="149" width="865" height="930" key="CommitChangelistDialog2" timestamp="1585844178413">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
     <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585672781224" />
-    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585338073763" />
-    <state x="606" y="172" key="CommitChangelistDialog2/67.27.1853.1053/1920.0.1280.1024@67.27.1853.1053" timestamp="1577193740622" />
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844178413" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="2087" y="125" width="1536" height="891" maximized="true" key="DiffContextDialog" timestamp="1585677777977">
+    <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog" timestamp="1585777842585">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
-    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585672053686" />
-    <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585677777977" />
-    <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl" timestamp="1585673314592">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585774372696" />
+    <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777842585" />
+    <state x="2696" y="310" width="519" height="484" key="FileChooserDialogImpl" timestamp="1585777664875">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585673314592" />
-    <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579648171620" />
-    <state width="1874" height="116" key="GridCell.Tab.0.bottom" timestamp="1585657927686">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="776" y="329" width="519" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585777354970" />
+    <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777664875" />
+    <state width="1807" height="116" key="GridCell.Tab.0.bottom" timestamp="1585682561529">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1874" height="116" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585657927686" />
-    <state width="1807" height="267" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150506130" />
+    <state width="1807" height="116" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561529" />
     <state width="1874" height="354" key="GridCell.Tab.0.bottom/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="116" key="GridCell.Tab.0.center" timestamp="1585657927686">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state width="1807" height="116" key="GridCell.Tab.0.center" timestamp="1585682561528">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1874" height="116" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585657927686" />
-    <state width="1807" height="267" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150506130" />
+    <state width="1807" height="116" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561528" />
     <state width="1874" height="354" key="GridCell.Tab.0.center/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="116" key="GridCell.Tab.0.left" timestamp="1585657927685">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state width="1807" height="116" key="GridCell.Tab.0.left" timestamp="1585682561528">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1874" height="116" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585657927685" />
-    <state width="1807" height="267" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150506130" />
+    <state width="1807" height="116" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561528" />
     <state width="1874" height="354" key="GridCell.Tab.0.left/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="116" key="GridCell.Tab.0.right" timestamp="1585657927686">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state width="1807" height="116" key="GridCell.Tab.0.right" timestamp="1585682561529">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state width="1874" height="116" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585657927686" />
-    <state width="1807" height="267" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150506130" />
+    <state width="1807" height="116" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561529" />
     <state width="1874" height="354" key="GridCell.Tab.0.right/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
     <state width="1874" height="354" key="GridCell.Tab.1.bottom" timestamp="1584737631288">
       <screen x="67" y="27" width="1853" height="1053" />
@@ -765,10 +764,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="665" y="257" width="580" height="564" key="MultipleFileMergeDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569750982" />
-    <state x="430" y="187" key="SettingsEditor" timestamp="1580920612527">
+    <state x="430" y="187" key="SettingsEditor" timestamp="1585765313288">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="430" y="187" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1580920612527" />
+    <state x="430" y="187" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585765313288" />
     <state x="2350" y="164" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579716034703" />
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1580915228026" />
     <state x="588" y="308" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1585569817768">
@@ -790,18 +789,15 @@
     </state>
     <state x="2116" y="27" width="1469" height="894" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585673495364" />
     <state x="160" y="0" width="1336" height="1011" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584718094877" />
-    <state x="-161" y="27" width="933" height="878" maximized="true" key="dock-window-1/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577114376215" />
     <state x="2294" y="30" width="1449" height="894" key="dock-window-2" timestamp="1585163191243">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2294" y="30" width="1449" height="894" key="dock-window-2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585163191243" />
     <state x="429" y="0" width="1369" height="1011" key="dock-window-2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579746881312" />
-    <state x="81" y="27" width="873" height="878" maximized="true" key="dock-window-2/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577124163206" />
     <state x="2362" y="27" width="1449" height="874" maximized="true" key="dock-window-3" timestamp="1585165560877">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2362" y="27" width="1449" height="874" maximized="true" key="dock-window-3/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585165560877" />
-    <state x="551" y="27" width="873" height="878" maximized="true" key="dock-window-3/67.27.1853.1053/1920.0.1280.1024@1920.0.1280.1024" timestamp="1577124715703" />
     <state x="2522" y="313" width="706" height="413" key="git4idea.merge.GitPullDialog" timestamp="1585677803783">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
