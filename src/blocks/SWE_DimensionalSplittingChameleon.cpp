@@ -222,7 +222,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
 	SWE_Block::applyBoundaryConditions();
     collector.startCounter(Collector::CTR_EXCHANGE);
-	if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK  && isReceivable(BND_RIGHT)) {
+	if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK  && isReceivable(BND_RIGHT) && right->isSendable(BND_LEFT)) {
 	    borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
 		for(int i = 1; i < ny+2; i++) {
 			bufferH[nx+1][i] = right->getWaterHeight()[1][i];
@@ -230,7 +230,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHv[nx+1][i] = right->getMomentumVertical()[1][i];
 		}
 	}
-	if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)) {
+	if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)  && left->isSendable(BND_RIGHT)) {
         borderTimestep[BND_LEFT] = left->getTotalLocalTimestep();
 
         for(int i = 1; i < ny+2; i++) {
@@ -239,7 +239,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHv[0][i] = left->getMomentumVertical()[nx][i];
 		}
 	}
-	if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)) {
+	if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)  && top->isSendable(BND_BOTTOM)) {
         borderTimestep[BND_TOP] = top->getTotalLocalTimestep();
 
         for(int i = 1; i < nx+2; i++) {
@@ -248,7 +248,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHv[i][ny+1] = top->getMomentumVertical()[i][1];
 		}
 	}
-	if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)) {
+	if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)  && bottom->isSendable(BND_TOP)) {
         borderTimestep[BND_BOTTOM] = bottom->getTotalLocalTimestep();
 
         for(int i = 1; i < nx+2; i++) {
