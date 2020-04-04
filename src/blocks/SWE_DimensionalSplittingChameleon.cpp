@@ -315,7 +315,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
         MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_RIGHT],  ((int)originY)&tagTS, MPI_COMM_WORLD, &req);
         MPI_Request_free(&req);
 	}
-	if (boundaryType[BND_BOTTOM] == CONNECT) {
+	if (boundaryType[BND_BOTTOM] == CONNECT && isSendable(BND_BOTTOM)) {
 		//int code = 
 		MPI_Isend(&h[1][1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagH, MPI_COMM_WORLD, &req);
 		//if(code != MPI_SUCCESS)
