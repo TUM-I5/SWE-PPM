@@ -621,6 +621,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
  * maximum allowed time step size
  */
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
+    if(!allGhostlayersInSync()) return;
     float maxVerticalWaveSpeed = (float) 0.;
 #pragma omp parallel private(solver)
     {
