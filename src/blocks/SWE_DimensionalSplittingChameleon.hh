@@ -52,7 +52,7 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
     	SWE_DimensionalSplittingChameleon() = default;
 		SWE_DimensionalSplittingChameleon(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY, bool localTimestepping);
 		~SWE_DimensionalSplittingChameleon() {};
-        //@todo exchange bathymetry ASAP!
+
 		// Interface methods
 		void setGhostLayer();
 		void receiveGhostLayer();
