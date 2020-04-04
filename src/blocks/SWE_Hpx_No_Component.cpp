@@ -363,9 +363,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
                         //if each block got the maxLocalTimestep the timestep is finished
                         synchronizedTimestep = true;
                         for(auto &block : simulationBlocks){
-                                if (block->hasMaxLocalTimestep()) {
+                                if (!block->hasMaxLocalTimestep()) {
                                     synchronizedTimestep = false;
-                                    break;
+                                   // break;
                                 }
                         }
                     }
