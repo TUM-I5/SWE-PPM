@@ -520,40 +520,8 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
  * maximum allowed time step size
  */
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
+
     if(!allGhostlayersInSync()) return;
-
-    //maximum (linearized) wave speed within one iteration
-    float maxHorizontalWaveSpeed = (float) 0.;
-    float maxVerticalWaveSpeed = (float) 0.;
-
-#pragma omp parallel private(solver)
-    {
-        // x-sweep, compute the actual domain plus ghost rows above and below
-        // iterate over cells on the x-axis, leave out the last column (two cells per computation)
-#pragma omp for reduction(max : maxHorizontalWaveSpeed) collapse(2)
-        for (int x = 0; x < nx + 1; x++) {
-            //const int ny_end = ny+2;
-            // iterate over all rows, including ghost layer
-/*#if defined(VECTORIZE)
-#pragma omp simd reduction(max:maxHorizontalWaveSpeed)
-#endif*/ // VECTORIZE
-            for (int y = 0; y < ny+2; y++) {
-                solver.computeNetUpdates (
-                        h[x][y], h[x + 1][y],
-                        hu[x][y], hu[x + 1][y],
-                        b[x][y], b[x + 1][y],
-                        hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
-                        huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                        maxHorizontalWaveSpeed
-                );
-            }
-        }
-    }
-
-    CollectorMpi::getInstance().addFlops(nx*ny*135);
-
-    maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-    /*if(!allGhostlayersInSync()) return;
 
 
 	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[9];
@@ -571,7 +539,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
         (void *)&computeNumericalFluxesHorizontalKernel,
         9, // number of args
         args);
-	int32_t res = chameleon_add_task(cur_task);*/
+	int32_t res = chameleon_add_task(cur_task);
 }
 
 void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* block, float* h_data, float* hu_data, float* hv_data, float* b_data,
@@ -653,7 +621,51 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
  * maximum allowed time step size
  */
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
-    if(!allGhostlayersInSync()) return;
+    float maxVerticalWaveSpeed = (float) 0.;
+#pragma omp parallel private(solver)
+    {
+        // set intermediary Q* states
+#pragma omp for collapse(2)
+        for (int x = 1; x < nx + 1; x++) {
+            for (int y = 0; y < ny + 2; y++) {
+                hStar[x][y] = h[x][y] - (maxTimestep / dx) * (hNetUpdatesLeft[x][y] + hNetUpdatesRight[x][y]);
+                huStar[x][y] = hu[x][y] - (maxTimestep / dx) * (huNetUpdatesLeft[x][y] + huNetUpdatesRight[x][y]);
+            }
+        }
+
+        // y-sweep
+#ifndef NDEBUG
+#pragma omp for
+#else
+#pragma omp for reduction(max : maxVerticalWaveSpeed) collapse(2)
+#endif
+        for (int x = 1; x < nx + 1; x++) {
+            //        const int ny_end = ny+1;
+            // iterate over all rows, including ghost layer
+/*#if defined(VECTORIZE)
+#pragma omp simd reduction(max:maxVerticalWaveSpeed)
+#endif */// VECTORIZE
+            for (int y = 0; y < ny+1; y++) {
+                solver.computeNetUpdates (
+                        h[x][y], h[x][y + 1],
+                        hv[x][y], hv[x][y + 1],
+                        b[x][y], b[x][y + 1],
+                        hNetUpdatesBelow[x][y], hNetUpdatesAbove[x][y + 1],
+                        hvNetUpdatesBelow[x][y], hvNetUpdatesAbove[x][y + 1],
+                        maxVerticalWaveSpeed
+                );
+            }
+        }
+
+#ifndef NDEBUG
+        #pragma omp single
+		{
+			// check if the cfl condition holds in the y-direction
+			//assert(maxTimestep < (float) .5 * (dy / maxVerticalWaveSpeed));
+		}
+#endif // NDEBUG
+    }
+   /* if(!allGhostlayersInSync()) return;
 	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[15];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
     args[1] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_TO);
@@ -675,7 +687,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
         (void *)&computeNumericalFluxesVerticalKernel,
         15, // number of args
         args);
-	int32_t res = chameleon_add_task(cur_task);
+	int32_t res = chameleon_add_task(cur_task);*/
 }
 
 /**
