@@ -290,14 +290,7 @@
       <workItem from="1585654107637" duration="12984000" />
       <workItem from="1585747633398" duration="7706000" />
       <workItem from="1585842957634" duration="1657000" />
-      <workItem from="1586002692663" duration="18837000" />
-    </task>
-    <task id="LOCAL-00084" summary="Found Chameleon implemenation bug">
-      <created>1580220997532</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
-      <option name="project" value="LOCAL" />
-      <updated>1580220997532</updated>
+      <workItem from="1586002692663" duration="20795000" />
     </task>
     <task id="LOCAL-00085" summary="Found Chameleon implemenation bug">
       <created>1580221229388</created>
@@ -635,7 +628,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586040502821</updated>
     </task>
-    <option name="localTasksCounter" value="133" />
+    <task id="LOCAL-00133" summary="Added debug info">
+      <created>1586040736274</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1586040736274</updated>
+    </task>
+    <option name="localTasksCounter" value="134" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -693,11 +693,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586040502739">
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586040736224">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586040502739" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586040736224" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="2394" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586031689623">
@@ -788,10 +788,10 @@
     </state>
     <state x="2276" y="27" width="1368" height="1008" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586031442227" />
     <state x="160" y="0" width="1336" height="1011" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584718094877" />
-    <state x="2294" y="30" width="1449" height="894" key="dock-window-2" timestamp="1585163191243">
+    <state x="2346" y="27" width="1368" height="872" maximized="true" key="dock-window-2" timestamp="1586041554375">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2294" y="30" width="1449" height="894" key="dock-window-2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585163191243" />
+    <state x="2346" y="27" width="1368" height="872" maximized="true" key="dock-window-2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586041554375" />
     <state x="429" y="0" width="1369" height="1011" key="dock-window-2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579746881312" />
     <state x="2362" y="27" width="1449" height="874" maximized="true" key="dock-window-3" timestamp="1585165560877">
       <screen x="1920" y="0" width="1920" height="1080" />
