@@ -288,7 +288,7 @@ int main(int argc, char** argv) {
 				blocks[x][y]->top = blocks[x][y+1];
 		}
 	}
-
+    std::cout<< "This rank has " << (xBounds[myXRank] - xBounds[myXRank+1])*(yBounds[myXRank] - yBounds[myXRank+1]) << " blocks \n";
 	/***************
 	 * INIT OUTPUT *
 	 ***************/
