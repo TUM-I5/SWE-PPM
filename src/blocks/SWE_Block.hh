@@ -280,7 +280,7 @@ std::string  SWE_Block <T, Buffer>::stateToString(GhostlayerState state){
 template <typename T, typename Buffer>
 void SWE_Block <T, Buffer>::printLtsStats() {
     std::cout << originX << " " << originY << "|"<< timestepCounter <<"| L: " << stateToString(receivedGhostlayer[BND_LEFT]) << " R: " << stateToString(receivedGhostlayer[BND_RIGHT])
-                                            << " B: " << stateToString(receivedGhostlayer[BND_BOTTOM])<< " T: " << stateToString(receivedGhostlayer[BND_TOP])<< std::endl;
+                                            << " B: " << stateToString(receivedGhostlayer[BND_BOTTOM])<< " T: " << stateToString(receivedGhostlayer[BND_TOP])<< " "<<getTotalLocalTimestep()<< " " <<std::endl;
 }
 template <typename T, typename Buffer>
 bool SWE_Block< T, Buffer>::allGhostlayersInSync() {
