@@ -134,6 +134,7 @@ class SWE_Block {
         float getTotalLocalTimestep();
 
         void setMaxLocalTimestep(float timestep);
+        void printLtsStats();
         bool hasMaxLocalTimestep();
         bool isReceivable(Boundary border);
         bool isSendable(Boundary border);
@@ -261,7 +262,23 @@ bool SWE_Block <T, Buffer>::hasMaxLocalTimestep(){
     return false;
 
 }
-
+std::string stateToString(GhostlayerState state){
+    switch (state){
+        case GL_UNVALID:
+            return "GL_UNVALID";
+        case GL_NEXT:
+            return "GL_NEXT";
+        case GL_SYNC:
+            return  "GL_SYNC";
+        case GL_INTER:
+            return  "GL_INTER";
+    }
+}
+template <typename T, typename Buffer>
+void SWE_Block <T, Buffer>::printLtsStats() {
+    std::cout << originX << " " << originY << "| L: " << stateToString(receivedGhostlayer[BND_LEFT]) << " R: " << stateToString(receivedGhostlayer[BND_RIGHT])
+                                            << " B: " << stateToString(receivedGhostlayer[BND_BOTTOM])<< " T: " << stateToString(receivedGhostlayer[BND_TOP])<< std::endl;
+}
 template <typename T, typename Buffer>
 bool SWE_Block< T, Buffer>::allGhostlayersInSync() {
     return receivedGhostlayer[BND_LEFT] != GL_UNVALID && receivedGhostlayer[BND_RIGHT] != GL_UNVALID
@@ -269,16 +286,17 @@ bool SWE_Block< T, Buffer>::allGhostlayersInSync() {
 }
 template <typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::isSendable(Boundary border){
-    return receivedGhostlayer[border] != GL_UNVALID && receivedGhostlayer[border] != GL_SYNC ;
+   // return receivedGhostlayer[border] != GL_UNVALID && receivedGhostlayer[border] != GL_SYNC ;
+    return receivedGhostlayer[border] == GL_NEXT && receivedGhostlayer[border] == GL_INTER;
 }
 template <typename T, typename Buffer>
 bool SWE_Block< T, Buffer>::isReceivable(Boundary border){
-    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_UNVALID;
+    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_UNVALID; //@todo check if this really holds, i believe that we need to receive when we are interpolating.
 }
 template <typename T, typename Buffer>
 float SWE_Block< T, Buffer>::interpolateValue(float oldval, float newval, float remoteTimestep){
 
-    return getTotalLocalTimestep() == remoteTimestep?newval:(oldval + (newval-oldval)*(getTotalLocalTimestep()/remoteTimestep));
+    return (oldval + (newval-oldval)*(getTotalLocalTimestep()/remoteTimestep));
 }
 template <typename T, typename Buffer>
 void SWE_Block< T, Buffer>::checkAllGhostlayers() {
@@ -287,7 +305,7 @@ void SWE_Block< T, Buffer>::checkAllGhostlayers() {
 
         //if neighbour stepped further than the local block, interpolation is possible, if not, block shall wait for fitting timestep
         for(int border = BND_LEFT; border <= BND_TOP; border++){
-            if((boundaryType[border] == CONNECT )|| boundaryType[border] == CONNECT_WITHIN_RANK) {
+            if((boundaryType[border] == CONNECT ) || boundaryType[border] == CONNECT_WITHIN_RANK) {
 
                 if (borderTimestep[border] == getTotalLocalTimestep()){
                     //This case the neighbor progressed as much as local block did and thus the received Ghostlayer is valid and we can expect
@@ -302,20 +320,20 @@ void SWE_Block< T, Buffer>::checkAllGhostlayers() {
                 }else {
                     //in this case we need to wait for the next iteration to receive a valid timestep, block will not compute until received a valid timestep.
                     receivedGhostlayer[border] = GL_UNVALID;
-
                 }
-
             }
-
         }
 
         if(allGhostlayersInSync()){
             //If it is interpolated we do need to receive next timestep
-            receivedGhostlayer[BND_LEFT]    = (receivedGhostlayer[BND_LEFT]  == GL_INTER)?GL_INTER:GL_NEXT;
-            receivedGhostlayer[BND_RIGHT]   = (receivedGhostlayer[BND_RIGHT]  == GL_INTER)?GL_INTER:GL_NEXT;
-            receivedGhostlayer[BND_TOP]     = (receivedGhostlayer[BND_TOP]  == GL_INTER)?GL_INTER:GL_NEXT;
-            receivedGhostlayer[BND_BOTTOM]  = (receivedGhostlayer[BND_BOTTOM]  == GL_INTER)?GL_INTER:GL_NEXT;
+            receivedGhostlayer[BND_LEFT]    = (receivedGhostlayer[BND_LEFT]     == GL_INTER)?GL_INTER:GL_NEXT;
+            receivedGhostlayer[BND_RIGHT]   = (receivedGhostlayer[BND_RIGHT]    == GL_INTER)?GL_INTER:GL_NEXT;
+            receivedGhostlayer[BND_TOP]     = (receivedGhostlayer[BND_TOP]      == GL_INTER)?GL_INTER:GL_NEXT;
+            receivedGhostlayer[BND_BOTTOM]  = (receivedGhostlayer[BND_BOTTOM]   == GL_INTER)?GL_INTER:GL_NEXT;
         }
+#ifdef DEBUG
+        printLtsStats();
+#endif
     }
 }
 template <typename T, typename Buffer>
@@ -324,28 +342,28 @@ void SWE_Block< T, Buffer>::interpolateGhostlayer(Boundary border,float remoteTi
     switch(border){
         case BND_LEFT:
             for(int i = 1; i < ny+2; i++) {
-                h[0][i] = interpolateValue(h[0][i],bufferH[0][i], remoteTimestep);
+                h[0][i]  = interpolateValue(h[0][i],bufferH[0][i], remoteTimestep);
                 hu[0][i] = interpolateValue(hu[0][i],bufferHu[0][i], remoteTimestep);
                 hv[0][i] = interpolateValue(hv[0][i],bufferHv[0][i], remoteTimestep);
             }
             break;
         case BND_RIGHT:
             for(int i = 1; i < ny+2; i++) {
-                h[nx+1][i] = interpolateValue(h[nx+1][i],bufferH[nx+1][i], remoteTimestep);
+                h[nx+1][i]  = interpolateValue(h[nx+1][i],bufferH[nx+1][i], remoteTimestep);
                 hu[nx+1][i] = interpolateValue(hu[nx+1][i],bufferHu[nx+1][i], remoteTimestep);
                 hv[nx+1][i] = interpolateValue(hv[nx+1][i],bufferHv[nx+1][i], remoteTimestep);
             }
             break;
         case BND_BOTTOM:
             for(int i = 1; i < nx+2; i++) {
-                h[i][0] = interpolateValue(h[i][0],bufferH[i][0], remoteTimestep);
+                h[i][0]  = interpolateValue(h[i][0],bufferH[i][0], remoteTimestep);
                 hu[i][0] = interpolateValue(hu[i][0],bufferHu[i][0], remoteTimestep);
                 hv[i][0] = interpolateValue(hv[i][0],bufferHv[i][0], remoteTimestep);
             }
             break;
         case BND_TOP:
             for(int i = 1; i < nx+2; i++) {
-                h[i][ny+1] = interpolateValue(h[i][ny+1],bufferH[i][ny+1], remoteTimestep);
+                h[i][ny+1]  = interpolateValue(h[i][ny+1],bufferH[i][ny+1], remoteTimestep);
                 hu[i][ny+1] = interpolateValue(hu[i][ny+1],bufferHu[i][ny+1], remoteTimestep);
                 hv[i][ny+1] = interpolateValue(hv[i][ny+1],bufferHv[i][ny+1], remoteTimestep);
             }
@@ -359,14 +377,12 @@ void SWE_Block< T, Buffer>::copyGhostlayer(Boundary border){
     int endIndex;
     switch(border){
         case BND_LEFT:
-
             startIndex = 1;
             endIndex = startIndex + ny;
 
             std::copy(bufferH.getRawPointer() + startIndex,bufferH.getRawPointer() + endIndex, h.getRawPointer() + startIndex);
             std::copy(bufferHu.getRawPointer() + startIndex,bufferHu.getRawPointer() + endIndex, hu.getRawPointer() + startIndex);
             std::copy(bufferHv.getRawPointer() + startIndex,bufferHv.getRawPointer() + endIndex, hv.getRawPointer() + startIndex);
-
             break;
         case BND_RIGHT:
              startIndex = (nx + 1) * (ny + 2) + 1;
@@ -381,7 +397,6 @@ void SWE_Block< T, Buffer>::copyGhostlayer(Boundary border){
                 h[i][0] = bufferH[i][0];
                 hu[i][0] = bufferHu[i][0];
                 hv[i][0] = bufferHv[i][0];
-
             }
             break;
         case BND_TOP:
