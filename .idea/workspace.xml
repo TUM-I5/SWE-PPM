@@ -290,14 +290,7 @@
       <workItem from="1585654107637" duration="12984000" />
       <workItem from="1585747633398" duration="7706000" />
       <workItem from="1585842957634" duration="1657000" />
-      <workItem from="1586002692663" duration="4340000" />
-    </task>
-    <task id="LOCAL-00070" summary="Charm work in progress">
-      <created>1580210208648</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1580210208648</updated>
+      <workItem from="1586002692663" duration="5320000" />
     </task>
     <task id="LOCAL-00071" summary="Charm work in progress">
       <created>1580210580785</created>
@@ -635,7 +628,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585844188958</updated>
     </task>
-    <option name="localTasksCounter" value="119" />
+    <task id="LOCAL-00119" summary="Added debug info">
+      <created>1586012004398</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1586012004399</updated>
+    </task>
+    <option name="localTasksCounter" value="120" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -656,7 +656,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Added Charm LTS" />
     <MESSAGE value="Added Charm LTS (bug fixed)" />
     <MESSAGE value="Fixed HPX lts bugs" />
     <MESSAGE value="Fixed final HPX lts bug" />
@@ -681,7 +680,8 @@
     <MESSAGE value="some bug in chameleon" />
     <MESSAGE value="Added variable path for log" />
     <MESSAGE value="Added bathymetryexchange for chameleon" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added bathymetryexchange for chameleon" />
+    <MESSAGE value="Added debug info" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added debug info" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1585152381830">
@@ -693,11 +693,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586011987081">
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586012004286">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586011987081" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586012004286" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog" timestamp="1585777842585">

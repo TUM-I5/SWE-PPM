@@ -201,6 +201,8 @@ class SWE_Block {
 		BoundaryType boundaryType[4];
 
     void copyGhostlayer(Boundary border);
+
+    std::string stateToString(GhostlayerState state);
 };
 
 /***************************
@@ -262,7 +264,8 @@ bool SWE_Block <T, Buffer>::hasMaxLocalTimestep(){
     return false;
 
 }
-std::string stateToString(GhostlayerState state){
+template <typename T, typename Buffer>
+std::string  SWE_Block <T, Buffer>::stateToString(GhostlayerState state){
     switch (state){
         case GL_UNVALID:
             return "GL_UNVALID";
