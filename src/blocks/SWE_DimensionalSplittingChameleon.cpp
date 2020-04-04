@@ -663,7 +663,7 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
 	//printf("%d: Update with %f and %f\n", myRank, dt, maxTimestep);
 
 	// this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
-	assert(std::abs(dt - maxTimestep) < 0.00001);
+//assert(std::abs(dt - maxTimestep) < 0.00001);
 	//update cell averages with the net-updates
 	//printf("%d: %p, %p, %p, %p\n", myRank, h.getRawPointer(), hStar.getRawPointer(), hNetUpdatesBelow.getRawPointer(), hNetUpdatesAbove.getRawPointer());
 	for (int x = 1; x < nx+1; x++) {
