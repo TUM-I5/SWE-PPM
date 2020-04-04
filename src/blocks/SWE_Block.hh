@@ -290,7 +290,7 @@ bool SWE_Block< T, Buffer>::allGhostlayersInSync() {
 template <typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::isSendable(Boundary border){
    // return receivedGhostlayer[border] != GL_UNVALID && receivedGhostlayer[border] != GL_SYNC ;
-    return receivedGhostlayer[border] == GL_NEXT && receivedGhostlayer[border] == GL_INTER;
+    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_INTER;
 }
 template <typename T, typename Buffer>
 bool SWE_Block< T, Buffer>::isReceivable(Boundary border){
