@@ -20,6 +20,7 @@
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,12 +74,12 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/blocks/SWE_DimensionalSplittingChameleon.cpp" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
-    <property name="two.files.diff.last.used.file" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/blocks/SWE_DimensionalSplittingChameleon.cpp" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" />
     <property name="two.files.diff.last.used.folder" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src" />
   </component>
   <component name="RecentsManager">
@@ -290,14 +291,7 @@
       <workItem from="1585654107637" duration="12984000" />
       <workItem from="1585747633398" duration="7706000" />
       <workItem from="1585842957634" duration="1657000" />
-      <workItem from="1586002692663" duration="11264000" />
-    </task>
-    <task id="LOCAL-00078" summary="        Charm work in progress">
-      <created>1580213745687</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1580213745687</updated>
+      <workItem from="1586002692663" duration="14365000" />
     </task>
     <task id="LOCAL-00079" summary="Clean and updated Makefile&#10;Finished Charm">
       <created>1580215579526</created>
@@ -635,7 +629,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586029389896</updated>
     </task>
-    <option name="localTasksCounter" value="127" />
+    <task id="LOCAL-00127" summary="Added debug info">
+      <created>1586029678670</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1586029678670</updated>
+    </task>
+    <option name="localTasksCounter" value="128" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -693,23 +694,23 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586029389838">
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586029678616">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586029389838" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586029678616" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="2087" y="125" width="1536" height="894" maximized="true" key="DiffContextDialog" timestamp="1586024895720">
+    <state x="2394" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586031689623">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
-    <state x="167" y="0" width="1536" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586024895720" />
+    <state x="2394" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586031689623" />
     <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777842585" />
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586024895168">
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586031018023">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586024895168" />
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586031018023" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777664875" />
     <state width="1807" height="116" key="GridCell.Tab.0.bottom" timestamp="1585682561529">
       <screen x="1920" y="0" width="1920" height="1080" />
@@ -783,10 +784,10 @@
     </state>
     <state x="761" y="487" width="464" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584537714717" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579700332116" />
-    <state x="2116" y="27" width="1469" height="894" maximized="true" key="dock-window-1" timestamp="1585673495364">
+    <state x="2276" y="27" width="1368" height="1008" maximized="true" key="dock-window-1" timestamp="1586031442227">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2116" y="27" width="1469" height="894" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585673495364" />
+    <state x="2276" y="27" width="1368" height="1008" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586031442227" />
     <state x="160" y="0" width="1336" height="1011" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584718094877" />
     <state x="2294" y="30" width="1449" height="894" key="dock-window-2" timestamp="1585163191243">
       <screen x="1920" y="0" width="1920" height="1080" />

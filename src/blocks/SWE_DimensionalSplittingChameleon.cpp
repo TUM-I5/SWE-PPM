@@ -508,12 +508,9 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 	block->computeTimeWall += getTime() - block->computeClock;
 
 
-	if(block->localTimestepping){
-       *maxTimestep =  block->getRoundTimestep(block->maxTimestep);
 
-	}else {
-        *maxTimestep = block->maxTimestep;
-	}
+	*maxTimestep = block->maxTimestep;
+
 	//usleep(10000);
 }
 
@@ -537,7 +534,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
     args[6] = chameleon_map_data_entry_create(this->hNetUpdatesRight.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[7] = chameleon_map_data_entry_create(this->huNetUpdatesLeft.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[8] = chameleon_map_data_entry_create(this->huNetUpdatesRight.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
-	
+
 	cham_migratable_task_t *cur_task = chameleon_create_task(
         (void *)&computeNumericalFluxesHorizontalKernel,
         9, // number of args
