@@ -533,7 +533,8 @@ int main(int argc, char** argv) {
                 for(int x = xLower; x < xUpper; x++) {
                     for(int y = yLower; y < yUpper; y++) {
                         // update the cell values
-                       // if(localTimestepping && blocks[x][y]->allGhostlayersInSync())blocks[x][y]->getRoundTimestep(blocks[x][y]->maxTimestep);
+                        if(localTimestepping && blocks[x][y]->allGhostlayersInSync())
+                            blocks[x][y]->maxTimestep = blocks[x][y]->getRoundTimestep(blocks[x][y]->maxTimestep);
                         blocks[x][y]->updateUnknowns(timestep);
                     }
                 }
