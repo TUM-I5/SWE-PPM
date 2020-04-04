@@ -23,7 +23,7 @@
 #elif WAVE_PROPAGATION_SOLVER==2
 #include "solvers/AugRie.hpp"
 #endif
-
+#include "writer/NetCdfWriter.hh"
 #include <hpx/include/compute.hpp>
 #include <hpx/include/lcos.hpp>
 #include <hpx/include/async.hpp>
@@ -57,11 +57,13 @@ struct copyLayerStruct {
 class SWE_DimensionalSplittingHpx : public SWE_Block<Float2DNative> {
 
 public:
+
+
     typedef communicator<copyLayerStruct<std::vector<float>>,SWE_DimensionalSplittingHpx> communicator_type;
     friend  communicator_type;
     // Constructor/Destructor
     SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
-                                float cellSizeVertical, float originX, float originY ,bool localTimestepping );
+                                float cellSizeVertical, float originX, float originY ,bool localTimestepping ,std::string name);
     ~SWE_DimensionalSplittingHpx() {};
 
     // Interface methods
@@ -79,7 +81,9 @@ public:
     void exchangeBathymetry();
 
     CollectorHpx collector;
+    NetCdfWriter writer;
     float maxTimestepGlobal;
+    void writeTimestep(float timestep);
 
 private:
 #if WAVE_PROPAGATION_SOLVER==0

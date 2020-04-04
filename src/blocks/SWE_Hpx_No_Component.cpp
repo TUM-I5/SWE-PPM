@@ -89,7 +89,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                                          bool localTimestepping)
     {
 
-        std::string outputFileName;
+
         // Initialize Scenario
 #ifdef ASAGI
         SWE_AsagiScenario scenario(batFile, displFile);
@@ -171,9 +171,9 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
             std::array<int, 4> myNeighbours = getNeighbours(localBlockPositionX, localBlockPositionY, blockCountX,
                                                             blockCountY, myHpxRank);
-
+            std::string outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
             simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingHpx>(new SWE_DimensionalSplittingHpx(nxLocal, nyLocal, dxSimulation, dySimulation,
-                                                                   localOriginX, localOriginY,localTimestepping)));
+                                                                   localOriginX, localOriginY,localTimestepping,outputFileName)));
 
             simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
         }
@@ -275,6 +275,11 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
         timesteps.reserve(simulationBlocks.size());
         std::vector<hpx::future<void>> xsweepFuture(simulationBlocks.size());
+
+
+        for(auto & block: simulationBlocks)block.get()->writeTimestep(0.f);
+
+
         // loop over the count of requested checkpoints
         for(int i = 0; i < numberOfCheckPoints; i++) {
             // Simulate until the checkpoint is reached
@@ -379,7 +384,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
             if(localityRank == 0) {
                 printf("Write timestep (%fs)\n", t);
             }
-
+            for(auto & block: simulationBlocks)block.get()->writeTimestep(t);
         }
 
     for(auto &block: simulationBlocks){

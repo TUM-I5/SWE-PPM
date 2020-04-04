@@ -55,7 +55,7 @@
  * @param l_dx Cell width
  * @param l_dy Cell height
  */
-SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX, float originY,bool localTimestepping) :
+SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX, float originY,bool localTimestepping,std::string name) :
 /*
  * Important note concerning grid allocations:
  * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -91,14 +91,27 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
         hNetUpdatesAbove(nx + 1, ny + 2),
 
         hvNetUpdatesBelow(nx + 1, ny + 2),
-        hvNetUpdatesAbove(nx + 1, ny + 2)
+        hvNetUpdatesAbove(nx + 1, ny + 2),
+        writer(
+                name,
+                b,
+                {{1, 1, 1, 1}},
+                nx,
+                ny,
+                dx,
+                dy,
+                originX,
+                originY)
        {
 
 
 }
 
 
+void SWE_DimensionalSplittingHpx::writeTimestep(float timestep) {
+    writer.writeTimeStep(h, hu, hv, timestep);
 
+}
 void SWE_DimensionalSplittingHpx::connectNeighbours(communicator_type
 comm){
 this->comm = comm;
