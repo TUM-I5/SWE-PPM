@@ -524,7 +524,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
 
     //maximum (linearized) wave speed within one iteration
     float maxHorizontalWaveSpeed = (float) 0.;
-    float maxVerticalWaveSpeed = (float) 0.;
+
 
 #pragma omp parallel private(solver)
     {
@@ -657,6 +657,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
  */
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
     if(!allGhostlayersInSync()) return;
+    float maxVerticalWaveSpeed = (float) 0.;
 #pragma omp parallel private(solver)
     {
         // set intermediary Q* states
