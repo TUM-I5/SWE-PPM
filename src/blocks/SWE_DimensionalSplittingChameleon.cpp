@@ -95,8 +95,6 @@ SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon(int nx, int
         hvNetUpdatesAbove(nx + 1, ny + 2),
         left(NULL),
         right(NULL) {
-    computeTime = 0.;
-    computeTimeWall = 0.;
 
     MPI_Type_vector(nx, 1, ny + 2, MPI_FLOAT, &HORIZONTAL_BOUNDARY);
     MPI_Type_commit(&HORIZONTAL_BOUNDARY);
