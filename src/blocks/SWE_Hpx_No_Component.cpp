@@ -232,7 +232,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
 
             for(auto & block: simulationBlocks)timesteps.push_back(block->getMaxTimestep());
 
-            float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
+            float minTimestep = *std::max_element(timesteps.begin(), timesteps.end());
 
             if(localityRank == 0){
                 if(localityCount > 1){
@@ -250,6 +250,7 @@ HPX_REGISTER_CHANNEL(timestep_type);
                 localityChannel.set(std::move(minTimestep));
                 maxLocalTimestep = localityChannel.get()[0].get();
             }
+            std::cout << "Max Local Timestep is " << maxLocalTimestep << std::endl;
             for(auto & block: simulationBlocks)block->setMaxLocalTimestep(maxLocalTimestep);
         }
 

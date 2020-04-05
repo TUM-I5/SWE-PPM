@@ -19,8 +19,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +118,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_hpx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--simulation-duration 20 --checkpoint-count 20 --resolution-horizontal 1000 --resolution-vertical 1000 --output-basepath output/hpx --blocks 64 --local-timestepping 1" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_hpx" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_hpx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--simulation-duration 20 --checkpoint-count 20 --resolution-horizontal 1024 --resolution-vertical 1024 --output-basepath output/hpx --blocks 64 --local-timestepping 1" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_hpx" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -291,14 +290,7 @@
       <workItem from="1585654107637" duration="12984000" />
       <workItem from="1585747633398" duration="7706000" />
       <workItem from="1585842957634" duration="1657000" />
-      <workItem from="1586002692663" duration="24319000" />
-    </task>
-    <task id="LOCAL-00094" summary="Found Chameleon implemenation bug">
-      <created>1580923481030</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1580923481030</updated>
+      <workItem from="1586002692663" duration="25441000" />
     </task>
     <task id="LOCAL-00095" summary="Found Chameleon implemenation bug">
       <created>1580923502832</created>
@@ -636,7 +628,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586045474343</updated>
     </task>
-    <option name="localTasksCounter" value="143" />
+    <task id="LOCAL-00143" summary="Added debug info">
+      <created>1586046967679</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1586046967679</updated>
+    </task>
+    <option name="localTasksCounter" value="144" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -685,20 +684,20 @@
     <option name="LAST_COMMIT_MESSAGE" value="Added debug info" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586040373655">
+    <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586047613990">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586040373655" />
+    <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586047613989" />
     <state x="2372" y="210" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585150503476" />
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1584535225989">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586045474283">
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586046967592">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586045474283" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586046967592" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="2394" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586031689623">
@@ -712,28 +711,28 @@
     </state>
     <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586031018023" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777664875" />
-    <state width="1874" height="382" key="GridCell.Tab.0.bottom" timestamp="1586040377515">
+    <state width="1874" height="219" key="GridCell.Tab.0.bottom" timestamp="1586048108249">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="382" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586040377515" />
+    <state width="1874" height="219" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586048108249" />
     <state width="1807" height="116" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561529" />
     <state width="1874" height="354" key="GridCell.Tab.0.bottom/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="382" key="GridCell.Tab.0.center" timestamp="1586040377515">
+    <state width="1874" height="219" key="GridCell.Tab.0.center" timestamp="1586048108249">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="382" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586040377515" />
+    <state width="1874" height="219" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586048108249" />
     <state width="1807" height="116" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561528" />
     <state width="1874" height="354" key="GridCell.Tab.0.center/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="382" key="GridCell.Tab.0.left" timestamp="1586040377515">
+    <state width="1874" height="219" key="GridCell.Tab.0.left" timestamp="1586048108249">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="382" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586040377515" />
+    <state width="1874" height="219" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586048108249" />
     <state width="1807" height="116" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561528" />
     <state width="1874" height="354" key="GridCell.Tab.0.left/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="382" key="GridCell.Tab.0.right" timestamp="1586040377515">
+    <state width="1874" height="219" key="GridCell.Tab.0.right" timestamp="1586048108249">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state width="1874" height="382" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586040377515" />
+    <state width="1874" height="219" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586048108249" />
     <state width="1807" height="116" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561529" />
     <state width="1874" height="354" key="GridCell.Tab.0.right/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
     <state width="1874" height="354" key="GridCell.Tab.1.bottom" timestamp="1584737631288">
