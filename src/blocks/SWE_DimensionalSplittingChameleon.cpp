@@ -470,19 +470,10 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
     int code = MPI_Waitall(16, recvReqs, stati);
     if (code != MPI_SUCCESS)
         printf("%d: No success %d\n", myRank, code);
-    int myRank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
 
     checkAllGhostlayers();
     collector.stopCounter(Collector::CTR_EXCHANGE);
-    //if(leftReceive)
-    //	printf("%d: Received left from %d\n", myRank, neighbourRankId[BND_LEFT]);
-    //if(rightReceive)
-    //	printf("%d: Received right from %d\n", myRank, neighbourRankId[BND_RIGHT]);
-    //if(bottomReceive)
-    //	printf("%d: Received bottom from %d, %f at %f\n", myRank, neighbourRankId[BND_BOTTOM], h[1][0], originX);
-    //if(topReceive)
-    //	printf("%d: Received top from %d, %f at %f\n", myRank, neighbourRankId[BND_TOP], h[1][ny + 1], originX);
+
 }
 
 void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon *block, float *maxTimestep, float *h_data,
@@ -587,6 +578,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
     CollectorMpi::getInstance().addFlops(nx * ny * 135);
 
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+    maxTimestep = getRoundTimestep(maxTimestep);
 /*
     if (!allGhostlayersInSync()) return;
     collector.addFlops(nx * ny * 135);

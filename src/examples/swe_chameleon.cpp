@@ -496,7 +496,7 @@ int main(int argc, char **argv) {
                             if (!localTimestepping) {
                                 blocks[x][y]->maxTimestep = timestep;
                             } else {
-                                blocks[x][y]->maxTimestep = blocks[x][y]->getRoundTimestep(blocks[x][y]->maxTimestep);
+                                //blocks[x][y]->maxTimestep = blocks[x][y]->getRoundTimestep(blocks[x][y]->maxTimestep);
                             }
                             blocks[x][y]->computeNumericalFluxesVertical();
                         }
