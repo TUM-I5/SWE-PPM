@@ -499,7 +499,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 					);
 		}
 	}
-    block->collector.addFlops(block->nx*block->ny*135);
+
 	// compute max timestep according to cautious CFL-condition
 	block->maxTimestep = (float) .4 * (block->dx / maxHorizontalWaveSpeed);
 
@@ -527,7 +527,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
 
     if(!allGhostlayersInSync()) return;
-
+   collector.addFlops(nx*ny*135);
 
 	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[9];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
@@ -607,7 +607,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 					);
 		}
 	}
-    block->collector.addFlops(block->nx*block->ny*135);
+    
 	#ifndef NDEBUG
 	if(block->maxTimestep >= (float) .7 * (block->dy / maxVerticalWaveSpeed)) {
 		printf("%d: %f, %f, %f\n", block->myRank, block->maxTimestep, block->dy, maxVerticalWaveSpeed);
@@ -629,6 +629,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
 
     if(!allGhostlayersInSync()) return;
+    collector.addFlops(nx*ny*135);
 	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[15];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
     args[1] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_TO);
