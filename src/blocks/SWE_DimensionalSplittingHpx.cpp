@@ -93,24 +93,28 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
         hNetUpdatesAbove(nx + 1, ny + 2),
 
         hvNetUpdatesBelow(nx + 1, ny + 2),
-        hvNetUpdatesAbove(nx + 1, ny + 2),
-        writer(
-                name,
-                b,
-                {{1, 1, 1, 1}},
-                nx,
-                ny,
-                dx,
-                dy,
-                originX,
-                originY) {
+        hvNetUpdatesAbove(nx + 1, ny + 2)
+       {
+            if(write){
+                writer = new NetCdfWriter(
+                        name,
+                        b,
+                        {{1, 1, 1, 1}},
+                        nx,
+                        ny,
+                        dx,
+                        dy,
+                        originX,
+                        originY)
 
-
-}
+            }
+       }
 
 
 void SWE_DimensionalSplittingHpx::writeTimestep(float timestep) {
-    writer.writeTimeStep(h, hu, hv, timestep);
+            if(write){
+                writer->writeTimeStep(h, hu, hv, timestep);
+            }
 
 }
 

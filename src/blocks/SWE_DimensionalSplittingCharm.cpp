@@ -70,11 +70,14 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
     SWE_RadialDamBreakScenario scenario = SWE_RadialDamBreakScenario();
 #endif
     initScenario(scenario, boundaries);
+    if(write){
+        // Initialize writer
+        BoundarySize boundarySize = {{1, 1, 1, 1}};
+        writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY);
 
-    // Initialize writer
-    BoundarySize boundarySize = {{1, 1, 1, 1}};
-    writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY);
+    }
     collector = new CollectorCharm();
+
     // output at t=0
     writeTimestep();
 

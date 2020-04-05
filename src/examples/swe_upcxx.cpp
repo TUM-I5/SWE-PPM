@@ -270,23 +270,23 @@ int main(int argc, char **argv) {
      ***************/
 
 
-    // Initialize boundary size of the ghost layers
-    BoundarySize boundarySize = {{1, 1, 1, 1}};
-    outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
+    if(write){
+        BoundarySize boundarySize = {{1, 1, 1, 1}};
+        outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
 #ifdef WRITENETCDF
-    // Construct a netCDF writer
-    NetCdfWriter writer(
-            outputFileName,
-            simulation.getBathymetry(),
-            boundarySize,
-            nxLocal,
-            nyLocal,
-            dxSimulation,
-            dySimulation,
-            simulation.getOriginX(),
-            simulation.getOriginY());
+        // Construct a netCDF writer
+        NetCdfWriter writer(
+                outputFileName,
+                simulation.getBathymetry(),
+                boundarySize,
+                nxLocal,
+                nyLocal,
+                dxSimulation,
+                dySimulation,
+                simulation.getOriginX(),
+                simulation.getOriginY());
 #else
-    // Construct a vtk writer
+        // Construct a vtk writer
     VtkWriter writer(
             outputFileName,
             simulation.getBathymetry(),
@@ -296,6 +296,9 @@ int main(int argc, char **argv) {
             dxSimulation,
             dySimulation);
 #endif // WRITENETCDF
+
+    }
+
     // Write the output at t = 0
     if (write) {
         writer.writeTimeStep(simulation.getWaterHeight(),

@@ -231,9 +231,9 @@ int main(int argc, char **argv) {
     /***************
      * INIT OUTPUT *
      ***************/
-
-
     // Initialize boundary size of the ghost layers
+
+if(write){
     BoundarySize boundarySize = {{1, 1, 1, 1}};
     outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
 #ifdef WRITENETCDF
@@ -259,6 +259,9 @@ int main(int argc, char **argv) {
             dxSimulation,
             dySimulation);
 #endif // WRITENETCDF
+
+}
+
 
     // Write the output at t = 0
     if (write) {

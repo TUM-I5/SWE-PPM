@@ -91,7 +91,7 @@ public:
     void exchangeBathymetry();
 
     CollectorHpx collector;
-    NetCdfWriter writer;
+    NetCdfWriter *writer;
     float maxTimestepGlobal;
 
     void writeTimestep(float timestep);
