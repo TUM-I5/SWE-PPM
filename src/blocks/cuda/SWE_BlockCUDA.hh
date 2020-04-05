@@ -41,9 +41,10 @@
 using namespace std;
 
 void checkCUDAError(const char *msg);
+
 void tryCUDA(cudaError_t err, const char *msg);
 
-const int TILE_SIZE=16;
+const int TILE_SIZE = 16;
 //const int TILE_SIZE=8;
 
 /**
@@ -54,13 +55,14 @@ const int TILE_SIZE=16;
  */
 class SWE_BlockCUDA : public SWE_Block {
 
-  public:
+public:
     // Constructor und Destructor
     SWE_BlockCUDA(int l_nx, int l_ny,
-    		float l_dx, float l_dy);
+                  float l_dx, float l_dy);
+
     virtual ~SWE_BlockCUDA();
-    
-  // object methods
+
+    // object methods
 
 // ---> COULD BE IMPLEMENTED TO PROVIDE A DEFAULT IMPLEMENTATION
 //     // determine maximum possible time step
@@ -68,64 +70,74 @@ class SWE_BlockCUDA : public SWE_Block {
 
     // deliver a pointer to proxy class that represents
     // the layer that is copied to an external ghost layer 
-    virtual SWE_Block1D* registerCopyLayer(BoundaryEdge edge);
+    virtual SWE_Block1D *registerCopyLayer(BoundaryEdge edge);
+
     // "grab" the ghost layer in order to set these values externally
-    virtual SWE_Block1D* grabGhostLayer(BoundaryEdge edge);
+    virtual SWE_Block1D *grabGhostLayer(BoundaryEdge edge);
 
     // access to CUDA variables
     /**
      *  @return	pointer to the array #hd (water height) in device memory 
      */
-    const float* getCUDA_waterHeight() { return hd; };
+    const float *getCUDA_waterHeight() { return hd; };
+
     /**
      *  @return	pointer to the array #hb (bathymetry) in device memory 
      */
-    const float* getCUDA_bathymetry() { return bd; };
+    const float *getCUDA_bathymetry() { return bd; };
 
-  protected:
-     
+protected:
+
     // synchronisation Methods
     virtual void synchAfterWrite();
+
     virtual void synchWaterHeightAfterWrite();
+
     virtual void synchDischargeAfterWrite();
+
     virtual void synchBathymetryAfterWrite();
+
     virtual void synchGhostLayerAfterWrite();
 
     virtual void synchBeforeRead();
+
     virtual void synchWaterHeightBeforeRead();
+
     virtual void synchDischargeBeforeRead();
+
     virtual void synchBathymetryBeforeRead();
+
     virtual void synchCopyLayerBeforeRead();
-    
+
     // set boundary conditions in ghost layers (set boundary conditions)
     virtual void setBoundaryConditions();
 
     // define arrays for main unknowns in CUDA global memory: 
     // hd, hud, hvd, and bd are CUDA arrays corresp. to h, hu, hv, and b
-    float* hd;
-    float* hud;
-    float* hvd;
-    float* bd;
-	
-  private:
-     
+    float *hd;
+    float *hud;
+    float *hvd;
+    float *bd;
+
+private:
+
     // separate memory to hold bottom and top ghost and copy layer 
     // in main memory allowing non-strided access
-    float* bottomLayer;
-    float* topLayer;
-    SWE_Block1D* bottomGhostLayer;
-    SWE_Block1D* bottomCopyLayer;
-    SWE_Block1D* topGhostLayer;
-    SWE_Block1D* topCopyLayer;
+    float *bottomLayer;
+    float *topLayer;
+    SWE_Block1D *bottomGhostLayer;
+    SWE_Block1D *bottomCopyLayer;
+    SWE_Block1D *topGhostLayer;
+    SWE_Block1D *topCopyLayer;
     // and resp. memory on the CUDA device:
-    float* bottomLayerDevice;
-    float* topLayerDevice;
+    float *bottomLayerDevice;
+    float *topLayerDevice;
 
     // helper arrays: store maximum height and velocities to determine time step
-    float* maxhd;
-    float* maxvd;
+    float *maxhd;
+    float *maxvd;
 
-  public:
+public:
     // print information about the CUDA device
     static void printDeviceInformation();
 
@@ -134,6 +146,7 @@ class SWE_BlockCUDA : public SWE_Block {
      *  Has to be called once at the beginning.
      */
     static void init(int i_cudaDevice = 0);
+
     /** Cleans up the cuda device */
     static void finalize();
 };
@@ -142,10 +155,10 @@ class SWE_BlockCUDA : public SWE_Block {
     Return index of hd[i][j] in linearised array
 	@param i,j		x- and y-coordinate of grid cell
 	@param ny		grid size in y-direction (without ghost layers)
-*/	
+*/
 inline __device__
 int getCellCoord(int x, int y, int ny) {
-   return x*(ny+2) + y;
+    return x * (ny + 2) + y;
 }
 
 
@@ -153,20 +166,20 @@ int getCellCoord(int x, int y, int ny) {
     Return index of edge-data Fhd[i][j] or Ghd[i][j] in linearised array
 	@param i,j		x- and y-coordinate of grid cell
 	@param ny		grid size in y-direction (without ghost layers)
-*/	
+*/
 inline __device__
 int getEdgeCoord(int x, int y, int ny) {
-   return x*(ny+1) + y;
+    return x * (ny + 1) + y;
 }
 
 /**
     Return index of a specific element in the arrays of bathymetry source terms
 	@param i,j		x- and y-coordinate of grid cell
 	@param ny		grid size in y-direction (without ghost layers)
-*/	
+*/
 inline __device__
 int getBathyCoord(int x, int y, int ny) {
-   return x*ny + y;
+    return x * ny + y;
 }
 
 

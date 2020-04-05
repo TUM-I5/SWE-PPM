@@ -23,38 +23,37 @@
 #include <utility>
 
 
+typedef LocalityChannel<float> localityChannel_type;
 
-    typedef LocalityChannel<float> localityChannel_type;
-    class SWE_Hpx_No_Component
-
-{
+class SWE_Hpx_No_Component {
 public:
 
-    SWE_Hpx_No_Component(int totalRanks,int rank,int localityCount,
-                      float simulationDuration,
-                      int numberOfCheckPoints,
-                      int nxRequested,
-                      int nyRequested,
-                      std::string outputBaseName,
-                      std::string const &batFile,
-                      std::string const &displFile,
-                      bool localTimestepping);
+    SWE_Hpx_No_Component(int totalRanks, int rank, int localityCount,
+                         float simulationDuration,
+                         int numberOfCheckPoints,
+                         int nxRequested,
+                         int nyRequested,
+                         std::string outputBaseName,
+                         std::string const &batFile,
+                         std::string const &displFile,
+                         bool localTimestepping,
+                         bool write);
+
     void run();
 
 
 private:
-        float simulationDuration;
-        int numberOfCheckPoints;
-        int localityRank;
-        int localityCount;
-        localityChannel_type localityChannel;
-        std::vector<std::shared_ptr<SWE_DimensionalSplittingHpx>> simulationBlocks;
-        std::string outputBaseName;
-        bool localTimestepping;
+    float simulationDuration;
+    int numberOfCheckPoints;
+    int localityRank;
+    int localityCount;
+    localityChannel_type localityChannel;
+    std::vector<std::shared_ptr<SWE_DimensionalSplittingHpx>> simulationBlocks;
+    std::string outputBaseName;
+    bool localTimestepping;
+    bool write;
+
 };
-
-
-
 
 
 #endif //SWE_BENCHMARK_SWE_HPX_NO_COMPONENT_HPP

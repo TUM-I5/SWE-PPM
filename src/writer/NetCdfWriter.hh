@@ -32,6 +32,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+
 #ifdef USEMPI
 #include <mpi.h>
 #ifndef MPI_INCLUDED
@@ -39,7 +40,9 @@
 #define MPI_INCLUDED_NETCDF
 #endif
 #endif
+
 #include <netcdf.h>
+
 #ifdef MPI_INCLUDED_NETCDF
 #undef MPI_INCLUDED
 #undef MPI_INCLUDED_NETCDF
@@ -48,49 +51,51 @@
 #include "writer/Writer.hh"
 
 namespace io {
-	class NetCdfWriter;
+    class NetCdfWriter;
 }
 
 class NetCdfWriter : public Writer {
-	public:
-		NetCdfWriter(const std::string &i_fileName,
-				const Float2D &i_b,
-				const BoundarySize &i_boundarySize,
-				int i_nX, int i_nY,
-				float i_dX, float i_dY,
-				float i_originX = 0., float i_originY = 0.,
-				unsigned int i_flush = 0);
-		virtual ~NetCdfWriter();
+public:
+    NetCdfWriter(const std::string &i_fileName,
+                 const Float2D &i_b,
+                 const BoundarySize &i_boundarySize,
+                 int i_nX, int i_nY,
+                 float i_dX, float i_dY,
+                 float i_originX = 0., float i_originY = 0.,
+                 unsigned int i_flush = 0);
 
-		// writes the unknowns at a given time step to the netCDF-file.
-		void writeTimeStep(const Float2D &i_h,
-				const Float2D &i_hu,
-				const Float2D &i_hv,
-				float i_time);
+    virtual ~NetCdfWriter();
 
-	private:
-		/** netCDF file id*/
-		int dataFile;
+    // writes the unknowns at a given time step to the netCDF-file.
+    void writeTimeStep(const Float2D &i_h,
+                       const Float2D &i_hu,
+                       const Float2D &i_hv,
+                       float i_time);
 
-		/** Variable ids */
-		int timeVar, hVar, huVar, hvVar, bVar;
+private:
+    /** netCDF file id*/
+    int dataFile;
 
-		/** Flush after every x write operation? */
-		unsigned int flush;
+    /** Variable ids */
+    int timeVar, hVar, huVar, hvVar, bVar;
 
-		// writer time dependent variables.
-		void writeVarTimeDependent(const Float2D &i_matrix,
-				int i_ncVariable);
+    /** Flush after every x write operation? */
+    unsigned int flush;
 
-		// writes time independent variables.
-		void writeVarTimeIndependent(const Float2D &i_matrix,
-				int i_ncVariable);
+    // writer time dependent variables.
+    void writeVarTimeDependent(const Float2D &i_matrix,
+                               int i_ncVariable);
 
-		/**
-		 * This is a small wrapper for `nc_put_att_text` which automatically sets the length.
-		 */
-		void ncPutAttText(int varid, const char* name, const char *value) {
-			nc_put_att_text(dataFile, varid, name, strlen(value), value);
-		}
+    // writes time independent variables.
+    void writeVarTimeIndependent(const Float2D &i_matrix,
+                                 int i_ncVariable);
+
+    /**
+     * This is a small wrapper for `nc_put_att_text` which automatically sets the length.
+     */
+    void ncPutAttText(int varid, const char *name, const char *value) {
+        nc_put_att_text(dataFile, varid, name, strlen(value), value);
+    }
 };
+
 #endif /* NETCDFWRITER_HH_ */

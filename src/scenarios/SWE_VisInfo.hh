@@ -56,11 +56,11 @@
  */
 class SWE_VisInfo {
 
- public:
-	/**
-	 * Empty virtual destructor
-	 */
-	virtual ~SWE_VisInfo() {};
+public:
+    /**
+     * Empty virtual destructor
+     */
+    virtual ~SWE_VisInfo() {};
 
     /**
      * @return The vertical scaling factor of the water

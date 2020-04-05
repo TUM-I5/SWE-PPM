@@ -54,41 +54,44 @@
 #define __FLOAT2D_HH
 
 class Float2D {
-	public:
-		int getRows() const {
-			return rows;
-		}
-		
-		int getCols() const {
-			return cols;
-		}
-		
-		float* getRawPointer() const {
-			return rawData;
-		}
-        void setRawPointer(float* pointer) {
-            rawData = pointer;
-        }
-		inline float* operator[](int index) {
-			return (rawData + (rows * index));
-		}
-		
-		inline const float* operator[](int index) const {
-			return (rawData + (rows * index));
-		}
+public:
+    int getRows() const {
+        return rows;
+    }
 
-	protected:
-		Float2D() {}
-		
-		Float2D(int cols, int rows) :
-				cols(cols),
-				rows(rows) {}
-		
-		~Float2D() {}
+    int getCols() const {
+        return cols;
+    }
 
-		int cols;
-		int rows;
+    float *getRawPointer() const {
+        return rawData;
+    }
 
-		float *rawData;
+    void setRawPointer(float *pointer) {
+        rawData = pointer;
+    }
+
+    inline float *operator[](int index) {
+        return (rawData + (rows * index));
+    }
+
+    inline const float *operator[](int index) const {
+        return (rawData + (rows * index));
+    }
+
+protected:
+    Float2D() {}
+
+    Float2D(int cols, int rows) :
+            cols(cols),
+            rows(rows) {}
+
+    ~Float2D() {}
+
+    int cols;
+    int rows;
+
+    float *rawData;
 };
+
 #endif // FLOAT2D_HH

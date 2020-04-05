@@ -3,20 +3,23 @@
 
 #include "swe_charm.decl.h"
 #include "tools/CollectorCharm.hpp"
+
 class swe_charm : public CBase_swe_charm {
-	public:
-		swe_charm(CkArgMsg *msg);
-		swe_charm(CkMigrateMessage *msg);
+public:
+    swe_charm(CkArgMsg *msg);
 
-		void done(int index,double ctr_flop, double ctr_exchange, double ctr_barrier,double ctr_reduce,double ctr_wall);
+    swe_charm(CkMigrateMessage *msg);
 
-		void exit();
-		int chareCount;
+    void done(int index, double ctr_flop, double ctr_exchange, double ctr_barrier, double ctr_reduce, double ctr_wall);
+
+    void exit();
+
+    int chareCount;
     float sumFlops;
     float sumCommTime;
     float sumReductionTime;
     CollectorCharm mainCollector;
-	private:
+private:
 
 };
 

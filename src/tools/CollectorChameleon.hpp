@@ -4,11 +4,14 @@
 
 #ifndef SWE_BENCHMARK_COLLECTORCHAMELEON_HPP
 #define SWE_BENCHMARK_COLLECTORCHAMELEON_HPP
+
 #include "CollectorMpi.hpp"
 #include <mpi.h>
-class CollectorChameleon : public CollectorMpi{
+
+class CollectorChameleon : public CollectorMpi {
 public:
-    CollectorChameleon(){};
+    CollectorChameleon() {};
 
 };
+
 #endif //SWE_BENCHMARK_COLLECTORCHAMELEON_HPP

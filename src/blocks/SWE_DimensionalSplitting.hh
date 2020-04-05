@@ -39,42 +39,47 @@
 #include "solvers/Hybrid.hpp"
 
 class SWE_DimensionalSplitting : public SWE_Block<Float2DNative> {
-	public:
-		// Constructor/Destructor
-		SWE_DimensionalSplitting(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY);
-		~SWE_DimensionalSplitting() {};
+public:
+    // Constructor/Destructor
+    SWE_DimensionalSplitting(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
+                             float cellSizeVertical, float originX, float originY);
 
-		// Interface methods
-		void setGhostLayer();
-		void computeNumericalFluxes();
-		void updateUnknowns(float dt);
+    ~SWE_DimensionalSplitting() {};
 
-		float computeTime;
-		float computeTimeWall;
+    // Interface methods
+    void setGhostLayer();
 
-	private:
-		solver::Hybrid<float> solver;
+    void computeNumericalFluxes();
 
-		// Temporary values after x-sweep and before y-sweep
-		Float2DNative hStar;
-		Float2DNative huStar;
+    void updateUnknowns(float dt);
 
-		// net updates per cell
-		Float2DNative hNetUpdatesLeft;
-		Float2DNative hNetUpdatesRight;
+    float computeTime;
+    float computeTimeWall;
 
-		Float2DNative huNetUpdatesLeft;
-		Float2DNative huNetUpdatesRight;
+private:
+    solver::Hybrid<float> solver;
 
-		Float2DNative hNetUpdatesBelow;
-		Float2DNative hNetUpdatesAbove;
+    // Temporary values after x-sweep and before y-sweep
+    Float2DNative hStar;
+    Float2DNative huStar;
 
-		Float2DNative hvNetUpdatesBelow;
-		Float2DNative hvNetUpdatesAbove;
+    // net updates per cell
+    Float2DNative hNetUpdatesLeft;
+    Float2DNative hNetUpdatesRight;
 
-		// timer
-		std::clock_t computeClock;
-		struct timespec startTime;
-		struct timespec endTime;
+    Float2DNative huNetUpdatesLeft;
+    Float2DNative huNetUpdatesRight;
+
+    Float2DNative hNetUpdatesBelow;
+    Float2DNative hNetUpdatesAbove;
+
+    Float2DNative hvNetUpdatesBelow;
+    Float2DNative hvNetUpdatesAbove;
+
+    // timer
+    std::clock_t computeClock;
+    struct timespec startTime;
+    struct timespec endTime;
 };
+
 #endif /* SWEDIMENSIONALSPLITTING_HH_ */

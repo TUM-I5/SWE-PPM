@@ -40,41 +40,55 @@
 #include "tools/CollectorUpcxx.hpp"
 #include <upcxx/upcxx.hpp>
 
-#if WAVE_PROPAGATION_SOLVER==0
+#if WAVE_PROPAGATION_SOLVER == 0
 //#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
-#elif WAVE_PROPAGATION_SOLVER==1
+
+#elif WAVE_PROPAGATION_SOLVER == 1
 #include "solvers/FWave.hpp"
 #elif WAVE_PROPAGATION_SOLVER==2
 #include "solvers/AugRie.hpp"
 #endif
 
-class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBufferUpcxx> {
-	public:
-		// Constructor/Destructor
-        SWE_DimensionalSplittingUpcxx();
-		SWE_DimensionalSplittingUpcxx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY, bool localTimestepping=false);
-		~SWE_DimensionalSplittingUpcxx() {};
+class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx, Float2DBufferUpcxx> {
+public:
+    // Constructor/Destructor
+    SWE_DimensionalSplittingUpcxx();
 
-		// Interface methods
-		void setGhostLayer();
-		void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
-		void computeNumericalFluxes();
-		void updateUnknowns(float dt);
-        void notifyNeighbours(bool sync);
-		// Upcxx specific
-		void connectBoundaries(BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[]);
-		BlockConnectInterface<upcxx::global_ptr<float>> getCopyLayer(Boundary boundary);
-		void exchangeBathymetry();
+    SWE_DimensionalSplittingUpcxx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
+                                  float cellSizeVertical, float originX, float originY, bool localTimestepping = false);
+
+    ~SWE_DimensionalSplittingUpcxx() {};
+
+    // Interface methods
+    void setGhostLayer();
+
+    void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
+
+    void computeNumericalFluxes();
+
+    void updateUnknowns(float dt);
+
+    void notifyNeighbours(bool sync);
+
+    // Upcxx specific
+    void connectBoundaries(BlockConnectInterface<upcxx::global_ptr < float>>
+
+    neighbourCopyLayer[]);
+    BlockConnectInterface<upcxx::global_ptr < float>> getCopyLayer(
+    Boundary boundary
+    );
+
+    void exchangeBathymetry();
 
 
-        int iteration = 0;
-	//private:
-#if WAVE_PROPAGATION_SOLVER==0
+    int iteration = 0;
+    //private:
+#if WAVE_PROPAGATION_SOLVER == 0
     //! Hybrid solver (f-wave + augmented)
     //solver::Hybrid<float> solver;
     solver::HLLEFun<float> solver;
-#elif WAVE_PROPAGATION_SOLVER==1
+#elif WAVE_PROPAGATION_SOLVER == 1
     //! F-wave Riemann solver
     solver::FWave<float> solver;
 #elif WAVE_PROPAGATION_SOLVER==2
@@ -82,37 +96,38 @@ class SWE_DimensionalSplittingUpcxx : public SWE_Block<Float2DUpcxx,Float2DBuffe
     solver::AugRie<float> solver;
 #endif
 
-		// Max timestep reduced over all upcxx ranks
-		float maxTimestepGlobal;
+    // Max timestep reduced over all upcxx ranks
+    float maxTimestepGlobal;
 
-		// Temporary values after x-sweep and before y-sweep
-		Float2DUpcxx hStar;
-		Float2DUpcxx huStar;
+    // Temporary values after x-sweep and before y-sweep
+    Float2DUpcxx hStar;
+    Float2DUpcxx huStar;
 
-		// net updates per cell
-		Float2DUpcxx hNetUpdatesLeft;
-		Float2DUpcxx hNetUpdatesRight;
+    // net updates per cell
+    Float2DUpcxx hNetUpdatesLeft;
+    Float2DUpcxx hNetUpdatesRight;
 
-		Float2DUpcxx huNetUpdatesLeft;
-		Float2DUpcxx huNetUpdatesRight;
+    Float2DUpcxx huNetUpdatesLeft;
+    Float2DUpcxx huNetUpdatesRight;
 
-		Float2DUpcxx hNetUpdatesBelow;
-		Float2DUpcxx hNetUpdatesAbove;
+    Float2DUpcxx hNetUpdatesBelow;
+    Float2DUpcxx hNetUpdatesAbove;
 
-		Float2DUpcxx hvNetUpdatesBelow;
-		Float2DUpcxx hvNetUpdatesAbove;
+    Float2DUpcxx hvNetUpdatesBelow;
+    Float2DUpcxx hvNetUpdatesAbove;
 
-		// Interfaces to neighbouring block copy layers, indexed by Boundary
-		BlockConnectInterface<upcxx::global_ptr<float>> neighbourCopyLayer[4];
-        //Used to transmit timestep in localtimestepping
-        upcxx::global_ptr<float> upcxxLocalTimestep;
-        upcxx::global_ptr<std::atomic<bool>> upcxxDataReady;
-        upcxx::global_ptr<std::atomic<bool>> upcxxDataTransmitted;
-        upcxx::global_ptr<int> upcxxIteration;
-        std::atomic<bool> *dataReady;
-        std::atomic<bool> *dataTransmitted;
-        float * upcxxBorderTimestep;
-		// timer
+    // Interfaces to neighbouring block copy layers, indexed by Boundary
+    BlockConnectInterface<upcxx::global_ptr < float>> neighbourCopyLayer[4];
+    //Used to transmit timestep in localtimestepping
+    upcxx::global_ptr<float> upcxxLocalTimestep;
+    upcxx::global_ptr <std::atomic<bool>> upcxxDataReady;
+    upcxx::global_ptr <std::atomic<bool>> upcxxDataTransmitted;
+    upcxx::global_ptr<int> upcxxIteration;
+    std::atomic<bool> *dataReady;
+    std::atomic<bool> *dataTransmitted;
+    float *upcxxBorderTimestep;
+    // timer
 
 };
+
 #endif /* SWEDIMENSIONALSPLITTINGUPCXX_HH_ */

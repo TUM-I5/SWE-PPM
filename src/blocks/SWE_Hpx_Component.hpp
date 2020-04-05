@@ -21,74 +21,70 @@
 #include <utility>
 
 
-namespace remote
-    {
-        typedef LocalityChannel<float> localityChannel_type;
-        struct HPX_COMPONENT_EXPORT SWE_Hpx_Component
-                : hpx::components::component_base<SWE_Hpx_Component>
-        {
-            //std::vector<client::SWE_DimensionalSplittingComponent> simulationBlocks;
-            std::vector<SWE_DimensionalSplittingHpx> simulationBlocks;
-            std::vector <int> left_border;
-            std::vector <int> right_border;
-            std::vector <int> top_border;
-            std::vector <int> bottom_border;
-            float simulationDuration;
-            int numberOfCheckPoints;
-            int localityRank;
-            int localityCount;
-            localityChannel_type localityChannel;
-            SWE_Hpx_Component(int totalRanks,int rank,int localityCount,
-                              float simulationDuration,
-                              int numberOfCheckPoints,
-                              int nxRequested,
-                              int nyRequested,
-                              std::string outputBaseName,
-                              std::string const &batFile,
-                              std::string const &displFile);
-            void run();
+namespace remote {
+    typedef LocalityChannel<float> localityChannel_type;
 
-            HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, run);
+    struct HPX_COMPONENT_EXPORT SWE_Hpx_Component
+            : hpx::components::component_base<SWE_Hpx_Component> {
+        //std::vector<client::SWE_DimensionalSplittingComponent> simulationBlocks;
+        std::vector<SWE_DimensionalSplittingHpx> simulationBlocks;
+        std::vector<int> left_border;
+        std::vector<int> right_border;
+        std::vector<int> top_border;
+        std::vector<int> bottom_border;
+        float simulationDuration;
+        int numberOfCheckPoints;
+        int localityRank;
+        int localityCount;
+        localityChannel_type localityChannel;
 
-        };
-    }
-
-HPX_REGISTER_ACTION_DECLARATION(
-       remote::SWE_Hpx_Component::run_action, SWE_Hpx_Component_run_action);
-
-    struct SWE_Hpx_Component
-            : hpx::components::client_base<SWE_Hpx_Component,remote::SWE_Hpx_Component>
-    {
-        typedef hpx::components::client_base<SWE_Hpx_Component,remote::SWE_Hpx_Component>
-                base_type;
-
-        SWE_Hpx_Component(hpx::future<hpx::naming::id_type> && f)
-                : base_type(std::move(f))
-        {}
-
-        SWE_Hpx_Component(hpx::naming::id_type && f)
-                : base_type(std::move(f))
-        {}
-        SWE_Hpx_Component(hpx::naming::id_type && f,int totalRanks,int rank,int localityCount,float simulationDuration,
+        SWE_Hpx_Component(int totalRanks, int rank, int localityCount,
+                          float simulationDuration,
                           int numberOfCheckPoints,
                           int nxRequested,
                           int nyRequested,
                           std::string outputBaseName,
                           std::string const &batFile,
-                          std::string const &displFile)
+                          std::string const &displFile);
 
-                : base_type(std::move(f))
-        {
-            this->create(f,totalRanks,rank,localityCount,simulationDuration,numberOfCheckPoints,nxRequested,nyRequested,outputBaseName,batFile,displFile);
-        }
-        void run()
-        {
-            return hpx::async<remote::SWE_Hpx_Component::run_action>(this->get_id()).get();
-        }
+        void run();
+
+        HPX_DEFINE_COMPONENT_ACTION(SWE_Hpx_Component, run);
+
     };
+}
 
+HPX_REGISTER_ACTION_DECLARATION(
+        remote::SWE_Hpx_Component::run_action, SWE_Hpx_Component_run_action);
 
+struct SWE_Hpx_Component
+        : hpx::components::client_base<SWE_Hpx_Component, remote::SWE_Hpx_Component> {
+    typedef hpx::components::client_base<SWE_Hpx_Component, remote::SWE_Hpx_Component>
+            base_type;
 
+    SWE_Hpx_Component(hpx::future<hpx::naming::id_type> &&f)
+            : base_type(std::move(f)) {}
+
+    SWE_Hpx_Component(hpx::naming::id_type &&f)
+            : base_type(std::move(f)) {}
+
+    SWE_Hpx_Component(hpx::naming::id_type &&f, int totalRanks, int rank, int localityCount, float simulationDuration,
+                      int numberOfCheckPoints,
+                      int nxRequested,
+                      int nyRequested,
+                      std::string outputBaseName,
+                      std::string const &batFile,
+                      std::string const &displFile)
+
+            : base_type(std::move(f)) {
+        this->create(f, totalRanks, rank, localityCount, simulationDuration, numberOfCheckPoints, nxRequested,
+                     nyRequested, outputBaseName, batFile, displFile);
+    }
+
+    void run() {
+        return hpx::async<remote::SWE_Hpx_Component::run_action>(this->get_id()).get();
+    }
+};
 
 
 #endif //SWE_BENCHMARK_SWE_HPX_COMPONENT_HPP

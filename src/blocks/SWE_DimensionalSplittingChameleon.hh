@@ -37,83 +37,93 @@
 #include <time.h>
 #include <mpi.h>
 #include "tools/CollectorChameleon.hpp"
-#if WAVE_PROPAGATION_SOLVER==0
+
+#if WAVE_PROPAGATION_SOLVER == 0
 //#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
-#elif WAVE_PROPAGATION_SOLVER==1
+
+#elif WAVE_PROPAGATION_SOLVER == 1
 #include "solvers/FWave.hpp"
 #elif WAVE_PROPAGATION_SOLVER==2
 #include "solvers/AugRie.hpp"
 #endif
 
 class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
-	public:
-		// Constructor/Destructor
-    	SWE_DimensionalSplittingChameleon() = default;
-		SWE_DimensionalSplittingChameleon(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY, bool localTimestepping);
-		~SWE_DimensionalSplittingChameleon() {};
+public:
+    // Constructor/Destructor
+    SWE_DimensionalSplittingChameleon() = default;
 
-		// Interface methods
-		void setGhostLayer();
-		void receiveGhostLayer();
-		void exchangeBathymetry();
-		void computeNumericalFluxes() {};
-		void computeNumericalFluxesHorizontal();
-		void computeNumericalFluxesVertical();
-		void updateUnknowns(float dt);
+    SWE_DimensionalSplittingChameleon(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
+                                      float cellSizeVertical, float originX, float originY, bool localTimestepping);
 
-		float computeTime;
-		double computeTimeWall;
+    ~SWE_DimensionalSplittingChameleon() {};
 
-		SWE_DimensionalSplittingChameleon* left;
-		SWE_DimensionalSplittingChameleon* right;
-		SWE_DimensionalSplittingChameleon* bottom;
-		SWE_DimensionalSplittingChameleon* top;
-		void setLeft(SWE_DimensionalSplittingChameleon* argLeft);
-		void setRight(SWE_DimensionalSplittingChameleon* argRight);
-		void freeMpiType();
+    // Interface methods
+    void setGhostLayer();
 
-		int neighbourRankId[4];
+    void receiveGhostLayer();
 
-		int myRank;
-		void setRank(int rank);
-		MPI_Datatype HORIZONTAL_BOUNDARY;
+    void exchangeBathymetry();
 
-#if WAVE_PROPAGATION_SOLVER==0
+    void computeNumericalFluxes() {};
+
+    void computeNumericalFluxesHorizontal();
+
+    void computeNumericalFluxesVertical();
+
+    void updateUnknowns(float dt);
+
+
+    SWE_DimensionalSplittingChameleon *left;
+    SWE_DimensionalSplittingChameleon *right;
+    SWE_DimensionalSplittingChameleon *bottom;
+    SWE_DimensionalSplittingChameleon *top;
+
+    void setLeft(SWE_DimensionalSplittingChameleon *argLeft);
+
+    void setRight(SWE_DimensionalSplittingChameleon *argRight);
+
+    void freeMpiType();
+
+    int neighbourRankId[4];
+
+    int myRank;
+
+    void setRank(int rank);
+
+    MPI_Datatype HORIZONTAL_BOUNDARY;
+
+#if WAVE_PROPAGATION_SOLVER == 0
     //! Hybrid solver (f-wave + augmented)
     //solver::Hybrid<float> solver;
     solver::HLLEFun<float> solver;
-#elif WAVE_PROPAGATION_SOLVER==1
+#elif WAVE_PROPAGATION_SOLVER == 1
     //! F-wave Riemann solver
     solver::FWave<float> solver;
 #elif WAVE_PROPAGATION_SOLVER==2
     //! Approximate Augmented Riemann solver
     solver::AugRie<float> solver;
 #endif
-		// Temporary values after x-sweep and before y-sweep
-		Float2DNative hStar;
-		Float2DNative huStar;
+    // Temporary values after x-sweep and before y-sweep
+    Float2DNative hStar;
+    Float2DNative huStar;
 
-		// net updates per cell
-		Float2DNative hNetUpdatesLeft;
-		Float2DNative hNetUpdatesRight;
+    // net updates per cell
+    Float2DNative hNetUpdatesLeft;
+    Float2DNative hNetUpdatesRight;
 
-		Float2DNative huNetUpdatesLeft;
-		Float2DNative huNetUpdatesRight;
+    Float2DNative huNetUpdatesLeft;
+    Float2DNative huNetUpdatesRight;
 
-		Float2DNative hNetUpdatesBelow;
-		Float2DNative hNetUpdatesAbove;
+    Float2DNative hNetUpdatesBelow;
+    Float2DNative hNetUpdatesAbove;
 
-		Float2DNative hvNetUpdatesBelow;
-		Float2DNative hvNetUpdatesAbove;
+    Float2DNative hvNetUpdatesBelow;
+    Float2DNative hvNetUpdatesAbove;
 
-		// timer
-		double computeClock;
-		struct timespec startTime;
-		struct timespec endTime;
-        CollectorChameleon collector;
+    CollectorChameleon collector;
 };
 
-double getTime();
+
 
 #endif /* SWEDIMENSIONALSPLITTING_HH_ */

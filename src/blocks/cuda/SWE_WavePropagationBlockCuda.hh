@@ -40,40 +40,40 @@
  *  F-Wave, <strike>Approximate Augmented Riemann, Hybrid (f-wave + augmented).</strike>
  *  (details can be found in the corresponding source files)
  */
-class SWE_WavePropagationBlockCuda: public SWE_BlockCUDA {
-  //private:
+class SWE_WavePropagationBlockCuda : public SWE_BlockCUDA {
+    //private:
     //! "2D array" which holds the net-updates for the water height (wave propagating to the left).
-    float* hNetUpdatesLeftD;
+    float *hNetUpdatesLeftD;
     //! "2D array" which holds the net-updates for the water height (wave propagating to the right).
-    float* hNetUpdatesRightD;
+    float *hNetUpdatesRightD;
 
     //! "2D array" which holds the net-updates for the momentum in x-direction (wave propagating to the left).
-    float* huNetUpdatesLeftD;
+    float *huNetUpdatesLeftD;
     //! "2D array" which holds the net-updates for the momentum in x-direction (wave propagating to the right).
-    float* huNetUpdatesRightD;
+    float *huNetUpdatesRightD;
 
 
     //! "2D array" which holds the net-updates for the water height (wave propagating to the top).
-    float* hNetUpdatesBelowD;
+    float *hNetUpdatesBelowD;
     //! "2D array" which holds the net-updates for the water height (wave propagating to the bottom).
-    float* hNetUpdatesAboveD;
+    float *hNetUpdatesAboveD;
 
     //! "2D array" which holds the net-updates for the momentum in y-direction (wave propagating to the top).
-    float* hvNetUpdatesBelowD;
+    float *hvNetUpdatesBelowD;
     //! "2D array" which holds the net-updates for the momentum in y-direction (wave propagating to the bottom).
-    float* hvNetUpdatesAboveD;
+    float *hvNetUpdatesAboveD;
 
-  public:
+public:
     // constructor of SWE_WavePropagationBlockCuda
     SWE_WavePropagationBlockCuda(
-    		int l_nx, int l_ny,
-    		float l_dx, float l_dy);
+            int l_nx, int l_ny,
+            float l_dx, float l_dy);
 
     // destructor of SWE_WavePropagationBlockCuda
     ~SWE_WavePropagationBlockCuda();
 
     // compute a single time step (net-updates + update of the cells).
-    void simulateTimestep( float i_dT );
+    void simulateTimestep(float i_dT);
 
     // simulate multiple time steps (start and end time provided as parameters)
     float simulate(float, float);

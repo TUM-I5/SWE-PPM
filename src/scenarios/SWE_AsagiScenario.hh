@@ -39,114 +39,113 @@
 
 using namespace asagi;
 
-class SWE_AsagiScenario: public SWE_Scenario {
-	public:
-		SWE_AsagiScenario(
-				const std::string bathymetryFilename,
-				const std::string displacementFilename) {
+class SWE_AsagiScenario : public SWE_Scenario {
+public:
+    SWE_AsagiScenario(
+            const std::string bathymetryFilename,
+            const std::string displacementFilename) {
 
-			bathymetryGrid = Grid::create();
-			displacementGrid = Grid::create();
+        bathymetryGrid = Grid::create();
+        displacementGrid = Grid::create();
 
-			if(bathymetryGrid->open(bathymetryFilename.c_str()) != Grid::SUCCESS) {
-				std::cout << "Could not open bathymetry file: " << bathymetryFilename << std::endl;
-				assert(false);
-			}
-			if(displacementGrid->open(displacementFilename.c_str()) != Grid::SUCCESS) {
-				std::cout << "Could not open displacement file: " << bathymetryFilename << std::endl;
-				assert(false);
-			}
+        if (bathymetryGrid->open(bathymetryFilename.c_str()) != Grid::SUCCESS) {
+            std::cout << "Could not open bathymetry file: " << bathymetryFilename << std::endl;
+            assert(false);
+        }
+        if (displacementGrid->open(displacementFilename.c_str()) != Grid::SUCCESS) {
+            std::cout << "Could not open displacement file: " << bathymetryFilename << std::endl;
+            assert(false);
+        }
 
-			bathymetryRange[0] = bathymetryGrid->getMin(0);
-			bathymetryRange[1] = bathymetryGrid->getMax(0);
-			bathymetryRange[2] = bathymetryGrid->getMin(1);
-			bathymetryRange[3] = bathymetryGrid->getMax(1);
+        bathymetryRange[0] = bathymetryGrid->getMin(0);
+        bathymetryRange[1] = bathymetryGrid->getMax(0);
+        bathymetryRange[2] = bathymetryGrid->getMin(1);
+        bathymetryRange[3] = bathymetryGrid->getMax(1);
 
-			displacementRange[0] = displacementGrid->getMin(0);
-			displacementRange[1] = displacementGrid->getMax(0);
-			displacementRange[2] = displacementGrid->getMin(1);
-			displacementRange[3] = displacementGrid->getMax(1);
+        displacementRange[0] = displacementGrid->getMin(0);
+        displacementRange[1] = displacementGrid->getMax(0);
+        displacementRange[2] = displacementGrid->getMin(1);
+        displacementRange[3] = displacementGrid->getMax(1);
 
 #ifndef NDEBUG
-		//print information
-		std::cout << "  *** scenarios::Asagi created" << std::endl
-			<< "    bathymetryRange[0]=" << bathymetryRange[0] << std::endl
-			<< "    bathymetryRange[1]=" << bathymetryRange[1] << std::endl
-			<< "    bathymetryRange[2]=" << bathymetryRange[2] << std::endl
-			<< "    bathymetryRange[3]=" << bathymetryRange[3] << std::endl
-			<< "    displacementRange[0]=" << displacementRange[0] << std::endl
-			<< "    displacementRange[1]=" << displacementRange[1] << std::endl
-			<< "    displacementRange[2]=" << displacementRange[2] << std::endl
-			<< "    displacementRange[3]=" << displacementRange[3] << std::endl;
+        //print information
+        std::cout << "  *** scenarios::Asagi created" << std::endl
+            << "    bathymetryRange[0]=" << bathymetryRange[0] << std::endl
+            << "    bathymetryRange[1]=" << bathymetryRange[1] << std::endl
+            << "    bathymetryRange[2]=" << bathymetryRange[2] << std::endl
+            << "    bathymetryRange[3]=" << bathymetryRange[3] << std::endl
+            << "    displacementRange[0]=" << displacementRange[0] << std::endl
+            << "    displacementRange[1]=" << displacementRange[1] << std::endl
+            << "    displacementRange[2]=" << displacementRange[2] << std::endl
+            << "    displacementRange[3]=" << displacementRange[3] << std::endl;
 #endif
-		}
+    }
 
-		virtual ~SWE_AsagiScenario() {
-			delete bathymetryGrid;	
-			delete displacementGrid;
-		}
+    virtual ~SWE_AsagiScenario() {
+        delete bathymetryGrid;
+        delete displacementGrid;
+    }
 
-		float getWaterHeight(float x, float y) {
-			assert(x > bathymetryRange[0]);
-			assert(x < bathymetryRange[1]);
-			assert(y > bathymetryRange[2]);
-			assert(y < bathymetryRange[3]);
+    float getWaterHeight(float x, float y) {
+        assert(x > bathymetryRange[0]);
+        assert(x < bathymetryRange[1]);
+        assert(y > bathymetryRange[2]);
+        assert(y < bathymetryRange[3]);
 
-			double position[] = {x, y};
-			float bathymetryValue = bathymetryGrid->getFloat(position);
+        double position[] = {x, y};
+        float bathymetryValue = bathymetryGrid->getFloat(position);
 
-			if(bathymetryValue > (float) 0.) {
-				return 0.;
-			}
-			else {
-				return -bathymetryValue;
-			}
-		}
+        if (bathymetryValue > (float) 0.) {
+            return 0.;
+        } else {
+            return -bathymetryValue;
+        }
+    }
 
-		float getBathymetry(float x, float y) {
-			assert(x > bathymetryRange[0]);
-			assert(x < bathymetryRange[1]);
-			assert(y > bathymetryRange[2]);
-			assert(y < bathymetryRange[3]);
+    float getBathymetry(float x, float y) {
+        assert(x > bathymetryRange[0]);
+        assert(x < bathymetryRange[1]);
+        assert(y > bathymetryRange[2]);
+        assert(y < bathymetryRange[3]);
 
-			double position[] = {x, y};
+        double position[] = {x, y};
 
-			float bathymetryValue = bathymetryGrid->getFloat(position);
-			float displacementValue = 0;
+        float bathymetryValue = bathymetryGrid->getFloat(position);
+        float displacementValue = 0;
 
-			if (x > displacementRange[0] &&
-					x < displacementRange[1] &&
-					y > displacementRange[2] &&
-					y < displacementRange[3]) {
-				displacementValue = displacementGrid->getFloat(position);
-			}
+        if (x > displacementRange[0] &&
+            x < displacementRange[1] &&
+            y > displacementRange[2] &&
+            y < displacementRange[3]) {
+            displacementValue = displacementGrid->getFloat(position);
+        }
 
-			return bathymetryValue + displacementValue;
-		}
+        return bathymetryValue + displacementValue;
+    }
 
-		BoundaryType getBoundaryType(Boundary boundary) {
-			return OUTFLOW;
-		}
+    BoundaryType getBoundaryType(Boundary boundary) {
+        return OUTFLOW;
+    }
 
-		float getBoundaryPos(Boundary boundary) {
-			if (boundary == BND_LEFT)
-				return bathymetryRange[0];
-			else if (boundary == BND_RIGHT)
-				return bathymetryRange[1];
-			else if (boundary == BND_BOTTOM)
-				return bathymetryRange[2];
-			else
-				return bathymetryRange[3];
-		}
-
+    float getBoundaryPos(Boundary boundary) {
+        if (boundary == BND_LEFT)
+            return bathymetryRange[0];
+        else if (boundary == BND_RIGHT)
+            return bathymetryRange[1];
+        else if (boundary == BND_BOTTOM)
+            return bathymetryRange[2];
+        else
+            return bathymetryRange[3];
+    }
 
 
-	private:
-		Grid* bathymetryGrid;
-		Grid* displacementGrid;
+private:
+    Grid *bathymetryGrid;
+    Grid *displacementGrid;
 
-		float bathymetryRange[4];
-		float displacementRange[4];
+    float bathymetryRange[4];
+    float displacementRange[4];
 
 };
+
 #endif // __SWE_ASAGISCENARIO_HH

@@ -51,43 +51,43 @@
  * bathymetry source terms are defined for cells with indices [1,..,nx]*[1,..,ny]
  */
 SWE_RusanovBlockCUDA::SWE_RusanovBlockCUDA(float _offsetX, float _offsetY, const int i_cudaDevice)
- : SWE_BlockCUDA(_offsetX,_offsetY, i_cudaDevice)
+        : SWE_BlockCUDA(_offsetX, _offsetY, i_cudaDevice)
 #ifdef DBG
- , Fh(nx+1,ny+1), Fhu(nx+1,ny+1), Fhv(nx+1,ny+1),
-   Gh(nx+1,ny+1), Ghu(nx+1,ny+1), Ghv(nx+1,ny+1)
+, Fh(nx+1,ny+1), Fhu(nx+1,ny+1), Fhv(nx+1,ny+1),
+  Gh(nx+1,ny+1), Ghu(nx+1,ny+1), Ghv(nx+1,ny+1)
 #endif
 {
 
-  int size = (nx+1)*(ny+1)*sizeof(float);
-  // allocate CUDA memory for flow unknows
-  cudaMalloc((void**)&Fhd, size); 
-     checkCUDAError("allocate device memory for Fh");
-  cudaMalloc((void**)&Fhud, size);
-     checkCUDAError("allocate device memory for Fhu");
-  cudaMalloc((void**)&Fhvd, size);
-     checkCUDAError("allocate device memory for Fhv");
+    int size = (nx + 1) * (ny + 1) * sizeof(float);
+    // allocate CUDA memory for flow unknows
+    cudaMalloc((void **) &Fhd, size);
+    checkCUDAError("allocate device memory for Fh");
+    cudaMalloc((void **) &Fhud, size);
+    checkCUDAError("allocate device memory for Fhu");
+    cudaMalloc((void **) &Fhvd, size);
+    checkCUDAError("allocate device memory for Fhv");
 
-  // allocate CUDA memory for flow unknows
-  cudaMalloc((void**)&Ghd, size); 
-     checkCUDAError("allocate device memory for Fh");
-  cudaMalloc((void**)&Ghud, size);
-     checkCUDAError("allocate device memory for Ghu");
-  cudaMalloc((void**)&Ghvd, size);
-     checkCUDAError("allocate device memory for Ghv");
+    // allocate CUDA memory for flow unknows
+    cudaMalloc((void **) &Ghd, size);
+    checkCUDAError("allocate device memory for Fh");
+    cudaMalloc((void **) &Ghud, size);
+    checkCUDAError("allocate device memory for Ghu");
+    cudaMalloc((void **) &Ghvd, size);
+    checkCUDAError("allocate device memory for Ghv");
 
-  // allocate CUDA unknowns: bathymetry source terms 
-  size = nx*ny*sizeof(float);
-  cudaMalloc((void**)&Bxd, size); 
-     checkCUDAError("allocate device memory for Bxd");
-  cudaMalloc((void**)&Byd, size);
-     checkCUDAError("allocate device memory for Byd");
+    // allocate CUDA unknowns: bathymetry source terms
+    size = nx * ny * sizeof(float);
+    cudaMalloc((void **) &Bxd, size);
+    checkCUDAError("allocate device memory for Bxd");
+    cudaMalloc((void **) &Byd, size);
+    checkCUDAError("allocate device memory for Byd");
 
-  // allocate CUDA unknowns: maxmimum height and velocity
-  size = (nx/TILE_SIZE)*(ny/TILE_SIZE)*sizeof(float);
-  cudaMalloc((void**)&maxhd, size);
-     checkCUDAError("allocate device memory for maxhd");
-  cudaMalloc((void**)&maxvd, size);
-     checkCUDAError("allocate device memory for maxvd");
+    // allocate CUDA unknowns: maxmimum height and velocity
+    size = (nx / TILE_SIZE) * (ny / TILE_SIZE) * sizeof(float);
+    cudaMalloc((void **) &maxhd, size);
+    checkCUDAError("allocate device memory for maxhd");
+    cudaMalloc((void **) &maxvd, size);
+    checkCUDAError("allocate device memory for maxvd");
 
 }
 
@@ -95,11 +95,17 @@ SWE_RusanovBlockCUDA::SWE_RusanovBlockCUDA(float _offsetX, float _offsetY, const
  * Destructor: de-allocate all variables
  */
 SWE_RusanovBlockCUDA::~SWE_RusanovBlockCUDA() {
-  cudaFree(Fhd); cudaFree(Fhud); cudaFree(Fhvd);
-  cudaFree(Ghd); cudaFree(Ghud); cudaFree(Ghvd);
-  cudaFree(Bxd); cudaFree(Byd);
-  cudaFree(maxhd); cudaFree(maxvd);
-  
+    cudaFree(Fhd);
+    cudaFree(Fhud);
+    cudaFree(Fhvd);
+    cudaFree(Ghd);
+    cudaFree(Ghud);
+    cudaFree(Ghvd);
+    cudaFree(Bxd);
+    cudaFree(Byd);
+    cudaFree(maxhd);
+    cudaFree(maxvd);
+
 }
 
 
@@ -116,62 +122,62 @@ SWE_RusanovBlockCUDA::~SWE_RusanovBlockCUDA() {
  */
 void SWE_RusanovBlockCUDA::computeMaxTimestepCUDA() {
 
-  float hmax = 0.0;
-  float vmax = 0.0;
-  float meshSize = (dx<dy) ? dx : dy;
-   
-  int numTiles = (nx/TILE_SIZE)*(ny/TILE_SIZE);
-#ifdef DBG
-  cout << "Number of tiles: " << numTiles << " -> ";
-#endif
-  // use 512 threads for maxmimum computation ...
-  int threads = 512;
-  // ... or the largest power-of-two smaller than numTiles:
-  while (threads > numTiles) threads >>=1;
-#ifdef DBG
-  cout << "use " << threads << " threads per tile" << endl << flush;
-#endif
-  
-  // loop over arrays of maxhd and maxvd to determine maximum
-  // GPU maximum kernel called for 512 (or threads) elements at a time
-  // CPU maintains maximum of all groups-of-512
-  for(int tile=numTiles; tile>0; tile -= threads) {
-     float newmax = 0;
-     dim3 dimBlock(threads,1,1);
-     dim3 dimGrid(1,1);
+    float hmax = 0.0;
+    float vmax = 0.0;
+    float meshSize = (dx < dy) ? dx : dy;
 
-     // Compute maximum of arrays maxhd and maxvd
-     // (for elements in range [tile-threads .. tile-1])
-     int start = tile-threads;
-     // use element range [0 .. threads-1], if tile-threads < 0
-     if (start<0) start=0; 
+    int numTiles = (nx / TILE_SIZE) * (ny / TILE_SIZE);
+#ifdef DBG
+    cout << "Number of tiles: " << numTiles << " -> ";
+#endif
+    // use 512 threads for maxmimum computation ...
+    int threads = 512;
+    // ... or the largest power-of-two smaller than numTiles:
+    while (threads > numTiles) threads >>= 1;
+#ifdef DBG
+    cout << "use " << threads << " threads per tile" << endl << flush;
+#endif
+
+    // loop over arrays of maxhd and maxvd to determine maximum
+    // GPU maximum kernel called for 512 (or threads) elements at a time
+    // CPU maintains maximum of all groups-of-512
+    for (int tile = numTiles; tile > 0; tile -= threads) {
+        float newmax = 0;
+        dim3 dimBlock(threads, 1, 1);
+        dim3 dimGrid(1, 1);
+
+        // Compute maximum of arrays maxhd and maxvd
+        // (for elements in range [tile-threads .. tile-1])
+        int start = tile - threads;
+        // use element range [0 .. threads-1], if tile-threads < 0
+        if (start < 0) start = 0;
 //   cout << "Call kernel to compute time step " << start << flush << endl;
-     kernelMaximum<<<dimGrid,dimBlock>>>(maxhd,maxvd,start,threads);
-     checkCUDAError("compute maximum height and velocity");
+        kernelMaximum << < dimGrid, dimBlock >> > (maxhd, maxvd, start, threads);
+        checkCUDAError("compute maximum height and velocity");
 
-     cudaMemcpy(&newmax,maxhd, sizeof(float), cudaMemcpyDeviceToHost);
-  checkCUDAError("memory of hmax not transferred");
-     if (newmax>hmax) hmax = newmax;
-     cudaMemcpy(&newmax,maxvd, sizeof(float), cudaMemcpyDeviceToHost);
-  checkCUDAError("memory of vmax not transferred");
-     if (newmax>vmax) vmax = newmax;
-     
-#ifdef DBG
-     cout << "Current maxmimum of tile " << start << ":"
-          << hmax << ',' << vmax << endl << flush;
-#endif
-  };
+        cudaMemcpy(&newmax, maxhd, sizeof(float), cudaMemcpyDeviceToHost);
+        checkCUDAError("memory of hmax not transferred");
+        if (newmax > hmax) hmax = newmax;
+        cudaMemcpy(&newmax, maxvd, sizeof(float), cudaMemcpyDeviceToHost);
+        checkCUDAError("memory of vmax not transferred");
+        if (newmax > vmax) vmax = newmax;
 
 #ifdef DBG
-  cout << "Computed Time step (CUDA): " 
-     << " from " << hmax << " and " << vmax << " -> "
-     << meshSize/(sqrt(g*hmax) + vmax) << endl << flush;
+        cout << "Current maxmimum of tile " << start << ":"
+             << hmax << ',' << vmax << endl << flush;
 #endif
-  
-  // sqrt(g*hmax) + vmax is the velocity of a characteristic shallow-water wave
-  // such that a wave must not propagate farther than dx in a single time step
-  // (uses 0.5 as a pessimistic factor to reduce time step size)
-  maxTimestep = 0.5*meshSize/(sqrt(g*hmax) + vmax);
+    };
+
+#ifdef DBG
+    cout << "Computed Time step (CUDA): "
+       << " from " << hmax << " and " << vmax << " -> "
+       << meshSize/(sqrt(g*hmax) + vmax) << endl << flush;
+#endif
+
+    // sqrt(g*hmax) + vmax is the velocity of a characteristic shallow-water wave
+    // such that a wave must not propagate farther than dx in a single time step
+    // (uses 0.5 as a pessimistic factor to reduce time step size)
+    maxTimestep = 0.5 * meshSize / (sqrt(g * hmax) + vmax);
 }
 
 
@@ -187,11 +193,11 @@ void SWE_RusanovBlockCUDA::computeMaxTimestepCUDA() {
  */
 void SWE_RusanovBlockCUDA::simulateTimestep(float dt) {
 
-  // compute the numerical fluxes on all edges
-  computeNumericalFluxes();
+    // compute the numerical fluxes on all edges
+    computeNumericalFluxes();
 
-  // update the unknowns according to an Euler timestep
-  updateUnknowns(dt);
+    // update the unknowns according to an Euler timestep
+    updateUnknowns(dt);
 
 }
 
@@ -205,22 +211,22 @@ void SWE_RusanovBlockCUDA::simulateTimestep(float dt) {
  */
 __host__
 float SWE_RusanovBlockCUDA::simulate(float tStart, float tEnd) {
-  float t = tStart;
-  do {
-     // set values in ghost cells:
-     setGhostLayer();
-     
-     // execute Euler time step:
-     simulateTimestep(maxTimestep);
+    float t = tStart;
+    do {
+        // set values in ghost cells:
+        setGhostLayer();
 
-     t += maxTimestep;
+        // execute Euler time step:
+        simulateTimestep(maxTimestep);
+
+        t += maxTimestep;
 
 #ifdef DBG
-     cout << "Simulation at time " << t << endl << flush;
+        cout << "Simulation at time " << t << endl << flush;
 #endif
-  } while(t < tEnd);
+    } while (t < tEnd);
 
-  return t;
+    return t;
 }
 
 /**
@@ -238,21 +244,21 @@ float SWE_RusanovBlockCUDA::simulate(float tStart, float tEnd) {
 __host__
 void SWE_RusanovBlockCUDA::updateUnknowns(float dt) {
 
-  dim3 dimBlock(TILE_SIZE,TILE_SIZE);
-  dim3 dimGrid(nx/TILE_SIZE,ny/TILE_SIZE);
+    dim3 dimBlock(TILE_SIZE, TILE_SIZE);
+    dim3 dimGrid(nx / TILE_SIZE, ny / TILE_SIZE);
 #ifdef DBG
-cout << "Call kernel for Euler timestep " << flush << endl;
+    cout << "Call kernel for Euler timestep " << flush << endl;
 #endif
-  kernelEulerTimestep<<<dimGrid,dimBlock>>>(hd,hud,hvd,
-                                            Fhd,Fhud,Fhvd,Ghd,Ghud,Ghvd,
-              Bxd,Byd,
-              maxhd,maxvd,
-              nx,ny,dt,1.0f/dx,1.0f/dy);
+    kernelEulerTimestep << < dimGrid, dimBlock >> > (hd, hud, hvd,
+            Fhd, Fhud, Fhvd, Ghd, Ghud, Ghvd,
+            Bxd, Byd,
+            maxhd, maxvd,
+            nx, ny, dt, 1.0f / dx, 1.0f / dy);
 
 
-  computeMaxTimestepCUDA();
+    computeMaxTimestepCUDA();
 
-  synchCopyLayerBeforeRead();
+    synchCopyLayerBeforeRead();
 }
 
 /**
@@ -260,37 +266,37 @@ cout << "Call kernel for Euler timestep " << flush << endl;
  */
 void SWE_RusanovBlockCUDA::computeNumericalFluxes() {
 
-  // time step required to compute Lax Friedrichs constant dx/dt
-  float dt = 2*maxTimestep;
+    // time step required to compute Lax Friedrichs constant dx/dt
+    float dt = 2 * maxTimestep;
 
-  // compute bathymetry source terms (depend on h)
-  computeBathymetrySources();
+    // compute bathymetry source terms (depend on h)
+    computeBathymetrySources();
 
-  // compute F-fluxes, i.e. all fluxes in x-direction (on left/right edges)
-  dim3 dimBlock(TILE_SIZE,TILE_SIZE);
-  dim3 dimGrid(nx/TILE_SIZE,ny/TILE_SIZE);
+    // compute F-fluxes, i.e. all fluxes in x-direction (on left/right edges)
+    dim3 dimBlock(TILE_SIZE, TILE_SIZE);
+    dim3 dimGrid(nx / TILE_SIZE, ny / TILE_SIZE);
 #ifdef DBG
-cout << "Call kernel to compute F-fluxes " << flush << endl;
+    cout << "Call kernel to compute F-fluxes " << flush << endl;
 #endif
-  kernelComputeFluxesF<<<dimGrid,dimBlock>>>(hd,hud,hvd, Fhd,Fhud,Fhvd,
-            ny,g,dx/dt,1);
+    kernelComputeFluxesF << < dimGrid, dimBlock >> > (hd, hud, hvd, Fhd, Fhud, Fhvd,
+            ny, g, dx / dt, 1);
 
-  dim3 dimLeftBlock(1,TILE_SIZE);
-  dim3 dimLeftGrid(1,ny/TILE_SIZE);
-  kernelComputeFluxesF<<<dimLeftGrid,dimLeftBlock>>>(hd,hud,hvd, Fhd,Fhud,Fhvd,
-                 ny,g,dx/dt,0);
-  
-  // compute G-fluxes, i.e. all fluxes in y-direction (on top/bottom edges)
+    dim3 dimLeftBlock(1, TILE_SIZE);
+    dim3 dimLeftGrid(1, ny / TILE_SIZE);
+    kernelComputeFluxesF << < dimLeftGrid, dimLeftBlock >> > (hd, hud, hvd, Fhd, Fhud, Fhvd,
+            ny, g, dx / dt, 0);
+
+    // compute G-fluxes, i.e. all fluxes in y-direction (on top/bottom edges)
 #ifdef DBG
-cout << "Call kernel to compute G-fluxes " << flush << endl;
+    cout << "Call kernel to compute G-fluxes " << flush << endl;
 #endif
-  kernelComputeFluxesG<<<dimGrid,dimBlock>>>(hd,hud,hvd, Ghd,Ghud,Ghvd,
-            ny,g,dy/dt,1);
+    kernelComputeFluxesG << < dimGrid, dimBlock >> > (hd, hud, hvd, Ghd, Ghud, Ghvd,
+            ny, g, dy / dt, 1);
 
-  dim3 dimTopBlock(TILE_SIZE,1);
-  dim3 dimTopGrid(nx/TILE_SIZE,1);
-  kernelComputeFluxesG<<<dimTopGrid,dimTopBlock>>>(hd,hud,hvd, Ghd,Ghud,Ghvd,
-               ny,g,dy/dt,0);
+    dim3 dimTopBlock(TILE_SIZE, 1);
+    dim3 dimTopGrid(nx / TILE_SIZE, 1);
+    kernelComputeFluxesG << < dimTopGrid, dimTopBlock >> > (hd, hud, hvd, Ghd, Ghud, Ghvd,
+            ny, g, dy / dt, 0);
 
 // cout << (*this) << flush;
 
@@ -301,12 +307,12 @@ cout << "Call kernel to compute G-fluxes " << flush << endl;
  */
 void SWE_RusanovBlockCUDA::computeBathymetrySources() {
 
-  dim3 dimBlock(TILE_SIZE,TILE_SIZE);
-  dim3 dimGrid(nx/TILE_SIZE,ny/TILE_SIZE);
+    dim3 dimBlock(TILE_SIZE, TILE_SIZE);
+    dim3 dimGrid(nx / TILE_SIZE, ny / TILE_SIZE);
 #ifdef DBG
-cout << "Call kernel to compute bathymetry sources" << flush << endl;
+    cout << "Call kernel to compute bathymetry sources" << flush << endl;
 #endif
-  kernelComputeBathymetrySources<<<dimGrid,dimBlock>>>(hd,bd,Bxd,Byd,ny,g);
+    kernelComputeBathymetrySources << < dimGrid, dimBlock >> > (hd, bd, Bxd, Byd, ny, g);
 
 // cout << (*this) << flush;
 
@@ -319,56 +325,56 @@ cout << "Call kernel to compute bathymetry sources" << flush << endl;
  * overload operator<< such that data can be written via cout <<
  * -> needs to be declared as friend to be allowed to access private data
  */
-ostream& operator<<(ostream& os, const SWE_RusanovBlockCUDA& swe) {
+ostream &operator<<(ostream &os, const SWE_RusanovBlockCUDA &swe) {
 
-  os << "Grid dimensions: " << swe.nx << "x" << swe.ny << endl;
+    os << "Grid dimensions: " << swe.nx << "x" << swe.ny << endl;
 
-  cout << "Water height:" << endl;
-  for(int j=swe.ny+1; j>=0; j--) {
-    for(int i=0; i<=swe.nx+1; i++) {
-      os << swe.h[i][j] << "  ";
+    cout << "Water height:" << endl;
+    for (int j = swe.ny + 1; j >= 0; j--) {
+        for (int i = 0; i <= swe.nx + 1; i++) {
+            os << swe.h[i][j] << "  ";
+        };
+        os << endl;
     };
-    os << endl;
-  };
 
-  cout << "Momentum in x-direction:" << endl;
-  for(int j=swe.ny+1; j>=0; j--) {
-    for(int i=0; i<=swe.nx+1; i++) {
-      os << swe.hu[i][j] << "  ";
+    cout << "Momentum in x-direction:" << endl;
+    for (int j = swe.ny + 1; j >= 0; j--) {
+        for (int i = 0; i <= swe.nx + 1; i++) {
+            os << swe.hu[i][j] << "  ";
+        };
+        os << endl;
     };
-    os << endl;
-  };
 
-  cout << "Momentum in y-direction:" << endl;
-  for(int j=swe.ny+1; j>=0; j--) {
-    for(int i=0; i<=swe.nx+1; i++) {
-      os << swe.hv[i][j] << "  ";
+    cout << "Momentum in y-direction:" << endl;
+    for (int j = swe.ny + 1; j >= 0; j--) {
+        for (int i = 0; i <= swe.nx + 1; i++) {
+            os << swe.hv[i][j] << "  ";
+        };
+        os << endl;
     };
-    os << endl;
-  };
 
 #ifdef DBG
-  cout << "Ghost/Copy Layer bottom:" << endl;
-     for(int i=0; i<=swe.nx+1; i++) {
-       os << swe.bottomGhostLayer->h[i]  << "  "; 
-       os << swe.bottomGhostLayer->hu[i] << "  ";
-       os << swe.bottomGhostLayer->hv[i] << "  ";
-       os << swe.bottomCopyLayer->h[i]  << "  ";  
-       os << swe.bottomCopyLayer->hu[i] << "  "; 
-       os << swe.bottomCopyLayer->hv[i] << "  "; 
-       cout << endl;
-     };
-  
-  cout << "Ghost/Copy Layer top:" << endl;
-     for(int i=0; i<=swe.nx+1; i++) {
-       os << swe.topGhostLayer->h[i]  << "  "; 
-       os << swe.topGhostLayer->hu[i] << "  ";
-       os << swe.topGhostLayer->hv[i] << "  ";
-       os << swe.topCopyLayer->h[i]  << "  ";  
-       os << swe.topCopyLayer->hu[i] << "  "; 
-       os << swe.topCopyLayer->hv[i] << "  "; 
-       cout << endl;
-     };
+    cout << "Ghost/Copy Layer bottom:" << endl;
+       for(int i=0; i<=swe.nx+1; i++) {
+         os << swe.bottomGhostLayer->h[i]  << "  ";
+         os << swe.bottomGhostLayer->hu[i] << "  ";
+         os << swe.bottomGhostLayer->hv[i] << "  ";
+         os << swe.bottomCopyLayer->h[i]  << "  ";
+         os << swe.bottomCopyLayer->hu[i] << "  ";
+         os << swe.bottomCopyLayer->hv[i] << "  ";
+         cout << endl;
+       };
+
+    cout << "Ghost/Copy Layer top:" << endl;
+       for(int i=0; i<=swe.nx+1; i++) {
+         os << swe.topGhostLayer->h[i]  << "  ";
+         os << swe.topGhostLayer->hu[i] << "  ";
+         os << swe.topGhostLayer->hv[i] << "  ";
+         os << swe.topCopyLayer->h[i]  << "  ";
+         os << swe.topCopyLayer->hu[i] << "  ";
+         os << swe.topCopyLayer->hv[i] << "  ";
+         cout << endl;
+       };
 #endif
 
 
@@ -421,9 +427,9 @@ ostream& operator<<(ostream& os, const SWE_RusanovBlockCUDA& swe) {
 //     os << endl;
 //   };
 // #endif
-  
-  os << flush;
 
-  return os;
+    os << flush;
+
+    return os;
 }
 

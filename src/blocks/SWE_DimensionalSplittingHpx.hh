@@ -6,7 +6,6 @@
 #define SWE_BENCHMARK_SWE_DIMENSIONALSPLITTINGHPX_HH
 
 
-
 #include <limits.h>
 #include <ctime>
 #include <time.h>
@@ -15,14 +14,17 @@
 #include "tools/Float2DNative.hh"
 
 #include "tools/Communicator.hpp"
-#if WAVE_PROPAGATION_SOLVER==0
+
+#if WAVE_PROPAGATION_SOLVER == 0
 //#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
-#elif WAVE_PROPAGATION_SOLVER==1
+
+#elif WAVE_PROPAGATION_SOLVER == 1
 #include "solvers/FWave.hpp"
 #elif WAVE_PROPAGATION_SOLVER==2
 #include "solvers/AugRie.hpp"
 #endif
+
 #include "writer/NetCdfWriter.hh"
 #include <hpx/include/compute.hpp>
 #include <hpx/include/lcos.hpp>
@@ -31,7 +33,8 @@
 #include <hpx/include/parallel_algorithm.hpp>
 #include <hpx/include/iostreams.hpp>
 #include "tools/CollectorHpx.hpp"
-template <typename T>
+
+template<typename T>
 struct copyLayerStruct {
 
     int size;
@@ -42,9 +45,9 @@ struct copyLayerStruct {
     T Hu;
     T Hv;
     float timestep = 0;
-    template <typename Archive>
-    void serialize(Archive & ar, unsigned)
-    {
+
+    template<typename Archive>
+    void serialize(Archive &ar, unsigned) {
         ar & size;
         ar & B;
         ar & H;
@@ -59,11 +62,14 @@ class SWE_DimensionalSplittingHpx : public SWE_Block<Float2DNative> {
 public:
 
 
-    typedef communicator<copyLayerStruct<std::vector<float>>,SWE_DimensionalSplittingHpx> communicator_type;
-    friend  communicator_type;
+    typedef communicator<copyLayerStruct<std::vector<float>>, SWE_DimensionalSplittingHpx> communicator_type;
+    friend communicator_type;
+
     // Constructor/Destructor
     SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
-                                float cellSizeVertical, float originX, float originY ,bool localTimestepping ,std::string name);
+                                float cellSizeVertical, float originX, float originY, bool localTimestepping,
+                                std::string name);
+
     ~SWE_DimensionalSplittingHpx() {};
 
     // Interface methods
@@ -71,26 +77,31 @@ public:
 
 
     void computeXSweep();
+
     void computeYSweep();
+
     void computeNumericalFluxes();
+
     void updateUnknowns(float dt);
 
-    copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary,bool bath);
+    copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary, bool bath);
 
     void connectNeighbours(communicator_type comm);
+
     void exchangeBathymetry();
 
     CollectorHpx collector;
     NetCdfWriter writer;
     float maxTimestepGlobal;
+
     void writeTimestep(float timestep);
 
 private:
-#if WAVE_PROPAGATION_SOLVER==0
+#if WAVE_PROPAGATION_SOLVER == 0
     //! Hybrid solver (f-wave + augmented)
     //solver::Hybrid<float> solver;
     solver::HLLEFun<float> solver;
-#elif WAVE_PROPAGATION_SOLVER==1
+#elif WAVE_PROPAGATION_SOLVER == 1
     //! F-wave Riemann solver
     solver::FWave<float> solver;
 #elif WAVE_PROPAGATION_SOLVER==2

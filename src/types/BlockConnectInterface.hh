@@ -7,16 +7,16 @@
 #include <upcxx/upcxx.hpp>
 #endif
 
-template <typename T>
+template<typename T>
 struct BlockConnectInterface {
-	Boundary boundary;
-	int size;
-	int stride;
-	int startIndex;
-	T pointerH;
-	T pointerB;
-	T pointerHu;
-	T pointerHv;
+    Boundary boundary;
+    int size;
+    int stride;
+    int startIndex;
+    T pointerH;
+    T pointerB;
+    T pointerHu;
+    T pointerHv;
     T pointerTimestep;
 #ifdef UPCXX
     upcxx::global_ptr<std::atomic<bool>> dataTransmitted;

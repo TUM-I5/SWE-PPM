@@ -38,189 +38,180 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-namespace tools
-{
+namespace tools {
 
-using namespace std;
+    using namespace std;
 
-class ProgressBar
-{
-private:
-	/** Local rank (we only do work on rank 0) */
-	int m_rank;
+    class ProgressBar {
+    private:
+        /** Local rank (we only do work on rank 0) */
+        int m_rank;
 
-	/** Total amount of work */
-	float m_totalWork;
+        /** Total amount of work */
+        float m_totalWork;
 
-	/** Progress bar initialization time */
-	time_t m_startTime;
+        /** Progress bar initialization time */
+        time_t m_startTime;
 
-	/** Terminal size */
-	unsigned int m_terminalSize;
+        /** Terminal size */
+        unsigned int m_terminalSize;
 
-	/** Rotating bar char */
-	unsigned char m_rotatingBar;
+        /** Rotating bar char */
+        unsigned char m_rotatingBar;
 
-public:
-	ProgressBar(float totalWork = 1., int rank = 0)
-		: m_rank(rank),
-		  m_totalWork(totalWork),
-		  m_startTime(time(0)),
-		  m_rotatingBar(0)
-	{
-		if (rank != 0)
-			return;
+    public:
+        ProgressBar(float totalWork = 1., int rank = 0)
+                : m_rank(rank),
+                  m_totalWork(totalWork),
+                  m_startTime(time(0)),
+                  m_rotatingBar(0) {
+            if (rank != 0)
+                return;
 
 #ifdef TIOCGSIZE
-		struct ttysize ts;
-		ioctl(STDIN_FILENO, TIOCGSIZE, &ts);
-		m_terminalSize = ts.ts_cols;
+            struct ttysize ts;
+            ioctl(STDIN_FILENO, TIOCGSIZE, &ts);
+            m_terminalSize = ts.ts_cols;
 #elif defined(TIOCGWINSZ)
-		struct winsize ts;
-		ioctl(STDIN_FILENO, TIOCGWINSZ, &ts);
-		m_terminalSize = ts.ws_col;
+            struct winsize ts;
+            ioctl(STDIN_FILENO, TIOCGWINSZ, &ts);
+            m_terminalSize = ts.ws_col;
 #else
-		m_terminalSize = 0;
+            m_terminalSize = 0;
 #endif
-		if (m_terminalSize > 300)
-			// Probably an error due to MPI
-			m_terminalSize = MIN_TERM_SIZE;
-	}
+            if (m_terminalSize > 300)
+                // Probably an error due to MPI
+                m_terminalSize = MIN_TERM_SIZE;
+        }
 
-	/**
-	 * @param done The amount of work already done
-	 */
-	void update(float done)
-	{
-		if (m_rank != 0 || m_terminalSize < MIN_TERM_SIZE)
-			return;
+        /**
+         * @param done The amount of work already done
+         */
+        void update(float done) {
+            if (m_rank != 0 || m_terminalSize < MIN_TERM_SIZE)
+                return;
 
-		unsigned int printed = 2;
-		std::cout << '\r';
-		printed += printTimeLeft(done);
-		std::cout << ' ';
-		printed += printPercentage(done);
-		std::cout << ' ';
-		printProgressBar(done, m_terminalSize-printed-2);
-		std::cout << ' ';
-		printRotatingBar();
-		std::cout << std::flush;
-	}
+            unsigned int printed = 2;
+            std::cout << '\r';
+            printed += printTimeLeft(done);
+            std::cout << ' ';
+            printed += printPercentage(done);
+            std::cout << ' ';
+            printProgressBar(done, m_terminalSize - printed - 2);
+            std::cout << ' ';
+            printRotatingBar();
+            std::cout << std::flush;
+        }
 
-	void clear()
-	{
-		if (m_rank != 0 || m_terminalSize < MIN_TERM_SIZE)
-			return;
+        void clear() {
+            if (m_rank != 0 || m_terminalSize < MIN_TERM_SIZE)
+                return;
 
-		std::cout << '\r';
-		for (unsigned int i = 0; i < m_terminalSize; i++)
-			std::cout << ' ';
-		std::cout << '\r';
-	}
+            std::cout << '\r';
+            for (unsigned int i = 0; i < m_terminalSize; i++)
+                std::cout << ' ';
+            std::cout << '\r';
+        }
 
-private:
-	/**
-	 * @return Number of characters printed
-	 */
-	unsigned int printTimeLeft(float done)
-	{
-		float timeLeft;
-		if (done <= 0)
-			timeLeft = std::numeric_limits<float>::max();
-		else
-			timeLeft = (time(0) - m_startTime) * (m_totalWork - done) / done;
+    private:
+        /**
+         * @return Number of characters printed
+         */
+        unsigned int printTimeLeft(float done) {
+            float timeLeft;
+            if (done <= 0)
+                timeLeft = std::numeric_limits<float>::max();
+            else
+                timeLeft = (time(0) - m_startTime) * (m_totalWork - done) / done;
 
-		std::cout << "Time left: ";
+            std::cout << "Time left: ";
 
-		if (timeLeft < 1) {
-			for (int i = 3; i < TIME_SIZE; i++)
-				std::cout << ' ';
-			std::cout << "< 1";
-		} else {
-			int digits = ceil(log(timeLeft)/log(10));
-			if (digits > TIME_SIZE) {
-				// Maximum number we can show
-				for (int i = 0; i < TIME_SIZE; i++)
-					std::cout << '9';
-			} else {
-				streamsize oldPrec = std::cout.precision();
-				std::ios::fmtflags oldFlags = std::cout.flags();
-				streamsize oldWidth = std::cout.width();
+            if (timeLeft < 1) {
+                for (int i = 3; i < TIME_SIZE; i++)
+                    std::cout << ' ';
+                std::cout << "< 1";
+            } else {
+                int digits = ceil(log(timeLeft) / log(10));
+                if (digits > TIME_SIZE) {
+                    // Maximum number we can show
+                    for (int i = 0; i < TIME_SIZE; i++)
+                        std::cout << '9';
+                } else {
+                    streamsize oldPrec = std::cout.precision();
+                    std::ios::fmtflags oldFlags = std::cout.flags();
+                    streamsize oldWidth = std::cout.width();
 
-				std::cout.precision(std::max(0, TIME_SIZE-digits-2));
-				std::cout.setf(std::ios::fixed);
-				std::cout.width(TIME_SIZE);
+                    std::cout.precision(std::max(0, TIME_SIZE - digits - 2));
+                    std::cout.setf(std::ios::fixed);
+                    std::cout.width(TIME_SIZE);
 
-				std::cout << timeLeft;
+                    std::cout << timeLeft;
 
-				std::cout.precision(oldPrec);
-				std::cout.flags(oldFlags);
-				std::cout.width(oldWidth);
-			}
-		}
+                    std::cout.precision(oldPrec);
+                    std::cout.flags(oldFlags);
+                    std::cout.width(oldWidth);
+                }
+            }
 
-		std::cout << " sec";
+            std::cout << " sec";
 
-		return 11+TIME_SIZE+4;
-	}
+            return 11 + TIME_SIZE + 4;
+        }
 
-	/**
-	 * @return Number of characters printed
-	 */
-	unsigned int printPercentage(float done)
-	{
-		int per = floor(done/m_totalWork*100);
+        /**
+         * @return Number of characters printed
+         */
+        unsigned int printPercentage(float done) {
+            int per = floor(done / m_totalWork * 100);
 
-		std::cout << '(';
+            std::cout << '(';
 
-		streamsize oldWidth = std::cout.width();
+            streamsize oldWidth = std::cout.width();
 
-		std::cout.width(3);
-		std::cout << per;
+            std::cout.width(3);
+            std::cout << per;
 
-		std::cout.width(oldWidth);
+            std::cout.width(oldWidth);
 
-		std::cout << "% done)";
+            std::cout << "% done)";
 
-		return 1+3+7;
-	}
+            return 1 + 3 + 7;
+        }
 
-	void printProgressBar(float done, unsigned int size)
-	{
-		if (size < 3)
-			return;
+        void printProgressBar(float done, unsigned int size) {
+            if (size < 3)
+                return;
 
-		size -= 2; // leave space for []
-		unsigned int per = floor(done/m_totalWork * size);
+            size -= 2; // leave space for []
+            unsigned int per = floor(done / m_totalWork * size);
 
-		std::cout << '[';
+            std::cout << '[';
 
-		for (unsigned int i = 0; i < per; i++)
-			std::cout << '=';
+            for (unsigned int i = 0; i < per; i++)
+                std::cout << '=';
 
-		if (per < size) {
-			std::cout << '>';
-			per++;
-		}
+            if (per < size) {
+                std::cout << '>';
+                per++;
+            }
 
-		for (unsigned int i = per; i < size; i++)
-			std::cout << ' ';
+            for (unsigned int i = per; i < size; i++)
+                std::cout << ' ';
 
-		std::cout << ']';
-	}
+            std::cout << ']';
+        }
 
-	void printRotatingBar()
-	{
-		static const char* CHARS = "|/-\\";
+        void printRotatingBar() {
+            static const char *CHARS = "|/-\\";
 
-		std::cout << CHARS[m_rotatingBar];
+            std::cout << CHARS[m_rotatingBar];
 
-		m_rotatingBar = (m_rotatingBar + 1) % 4;
-	}
+            m_rotatingBar = (m_rotatingBar + 1) % 4;
+        }
 
-	static const unsigned int MIN_TERM_SIZE = 80;
-	static const int TIME_SIZE = 8;
-};
+        static const unsigned int MIN_TERM_SIZE = 80;
+        static const int TIME_SIZE = 8;
+    };
 
 }
 

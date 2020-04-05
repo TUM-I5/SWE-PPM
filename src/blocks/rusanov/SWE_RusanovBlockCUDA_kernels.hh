@@ -33,30 +33,30 @@
 //******************************************************************
 
 __global__
-void kernelComputeFluxesF(float* hd, float* hud, float* hvd,
-                          float* Fhd, float* Fhud, float* Fhvd,
+void kernelComputeFluxesF(float *hd, float *hud, float *hvd,
+                          float *Fhd, float *Fhud, float *Fhvd,
                           int ny, float g, float llf, int istart);
 
 __global__
-void kernelComputeFluxesG(float* hd, float* hud, float* hvd,
-                          float* Ghd, float* Ghud, float* Ghvd,
+void kernelComputeFluxesG(float *hd, float *hud, float *hvd,
+                          float *Ghd, float *Ghud, float *Ghvd,
                           int ny, float g, float llf, int jstart);
 
 __global__
-void kernelComputeBathymetrySources(float* hd, float* bd, float* Bxd, float* Byd, 
+void kernelComputeBathymetrySources(float *hd, float *bd, float *Bxd, float *Byd,
                                     int ny, float g);
 
 __global__
-void kernelEulerTimestep(float* hd, float* hud, float* hvd,
-                         float* Fhd, float* Fhud, float* Fhvd,
-                         float* Ghd, float* Ghud, float* Ghvd,
-			 float* Bxd, float* Byd,
-			 float* maxhd, float* maxvd,
+void kernelEulerTimestep(float *hd, float *hud, float *hvd,
+                         float *Fhd, float *Fhud, float *Fhvd,
+                         float *Ghd, float *Ghud, float *Ghvd,
+                         float *Bxd, float *Byd,
+                         float *maxhd, float *maxvd,
                          int nx, int ny, float dt, float dxi, float dyi);
 
 
-__global__ 
-void kernelMaximum(float* maxhd, float* maxvd, int start, int size);
+__global__
+void kernelMaximum(float *maxhd, float *maxvd, int start, int size);
 
 #endif
 

@@ -45,9 +45,9 @@
  */
 inline std::string generateFileName(std::string baseName, int timeStep) {
 
-	std::ostringstream FileName;
-	FileName << baseName <<timeStep<<".vtk";
-	return FileName.str();
+    std::ostringstream FileName;
+    FileName << baseName << timeStep << ".vtk";
+    return FileName.str();
 };
 
 /**
@@ -61,14 +61,14 @@ inline std::string generateFileName(std::string baseName, int timeStep) {
  *
  * @deprecated
  */
-inline std::string generateFileName( std::string i_baseName,
-		int i_blockPositionX, int i_blockPositionY,
-		std::string i_fileExtension=".nc" ) {
+inline std::string generateFileName(std::string i_baseName,
+                                    int i_blockPositionX, int i_blockPositionY,
+                                    std::string i_fileExtension = ".nc") {
 
-	std::ostringstream l_fileName;
+    std::ostringstream l_fileName;
 
-	l_fileName << i_baseName << "_" << i_blockPositionX << i_blockPositionY << i_fileExtension;
-	return l_fileName.str();
+    l_fileName << i_baseName << "_" << i_blockPositionX << i_blockPositionY << i_fileExtension;
+    return l_fileName.str();
 };
 
 /**
@@ -79,11 +79,12 @@ inline std::string generateFileName( std::string i_baseName,
  *
  *  @deprecated
  */
-inline std::string generateFileName(std::string baseName, int timeStep, int block_X, int block_Y, std::string i_fileExtension=".vts") {
+inline std::string
+generateFileName(std::string baseName, int timeStep, int block_X, int block_Y, std::string i_fileExtension = ".vts") {
 
-	std::ostringstream FileName;
-	FileName << baseName <<"_"<< block_X<<"_"<<block_Y<<"_"<<timeStep<<i_fileExtension;
-	return FileName.str();
+    std::ostringstream FileName;
+    FileName << baseName << "_" << block_X << "_" << block_Y << "_" << timeStep << i_fileExtension;
+    return FileName.str();
 };
 
 /**
@@ -95,13 +96,12 @@ inline std::string generateFileName(std::string baseName, int timeStep, int bloc
  *
  * @return the output filename <b>without</b> timestep information and file extension
  */
-	inline
-std::string generateBaseFileName(std::string const &i_baseName, int i_blockPositionX , int i_blockPositionY)
-{
-	std::ostringstream l_fileName;
+inline
+std::string generateBaseFileName(std::string const &i_baseName, int i_blockPositionX, int i_blockPositionY) {
+    std::ostringstream l_fileName;
 
-	l_fileName << i_baseName << "_" << i_blockPositionX << i_blockPositionY;
-	return l_fileName.str();
+    l_fileName << i_baseName << "_" << i_blockPositionX << i_blockPositionY;
+    return l_fileName.str();
 }
 
 /**
@@ -110,9 +110,9 @@ std::string generateBaseFileName(std::string const &i_baseName, int i_blockPosit
  */
 inline std::string generateContainerFileName(std::string baseName, int timeStep) {
 
-	std::ostringstream FileName;
-	FileName << baseName<<"_"<<timeStep<<".pvts";
-	return FileName.str();
+    std::ostringstream FileName;
+    FileName << baseName << "_" << timeStep << ".pvts";
+    return FileName.str();
 };
 
 

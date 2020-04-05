@@ -31,32 +31,31 @@
 
 class VtkWriter : public Writer {
 private:
-	//! cell size
-	float dX, dY;
+    //! cell size
+    float dX, dY;
 
-	float offsetX, offsetY;
+    float offsetX, offsetY;
 
 public:
-	VtkWriter( const std::string &i_fileName,
-			   const Float2D &i_b,
-			   const BoundarySize &i_boundarySize,
-			   int i_nX, int i_nY,
-			   float i_dX, float i_dY,
-			   int i_offsetX = 0, int i_offsetY = 0);
+    VtkWriter(const std::string &i_fileName,
+              const Float2D &i_b,
+              const BoundarySize &i_boundarySize,
+              int i_nX, int i_nY,
+              float i_dX, float i_dY,
+              int i_offsetX = 0, int i_offsetY = 0);
 
     // writes the unknowns at a given time step to a vtk file
-    void writeTimeStep( const Float2D &i_h,
-                        const Float2D &i_hu,
-                        const Float2D &i_hv,
-                        float i_time);
+    void writeTimeStep(const Float2D &i_h,
+                       const Float2D &i_hu,
+                       const Float2D &i_hv,
+                       float i_time);
 
 private:
-    std::string generateFileName()
-    {
-    	std::ostringstream name;
+    std::string generateFileName() {
+        std::ostringstream name;
 
-    	name << fileName << '.' << timeStep << ".vts";
-    	return name.str();
+        name << fileName << '.' << timeStep << ".vts";
+        return name.str();
     }
 };
 

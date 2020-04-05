@@ -39,9 +39,11 @@
 //  0: Hybrid
 //  1: f-Wave
 //  2: Approximate Augmented Riemann solver
-#if WAVE_PROPAGATION_SOLVER==0
+#if WAVE_PROPAGATION_SOLVER == 0
+
 #include "solvers/Hybrid.hpp"
-#elif WAVE_PROPAGATION_SOLVER==1
+
+#elif WAVE_PROPAGATION_SOLVER == 1
 #include "solvers/FWave.hpp"
 #elif WAVE_PROPAGATION_SOLVER==2
 #include "solvers/AugRie.hpp"
@@ -57,14 +59,14 @@
  *  F-Wave, Apprximate Augmented Riemann, Hybrid (f-wave + augmented).
  *  (details can be found in the corresponding source files)
  */
-class SWE_WavePropagationBlock: public SWE_Block {
+class SWE_WavePropagationBlock : public SWE_Block {
 
 private:
     //specify the wave propagation solver
-#if WAVE_PROPAGATION_SOLVER==0
+#if WAVE_PROPAGATION_SOLVER == 0
     //! Hybrid solver (f-wave + augmented)
     solver::Hybrid<float> wavePropagationSolver;
-#elif WAVE_PROPAGATION_SOLVER==1
+#elif WAVE_PROPAGATION_SOLVER == 1
     //! F-wave Riemann solver
     solver::FWave<float> wavePropagationSolver;
 #elif WAVE_PROPAGATION_SOLVER==2
@@ -92,16 +94,17 @@ private:
     //! net-updates for the y-momentums of the cells above the horizontal edges.
     Float2D hvNetUpdatesAbove;
 
-  public:
+public:
     //constructor of a SWE_WavePropagationBlock.
     SWE_WavePropagationBlock(int l_nx, int l_ny,
-    					float l_dx, float l_dy);
+                             float l_dx, float l_dy);
 
     //computes the net-updates for the block
     void computeNumericalFluxes();
 
     //update the cells
     void updateUnknowns(float dt);
+
     void updateUnknownsRow(float dt, int i);
 
     /**

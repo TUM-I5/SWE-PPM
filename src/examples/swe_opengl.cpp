@@ -61,49 +61,46 @@
 	The simulation (model) advances stepwise, the visualization (view) 
 	displays then the updated data.
 */
-int main(int argc, char *argv[])
-{  
-	int done = 0;
+int main(int argc, char *argv[]) {
+    int done = 0;
 
-	tools::Logger::logger.printStartMessage();
+    tools::Logger::logger.printStartMessage();
 
-	// Initialize visualization
-	Visualization visualization(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
-	printf("Initialized OpenGL window...\n\n");
+    // Initialize visualization
+    Visualization visualization(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
+    printf("Initialized OpenGL window...\n\n");
 
-	// Initialize simulation
-	printf("Init simulation\n\n");
-	Simulation sim;
-	printf("Init visualisation\n\n");
-	visualization.init(sim);
+    // Initialize simulation
+    printf("Init simulation\n\n");
+    Simulation sim;
+    printf("Init visualisation\n\n");
+    visualization.init(sim);
 
-	// Initialize controller
-	Controller controller(&sim, &visualization);
-	
-	printf("Start simulation\n\n");
+    // Initialize controller
+    Controller controller(&sim, &visualization);
+
+    printf("Start simulation\n\n");
     // sim.saveToFile();
-	// Enter the main loop
-	while ( ! done ) 
-	{
-		// Handle events
-		done = controller.handleEvents();
-		if (controller.isPaused()) {
-			// We're paused, only render new display
-			visualization.renderDisplay();
-		}
-		else if (controller.hasFocus()) {
-			// Simulate, update visualization data
-			sim.runCuda(visualization.getCudaWaterSurfacePtr(), visualization.getCudaNormalsPtr());
-			// Render new data
-			visualization.renderDisplay();
-		}
-	}
+    // Enter the main loop
+    while (!done) {
+        // Handle events
+        done = controller.handleEvents();
+        if (controller.isPaused()) {
+            // We're paused, only render new display
+            visualization.renderDisplay();
+        } else if (controller.hasFocus()) {
+            // Simulate, update visualization data
+            sim.runCuda(visualization.getCudaWaterSurfacePtr(), visualization.getCudaNormalsPtr());
+            // Render new data
+            visualization.renderDisplay();
+        }
+    }
 
-	// Clean everything up
-	visualization.cleanUp();
-        
-	// delete scene;
-	// delete splash;
-	
-	return 0;
+    // Clean everything up
+    visualization.cleanUp();
+
+    // delete scene;
+    // delete splash;
+
+    return 0;
 }

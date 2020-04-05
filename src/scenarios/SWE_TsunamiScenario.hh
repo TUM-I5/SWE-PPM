@@ -56,160 +56,169 @@
 #include "tools/Float2D.hh"
 
 class SWE_TsunamiScenario : public SWE_Scenario {
-	protected:
-		InputGridSpecification bathymetryGrid;
-		InputGridSpecification displacementGrid;
+protected:
+    InputGridSpecification bathymetryGrid;
+    InputGridSpecification displacementGrid;
 
-		/*
-		 * The function mapping a 1D coordinate to an index w.r.t. to the original grid.
-		 * In order to do this, the origin of the coordinate (which maps to the index 0)
-		 * and the step size between two indices is needed (origin + i * width maps to index i).
-		 *
-		 * First, the offset of the point from the previous grid point is calculated
-		 * and then used to determine whether the point is sitting closer to the grid point
-		 * to its right or left (top or bottom).
-		 *
-		 * Then the grid point found to be closest is mapped to the corresponding index.
-		 *
-		 * @param position A 1D coordinate which is to be mapped to the index of the nearest data point w.r.t. to this dimension.
-		 * @param origin The real-world origin w.r.t. to the dimension at hand.
-		 * @param width The distance between two real-world data point along the dimension at hand.
-		 */
-		int getNearestIndex(float position, float origin, float width) {
-			float offset = fmod(position, width);
-			float nextGridPoint = position + width - offset;
-			float previousGridPoint = position - offset;
+    /*
+     * The function mapping a 1D coordinate to an index w.r.t. to the original grid.
+     * In order to do this, the origin of the coordinate (which maps to the index 0)
+     * and the step size between two indices is needed (origin + i * width maps to index i).
+     *
+     * First, the offset of the point from the previous grid point is calculated
+     * and then used to determine whether the point is sitting closer to the grid point
+     * to its right or left (top or bottom).
+     *
+     * Then the grid point found to be closest is mapped to the corresponding index.
+     *
+     * @param position A 1D coordinate which is to be mapped to the index of the nearest data point w.r.t. to this dimension.
+     * @param origin The real-world origin w.r.t. to the dimension at hand.
+     * @param width The distance between two real-world data point along the dimension at hand.
+     */
+    int getNearestIndex(float position, float origin, float width) {
+        float offset = fmod(position, width);
+        float nextGridPoint = position + width - offset;
+        float previousGridPoint = position - offset;
 
-			// Offset needed to shift the first grid point to index zero
-			// The first grid point will sit in the middle of the first cell: origin + width / 2
-			float firstPointOffset = (origin + width / 2) / width;
+        // Offset needed to shift the first grid point to index zero
+        // The first grid point will sit in the middle of the first cell: origin + width / 2
+        float firstPointOffset = (origin + width / 2) / width;
 
-			int nextGridPointIndex = nextGridPoint / width - firstPointOffset;
-			int previousGridPointIndex = previousGridPoint / width - firstPointOffset;
-			int nearestIndex = (offset >= width / 2) ? nextGridPointIndex : previousGridPointIndex;
-			return nearestIndex;
-		}
+        int nextGridPointIndex = nextGridPoint / width - firstPointOffset;
+        int previousGridPointIndex = previousGridPoint / width - firstPointOffset;
+        int nearestIndex = (offset >= width / 2) ? nextGridPointIndex : previousGridPointIndex;
+        return nearestIndex;
+    }
 
-		size_t nx;
-		size_t ny;
-		float dx;
-		float dy;
-		float originX;
-		float originY;
-		int simulatedTimesteps;
-		float currentTime;
+    size_t nx;
+    size_t ny;
+    float dx;
+    float dy;
+    float originX;
+    float originY;
+    int simulatedTimesteps;
+    float currentTime;
 
-	public:
-		SWE_TsunamiScenario() {}
-		SWE_TsunamiScenario(const char* inputFileName, const char* displacementFileName) {
-			bathymetryGrid = readNetCdf(inputFileName);
-			displacementGrid = readNetCdf(displacementFileName);
+public:
+    SWE_TsunamiScenario() {}
 
-			// Assert that the displacement grid is subset of the bathymetry grid,
-			// other cases are undefined and do not make sense
-			assert(bathymetryGrid.originX <= displacementGrid.originX + 0.0001);
-			assert(bathymetryGrid.originY <= displacementGrid.originY + 0.0001);
-			assert(bathymetryGrid.originX + bathymetryGrid.nx * bathymetryGrid.dx
-					>= displacementGrid.originX + displacementGrid.nx * displacementGrid.dx - 0.0001);
-			assert(bathymetryGrid.originY + bathymetryGrid.ny * bathymetryGrid.dy
-					>= displacementGrid.originY + displacementGrid.ny * displacementGrid.dy - 0.0001);
+    SWE_TsunamiScenario(const char *inputFileName, const char *displacementFileName) {
+        bathymetryGrid = readNetCdf(inputFileName);
+        displacementGrid = readNetCdf(displacementFileName);
 
-			// Load metadata of the simulation domain to member variables
-			originX = bathymetryGrid.originX;
-			originY = bathymetryGrid.originY;
-			nx = bathymetryGrid.nx;
-			ny = bathymetryGrid.ny;
-			dx = bathymetryGrid.dx;
-			dy = bathymetryGrid.dy;
-			simulatedTimesteps = 0;
-			currentTime = 0.0;
-		}
+        // Assert that the displacement grid is subset of the bathymetry grid,
+        // other cases are undefined and do not make sense
+        assert(bathymetryGrid.originX <= displacementGrid.originX + 0.0001);
+        assert(bathymetryGrid.originY <= displacementGrid.originY + 0.0001);
+        assert(bathymetryGrid.originX + bathymetryGrid.nx * bathymetryGrid.dx
+               >= displacementGrid.originX + displacementGrid.nx * displacementGrid.dx - 0.0001);
+        assert(bathymetryGrid.originY + bathymetryGrid.ny * bathymetryGrid.dy
+               >= displacementGrid.originY + displacementGrid.ny * displacementGrid.dy - 0.0001);
 
-		~SWE_TsunamiScenario() {
-		}
+        // Load metadata of the simulation domain to member variables
+        originX = bathymetryGrid.originX;
+        originY = bathymetryGrid.originY;
+        nx = bathymetryGrid.nx;
+        ny = bathymetryGrid.ny;
+        dx = bathymetryGrid.dx;
+        dy = bathymetryGrid.dy;
+        simulatedTimesteps = 0;
+        currentTime = 0.0;
+    }
 
-		/*
-		 * This function returns the bathymetry corresponding to any point inside the simulation domain.
-		 * In order to do this, it first determines the grid point nearest to the requested point and the
-		 * Float2D index of this grid point.
-		 * It then checks, if a displacement (e.g. earthquake induced) is defined for this point,
-		 * if yes it also calculates the Float2D index corresponding to the array holding displacement data.
-		 * Then, the actual bathymetry is calculated and returned.
-		 *
-		 * @param x X-coordinate of the requested point.
-		 * @param y Y-coordinate of the requested point.
-		 */
-		virtual float getBathymetry(float x, float y) {
-			// Make sure the requested coordinates are within the simulation domain.
-			assert(x > originX - 0.0001);
-			assert(x < nx * dx + originX + 0.0001);
-			assert(y > originY - 0.0001);
-			assert(y < ny * dy + originY + 0.0001);
+    ~SWE_TsunamiScenario() {
+    }
 
-			// Calculate the corresponding Float2D entry and get the corresponding bathymetry.
-			int xIndex = getNearestIndex(x, bathymetryGrid.originX, bathymetryGrid.dx);
-			int yIndex = getNearestIndex(y, bathymetryGrid.originY, bathymetryGrid.dy);
-			float b = bathymetryGrid.var[xIndex][yIndex];
-			// Check if displacement exists at the requested coordinate, and add the corresponding displacement if true.
-			if (   x > displacementGrid.originX - 0.0001
-			    && y > displacementGrid.originY - 0.0001
-			    && x < displacementGrid.originX + displacementGrid.nx * displacementGrid.dx + 0.0001
-			    && y < displacementGrid.originY + displacementGrid.ny * displacementGrid.dy + 0.0001) {
-				int xIndex_displ = getNearestIndex(x, displacementGrid.originX, displacementGrid.dx);
-				int yIndex_displ = getNearestIndex(y, displacementGrid.originY, displacementGrid.dy);
-				b += displacementGrid.var[xIndex_displ][yIndex_displ];
-			}
-			return b;
-		}
+    /*
+     * This function returns the bathymetry corresponding to any point inside the simulation domain.
+     * In order to do this, it first determines the grid point nearest to the requested point and the
+     * Float2D index of this grid point.
+     * It then checks, if a displacement (e.g. earthquake induced) is defined for this point,
+     * if yes it also calculates the Float2D index corresponding to the array holding displacement data.
+     * Then, the actual bathymetry is calculated and returned.
+     *
+     * @param x X-coordinate of the requested point.
+     * @param y Y-coordinate of the requested point.
+     */
+    virtual float getBathymetry(float x, float y) {
+        // Make sure the requested coordinates are within the simulation domain.
+        assert(x > originX - 0.0001);
+        assert(x < nx * dx + originX + 0.0001);
+        assert(y > originY - 0.0001);
+        assert(y < ny * dy + originY + 0.0001);
 
-		/*
-		 * This function returns the water height corresponding to any point inside the simulation domain.
-		 * In order to do this, it first determines the grid point nearest to the requested point and the
-		 * Float2D index of this grid point.
-		 * It then returns either zero, if there is land mass at the requested point,
-		 * or the negative bathymetry at this point, such that the effective water height is 0 (sea level by definition).
-		 *
-		 * @param x X-coordinate of the requested point.
-		 * @param y Y-coordinate of the requested point.
-		 *
-		 */
-		virtual float getWaterHeight(float x, float y) {
-			// Make sure the requested coordinates are within the simulation domain
-			assert(x > bathymetryGrid.originX - 0.0001);
-			assert(x < bathymetryGrid.nx * bathymetryGrid.dx + bathymetryGrid.originX + 0.0001);
-			assert(y > bathymetryGrid.originY - 0.0001);
-			assert(y < bathymetryGrid.ny * bathymetryGrid.dy + bathymetryGrid.originY + 0.0001);
+        // Calculate the corresponding Float2D entry and get the corresponding bathymetry.
+        int xIndex = getNearestIndex(x, bathymetryGrid.originX, bathymetryGrid.dx);
+        int yIndex = getNearestIndex(y, bathymetryGrid.originY, bathymetryGrid.dy);
+        float b = bathymetryGrid.var[xIndex][yIndex];
+        // Check if displacement exists at the requested coordinate, and add the corresponding displacement if true.
+        if (x > displacementGrid.originX - 0.0001
+            && y > displacementGrid.originY - 0.0001
+            && x < displacementGrid.originX + displacementGrid.nx * displacementGrid.dx + 0.0001
+            && y < displacementGrid.originY + displacementGrid.ny * displacementGrid.dy + 0.0001) {
+            int xIndex_displ = getNearestIndex(x, displacementGrid.originX, displacementGrid.dx);
+            int yIndex_displ = getNearestIndex(y, displacementGrid.originY, displacementGrid.dy);
+            b += displacementGrid.var[xIndex_displ][yIndex_displ];
+        }
+        return b;
+    }
 
-			int xIndex = getNearestIndex(x, bathymetryGrid.originX, bathymetryGrid.dx);
-			int yIndex = getNearestIndex(y, bathymetryGrid.originY, bathymetryGrid.dy);
-			float ret =  -std::fmin(0.0, bathymetryGrid.var[xIndex][yIndex]);
-			return ret;
-		}
+    /*
+     * This function returns the water height corresponding to any point inside the simulation domain.
+     * In order to do this, it first determines the grid point nearest to the requested point and the
+     * Float2D index of this grid point.
+     * It then returns either zero, if there is land mass at the requested point,
+     * or the negative bathymetry at this point, such that the effective water height is 0 (sea level by definition).
+     *
+     * @param x X-coordinate of the requested point.
+     * @param y Y-coordinate of the requested point.
+     *
+     */
+    virtual float getWaterHeight(float x, float y) {
+        // Make sure the requested coordinates are within the simulation domain
+        assert(x > bathymetryGrid.originX - 0.0001);
+        assert(x < bathymetryGrid.nx * bathymetryGrid.dx + bathymetryGrid.originX + 0.0001);
+        assert(y > bathymetryGrid.originY - 0.0001);
+        assert(y < bathymetryGrid.ny * bathymetryGrid.dy + bathymetryGrid.originY + 0.0001);
 
-		/*
-		 * This function returns the x- or y-coordinate of a given boundary edge.
-		 *
-		 * @param edge One of BND_TOP, BND_BOTTOM, BND_LEFT, BND_RIGHT.
-		 *
-		 */
-		float getBoundary(BoundaryEdge edge) {
-			if (edge == BND_LEFT)
-				return originX;
-			else if (edge == BND_RIGHT)
-				return originX + nx * dx;
-			else if (edge == BND_BOTTOM)
-				return originY;
-			else
-				return originY + ny + dy;
-		};
+        int xIndex = getNearestIndex(x, bathymetryGrid.originX, bathymetryGrid.dx);
+        int yIndex = getNearestIndex(y, bathymetryGrid.originY, bathymetryGrid.dy);
+        float ret = -std::fmin(0.0, bathymetryGrid.var[xIndex][yIndex]);
+        return ret;
+    }
 
-		size_t getNx() { return nx; };
-		size_t getNy() { return ny; };
-		float getDx() { return dx; };
-		float getDy() { return dy; } ;
-		float getOriginX() { return originX; };
-		float getOriginY() { return originY; } ;
-		int getSimulatedTimesteps() { return simulatedTimesteps; }
-		float getSimulationTime() { return currentTime; }
+    /*
+     * This function returns the x- or y-coordinate of a given boundary edge.
+     *
+     * @param edge One of BND_TOP, BND_BOTTOM, BND_LEFT, BND_RIGHT.
+     *
+     */
+    float getBoundary(BoundaryEdge edge) {
+        if (edge == BND_LEFT)
+            return originX;
+        else if (edge == BND_RIGHT)
+            return originX + nx * dx;
+        else if (edge == BND_BOTTOM)
+            return originY;
+        else
+            return originY + ny + dy;
+    };
+
+    size_t getNx() { return nx; };
+
+    size_t getNy() { return ny; };
+
+    float getDx() { return dx; };
+
+    float getDy() { return dy; };
+
+    float getOriginX() { return originX; };
+
+    float getOriginY() { return originY; };
+
+    int getSimulatedTimesteps() { return simulatedTimesteps; }
+
+    float getSimulationTime() { return currentTime; }
 };
+
 #endif // __SWE_TSUNAMISCENARIO_HH

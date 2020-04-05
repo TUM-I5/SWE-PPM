@@ -39,7 +39,9 @@
 #include "tools/args.hh"
 
 #ifdef WRITENETCDF
+
 #include "writer/NetCdfWriter.hh"
+
 #else
 #include "writer/VtkWriter.hh"
 #endif
@@ -47,7 +49,9 @@
 #ifdef ASAGI
 #include "scenarios/SWE_AsagiScenario.hh"
 #else
+
 #include "scenarios/SWE_simple_scenarios.hh"
+
 #endif
 
 
@@ -59,9 +63,10 @@
 #include <hpx/program_options/variables_map.hpp>
 #include <hpx/program_options/options_description.hpp>
 #include <hpx/collectives/broadcast.hpp>
+
 HPX_REGISTER_ALLREDUCE(double, reduction_test);
-int hpx_main(hpx::program_options::variables_map& vm)
-{
+
+int hpx_main(hpx::program_options::variables_map &vm) {
 
 
     /**************
@@ -75,20 +80,20 @@ int hpx_main(hpx::program_options::variables_map& vm)
     std::string outputBaseName;
     std::string batFile;
     std::string displFile;
-    bool  localTimestepping;
-
-    simulationDuration =  vm["simulation-duration"].as<float>();
+    bool localTimestepping;
+    bool write;
+    simulationDuration = vm["simulation-duration"].as<float>();
     numberOfCheckPoints = vm["checkpoint-count"].as<int>();
     nxRequested = vm["resolution-horizontal"].as<int>();
     nyRequested = vm["resolution-vertical"].as<int>();
     totalRanks = vm["blocks"].as<int>();
     outputBaseName = vm["output-basepath"].as<std::string>();
     localTimestepping = vm["local-timestepping"].as<bool>();
+    write = vm["write"].as<bool>();
 #ifdef ASAGI
     batFile = vm["bathymetry-file"].as<std::string>();
     displFile = vm["displacement-file"].as<std::string>();
 #endif
-
 
 
     int localityCount = hpx::get_num_localities().get();
@@ -96,15 +101,16 @@ int hpx_main(hpx::program_options::variables_map& vm)
 
     hpx::cout << "Locality " << localityNumber << " of " << localityCount << " Localities" << std::endl;
 
-    SWE_Hpx_No_Component comp(totalRanks,localityNumber,localityCount,simulationDuration,numberOfCheckPoints,
-                         nxRequested,nyRequested,outputBaseName,batFile,displFile,localTimestepping );
+    SWE_Hpx_No_Component comp(totalRanks, localityNumber, localityCount, simulationDuration, numberOfCheckPoints,
+                              nxRequested, nyRequested, outputBaseName, batFile, displFile, localTimestepping, write);
 
     comp.run();
 
 
     return hpx::finalize();
 }
-int main(int argc, char** argv) {
+
+int main(int argc, char **argv) {
 
 
     /**************
@@ -115,23 +121,23 @@ int main(int argc, char** argv) {
     options_description desc_commandline;
 
 
-
     desc_commandline.add_options()
-     ("bathymetry-file,b", value<std::string>(),"File containing the bathymetry")
-     ("displacement-file,d",value<std::string>(), "File containing the displacement")
-     ("simulation-duration,e", value<float>()->default_value(100),"Time in seconds to simulate")
-     ("checkpoint-count,n", value<int>()->default_value(100),"Number of simulation snapshots to be written")
-     ("resolution-horizontal",value<int>()->default_value(100), "Number of simulation cells in horizontal direction")
-     ("resolution-vertical", value<int>()->default_value(100),"Number of simulated cells in y-direction")
-     ("output-basepath,o", value<std::string>()->default_value("hpx_output"),"Output base file name")
-     ("blocks", value<int>()->default_value(1),"Number of swe blocks")
-     ("local-timestepping", value<bool>()->default_value(false),"Number of swe blocks");
-
+            ("bathymetry-file,b", value<std::string>(), "File containing the bathymetry")
+            ("displacement-file,d", value<std::string>(), "File containing the displacement")
+            ("simulation-duration,e", value<float>()->default_value(100), "Time in seconds to simulate")
+            ("checkpoint-count,n", value<int>()->default_value(100), "Number of simulation snapshots to be written")
+            ("resolution-horizontal", value<int>()->default_value(100),
+             "Number of simulation cells in horizontal direction")
+            ("resolution-vertical", value<int>()->default_value(100), "Number of simulated cells in y-direction")
+            ("output-basepath,o", value<std::string>()->default_value("hpx_output"), "Output base file name")
+            ("blocks", value<int>()->default_value(1), "Number of swe blocks")
+            ("local-timestepping", value<bool>()->default_value(false), "Number of swe blocks");
+    ("write,w", value<bool>()->default_value(false), "Write netcdf if set");
     // Initialize and run HPX, this example requires to run hpx_main on all
     // localities
     std::vector<std::string> const cfg = {
             "hpx.run_hpx_main!=1"
     };
 
-    return hpx::init(desc_commandline,argc, argv,cfg);
+    return hpx::init(desc_commandline, argc, argv, cfg);
 }

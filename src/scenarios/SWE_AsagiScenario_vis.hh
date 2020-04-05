@@ -30,10 +30,10 @@
 
 #include "SWE_VisInfo.hh"
 
-class SWE_AsagiJapanSmallVisInfo : public SWE_VisInfo
-{
+class SWE_AsagiJapanSmallVisInfo : public SWE_VisInfo {
 public:
     virtual float waterVerticalScaling() { return 4.0f; };
+
     virtual float bathyVerticalScaling() { return 0.010313f; };
 };
 

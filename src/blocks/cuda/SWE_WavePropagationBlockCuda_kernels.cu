@@ -35,7 +35,9 @@
 #if defined CUDA_AUGRIE
 #include "solvers/AugRieCUDA.h"
 #else
+
 #include "solvers/FWaveCuda.h"
+
 #endif
 
 /**
@@ -76,217 +78,223 @@
  */
 __global__
 void computeNetUpdatesKernel(
-    const float* i_h, const float* i_hu, const float* i_hv, const float* i_b,
-    float* o_hNetUpdatesLeftD,   float* o_hNetUpdatesRightD,
-    float* o_huNetUpdatesLeftD,  float* o_huNetUpdatesRightD,
-    float* o_hNetUpdatesBelowD,  float* o_hNetUpdatesAboveD,
-    float* o_hvNetUpdatesBelowD, float* o_hvNetUpdatesAboveD,
-    float* o_maximumWaveSpeeds,
-    const int i_nX, const int i_nY,
-    const int i_offsetX, const int i_offsetY,
-    const int i_blockOffSetX, const int i_blockOffSetY
+        const float *i_h, const float *i_hu, const float *i_hv, const float *i_b,
+        float *o_hNetUpdatesLeftD, float *o_hNetUpdatesRightD,
+        float *o_huNetUpdatesLeftD, float *o_huNetUpdatesRightD,
+        float *o_hNetUpdatesBelowD, float *o_hNetUpdatesAboveD,
+        float *o_hvNetUpdatesBelowD, float *o_hvNetUpdatesAboveD,
+        float *o_maximumWaveSpeeds,
+        const int i_nX, const int i_nY,
+        const int i_offsetX, const int i_offsetY,
+        const int i_blockOffSetX, const int i_blockOffSetY
 ) {
-  /*
-   * Initialization
-   */
-  //! array maximum wave speed within this CUDA-block
-  __shared__ float l_maxWaveSpeedShared[TILE_SIZE*TILE_SIZE];
+    /*
+     * Initialization
+     */
+    //! array maximum wave speed within this CUDA-block
+    __shared__ float l_maxWaveSpeedShared[TILE_SIZE * TILE_SIZE];
 
-  //! thread local index in the shared maximum wave speed array
-  int l_maxWaveSpeedPosition = computeOneDPositionKernel(threadIdx.y, threadIdx.x, blockDim.x);
+    //! thread local index in the shared maximum wave speed array
+    int l_maxWaveSpeedPosition = computeOneDPositionKernel(threadIdx.y, threadIdx.x, blockDim.x);
 
-  // initialize shared maximum wave speed with zero
-  l_maxWaveSpeedShared[l_maxWaveSpeedPosition] = (float) 0.0;
+    // initialize shared maximum wave speed with zero
+    l_maxWaveSpeedShared[l_maxWaveSpeedPosition] = (float) 0.0;
 
-  //! index (l_cellIndexI,l_cellIndexJ) of the cell lying on the right side of the edge/above the edge where the thread works on.
-  int l_cellIndexI, l_cellIndexJ;
+    //! index (l_cellIndexI,l_cellIndexJ) of the cell lying on the right side of the edge/above the edge where the thread works on.
+    int l_cellIndexI, l_cellIndexJ;
 
-  // initialize the indices l_cellIndexI and l_cellIndexJ with the given offset
-  l_cellIndexI = i_offsetX;
-  l_cellIndexJ = i_offsetY;
+    // initialize the indices l_cellIndexI and l_cellIndexJ with the given offset
+    l_cellIndexI = i_offsetX;
+    l_cellIndexJ = i_offsetY;
 
-  //! array which holds the thread local net-updates.
-  float l_netUpdates[5];
+    //! array which holds the thread local net-updates.
+    float l_netUpdates[5];
 
-  //! location of the thread local cells in the global CUDA-arrays.
-  int l_leftCellPosition, l_rightCellPosition, l_netUpdatePosition;
+    //! location of the thread local cells in the global CUDA-arrays.
+    int l_leftCellPosition, l_rightCellPosition, l_netUpdatePosition;
 
-  // compute (l_cellIndexI,l_cellIndexJ) for the cell lying right/above of the edge
-  l_cellIndexI += blockDim.y * blockIdx.x + threadIdx.y + 1; //+1: start at cell with index (1,0)
-  l_cellIndexJ += blockDim.x * blockIdx.y + threadIdx.x + 1; //+1: start at cell with index (1,1)
+    // compute (l_cellIndexI,l_cellIndexJ) for the cell lying right/above of the edge
+    l_cellIndexI += blockDim.y * blockIdx.x + threadIdx.y + 1; //+1: start at cell with index (1,0)
+    l_cellIndexJ += blockDim.x * blockIdx.y + threadIdx.x + 1; //+1: start at cell with index (1,1)
 
-  /*
-   * Computation of horizontal net-updates
-   */
-  if(i_offsetY == 0) { //horizontal edges?
+    /*
+     * Computation of horizontal net-updates
+     */
+    if (i_offsetY == 0) { //horizontal edges?
 
-    // compute the locations of the thread local cells in the global CUDA-arrays.
-    l_leftCellPosition = computeOneDPositionKernel(l_cellIndexI-1, l_cellIndexJ, i_nY+2);
-    l_rightCellPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ, i_nY+2);
+        // compute the locations of the thread local cells in the global CUDA-arrays.
+        l_leftCellPosition = computeOneDPositionKernel(l_cellIndexI - 1, l_cellIndexJ, i_nY + 2);
+        l_rightCellPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ, i_nY + 2);
 
-    // compute the net-updates
+        // compute the net-updates
 #if defined CUDA_AUGRIE
-    augRieComputeNetUpdates (
-                            i_h[l_leftCellPosition],  i_h[l_rightCellPosition],
-                            i_hu[l_leftCellPosition], i_hu[l_rightCellPosition],
-                            i_b[l_leftCellPosition],  i_b[l_rightCellPosition],
-                            static_cast<real>(9.81), static_cast<real>(0.01), static_cast<real>(0.000001), static_cast<real>(0.0001), 10,
-                            l_netUpdates
-                           );
+        augRieComputeNetUpdates (
+                                i_h[l_leftCellPosition],  i_h[l_rightCellPosition],
+                                i_hu[l_leftCellPosition], i_hu[l_rightCellPosition],
+                                i_b[l_leftCellPosition],  i_b[l_rightCellPosition],
+                                static_cast<real>(9.81), static_cast<real>(0.01), static_cast<real>(0.000001), static_cast<real>(0.0001), 10,
+                                l_netUpdates
+                               );
 #else
-    fWaveComputeNetUpdates( 9.81,
-                            i_h[l_leftCellPosition],  i_h[l_rightCellPosition],
-                            i_hu[l_leftCellPosition], i_hu[l_rightCellPosition],
-                            i_b[l_leftCellPosition],  i_b[l_rightCellPosition],
-                            l_netUpdates
-                           );
+        fWaveComputeNetUpdates(9.81,
+                               i_h[l_leftCellPosition], i_h[l_rightCellPosition],
+                               i_hu[l_leftCellPosition], i_hu[l_rightCellPosition],
+                               i_b[l_leftCellPosition], i_b[l_rightCellPosition],
+                               l_netUpdates
+        );
 #endif
-    // compute the location of the net-updates in the global CUDA-arrays.
-    l_netUpdatePosition = computeOneDPositionKernel(l_cellIndexI-1, l_cellIndexJ, i_nY+1);
+        // compute the location of the net-updates in the global CUDA-arrays.
+        l_netUpdatePosition = computeOneDPositionKernel(l_cellIndexI - 1, l_cellIndexJ, i_nY + 1);
 
-    // store the horizontal net-updates (thread local net-updates -> device net-updates)
-    o_hNetUpdatesLeftD[l_netUpdatePosition]  = l_netUpdates[0]; o_hNetUpdatesRightD[l_netUpdatePosition]  = l_netUpdates[1];
-    o_huNetUpdatesLeftD[l_netUpdatePosition] = l_netUpdates[2]; o_huNetUpdatesRightD[l_netUpdatePosition] = l_netUpdates[3];
+        // store the horizontal net-updates (thread local net-updates -> device net-updates)
+        o_hNetUpdatesLeftD[l_netUpdatePosition] = l_netUpdates[0];
+        o_hNetUpdatesRightD[l_netUpdatePosition] = l_netUpdates[1];
+        o_huNetUpdatesLeftD[l_netUpdatePosition] = l_netUpdates[2];
+        o_huNetUpdatesRightD[l_netUpdatePosition] = l_netUpdates[3];
 
-    // store the maximum wave speed in the shared array
-    l_maxWaveSpeedShared[l_maxWaveSpeedPosition] = l_netUpdates[4];
-  }
+        // store the maximum wave speed in the shared array
+        l_maxWaveSpeedShared[l_maxWaveSpeedPosition] = l_netUpdates[4];
+    }
 
-  // synchronize the threads before the vertical edges (optimization)
-  __syncthreads();
+    // synchronize the threads before the vertical edges (optimization)
+    __syncthreads();
 
-  /*
-   * Computation of vertical net-updates
-   */
-  if(i_offsetX == 0) { //vertical edges?
-    // compute the locations of the thread local cells in the global CUDA-arrays.
-    l_leftCellPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ-1, i_nY+2);
-    l_rightCellPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ, i_nY+2);
+    /*
+     * Computation of vertical net-updates
+     */
+    if (i_offsetX == 0) { //vertical edges?
+        // compute the locations of the thread local cells in the global CUDA-arrays.
+        l_leftCellPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ - 1, i_nY + 2);
+        l_rightCellPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ, i_nY + 2);
 
 // compute the net-updates
 #if defined CUDA_AUGRIE
-    augRieComputeNetUpdates (
-                            i_h[l_leftCellPosition],  i_h[l_rightCellPosition],
-                            i_hv[l_leftCellPosition], i_hv[l_rightCellPosition],
-                            i_b[l_leftCellPosition],  i_b[l_rightCellPosition],
-                            static_cast<real>(9.81), static_cast<real>(0.01), static_cast<real>(0.000001), static_cast<real>(0.0001), 10,
-                            l_netUpdates
-                           );
+        augRieComputeNetUpdates (
+                                i_h[l_leftCellPosition],  i_h[l_rightCellPosition],
+                                i_hv[l_leftCellPosition], i_hv[l_rightCellPosition],
+                                i_b[l_leftCellPosition],  i_b[l_rightCellPosition],
+                                static_cast<real>(9.81), static_cast<real>(0.01), static_cast<real>(0.000001), static_cast<real>(0.0001), 10,
+                                l_netUpdates
+                               );
 #else
-    fWaveComputeNetUpdates( 9.81,
-                            i_h[l_leftCellPosition], i_h[l_rightCellPosition],
-                            i_hv[l_leftCellPosition], i_hv[l_rightCellPosition],
-                            i_b[l_leftCellPosition], i_b[l_rightCellPosition],
-                            l_netUpdates
-                           );
+        fWaveComputeNetUpdates(9.81,
+                               i_h[l_leftCellPosition], i_h[l_rightCellPosition],
+                               i_hv[l_leftCellPosition], i_hv[l_rightCellPosition],
+                               i_b[l_leftCellPosition], i_b[l_rightCellPosition],
+                               l_netUpdates
+        );
 #endif
-    // compute the location of the net-updates in the global CUDA-arrays.
-    l_netUpdatePosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ-1, i_nY+1);
+        // compute the location of the net-updates in the global CUDA-arrays.
+        l_netUpdatePosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ - 1, i_nY + 1);
 
-    // store the vertical net-updates (thread local net-updates -> device net-updates)
-    o_hNetUpdatesBelowD[l_netUpdatePosition]  = l_netUpdates[0]; o_hNetUpdatesAboveD[l_netUpdatePosition]  = l_netUpdates[1];
-    o_hvNetUpdatesBelowD[l_netUpdatePosition] = l_netUpdates[2]; o_hvNetUpdatesAboveD[l_netUpdatePosition] = l_netUpdates[3];
+        // store the vertical net-updates (thread local net-updates -> device net-updates)
+        o_hNetUpdatesBelowD[l_netUpdatePosition] = l_netUpdates[0];
+        o_hNetUpdatesAboveD[l_netUpdatePosition] = l_netUpdates[1];
+        o_hvNetUpdatesBelowD[l_netUpdatePosition] = l_netUpdates[2];
+        o_hvNetUpdatesAboveD[l_netUpdatePosition] = l_netUpdates[3];
 
-    // store the maximum wave speed in the shared array
-    l_maxWaveSpeedShared[l_maxWaveSpeedPosition] = fmax(l_maxWaveSpeedShared[l_maxWaveSpeedPosition], l_netUpdates[4]);
-  }
-
-  /*
-   * Compute the maximum observed wave speed
-   */
-  // wait for all threads to finish
-  __syncthreads();
-
-  // initialize reduction block size with the original block size
-  int reductionBlockDimY = blockDim.y;
-  int reductionBlockDimX = blockDim.x;
-
-  // do the reduction
-  while(reductionBlockDimY != 1 || reductionBlockDimX != 1) { // if the reduction block size == 1*1 (1 cell) -> done.
-    //! reduction partner for a thread
-    int reductionPartner = 0;
-
-    // split the block in the x-direction (size in x-dir. > 1) or y-direction (size in x-dir. == 1, size in y-dir. > 1)
-    if(reductionBlockDimX != 1) {
-      reductionBlockDimX >>= 1; //reduce row wise (divide by 2)
-      reductionPartner = computeOneDPositionKernel(threadIdx.y, threadIdx.x + reductionBlockDimX, blockDim.x);
-    } else if(reductionBlockDimY != 1) {
-      reductionBlockDimY >>= 1; //reduce column wise (divide by 2)
-      reductionPartner = computeOneDPositionKernel(threadIdx.y + reductionBlockDimY, threadIdx.x, blockDim.x);
+        // store the maximum wave speed in the shared array
+        l_maxWaveSpeedShared[l_maxWaveSpeedPosition] = fmax(l_maxWaveSpeedShared[l_maxWaveSpeedPosition],
+                                                            l_netUpdates[4]);
     }
+
+    /*
+     * Compute the maximum observed wave speed
+     */
+    // wait for all threads to finish
+    __syncthreads();
+
+    // initialize reduction block size with the original block size
+    int reductionBlockDimY = blockDim.y;
+    int reductionBlockDimX = blockDim.x;
+
+    // do the reduction
+    while (reductionBlockDimY != 1 || reductionBlockDimX != 1) { // if the reduction block size == 1*1 (1 cell) -> done.
+        //! reduction partner for a thread
+        int reductionPartner = 0;
+
+        // split the block in the x-direction (size in x-dir. > 1) or y-direction (size in x-dir. == 1, size in y-dir. > 1)
+        if (reductionBlockDimX != 1) {
+            reductionBlockDimX >>= 1; //reduce row wise (divide by 2)
+            reductionPartner = computeOneDPositionKernel(threadIdx.y, threadIdx.x + reductionBlockDimX, blockDim.x);
+        } else if (reductionBlockDimY != 1) {
+            reductionBlockDimY >>= 1; //reduce column wise (divide by 2)
+            reductionPartner = computeOneDPositionKernel(threadIdx.y + reductionBlockDimY, threadIdx.x, blockDim.x);
+        }
 #ifndef NDEBUG
 #if defined(__CUDA_ARCH__) & (__CUDA_ARCH__ < 200)
 #warning skipping printf command, which was introduced for compute capability >= 2.0
 #else
-    else {
-      printf("computeNetUpdatesKernel(...): There was an error in the reducing procedure!\n");
-    }
+        else {
+          printf("computeNetUpdatesKernel(...): There was an error in the reducing procedure!\n");
+        }
 #endif
 #endif
-    if(threadIdx.y < reductionBlockDimY && threadIdx.x < reductionBlockDimX) { // use only half the threads in each reduction
-      //execute the reduction routine (maximum)
-      l_maxWaveSpeedShared[l_maxWaveSpeedPosition] = fmax( l_maxWaveSpeedShared[l_maxWaveSpeedPosition],
-                                                           l_maxWaveSpeedShared[reductionPartner]
-                                                         );
+        if (threadIdx.y < reductionBlockDimY &&
+            threadIdx.x < reductionBlockDimX) { // use only half the threads in each reduction
+            //execute the reduction routine (maximum)
+            l_maxWaveSpeedShared[l_maxWaveSpeedPosition] = fmax(l_maxWaveSpeedShared[l_maxWaveSpeedPosition],
+                                                                l_maxWaveSpeedShared[reductionPartner]
+            );
+        }
+        // wait for all threads to finish
+        __syncthreads();
     }
-    // wait for all threads to finish
-    __syncthreads();
-  }
 
-  if(threadIdx.y == 0 && threadIdx.x == 0) {
-    /**
-     * Position of the maximum wave speed in the global device array.
-     *
-     *   In the 'main' part (e.g. gridDim = nx/TILE_SIZEm ny/TILE_SIZE) the position
-     *   is simply given by the blockId in x- and y-direction with a stride of gridDim.x + 1. The +1 results from the
-     *   speeds in the 'boundary' case, see below.
-     *
-     *   In the 'boundary' case, where the edges lie between the computational domain and the right/top ghost layer,
-     *   this is more complicated. In this case block offsets in x- and y-direction are used. The offsets define how
-     *   many blocks in the resp. direction have to be added to get a valid result.
-     *     Computational domain - right ghost layer: In this case the dimension of the grid in x-direction is 1.
-     *     Computational domain - top ghost layer: In this case the dimension of the grid in y-direction is 1.
-     *
-     *   Same Example as in SWE_WavePropagationBlockCuda::computeNumericalFluxes(), assume the CUDA-grid/-blocks has
-     *   the following layout:
-     * <pre>
-     *                                                          *
-     *                                                         **        top ghost layer,
-     *                        * block 8 * block 9 * block 10* ********   cell ids
-     *                        ******************************** **
-     *                        *         *         *         *   *
-     *                        *  block  *  block  *  block  * b
-     *                        *    4    *    5    *    6    * 7
-     *                        *         *         *         *
-     *                        ********************************
-     *                        *         *         *         *
-     *                        *  block  *  block  *  block  * b
-     *                    *   *    0    *    1    *    2    * 3
-     *     bottom         **  *         *         *         *
-     *     ghost     ******** ********************************
-     *     layer          **
-     *                    *   *                              *
-     *                       ***                            ***
-     *                        *                              *
-     *                        *                              *
-     *                  left ghost layer              right ghost layer
-     * </pre>
-     *   This results in a 'main' part containing of (3*2) blocks and two 'boundary' parts containing
-     *   of (1*2) blocks and (3*1) blocks.
-     *
-     *   The maximum wave speed array on the device represents therefore logically a (4 * 3)-1 2D-array (-1: no block on the top right).
-     *   The 'main' part writes into cells 0, 1, 2, 4, 5 and 6.
-     *   The 'computational domain - right ghost layer' part writes into 3 and 7 with offset in x-direction = 3
-     *   The 'computational domain - top ghost layer'  part writes into 8, 9, 10 with offset in y-direction = 2
-     *
-     */
-    int l_maxWaveSpeedDevicePosition = computeOneDPositionKernel( i_blockOffSetX + blockIdx.x,
-                                                                  i_blockOffSetY + blockIdx.y,
-                                                                  max(i_blockOffSetY+1, gridDim.y+1) );
+    if (threadIdx.y == 0 && threadIdx.x == 0) {
+        /**
+         * Position of the maximum wave speed in the global device array.
+         *
+         *   In the 'main' part (e.g. gridDim = nx/TILE_SIZEm ny/TILE_SIZE) the position
+         *   is simply given by the blockId in x- and y-direction with a stride of gridDim.x + 1. The +1 results from the
+         *   speeds in the 'boundary' case, see below.
+         *
+         *   In the 'boundary' case, where the edges lie between the computational domain and the right/top ghost layer,
+         *   this is more complicated. In this case block offsets in x- and y-direction are used. The offsets define how
+         *   many blocks in the resp. direction have to be added to get a valid result.
+         *     Computational domain - right ghost layer: In this case the dimension of the grid in x-direction is 1.
+         *     Computational domain - top ghost layer: In this case the dimension of the grid in y-direction is 1.
+         *
+         *   Same Example as in SWE_WavePropagationBlockCuda::computeNumericalFluxes(), assume the CUDA-grid/-blocks has
+         *   the following layout:
+         * <pre>
+         *                                                          *
+         *                                                         **        top ghost layer,
+         *                        * block 8 * block 9 * block 10* ********   cell ids
+         *                        ******************************** **
+         *                        *         *         *         *   *
+         *                        *  block  *  block  *  block  * b
+         *                        *    4    *    5    *    6    * 7
+         *                        *         *         *         *
+         *                        ********************************
+         *                        *         *         *         *
+         *                        *  block  *  block  *  block  * b
+         *                    *   *    0    *    1    *    2    * 3
+         *     bottom         **  *         *         *         *
+         *     ghost     ******** ********************************
+         *     layer          **
+         *                    *   *                              *
+         *                       ***                            ***
+         *                        *                              *
+         *                        *                              *
+         *                  left ghost layer              right ghost layer
+         * </pre>
+         *   This results in a 'main' part containing of (3*2) blocks and two 'boundary' parts containing
+         *   of (1*2) blocks and (3*1) blocks.
+         *
+         *   The maximum wave speed array on the device represents therefore logically a (4 * 3)-1 2D-array (-1: no block on the top right).
+         *   The 'main' part writes into cells 0, 1, 2, 4, 5 and 6.
+         *   The 'computational domain - right ghost layer' part writes into 3 and 7 with offset in x-direction = 3
+         *   The 'computational domain - top ghost layer'  part writes into 8, 9, 10 with offset in y-direction = 2
+         *
+         */
+        int l_maxWaveSpeedDevicePosition = computeOneDPositionKernel(i_blockOffSetX + blockIdx.x,
+                                                                     i_blockOffSetY + blockIdx.y,
+                                                                     max(i_blockOffSetY + 1, gridDim.y + 1));
 
-    // write the block local maximum wave speed to the device array
-    o_maximumWaveSpeeds[ l_maxWaveSpeedDevicePosition ] = l_maxWaveSpeedShared[0];
-  }
+        // write the block local maximum wave speed to the device array
+        o_maximumWaveSpeeds[l_maxWaveSpeedDevicePosition] = l_maxWaveSpeedShared[0];
+    }
 }
 
 /**
@@ -312,74 +320,78 @@ void computeNetUpdatesKernel(
  */
 __global__
 void updateUnknownsKernel(
-    const float* i_hNetUpdatesLeftD,   const float* i_hNetUpdatesRightD,
-    const float* i_huNetUpdatesLeftD,  const float* i_huNetUpdatesRightD,
-    const float* i_hNetUpdatesBelowD,  const float* i_hNetUpdatesAboveD,
-    const float* i_hvNetUpdatesBelowD, const float* i_hvNetUpdatesAboveD,
-    float* io_h, float* io_hu, float* io_hv,
-    const float i_updateWidthX, const float i_updateWidthY,
-    const int i_nX, const int i_nY ) {
-  /*
-   * Initialization
-   */
-  //! cell indices (l_cellIndexI,l_cellIndexJ) of the cell which the thread updates.
-  int l_cellIndexI, l_cellIndexJ;
+        const float *i_hNetUpdatesLeftD, const float *i_hNetUpdatesRightD,
+        const float *i_huNetUpdatesLeftD, const float *i_huNetUpdatesRightD,
+        const float *i_hNetUpdatesBelowD, const float *i_hNetUpdatesAboveD,
+        const float *i_hvNetUpdatesBelowD, const float *i_hvNetUpdatesAboveD,
+        float *io_h, float *io_hu, float *io_hv,
+        const float i_updateWidthX, const float i_updateWidthY,
+        const int i_nX, const int i_nY) {
+    /*
+     * Initialization
+     */
+    //! cell indices (l_cellIndexI,l_cellIndexJ) of the cell which the thread updates.
+    int l_cellIndexI, l_cellIndexJ;
 
-  //! location of the thread local cell in the global CUDA-arrays.
-  int l_cellPosition;
+    //! location of the thread local cell in the global CUDA-arrays.
+    int l_cellPosition;
 
-  // compute the thread local cell indices (start at cell (1,1))
-  l_cellIndexI = blockDim.y * blockIdx.x + threadIdx.y + 1;
-  l_cellIndexJ = blockDim.x * blockIdx.y + threadIdx.x + 1;
+    // compute the thread local cell indices (start at cell (1,1))
+    l_cellIndexI = blockDim.y * blockIdx.x + threadIdx.y + 1;
+    l_cellIndexJ = blockDim.x * blockIdx.y + threadIdx.x + 1;
 
-  // compute the global cell position
-  l_cellPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ, i_nY+2);
+    // compute the global cell position
+    l_cellPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ, i_nY + 2);
 
 #ifndef NDEBUG
 #if defined(__CUDA_ARCH__) & (__CUDA_ARCH__ < 200)
 #warning skipping printf command, which was introduced for compute capability >= 2.0
 #else
-  if(l_cellPosition > (i_nX+2)*(i_nY+2))
-    printf("Warning: cellPosition(%i) > (i_nx+2)*(i_ny+2)\n", l_cellPosition);
+    if(l_cellPosition > (i_nX+2)*(i_nY+2))
+      printf("Warning: cellPosition(%i) > (i_nx+2)*(i_ny+2)\n", l_cellPosition);
 #endif
 #endif
 
-  //! positions of the net-updates in the global CUDA-arrays.
-  int l_netUpdatesLeftPosition, l_netUpdatesRightPosition, l_netUpdatesBelowPosition, l_netUpdatesAbovePosition;
+    //! positions of the net-updates in the global CUDA-arrays.
+    int l_netUpdatesLeftPosition, l_netUpdatesRightPosition, l_netUpdatesBelowPosition, l_netUpdatesAbovePosition;
 
-  /**
-   *  Compute the positions of the net updates relative to a given cell
-   *
-   * <pre>
-   *                  netUpdateRight(i-1, j)
-   *
-   *                           |           |
-   *                           |           |
-   *                           |           |
-   *  netUpdateBelow(i,j) -----*************-----
-   *                           *           *
-   *                           * cell(i,j) *
-   *                           *           *
-   *                      -----*************------ netUpdateAbove(i, j-1)
-   *                           |           |
-   *                           |           |
-   *                           |           |
-   *                                netUpdatesLeft(i,j)
-   * </pre>
-   */
-  l_netUpdatesRightPosition = computeOneDPositionKernel(l_cellIndexI-1, l_cellIndexJ, i_nY+1);
-  l_netUpdatesLeftPosition  = computeOneDPositionKernel(l_cellIndexI,   l_cellIndexJ, i_nY+1);
+    /**
+     *  Compute the positions of the net updates relative to a given cell
+     *
+     * <pre>
+     *                  netUpdateRight(i-1, j)
+     *
+     *                           |           |
+     *                           |           |
+     *                           |           |
+     *  netUpdateBelow(i,j) -----*************-----
+     *                           *           *
+     *                           * cell(i,j) *
+     *                           *           *
+     *                      -----*************------ netUpdateAbove(i, j-1)
+     *                           |           |
+     *                           |           |
+     *                           |           |
+     *                                netUpdatesLeft(i,j)
+     * </pre>
+     */
+    l_netUpdatesRightPosition = computeOneDPositionKernel(l_cellIndexI - 1, l_cellIndexJ, i_nY + 1);
+    l_netUpdatesLeftPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ, i_nY + 1);
 
-  l_netUpdatesAbovePosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ-1, i_nY+1);
-  l_netUpdatesBelowPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ,   i_nY+1);
+    l_netUpdatesAbovePosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ - 1, i_nY + 1);
+    l_netUpdatesBelowPosition = computeOneDPositionKernel(l_cellIndexI, l_cellIndexJ, i_nY + 1);
 
-  //update the cell values
-  io_h[l_cellPosition] -=  i_updateWidthX * ( i_hNetUpdatesRightD[ l_netUpdatesRightPosition ] +  i_hNetUpdatesLeftD[  l_netUpdatesLeftPosition ] )
-                         + i_updateWidthY * ( i_hNetUpdatesAboveD[ l_netUpdatesAbovePosition ] +  i_hNetUpdatesBelowD[ l_netUpdatesBelowPosition ] );
+    //update the cell values
+    io_h[l_cellPosition] -= i_updateWidthX * (i_hNetUpdatesRightD[l_netUpdatesRightPosition] +
+                                              i_hNetUpdatesLeftD[l_netUpdatesLeftPosition])
+                            + i_updateWidthY * (i_hNetUpdatesAboveD[l_netUpdatesAbovePosition] +
+                                                i_hNetUpdatesBelowD[l_netUpdatesBelowPosition]);
 
-  io_hu[l_cellPosition] -= i_updateWidthX * ( i_huNetUpdatesRightD[ l_netUpdatesRightPosition ] + i_huNetUpdatesLeftD[ l_netUpdatesLeftPosition ] );
+    io_hu[l_cellPosition] -= i_updateWidthX * (i_huNetUpdatesRightD[l_netUpdatesRightPosition] +
+                                               i_huNetUpdatesLeftD[l_netUpdatesLeftPosition]);
 
-  io_hv[l_cellPosition] -= i_updateWidthY * ( i_hvNetUpdatesAboveD[ l_netUpdatesAbovePosition ] + i_hvNetUpdatesBelowD[ l_netUpdatesBelowPosition ] );
+    io_hv[l_cellPosition] -= i_updateWidthY * (i_hvNetUpdatesAboveD[l_netUpdatesAbovePosition] +
+                                               i_hvNetUpdatesBelowD[l_netUpdatesBelowPosition]);
 }
 
 /**
@@ -393,5 +405,5 @@ void updateUnknownsKernel(
  */
 __device__
 inline int computeOneDPositionKernel(const int i_i, const int i_j, const int i_ny) {
-  return i_i*i_ny + i_j;
+    return i_i * i_ny + i_j;
 }

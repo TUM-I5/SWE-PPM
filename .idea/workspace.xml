@@ -17,9 +17,108 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Fixed Chameleon Bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block_common.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block_common.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block_common.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block_common.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplitting.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingComponent.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_Component.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlockSIMD.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlockSIMD.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlockSIMD.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlockSIMD.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/cuda/SWE_BlockCUDA.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/cuda/SWE_BlockCUDA.cu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/cuda/SWE_BlockCUDA.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/cuda/SWE_BlockCUDA.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/cuda/SWE_BlockCUDA_kernels.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/cuda/SWE_BlockCUDA_kernels.cu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/cuda/SWE_BlockCUDA_kernels.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/cuda/SWE_BlockCUDA_kernels.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/cuda/SWE_WavePropagationBlockCuda.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/cuda/SWE_WavePropagationBlockCuda.cu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/cuda/SWE_WavePropagationBlockCuda.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/cuda/SWE_WavePropagationBlockCuda.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/cuda/SWE_WavePropagationBlockCuda_kernels.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/cuda/SWE_WavePropagationBlockCuda_kernels.cu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/cuda/SWE_WavePropagationBlockCuda_kernels.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/cuda/SWE_WavePropagationBlockCuda_kernels.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlock.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlock.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlock.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlock.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlockCUDA.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlockCUDA.cu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlockCUDA.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlockCUDA.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.cu" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/rusanov/SWE_RusanovBlockCUDA_kernels.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/netCdf_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/netCdf_mpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/netCdf_simple.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/netCdf_simple.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi_legacy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi_legacy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_opengl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_opengl.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_simple.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_simple.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_AsagiScenario.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_AsagiScenario.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_AsagiScenario_vis.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_AsagiScenario_vis.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_Scenario.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_Scenario.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_TsunamiScenario.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_TsunamiScenario.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_VisInfo.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_VisInfo.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios_vis.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios_vis.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Collector.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Collector.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/CollectorChameleon.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorChameleon.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/CollectorCharm.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorCharm.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/CollectorHpx.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorHpx.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/CollectorMpi.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorMpi.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/CollectorUpcxx.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorUpcxx.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Communicator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Communicator.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Float1D.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float1D.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Float2D.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2D.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Float2DBuffer.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2DBuffer.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Float2DBufferUpcxx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2DBufferUpcxx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Float2DNative.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2DNative.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Float2DUpcxx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Float2DUpcxx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/LocalityChannel.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/LocalityChannel.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Logger.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Logger.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/ProgressBar.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/ProgressBar.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/args.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/args.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/help.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/help.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/BlockConnectInterface.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/BlockConnectInterface.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/Boundary.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/Boundary.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/SWE_Block1D.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/SWE_Block1D.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types/SWE_Block1DUpcxx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/SWE_Block1DUpcxx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/writer/NetCdfWriter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/writer/NetCdfWriter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/writer/NetCdfWriter.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/writer/NetCdfWriter.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/writer/VtkWriter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/writer/VtkWriter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/writer/VtkWriter.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/writer/VtkWriter.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/writer/Writer.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/writer/Writer.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRie.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRie.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRieCUDA.h" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRieCUDA.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRieFun.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRieFun.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRieGeoClaw.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRieGeoClaw.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRie_SIMD.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/AugRie_SIMD.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/FWave.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/FWave.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/FWaveCuda.h" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/FWaveCuda.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/FWaveVec.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/FWaveVec.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/Hybrid.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/Hybrid.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/SIMD_COSTS.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/SIMD_COSTS.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/SIMD_DEFINITIONS.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/SIMD_DEFINITIONS.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/SIMD_TYPES.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/SIMD_TYPES.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/WavePropagation.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers/src/solver/WavePropagation.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -291,13 +390,7 @@
       <workItem from="1585747633398" duration="7706000" />
       <workItem from="1585842957634" duration="1657000" />
       <workItem from="1586002692663" duration="25861000" />
-    </task>
-    <task id="LOCAL-00096" summary="Found Chameleon implemenation bug">
-      <created>1580923537726</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1580923537726</updated>
+      <workItem from="1586079765052" duration="5100000" />
     </task>
     <task id="LOCAL-00097" summary="Fixed bug with weird posiiton of timestep calculation">
       <created>1580925026894</created>
@@ -635,7 +728,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586048123045</updated>
     </task>
-    <option name="localTasksCounter" value="145" />
+    <task id="LOCAL-00145" summary="Fixed Chameleon Bug">
+      <created>1586080018089</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1586080018089</updated>
+    </task>
+    <option name="localTasksCounter" value="146" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -656,7 +756,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Added Charm LTS (bug fixed)" />
     <MESSAGE value="Fixed HPX lts bugs" />
     <MESSAGE value="Fixed final HPX lts bug" />
     <MESSAGE value="added upcxx experimental" />
@@ -681,7 +780,8 @@
     <MESSAGE value="Added variable path for log" />
     <MESSAGE value="Added bathymetryexchange for chameleon" />
     <MESSAGE value="Added debug info" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added debug info" />
+    <MESSAGE value="Fixed Chameleon Bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed Chameleon Bug" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586047613990">
@@ -693,11 +793,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586048122986">
+    <state x="558" y="172" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586087726690">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586048122986" />
+    <state x="558" y="172" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586087726690" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="2394" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586031689623">
@@ -829,7 +929,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.hh</url>
-          <line>44</line>
+          <line>46</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -838,7 +938,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/examples/swe_upcxx.cpp</url>
-          <line>233</line>
+          <line>244</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>

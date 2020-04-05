@@ -35,19 +35,25 @@
 #include <string>
 
 #ifdef WRITENETCDF
+
 #include "writer/NetCdfWriter.hh"
+
 #else
 #include "writer/VtkWriter.hh"
 #endif
+
 #include "blocks/SWE_DimensionalSplittingCharm.hh"
 #include "tools/args.hh"
 #include "tools/Float2D.hh"
 #include "tools/Logger.hh"
 #include "tools/ProgressBar.hh"
+
 #ifdef ASAGI
 #include "scenarios/SWE_AsagiScenario.hh"
 #else
+
 #include "scenarios/SWE_simple_scenarios.hh"
+
 #endif
 
 /* readonly */ CProxy_swe_charm mainProxy;
@@ -61,155 +67,164 @@ swe_charm::swe_charm(CkMigrateMessage *msg) {}
 swe_charm::swe_charm(CkArgMsg *msg) {
 
 
-	/**************
-	 * INIT INPUT *
-	 **************/
+    /**************
+     * INIT INPUT *
+     **************/
 
 
-	// Define command line arguments
-	tools::Args args;
+    // Define command line arguments
+    tools::Args args;
 
 #ifdef ASAGI
-	args.addOption("bathymetry-file", 'b', "File containing the bathymetry");
-	args.addOption("displacement-file", 'd', "File containing the displacement");
+    args.addOption("bathymetry-file", 'b', "File containing the bathymetry");
+    args.addOption("displacement-file", 'd', "File containing the displacement");
 #endif
-	args.addOption("simulation-duration", 't', "Time in seconds to simulate");
-	args.addOption("checkpoint-count", 'n', "Number of simulation snapshots to be written");
-	args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
-	args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
-	args.addOption("output-basepath", 'o', "Output base file name");
-    	args.addOption("chares", 'c', "charecount",args.Required,false);
+    args.addOption("simulation-duration", 't', "Time in seconds to simulate");
+    args.addOption("checkpoint-count", 'n', "Number of simulation snapshots to be written");
+    args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
+    args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
+    args.addOption("output-basepath", 'o', "Output base file name");
+    args.addOption("chares", 'c', "charecount", args.Required, false);
+    args.addOption("write", 'w', "Write results", tools::Args::Required, false);
+
     args.addOption("local-timestepping", 'l', "Activate local timestepping", tools::Args::Required, false);
-	// Declare the variables needed to hold command line input
-	int nxRequested;
-	int nyRequested;
-	std::string bathymetryFilename;
-	std::string displacementFilename;
-	std::string outputBasename;
-    bool  localTimestepping = false;
-	// Declare variables for the output and the simulation time
-	std::string outputFilename;
-	float t = 0.;
+    // Declare the variables needed to hold command line input
+    int nxRequested;
+    int nyRequested;
+    std::string bathymetryFilename;
+    std::string displacementFilename;
+    std::string outputBasename;
+    bool localTimestepping = false;
+    bool write = false;
+    // Declare variables for the output and the simulation time
+    std::string outputFilename;
+    float t = 0.;
 
-	// Parse command line arguments
-	tools::Args::Result ret = args.parse(msg->argc, msg->argv);
-	switch (ret)
-	{
-		case tools::Args::Error:
-			exit();
-		case tools::Args::Help:
-			exit();
-		case tools::Args::Success:
-			break;
-	}
+    // Parse command line arguments
+    tools::Args::Result ret = args.parse(msg->argc, msg->argv);
+    switch (ret) {
+        case tools::Args::Error:
+            exit();
+        case tools::Args::Help:
+            exit();
+        case tools::Args::Success:
+            break;
+    }
 
-    if(args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1){
+    if (args.isSet("write") && args.getArgument<int>("write") == 1)
+        write = true;
+    if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
         localTimestepping = true;
     }
-	// Read in command line arguments
-	simulationDuration = args.getArgument<float>("simulation-duration");
-	checkpointCount = args.getArgument<int>("checkpoint-count");
-	nxRequested = args.getArgument<int>("resolution-horizontal");
-	nyRequested = args.getArgument<int>("resolution-vertical");
+    // Read in command line arguments
+    simulationDuration = args.getArgument<float>("simulation-duration");
+    checkpointCount = args.getArgument<int>("checkpoint-count");
+    nxRequested = args.getArgument<int>("resolution-horizontal");
+    nyRequested = args.getArgument<int>("resolution-vertical");
 #ifdef ASAGI
-	bathymetryFilename = args.getArgument<std::string>("bathymetry-file");
-	displacementFilename = args.getArgument<std::string>("displacement-file");
+    bathymetryFilename = args.getArgument<std::string>("bathymetry-file");
+    displacementFilename = args.getArgument<std::string>("displacement-file");
 #endif
-	outputBasename = args.getArgument<std::string>("output-basepath");
-    mainCollector.setMasterSettings(true, outputBasename+".log");
-	// Initialize Scenario
+    outputBasename = args.getArgument<std::string>("output-basepath");
+    mainCollector.setMasterSettings(true, outputBasename + ".log");
+    // Initialize Scenario
 #ifdef ASAGI
-	SWE_AsagiScenario scenario(bathymetryFilename, displacementFilename);
+    SWE_AsagiScenario scenario(bathymetryFilename, displacementFilename);
 #else
     //SWE_HalfDomainDry scenario;
     SWE_RadialDamBreakScenario scenario;
 #endif
 
 
-	/****************************************
-	 * INIT WORK CHARES / SIMULATION BLOCKS *
-	 ****************************************/
+    /****************************************
+     * INIT WORK CHARES / SIMULATION BLOCKS *
+     ****************************************/
 
-	// Spawn one chare per CPU
-	if(args.isSet("chares")){
-	    chareCount = args.getArgument<int>("chares");
-	}else {
+    // Spawn one chare per CPU
+    if (args.isSet("chares")) {
+        chareCount = args.getArgument<int>("chares");
+    } else {
         chareCount = CkNumPes();
     }
-	mainProxy = thisProxy;
+    mainProxy = thisProxy;
 
-	/*
-	 * Calculate the simulation grid layout.
-	 * The cell count of the scenario as well as the scenario size is fixed, 
-	 * Get the size of the actual domain and divide it by the requested resolution.
-	 */
-	int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
-	int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
-	float dxSimulation = (float) widthScenario / nxRequested;
-	float dySimulation = (float) heightScenario / nyRequested;
+    /*
+     * Calculate the simulation grid layout.
+     * The cell count of the scenario as well as the scenario size is fixed,
+     * Get the size of the actual domain and divide it by the requested resolution.
+     */
+    int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
+    int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
+    float dxSimulation = (float) widthScenario / nxRequested;
+    float dySimulation = (float) heightScenario / nyRequested;
 
-	// Declare empty proxy array (dynamic insertion after parameters have been determined)
-	CProxy_SWE_DimensionalSplittingCharm blocks = CProxy_SWE_DimensionalSplittingCharm::ckNew();
+    // Declare empty proxy array (dynamic insertion after parameters have been determined)
+    CProxy_SWE_DimensionalSplittingCharm blocks = CProxy_SWE_DimensionalSplittingCharm::ckNew();
 
-	// number of SWE-Blocks in x- and y-direction
-	blockCountY = std::sqrt(chareCount);
-	while (chareCount % blockCountY != 0) blockCountY--;
-	blockCountX = chareCount / blockCountY;
+    // number of SWE-Blocks in x- and y-direction
+    blockCountY = std::sqrt(chareCount);
+    while (chareCount % blockCountY != 0) blockCountY--;
+    blockCountX = chareCount / blockCountY;
 
-	int localBlockPositionX[chareCount];
-	int localBlockPositionY[chareCount];
+    int localBlockPositionX[chareCount];
+    int localBlockPositionY[chareCount];
 
-	// Spawn chares
-	for(int i = 0; i < chareCount; i++) {
-		// determine the local block position of each SWE_Block
-		localBlockPositionX[i] = i / blockCountY;
-		localBlockPositionY[i] = i % blockCountY;
+    // Spawn chares
+    for (int i = 0; i < chareCount; i++) {
+        // determine the local block position of each SWE_Block
+        localBlockPositionX[i] = i / blockCountY;
+        localBlockPositionY[i] = i % blockCountY;
 
-		// compute local number of cells for each SWE_Block w.r.t. the simulation domain
-		// (particularly not the original scenario domain, which might be finer in resolution)
-		// (blocks at the domain boundary are assigned the "remainder" of cells)
-		int nxBlockSimulation = nxRequested / blockCountX;
-		int nxRemainderSimulation = nxRequested - (blockCountX - 1) * (nxRequested / blockCountX);
-		int nyBlockSimulation = nyRequested / blockCountY;
-		int nyRemainderSimulation = nyRequested - (blockCountY - 1) * (nyRequested / blockCountY);
-	
-		int nxLocal = (localBlockPositionX[i] < blockCountX - 1) ? nxBlockSimulation : nxRemainderSimulation;
-		int nyLocal = (localBlockPositionY[i] < blockCountY - 1) ? nyBlockSimulation : nyRemainderSimulation;
-		
-		// Compute the origin of the local simulation block w.r.t. the original scenario domain.
-		float localOriginX = scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX[i] * dxSimulation * nxBlockSimulation;
-		float localOriginY = scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY[i] * dySimulation * nyBlockSimulation;
-	
-		// Determine the boundary types for the SWE_Block:
-		// block boundaries bordering other blocks have a CONNECT boundary,
-		// block boundaries bordering the entire scenario have the respective scenario boundary type
-		BoundaryType boundaries[4];
-	
-		boundaries[BND_LEFT] = (localBlockPositionX[i] > 0) ? CONNECT : scenario.getBoundaryType(BND_LEFT);
-		boundaries[BND_RIGHT] = (localBlockPositionX[i] < blockCountX - 1) ? CONNECT : scenario.getBoundaryType(BND_RIGHT);
-		boundaries[BND_BOTTOM] = (localBlockPositionY[i] > 0) ? CONNECT : scenario.getBoundaryType(BND_BOTTOM);
-		boundaries[BND_TOP] = (localBlockPositionY[i] < blockCountY - 1) ? CONNECT : scenario.getBoundaryType(BND_TOP);
+        // compute local number of cells for each SWE_Block w.r.t. the simulation domain
+        // (particularly not the original scenario domain, which might be finer in resolution)
+        // (blocks at the domain boundary are assigned the "remainder" of cells)
+        int nxBlockSimulation = nxRequested / blockCountX;
+        int nxRemainderSimulation = nxRequested - (blockCountX - 1) * (nxRequested / blockCountX);
+        int nyBlockSimulation = nyRequested / blockCountY;
+        int nyRemainderSimulation = nyRequested - (blockCountY - 1) * (nyRequested / blockCountY);
 
-		outputFilename = generateBaseFileName(outputBasename, localBlockPositionX[i], localBlockPositionY[i]);
+        int nxLocal = (localBlockPositionX[i] < blockCountX - 1) ? nxBlockSimulation : nxRemainderSimulation;
+        int nyLocal = (localBlockPositionY[i] < blockCountY - 1) ? nyBlockSimulation : nyRemainderSimulation;
 
-		// Spawn chare for the current block and insert it into the proxy array
+        // Compute the origin of the local simulation block w.r.t. the original scenario domain.
+        float localOriginX =
+                scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX[i] * dxSimulation * nxBlockSimulation;
+        float localOriginY =
+                scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY[i] * dySimulation * nyBlockSimulation;
+
+        // Determine the boundary types for the SWE_Block:
+        // block boundaries bordering other blocks have a CONNECT boundary,
+        // block boundaries bordering the entire scenario have the respective scenario boundary type
+        BoundaryType boundaries[4];
+
+        boundaries[BND_LEFT] = (localBlockPositionX[i] > 0) ? CONNECT : scenario.getBoundaryType(BND_LEFT);
+        boundaries[BND_RIGHT] = (localBlockPositionX[i] < blockCountX - 1) ? CONNECT : scenario.getBoundaryType(
+                BND_RIGHT);
+        boundaries[BND_BOTTOM] = (localBlockPositionY[i] > 0) ? CONNECT : scenario.getBoundaryType(BND_BOTTOM);
+        boundaries[BND_TOP] = (localBlockPositionY[i] < blockCountY - 1) ? CONNECT : scenario.getBoundaryType(BND_TOP);
+
+        outputFilename = generateBaseFileName(outputBasename, localBlockPositionX[i], localBlockPositionY[i]);
+
+        // Spawn chare for the current block and insert it into the proxy array
 #ifdef ASAGI
-		blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, localBlockPositionX[i], localBlockPositionY[i],
-				 boundaries, outputFilename, bathymetryFilename, displacementFilename, localTimestepping);
+        blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, localBlockPositionX[i], localBlockPositionY[i],
+                 boundaries, outputFilename, bathymetryFilename, displacementFilename, localTimestepping);
 #else
-		blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, localBlockPositionX[i], localBlockPositionY[i],
-				 boundaries, outputFilename, "", "", localTimestepping);
+        blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,
+                         localBlockPositionX[i], localBlockPositionY[i],
+                         boundaries, outputFilename, "", "", localTimestepping,write);
 #endif
-	}
-	blocks.doneInserting();
-	blocks.compute();
+    }
+    blocks.doneInserting();
+    blocks.compute();
 }
 
-void swe_charm::done(int index,double ctr_flop, double ctr_exchange, double ctr_barrier,double ctr_reduce,double ctr_wall) {
-    double serialized[5] = {ctr_flop,  ctr_exchange, ctr_barrier, ctr_reduce, ctr_wall};
+void swe_charm::done(int index, double ctr_flop, double ctr_exchange, double ctr_barrier, double ctr_reduce,
+                     double ctr_wall) {
+    double serialized[5] = {ctr_flop, ctr_exchange, ctr_barrier, ctr_reduce, ctr_wall};
     mainCollector += CollectorCharm::deserialize(serialized);
 
-    if (--chareCount == 0){
+    if (--chareCount == 0) {
         mainCollector.logResults();
         exit();
     }
@@ -217,7 +232,7 @@ void swe_charm::done(int index,double ctr_flop, double ctr_exchange, double ctr_
 }
 
 void swe_charm::exit() {
-	CkExit();
+    CkExit();
 }
 
 #include "swe_charm.def.h"

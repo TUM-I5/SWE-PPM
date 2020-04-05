@@ -31,20 +31,19 @@
 /**
     Sets corner values of hd (only needed for visualization)
 	@param hd		h-values on device
-*/	
+*/
 __global__
-void kernelHdBufferEdges(float* hd, int nx, int ny)
-{ 
-  hd[getCellCoord(0   ,0   ,ny)] = hd[getCellCoord(1 ,1 ,ny)];
-  hd[getCellCoord(0   ,ny+1,ny)] = hd[getCellCoord(1 ,ny,ny)];
-  hd[getCellCoord(nx+1,0   ,ny)] = hd[getCellCoord(nx,1 ,ny)];
-  hd[getCellCoord(nx+1,ny+1,ny)] = hd[getCellCoord(nx,ny,ny)];
-	
-  //Corresponding C-Code:
-  //h[0][0] = h[1][1];
-  //h[0][ny+1] = h[1][ny];
-  //h[nx+1][0] = h[nx][1];
-  //h[nx+1][ny+1] = h[nx][ny];
+void kernelHdBufferEdges(float *hd, int nx, int ny) {
+    hd[getCellCoord(0, 0, ny)] = hd[getCellCoord(1, 1, ny)];
+    hd[getCellCoord(0, ny + 1, ny)] = hd[getCellCoord(1, ny, ny)];
+    hd[getCellCoord(nx + 1, 0, ny)] = hd[getCellCoord(nx, 1, ny)];
+    hd[getCellCoord(nx + 1, ny + 1, ny)] = hd[getCellCoord(nx, ny, ny)];
+
+    //Corresponding C-Code:
+    //h[0][0] = h[1][1];
+    //h[0][ny+1] = h[1][ny];
+    //h[nx+1][0] = h[nx][1];
+    //h[nx+1][ny+1] = h[nx][ny];
 }
 
 
@@ -58,17 +57,16 @@ void kernelHdBufferEdges(float* hd, int nx, int ny)
  * SWE_Block size ny is assumed to be a multiple of the TILE_SIZE
  */
 __global__
-void kernelLeftBoundary(float* hd, float* hud, float* hvd,
-                        int nx, int ny, BoundaryType bound)
-{
-  int j = 1 + TILE_SIZE*blockIdx.y + threadIdx.y;
-  int ghost = getCellCoord(0,j,ny);
-  int inner = getCellCoord(1,j,ny);
-  
-  // consider only WALL & OUTFLOW boundary conditions
-  hd[ghost] = hd[inner];
-  hud[ghost] = (bound==WALL) ? -hud[inner] : hud[inner];
-  hvd[ghost] = hvd[inner];
+void kernelLeftBoundary(float *hd, float *hud, float *hvd,
+                        int nx, int ny, BoundaryType bound) {
+    int j = 1 + TILE_SIZE * blockIdx.y + threadIdx.y;
+    int ghost = getCellCoord(0, j, ny);
+    int inner = getCellCoord(1, j, ny);
+
+    // consider only WALL & OUTFLOW boundary conditions
+    hd[ghost] = hd[inner];
+    hud[ghost] = (bound == WALL) ? -hud[inner] : hud[inner];
+    hvd[ghost] = hvd[inner];
 }
 
 /**
@@ -77,17 +75,16 @@ void kernelLeftBoundary(float* hd, float* hud, float* hvd,
  * SWE_Block size ny is assumed to be a multiple of the TILE_SIZE
  */
 __global__
-void kernelRightBoundary(float* hd, float* hud, float* hvd,
-                         int nx, int ny, BoundaryType bound)
-{
-  int j = 1 + TILE_SIZE*blockIdx.y + threadIdx.y;
-  int ghost = getCellCoord(nx+1,j,ny);
-  int inner = getCellCoord(nx  ,j,ny);
-  
-  // consider only WALL & OUTFLOW boundary conditions
-  hd[ghost] = hd[inner];
-  hud[ghost] = (bound==WALL) ? -hud[inner] : hud[inner];
-  hvd[ghost] = hvd[inner];
+void kernelRightBoundary(float *hd, float *hud, float *hvd,
+                         int nx, int ny, BoundaryType bound) {
+    int j = 1 + TILE_SIZE * blockIdx.y + threadIdx.y;
+    int ghost = getCellCoord(nx + 1, j, ny);
+    int inner = getCellCoord(nx, j, ny);
+
+    // consider only WALL & OUTFLOW boundary conditions
+    hd[ghost] = hd[inner];
+    hud[ghost] = (bound == WALL) ? -hud[inner] : hud[inner];
+    hvd[ghost] = hvd[inner];
 }
 
 
@@ -97,17 +94,16 @@ void kernelRightBoundary(float* hd, float* hud, float* hvd,
  * SWE_Block size ny is assumed to be a multiple of the TILE_SIZE
  */
 __global__
-void kernelBottomBoundary(float* hd, float* hud, float* hvd,
-                          int nx, int ny, BoundaryType bound)
-{
-  int i = 1 + TILE_SIZE*blockIdx.x + threadIdx.x;
-  int ghost = getCellCoord(i,0,ny);
-  int inner = getCellCoord(i,1,ny);
-  
-  // consider only WALL & OUTFLOW boundary conditions
-  hd[ghost] = hd[inner];
-  hud[ghost] = hud[inner];
-  hvd[ghost] = (bound==WALL) ? -hvd[inner] : hvd[inner]; 
+void kernelBottomBoundary(float *hd, float *hud, float *hvd,
+                          int nx, int ny, BoundaryType bound) {
+    int i = 1 + TILE_SIZE * blockIdx.x + threadIdx.x;
+    int ghost = getCellCoord(i, 0, ny);
+    int inner = getCellCoord(i, 1, ny);
+
+    // consider only WALL & OUTFLOW boundary conditions
+    hd[ghost] = hd[inner];
+    hud[ghost] = hud[inner];
+    hvd[ghost] = (bound == WALL) ? -hvd[inner] : hvd[inner];
 }
 
 /**
@@ -115,17 +111,16 @@ void kernelBottomBoundary(float* hd, float* hud, float* hvd,
  * blockIdx.x and threadIdx.x loop over the boundary elements
  */
 __global__
-void kernelTopBoundary(float* hd, float* hud, float* hvd,
-                       int nx, int ny, BoundaryType bound)
-{
-  int i = 1 + TILE_SIZE*blockIdx.x + threadIdx.x;
-  int ghost = getCellCoord(i,ny+1,ny);
-  int inner = getCellCoord(i,ny  ,ny);
-  
-  // consider only WALL & OUTFLOW boundary conditions
-  hd[ghost] = hd[inner];
-  hud[ghost] = hud[inner];
-  hvd[ghost] = (bound==WALL) ? -hvd[inner] : hvd[inner]; 
+void kernelTopBoundary(float *hd, float *hud, float *hvd,
+                       int nx, int ny, BoundaryType bound) {
+    int i = 1 + TILE_SIZE * blockIdx.x + threadIdx.x;
+    int ghost = getCellCoord(i, ny + 1, ny);
+    int inner = getCellCoord(i, ny, ny);
+
+    // consider only WALL & OUTFLOW boundary conditions
+    hd[ghost] = hd[inner];
+    hud[ghost] = hud[inner];
+    hvd[ghost] = (bound == WALL) ? -hvd[inner] : hvd[inner];
 }
 
 /**
@@ -136,15 +131,14 @@ void kernelTopBoundary(float* hd, float* hud, float* hvd,
  * SWE_Block size ny is assumed to be a multiple of the TILE_SIZE
  */
 __global__
-void kernelBottomGhostBoundary(float* hd, float* hud, float* hvd,
-                               float* bottomGhostLayer, int nx, int ny)
-{
-  int i = 1 + TILE_SIZE*blockIdx.x + threadIdx.x;
-  int ghost = getCellCoord(i,0,ny);
+void kernelBottomGhostBoundary(float *hd, float *hud, float *hvd,
+                               float *bottomGhostLayer, int nx, int ny) {
+    int i = 1 + TILE_SIZE * blockIdx.x + threadIdx.x;
+    int ghost = getCellCoord(i, 0, ny);
 
-  hd[ghost]  = bottomGhostLayer[i];
-  hud[ghost] = bottomGhostLayer[(nx+2)+i];
-  hvd[ghost] = bottomGhostLayer[2*(nx+2)+i];
+    hd[ghost] = bottomGhostLayer[i];
+    hud[ghost] = bottomGhostLayer[(nx + 2) + i];
+    hvd[ghost] = bottomGhostLayer[2 * (nx + 2) + i];
 }
 
 /**
@@ -155,15 +149,14 @@ void kernelBottomGhostBoundary(float* hd, float* hud, float* hvd,
  * SWE_Block size ny is assumed to be a multiple of the TILE_SIZE
  */
 __global__
-void kernelTopGhostBoundary(float* hd, float* hud, float* hvd,
-                            float* topGhostLayer, int nx, int ny)
-{
-  int i = 1 + TILE_SIZE*blockIdx.x + threadIdx.x;
-  int ghost = getCellCoord(i,ny+1,ny);
-  
-  hd[ghost]  = topGhostLayer[i];
-  hud[ghost] = topGhostLayer[(nx+2)+i];
-  hvd[ghost] = topGhostLayer[2*(nx+2)+i];
+void kernelTopGhostBoundary(float *hd, float *hud, float *hvd,
+                            float *topGhostLayer, int nx, int ny) {
+    int i = 1 + TILE_SIZE * blockIdx.x + threadIdx.x;
+    int ghost = getCellCoord(i, ny + 1, ny);
+
+    hd[ghost] = topGhostLayer[i];
+    hud[ghost] = topGhostLayer[(nx + 2) + i];
+    hvd[ghost] = topGhostLayer[2 * (nx + 2) + i];
 }
 
 /**
@@ -174,15 +167,14 @@ void kernelTopGhostBoundary(float* hd, float* hud, float* hvd,
  * SWE_Block size ny is assumed to be a multiple of the TILE_SIZE
  */
 __global__
-void kernelBottomCopyLayer(float* hd, float* hud, float* hvd,
-                           float* bottomCopyLayer, int nx, int ny)
-{
-  int i = 1 + TILE_SIZE*blockIdx.x + threadIdx.x;
-  int copy = getCellCoord(i,1,ny);
+void kernelBottomCopyLayer(float *hd, float *hud, float *hvd,
+                           float *bottomCopyLayer, int nx, int ny) {
+    int i = 1 + TILE_SIZE * blockIdx.x + threadIdx.x;
+    int copy = getCellCoord(i, 1, ny);
 
-  bottomCopyLayer[i]          = hd[copy];  
-  bottomCopyLayer[(nx+2)+i]   = hud[copy]; 
-  bottomCopyLayer[2*(nx+2)+i] = hvd[copy]; 
+    bottomCopyLayer[i] = hd[copy];
+    bottomCopyLayer[(nx + 2) + i] = hud[copy];
+    bottomCopyLayer[2 * (nx + 2) + i] = hvd[copy];
 }
 
 /**
@@ -193,15 +185,14 @@ void kernelBottomCopyLayer(float* hd, float* hud, float* hvd,
  * SWE_Block size ny is assumed to be a multiple of the TILE_SIZE
  */
 __global__
-void kernelTopCopyLayer(float* hd, float* hud, float* hvd,
-                        float* topCopyLayer, int nx, int ny)
-{
-  int i = 1 + TILE_SIZE*blockIdx.x + threadIdx.x;
-  int copy = getCellCoord(i,ny,ny);
-  
-  topCopyLayer[i]          = hd[copy];  
-  topCopyLayer[(nx+2)+i]   = hud[copy]; 
-  topCopyLayer[2*(nx+2)+i] = hvd[copy]; 
+void kernelTopCopyLayer(float *hd, float *hud, float *hvd,
+                        float *topCopyLayer, int nx, int ny) {
+    int i = 1 + TILE_SIZE * blockIdx.x + threadIdx.x;
+    int copy = getCellCoord(i, ny, ny);
+
+    topCopyLayer[i] = hd[copy];
+    topCopyLayer[(nx + 2) + i] = hud[copy];
+    topCopyLayer[2 * (nx + 2) + i] = hvd[copy];
 }
 
 

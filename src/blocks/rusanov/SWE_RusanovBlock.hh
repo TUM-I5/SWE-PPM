@@ -45,35 +45,39 @@ using namespace std;
  */
 class SWE_RusanovBlock : public SWE_Block {
 
-  public:
+public:
     // Constructor und Destructor
     SWE_RusanovBlock(float _offsetX = 0, float _offsetY = 0);
+
     virtual ~SWE_RusanovBlock();
-    
-  // object methods
+
+    // object methods
     /// execute a single time step of the simulation
     virtual void simulateTimestep(float dt);
+
     /// compute simulate from specified start to end time
     virtual float simulate(float tStart, float tEnd);
-    
+
     /// compute flux terms on edges
     virtual void computeNumericalFluxes();
+
     /// update unknowns according to fluxes (Euler time step)
     virtual void updateUnknowns(float dt);
 
-  protected:
-     
+protected:
+
     /// compute source terms
     virtual void computeBathymetrySources();
 
     static float computeFlux(float fLoc, float fNeigh, float xiLoc, float xiNeigh, float llf);
+
     float computeLocalSV(int i, int j, char dir);
 
     // compute the largest allowed time step for the current grid block
     virtual void computeMaxTimestep() {
-       SWE_Block::computeMaxTimestep();
-       // more pessimistic choice of the time step
-       maxTimestep *= 0.5; 
+        SWE_Block::computeMaxTimestep();
+        // more pessimistic choice of the time step
+        maxTimestep *= 0.5;
     };
 
     // define additional arrays for temporary unknowns: 
@@ -87,15 +91,14 @@ class SWE_RusanovBlock : public SWE_Block {
     // - arrays to hold the bathymetry source terms for the hu and hv equations
     Float2D Bx;
     Float2D By;
-    
+
     // overload operator<< such that data can be written via cout <<
     // -> needs to be declared as friend to be allowed to access private data
-    friend ostream& operator<< (ostream& os, const SWE_RusanovBlock& swe);
-  
+    friend ostream &operator<<(ostream &os, const SWE_RusanovBlock &swe);
+
 };
 
-ostream& operator<< (ostream& os, const SWE_RusanovBlock& swe);
-
+ostream &operator<<(ostream &os, const SWE_RusanovBlock &swe);
 
 
 #endif

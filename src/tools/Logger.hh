@@ -39,91 +39,91 @@
 #include <ctime>
 
 namespace tools {
-  class Logger;
+    class Logger;
 }
 
 class tools::Logger {
 //private:
 
-  /**
-   * Stream, which prints the time in the beginning.
-   *
-   * @return extended std::cout stream.
-   */
-  std::ostream& timeCout() {
-    //get current time
-    time_t rawTime;
-    time(&rawTime);
+    /**
+     * Stream, which prints the time in the beginning.
+     *
+     * @return extended std::cout stream.
+     */
+    std::ostream &timeCout() {
+        //get current time
+        time_t rawTime;
+        time(&rawTime);
 
-    //convert time to a human readable format
-    std::string humanReadableTime = ctime(&rawTime);
+        //convert time to a human readable format
+        std::string humanReadableTime = ctime(&rawTime);
 
-    //remove new-line character
-    humanReadableTime.erase(humanReadableTime.end() - 1);
+        //remove new-line character
+        humanReadableTime.erase(humanReadableTime.end() - 1);
 
-    //return the stream
-    return std::cout << humanReadableTime;
-  }
+        //return the stream
+        return std::cout << humanReadableTime;
+    }
 
-  //! definition of the process rank (0 == master process)
-  int processRank;
+    //! definition of the process rank (0 == master process)
+    int processRank;
 
-  //! definition of the program name
-  const std::string programName;
+    //! definition of the program name
+    const std::string programName;
 
-  //! definition of the welcome message
-  const std::string welcomeMessage;
+    //! definition of the welcome message
+    const std::string welcomeMessage;
 
-  //! definition of the copyrights
-  const std::string copyRights;
+    //! definition of the copyrights
+    const std::string copyRights;
 
-  //! definition of the finish message
-  const std::string finishMessage;
+    //! definition of the finish message
+    const std::string finishMessage;
 
-  //! definition of a mid delimiter
-  const std::string midDelimiter;
+    //! definition of a mid delimiter
+    const std::string midDelimiter;
 
-  //! definition of a large delimiter
-  const std::string largeDelimiter;
+    //! definition of a large delimiter
+    const std::string largeDelimiter;
 
-  //! definition of indentation
-  const std::string indentation;
+    //! definition of indentation
+    const std::string indentation;
 
-  //! Clocks
-  std::map<std::string, clock_t> clocks;
+    //! Clocks
+    std::map<std::string, clock_t> clocks;
 
-  //! Timer
-  std::map<std::string, double> timer;
+    //! Timer
+    std::map<std::string, double> timer;
 
-  //! wall clock time: cpu, communication, IO
-  double wallClockTime;
+    //! wall clock time: cpu, communication, IO
+    double wallClockTime;
 
-  /**
-   * Print the number of 1D quantities.
-   *
-   * @param i_nX size in x-direction.
-   * @param i_quantity definition of the qantity.
-   */
-  void printNumber1d( const int i_nX,
-                      const std::string i_quantity ) {
-    std::cout << "Number of " << i_quantity << ": " << i_nX << std::endl;
-  }
+    /**
+     * Print the number of 1D quantities.
+     *
+     * @param i_nX size in x-direction.
+     * @param i_quantity definition of the qantity.
+     */
+    void printNumber1d(const int i_nX,
+                       const std::string i_quantity) {
+        std::cout << "Number of " << i_quantity << ": " << i_nX << std::endl;
+    }
 
-  /**
-   * Print the number of 2D quantities.
-   *
-   * @param i_nX size in x-direction.
-   * @param i_nY size in y-direction.
-   * @param i_quantity definition of the qantity.
-   */
-  void printNumber2d( const int i_nX,
-                      const int i_nY,
-                      const std::string i_quantity ) {
-    std::cout << "Number of " << i_quantity << ": " << i_nX << " * " << i_nY
-              << " = " << i_nX*i_nY << std::endl;
-  }
+    /**
+     * Print the number of 2D quantities.
+     *
+     * @param i_nX size in x-direction.
+     * @param i_nY size in y-direction.
+     * @param i_quantity definition of the qantity.
+     */
+    void printNumber2d(const int i_nX,
+                       const int i_nY,
+                       const std::string i_quantity) {
+        std::cout << "Number of " << i_quantity << ": " << i_nX << " * " << i_nY
+                  << " = " << i_nX * i_nY << std::endl;
+    }
 
-  public:
+public:
     /**
      * The Constructor.
      * Prints the welcome message (process rank 0 only).
@@ -140,23 +140,23 @@ class tools::Logger {
      * @param i_largeDelimiter definition of the large delimiter.
      * @param i_indentation definition of the indentation (used in all messages, except welcome, start and finish).
      */
-    Logger( const int i_processRank = 0,
-            const std::string i_programName = "SWE",
-            const std::string i_welcomeMessage = "Welcome to",
-            const std::string i_copyRights =  "\n\nSWE Copyright (C) 2012-2013\n"
-                                              "  Technische Universitaet Muenchen\n"
-                                              "  Department of Informatics\n"
-                                              "  Chair of Scientific Computing\n"
-                                              "  http://www5.in.tum.de/SWE\n"
-                                              "\n"
-                                              "SWE comes with ABSOLUTELY NO WARRANTY.\n"
-                                              "SWE is free software, and you are welcome to redistribute it\n"
-                                              "under certain conditions.\n"
-                                              "Details can be found in the file \'gpl.txt\'.",
-            const std::string i_finishMessage = "finished successfully.",
-            const std::string i_midDelimiter = "\n------------------------------------------------------------------\n",
-            const std::string i_largeDelimiter = "\n*************************************************************\n",
-            const std::string i_indentation = "\t" ):
+    Logger(const int i_processRank = 0,
+           const std::string i_programName = "SWE",
+           const std::string i_welcomeMessage = "Welcome to",
+           const std::string i_copyRights = "\n\nSWE Copyright (C) 2012-2013\n"
+                                            "  Technische Universitaet Muenchen\n"
+                                            "  Department of Informatics\n"
+                                            "  Chair of Scientific Computing\n"
+                                            "  http://www5.in.tum.de/SWE\n"
+                                            "\n"
+                                            "SWE comes with ABSOLUTELY NO WARRANTY.\n"
+                                            "SWE is free software, and you are welcome to redistribute it\n"
+                                            "under certain conditions.\n"
+                                            "Details can be found in the file \'gpl.txt\'.",
+           const std::string i_finishMessage = "finished successfully.",
+           const std::string i_midDelimiter = "\n------------------------------------------------------------------\n",
+           const std::string i_largeDelimiter = "\n*************************************************************\n",
+           const std::string i_indentation = "\t") :
             processRank(i_processRank),
             programName(i_programName),
             welcomeMessage(i_welcomeMessage),
@@ -167,10 +167,10 @@ class tools::Logger {
             indentation(i_indentation) {
 
 #ifndef USEMPI
-      // Since we have one static logger, we do not know the MPI rank in this
-      // constructor. When using MPI, the process rank has to be set first,
-      // before printing the welcome message.
-  	  printWelcomeMessage();
+        // Since we have one static logger, we do not know the MPI rank in this
+        // constructor. When using MPI, the process rank has to be set first,
+        // before printing the welcome message.
+        printWelcomeMessage();
 #endif
     }
 
@@ -179,35 +179,35 @@ class tools::Logger {
      * Prints the finish message (process rank 0 only).
      */
     virtual ~Logger() {
-      #ifndef USEMPI
+#ifndef USEMPI
         printFinishMessage();
-      #endif
-      std::cout.flush();
+#endif
+        std::cout.flush();
     }
 
     /**
      * Print the welcome message.
      */
     void printWelcomeMessage() {
-      if(processRank == 0) {
-        std::cout << largeDelimiter
-                  << welcomeMessage << " "
-                  << programName
-                  << copyRights
-                  << largeDelimiter;
-      }
+        if (processRank == 0) {
+            std::cout << largeDelimiter
+                      << welcomeMessage << " "
+                      << programName
+                      << copyRights
+                      << largeDelimiter;
+        }
     }
 
     /**
      * Print the finish message.
      */
     void printFinishMessage() {
-      if(processRank == 0) {
-        std::cout << largeDelimiter
-                  << programName << " "
-                  << finishMessage
-                  << largeDelimiter;
-      }
+        if (processRank == 0) {
+            std::cout << largeDelimiter
+                      << programName << " "
+                      << finishMessage
+                      << largeDelimiter;
+        }
     }
 
     /**
@@ -215,12 +215,12 @@ class tools::Logger {
      *
      * @return extended (time + indentation) std::cout stream.
      */
-    std::ostream& cout() {
-      return timeCout() << indentation
-        #ifdef USEMPI
-        <<  "process " << processRank << " - "
-        #endif
-        ;
+    std::ostream &cout() {
+        return timeCout() << indentation
+#ifdef USEMPI
+            <<  "process " << processRank << " - "
+#endif
+                ;
     }
 
     /**
@@ -228,8 +228,8 @@ class tools::Logger {
      *
      * @param i_processRank process rank.
      */
-    void setProcessRank( const int i_processRank ) {
-      processRank = i_processRank;
+    void setProcessRank(const int i_processRank) {
+        processRank = i_processRank;
     }
 
 
@@ -239,9 +239,9 @@ class tools::Logger {
      * @param i_string some string.
      */
     void printString(const std::string i_string) {
-      if (processRank == 0 )
-      timeCout() << indentation
-                << i_string << std::endl;
+        if (processRank == 0)
+            timeCout() << indentation
+                       << i_string << std::endl;
     }
 
     /**
@@ -251,12 +251,12 @@ class tools::Logger {
      * @param i_numberOfProcesses number of processes.
      * @param i_processesName name of the processes.
      */
-    void printNumberOfProcesses( const int i_numberOfProcesses,
-                                 const std::string i_processesName="MPI processes" ) {
-      if (processRank == 0 )
-      timeCout() << indentation
-                << "Number of " << i_processesName << ": "
-                << i_numberOfProcesses << std::endl;
+    void printNumberOfProcesses(const int i_numberOfProcesses,
+                                const std::string i_processesName = "MPI processes") {
+        if (processRank == 0)
+            timeCout() << indentation
+                       << "Number of " << i_processesName << ": "
+                       << i_numberOfProcesses << std::endl;
     }
 
     /**
@@ -267,13 +267,13 @@ class tools::Logger {
      * @param i_nY number of cells in y-direction.
      * @param i_cellMessage cell message.
      */
-    void printNumberOfCells( const int i_nX,
-                             const int i_nY,
-                             const std::string i_cellMessage="cells") {
-      if(processRank == 0) {
-        timeCout() << indentation;
-        printNumber2d(i_nX, i_nY, i_cellMessage);
-      }
+    void printNumberOfCells(const int i_nX,
+                            const int i_nY,
+                            const std::string i_cellMessage = "cells") {
+        if (processRank == 0) {
+            timeCout() << indentation;
+            printNumber2d(i_nX, i_nY, i_cellMessage);
+        }
     }
 
     /**
@@ -282,9 +282,9 @@ class tools::Logger {
      * @param i_nX number of cells in x-direction.
      * @param i_nY number of cells in y-direction.
      */
-    void printNumberOfCellsPerProcess( const int i_nX, const int i_nY ) {
-      timeCout() << indentation << "process " << processRank << " - ";
-      printNumber2d(i_nX, i_nY, "cells");
+    void printNumberOfCellsPerProcess(const int i_nX, const int i_nY) {
+        timeCout() << indentation << "process " << processRank << " - ";
+        printNumber2d(i_nX, i_nY, "cells");
     }
 
     /**
@@ -294,12 +294,12 @@ class tools::Logger {
      * @param i_dY size in y-direction.
      * @param i_unit measurement unit.
      */
-    void printCellSize( const float i_dX, const float i_dY, const std::string i_unit="m" ) {
-      if(processRank == 0) {
-        timeCout() << indentation
-                   <<"Cell size: " << i_dX << i_unit <<" * " << i_dY << i_unit
-                   << " = " << i_dX*i_dY << " " << i_unit << "^2" << std::endl;
-      }
+    void printCellSize(const float i_dX, const float i_dY, const std::string i_unit = "m") {
+        if (processRank == 0) {
+            timeCout() << indentation
+                       << "Cell size: " << i_dX << i_unit << " * " << i_dY << i_unit
+                       << " = " << i_dX * i_dY << " " << i_unit << "^2" << std::endl;
+        }
     }
 
 
@@ -310,23 +310,23 @@ class tools::Logger {
      * @param i_nX number of blocks in x-direction.
      * @param i_nY number of blocks in y-direction.
      */
-    void printNumberOfBlocks( const int i_nX, const int i_nY ) {
-      if(processRank == 0) {
-        timeCout() << indentation;
-        printNumber2d(i_nX, i_nY, "blocks");
-      }
+    void printNumberOfBlocks(const int i_nX, const int i_nY) {
+        if (processRank == 0) {
+            timeCout() << indentation;
+            printNumber2d(i_nX, i_nY, "blocks");
+        }
     }
 
     /**
      * Print the start message.
      * (process rank 0 only)
      */
-    void printStartMessage( const std::string i_startMessage = "Everything is set up, starting the simulation." ) {
-      if(processRank == 0) {
-        std::cout << midDelimiter;
-        timeCout() << indentation << i_startMessage;
-        std::cout << midDelimiter;
-      }
+    void printStartMessage(const std::string i_startMessage = "Everything is set up, starting the simulation.") {
+        if (processRank == 0) {
+            std::cout << midDelimiter;
+            timeCout() << indentation << i_startMessage;
+            std::cout << midDelimiter;
+        }
     }
 
     /**
@@ -335,12 +335,12 @@ class tools::Logger {
      *
      * @param i_time time in seconds.
      */
-    void printSimulationTime( const float i_time,
-                              const std::string i_simulationTimeMessage = "Simulation at time" ) {
-      if(processRank == 0) {
-        timeCout() << indentation
-                  << i_simulationTimeMessage << ": " << i_time << " seconds." << std::endl;
-      }
+    void printSimulationTime(const float i_time,
+                             const std::string i_simulationTimeMessage = "Simulation at time") {
+        if (processRank == 0) {
+            timeCout() << indentation
+                       << i_simulationTimeMessage << ": " << i_time << " seconds." << std::endl;
+        }
     }
 
     /**
@@ -351,11 +351,12 @@ class tools::Logger {
      * @param i_blockY block position in y-direction.
      * @param i_fileType type of the output file.
      */
-    void printOutputFileCreation( const std::string i_fileName,
-                                  const int i_blockX , const int i_blockY,
-                                  const std::string i_fileType = "netCDF" ) {
-      timeCout() << indentation << "process " << processRank << " - "
-                << "creating " << i_fileType << " file " << i_fileName << " for block " << i_blockX << ", " << i_blockY << "." << std::endl;
+    void printOutputFileCreation(const std::string i_fileName,
+                                 const int i_blockX, const int i_blockY,
+                                 const std::string i_fileType = "netCDF") {
+        timeCout() << indentation << "process " << processRank << " - "
+                   << "creating " << i_fileType << " file " << i_fileName << " for block " << i_blockX << ", "
+                   << i_blockY << "." << std::endl;
     }
 
     /**
@@ -364,12 +365,12 @@ class tools::Logger {
      * @param i_time time in seconds.
      * @param i_outputTimeMessage output message.
      */
-    void printOutputTime( const float i_time,
-                          const std::string i_outputTimeMessage="Writing output file at time" ) {
-      if(processRank == 0) {
-        timeCout() << indentation
-                  << i_outputTimeMessage << ": " << i_time << " seconds" << std::endl;
-      }
+    void printOutputTime(const float i_time,
+                         const std::string i_outputTimeMessage = "Writing output file at time") {
+        if (processRank == 0) {
+            timeCout() << indentation
+                       << i_outputTimeMessage << ": " << i_time << " seconds" << std::endl;
+        }
     }
 
     /**
@@ -377,12 +378,13 @@ class tools::Logger {
      *
      * @param i_statisticsMessage statistics message.
      */
-    void printStatisticsMessage( const std::string i_statisticsMessage="Simulation finished. Printing statistics for each process." ) {
-      if(processRank == 0) {
-        std::cout << midDelimiter;
-        timeCout() << indentation << i_statisticsMessage;
-        std::cout << midDelimiter;
-      }
+    void printStatisticsMessage(
+            const std::string i_statisticsMessage = "Simulation finished. Printing statistics for each process.") {
+        if (processRank == 0) {
+            std::cout << midDelimiter;
+            timeCout() << indentation << i_statisticsMessage;
+            std::cout << midDelimiter;
+        }
     }
 
     /**
@@ -395,20 +397,20 @@ class tools::Logger {
      * @param i_firstSolverName name of the first solver.
      * @param i_secondSolverName name of the second solver.
      */
-    void printSolverStatistics( const long i_firstSolverCounter,
-                                const long i_secondSolverCounter,
-                                const int i_blockX=0,
-                                const int i_blockY=0,
-                                const std::string i_firstSolverName="f-Wave solver",
-                                const std::string i_secondSolverName="Augemented Riemann solver" ) {
-      timeCout() << indentation << "process " << processRank << " - "
-                 << "Solver Statistics for block " << i_blockX << ", " << i_blockY << ":"<< std::endl;
-      timeCout() << indentation << "process " << processRank << " - " << indentation
-                 << "Times the " << i_firstSolverName << " was used: " << i_firstSolverCounter << std::endl;
-      timeCout() << indentation << "process " << processRank << " - " << indentation
-                 << "Times the " << i_secondSolverName << " was used: " << i_secondSolverCounter << std::endl;
-      timeCout() << indentation << "process " << processRank << " - " << indentation
-                 << "In Total: " << i_firstSolverCounter + i_secondSolverCounter << std::endl;
+    void printSolverStatistics(const long i_firstSolverCounter,
+                               const long i_secondSolverCounter,
+                               const int i_blockX = 0,
+                               const int i_blockY = 0,
+                               const std::string i_firstSolverName = "f-Wave solver",
+                               const std::string i_secondSolverName = "Augemented Riemann solver") {
+        timeCout() << indentation << "process " << processRank << " - "
+                   << "Solver Statistics for block " << i_blockX << ", " << i_blockY << ":" << std::endl;
+        timeCout() << indentation << "process " << processRank << " - " << indentation
+                   << "Times the " << i_firstSolverName << " was used: " << i_firstSolverCounter << std::endl;
+        timeCout() << indentation << "process " << processRank << " - " << indentation
+                   << "Times the " << i_secondSolverName << " was used: " << i_secondSolverCounter << std::endl;
+        timeCout() << indentation << "process " << processRank << " - " << indentation
+                   << "In Total: " << i_firstSolverCounter + i_secondSolverCounter << std::endl;
     }
 
     /**
@@ -417,7 +419,7 @@ class tools::Logger {
      * @param i_name Name of timer
      */
     void updateTime(const std::string &i_name) {
-    	timer[i_name] += (clock() - clocks.at(i_name))/(double)CLOCKS_PER_SEC;
+        timer[i_name] += (clock() - clocks.at(i_name)) / (double) CLOCKS_PER_SEC;
     }
 
     /**
@@ -426,7 +428,7 @@ class tools::Logger {
      * @param i_name Name of timer/clock
      */
     void resetClockToCurrentTime(const std::string &i_name) {
-    	clocks[i_name] = clock();
+        clocks[i_name] = clock();
     }
 
     /**
@@ -434,8 +436,8 @@ class tools::Logger {
      *
      * @param i_wallClockTime value the wall block time will be set to.
      */
-    void initWallClockTime( const double i_wallClockTime ) {
-      wallClockTime = i_wallClockTime;
+    void initWallClockTime(const double i_wallClockTime) {
+        wallClockTime = i_wallClockTime;
     }
 
     /**
@@ -443,12 +445,12 @@ class tools::Logger {
      *
      * @param i_wallClockTime wall clock time message.
      */
-    void printWallClockTime( const double i_wallClockTime,
-                             const std::string i_wallClockTimeMessage = "wall clock time" ) {
-      timeCout() << indentation << "process " << processRank << " - "
-                 << i_wallClockTimeMessage << ": "
-                 << i_wallClockTime - wallClockTime
-                 << " seconds"<< std::endl;
+    void printWallClockTime(const double i_wallClockTime,
+                            const std::string i_wallClockTimeMessage = "wall clock time") {
+        timeCout() << indentation << "process " << processRank << " - "
+                   << i_wallClockTimeMessage << ": "
+                   << i_wallClockTime - wallClockTime
+                   << " seconds" << std::endl;
     }
 
     /**
@@ -457,10 +459,10 @@ class tools::Logger {
      * @param i_name Name of the timer
      * @param i_message time message.
      */
-    void printTime(const std::string &i_name, const std::string &i_message ) {
-      timeCout() << indentation << "process " << processRank << " - "
-                << i_message << ": "
-                << timer.at(i_name) << " seconds"<< std::endl;
+    void printTime(const std::string &i_name, const std::string &i_message) {
+        timeCout() << indentation << "process " << processRank << " - "
+                   << i_message << ": "
+                   << timer.at(i_name) << " seconds" << std::endl;
     }
 
     /**
@@ -470,7 +472,7 @@ class tools::Logger {
      * @return elapsed time
      */
     double getTime(const std::string &i_name) {
-    	return timer.at(i_name);
+        return timer.at(i_name);
     }
 
     /**
@@ -479,12 +481,11 @@ class tools::Logger {
      * @param i_iterations Number of iterations done
      * @param i_interationMessage Iterations done message
      */
-    void printIterationsDone(unsigned int i_iterations, std::string i_iterationMessage = "iterations done")
-    {
-    	if (processRank == 0) {
-    		timeCout() << indentation << i_iterations
-    			<< ' ' << i_iterationMessage << std::endl;
-    	}
+    void printIterationsDone(unsigned int i_iterations, std::string i_iterationMessage = "iterations done") {
+        if (processRank == 0) {
+            timeCout() << indentation << i_iterations
+                       << ' ' << i_iterationMessage << std::endl;
+        }
     }
 
     /**
@@ -493,16 +494,16 @@ class tools::Logger {
      * @param i_iterations Number of iterations done
      * @param i_interationMessage Iterations done message
      */
-    void printElementUpdatesDone(unsigned int i_iterations, const int i_nX, const int i_nY, 
-	                             const std::string &i_name, const std::string i_iterationMessage = "element updates per second done")
-    {
-    	if (processRank == 0) {
-    		timeCout() << indentation << double(i_iterations)*i_nX*i_nY / timer.at(i_name)
-    			<< ' ' << i_iterationMessage << std::endl;
-    	}
+    void printElementUpdatesDone(unsigned int i_iterations, const int i_nX, const int i_nY,
+                                 const std::string &i_name,
+                                 const std::string i_iterationMessage = "element updates per second done") {
+        if (processRank == 0) {
+            timeCout() << indentation << double(i_iterations) * i_nX * i_nY / timer.at(i_name)
+                       << ' ' << i_iterationMessage << std::endl;
+        }
     }
 
-  public:
+public:
     /** The logger all classes should use */
     static Logger logger;
 };

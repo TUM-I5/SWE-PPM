@@ -29,35 +29,42 @@
 #define __SWE_BLOCKCUDAKERNELS_HH
 
 // declaration of CUDA kernels
-__global__ 
-void kernelHdBufferEdges(float* hd, int nx, int ny);
-
-__global__ 
-void kernelMaximum(float* maxhd, float* maxvd, int start, int size);
+__global__
+void kernelHdBufferEdges(float *hd, int nx, int ny);
 
 __global__
-void kernelLeftBoundary(float* hd, float* hud, float* hvd,
+void kernelMaximum(float *maxhd, float *maxvd, int start, int size);
+
+__global__
+void kernelLeftBoundary(float *hd, float *hud, float *hvd,
                         int nx, int ny, BoundaryType bound);
+
 __global__
-void kernelRightBoundary(float* hd, float* hud, float* hvd,
+void kernelRightBoundary(float *hd, float *hud, float *hvd,
                          int nx, int ny, BoundaryType bound);
+
 __global__
-void kernelBottomBoundary(float* hd, float* hud, float* hvd,
+void kernelBottomBoundary(float *hd, float *hud, float *hvd,
                           int nx, int ny, BoundaryType bound);
+
 __global__
-void kernelTopBoundary(float* hd, float* hud, float* hvd,
+void kernelTopBoundary(float *hd, float *hud, float *hvd,
                        int nx, int ny, BoundaryType bound);
+
 __global__
-void kernelBottomGhostBoundary(float* hd, float* hud, float* hvd,
-                               float* bottomGhostLayer, int nx, int ny);
+void kernelBottomGhostBoundary(float *hd, float *hud, float *hvd,
+                               float *bottomGhostLayer, int nx, int ny);
+
 __global__
-void kernelTopGhostBoundary(float* hd, float* hud, float* hvd,
-                            float* topGhostLayer, int nx, int ny);
+void kernelTopGhostBoundary(float *hd, float *hud, float *hvd,
+                            float *topGhostLayer, int nx, int ny);
+
 __global__
-void kernelBottomCopyLayer(float* hd, float* hud, float* hvd,
-                           float* bottomCopyLayer, int nx, int ny);
+void kernelBottomCopyLayer(float *hd, float *hud, float *hvd,
+                           float *bottomCopyLayer, int nx, int ny);
+
 __global__
-void kernelTopCopyLayer(float* hd, float* hud, float* hvd,
-                        float* topCopyLayer, int nx, int ny);
+void kernelTopCopyLayer(float *hd, float *hud, float *hvd,
+                        float *topCopyLayer, int nx, int ny);
 
 #endif

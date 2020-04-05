@@ -42,81 +42,79 @@
  *
  * @todo This version can only handle a boundary layer of size 1
  */
-VtkWriter::VtkWriter( const std::string &i_baseName,
-		const Float2D &i_b,
-		const BoundarySize &i_boundarySize,
-		int i_nX, int i_nY,
-		float i_dX, float i_dY,
-		int i_offsetX, int i_offsetY) :
-  Writer(i_baseName, i_b, i_boundarySize, i_nX, i_nY),
-  dX(i_dX), dY(i_dY),
-  offsetX(i_offsetX), offsetY(i_offsetY)
-{
+VtkWriter::VtkWriter(const std::string &i_baseName,
+                     const Float2D &i_b,
+                     const BoundarySize &i_boundarySize,
+                     int i_nX, int i_nY,
+                     float i_dX, float i_dY,
+                     int i_offsetX, int i_offsetY) :
+        Writer(i_baseName, i_b, i_boundarySize, i_nX, i_nY),
+        dX(i_dX), dY(i_dY),
+        offsetX(i_offsetX), offsetY(i_offsetY) {
 }
 
 void VtkWriter::writeTimeStep(
-		const Float2D &i_h,
+        const Float2D &i_h,
         const Float2D &i_hu,
         const Float2D &i_hv,
-        float i_time)
-{
-	std::ofstream vtkFile(generateFileName().c_str());
-	assert(vtkFile.good());
+        float i_time) {
+    std::ofstream vtkFile(generateFileName().c_str());
+    assert(vtkFile.good());
 
-	// VTK header
-	vtkFile << "<?xml version=\"1.0\"?>" << std::endl
-			<< "<VTKFile type=\"StructuredGrid\">" << std::endl
-			<< "<StructuredGrid WholeExtent=\"" << offsetX << " " << offsetX+nX
-				<< " " << offsetY << " " << offsetY+nY << " 0 0\">" << std::endl
-	        << "<Piece Extent=\"" << offsetX << " " << offsetX+nX
-	        	<< " " << offsetY << " " << offsetY+nY << " 0 0\">" << std::endl;
+    // VTK header
+    vtkFile << "<?xml version=\"1.0\"?>" << std::endl
+            << "<VTKFile type=\"StructuredGrid\">" << std::endl
+            << "<StructuredGrid WholeExtent=\"" << offsetX << " " << offsetX + nX
+            << " " << offsetY << " " << offsetY + nY << " 0 0\">" << std::endl
+            << "<Piece Extent=\"" << offsetX << " " << offsetX + nX
+            << " " << offsetY << " " << offsetY + nY << " 0 0\">" << std::endl;
 
-	vtkFile << "<Points>" << std::endl
-			<< "<DataArray NumberOfComponents=\"3\" type=\"Float32\" format=\"ascii\">" << std::endl;
+    vtkFile << "<Points>" << std::endl
+            << "<DataArray NumberOfComponents=\"3\" type=\"Float32\" format=\"ascii\">" << std::endl;
 
-	//Grid points
-	for (int j=0; j < nY+1; j++)
-	      for (int i=0; i < nX+1; i++)
-	    	  vtkFile << (offsetX+i)*dX << " " << (offsetY+j)*dY <<" 0" << std::endl;
+    //Grid points
+    for (int j = 0; j < nY + 1; j++)
+        for (int i = 0; i < nX + 1; i++)
+            vtkFile << (offsetX + i) * dX << " " << (offsetY + j) * dY << " 0" << std::endl;
 
-	vtkFile << "</DataArray>" << std::endl
-			<< "</Points>" << std::endl;
+    vtkFile << "</DataArray>" << std::endl
+            << "</Points>" << std::endl;
 
-	vtkFile << "<CellData>" << std::endl;
+    vtkFile << "<CellData>" << std::endl;
 
-	// Water surface height h
-	vtkFile << "<DataArray Name=\"h\" type=\"Float32\" format=\"ascii\">" << std::endl;
-	for (int j=1; j < nY+1; j++)
-		for (int i=1; i < nX+1; i++)
-			vtkFile << i_h[i][j] << std::endl;
-	vtkFile << "</DataArray>" << std::endl;
+    // Water surface height h
+    vtkFile << "<DataArray Name=\"h\" type=\"Float32\" format=\"ascii\">" << std::endl;
+    for (int j = 1; j < nY + 1; j++)
+        for (int i = 1; i < nX + 1; i++)
+            vtkFile << i_h[i][j] << std::endl;
+    vtkFile << "</DataArray>" << std::endl;
 
-	// Momentums
-	vtkFile << "<DataArray Name=\"hu\" type=\"Float32\" format=\"ascii\">" << std::endl;
-	for (int j=1; j < nY+1; j++)
-		for (int i=1; i < nX+1; i++)
-			vtkFile << i_hu[i][j] << std::endl;
-	vtkFile << "</DataArray>" << std::endl;
+    // Momentums
+    vtkFile << "<DataArray Name=\"hu\" type=\"Float32\" format=\"ascii\">" << std::endl;
+    for (int j = 1; j < nY + 1; j++)
+        for (int i = 1; i < nX + 1; i++)
+            vtkFile << i_hu[i][j] << std::endl;
+    vtkFile << "</DataArray>" << std::endl;
 
-	vtkFile << "<DataArray Name=\"hv\" type=\"Float32\" format=\"ascii\">" << std::endl;
-	for (int j=1; j < nY+1; j++)
-		for (int i=1; i<nX+1; i++)
-			vtkFile << i_hv[i][j] << std::endl;
-	vtkFile << "</DataArray>" << std::endl;
+    vtkFile << "<DataArray Name=\"hv\" type=\"Float32\" format=\"ascii\">" << std::endl;
+    for (int j = 1; j < nY + 1; j++)
+        for (int i = 1; i < nX + 1; i++)
+            vtkFile << i_hv[i][j] << std::endl;
+    vtkFile << "</DataArray>" << std::endl;
 
-	// Bathymetry
-	vtkFile << "<DataArray Name=\"b\" type=\"Float32\" format=\"ascii\">" << std::endl;
-	for (int j=1; j<nY+1; j++)
-		for (int i=1; i<nX+1; i++)
-			vtkFile << b[i][j] << std::endl;
-	vtkFile << "</DataArray>" << std::endl;
+    // Bathymetry
+    vtkFile << "<DataArray Name=\"b\" type=\"Float32\" format=\"ascii\">" << std::endl;
+    for (int j = 1; j < nY + 1; j++)
+        for (int i = 1; i < nX + 1; i++)
+            vtkFile << b[i][j] << std::endl;
+    vtkFile << "</DataArray>" << std::endl;
 
-	vtkFile << "</CellData>" << std::endl
-			<< "</Piece>" << std::endl;
+    vtkFile << "</CellData>" << std::endl
+            << "</Piece>" << std::endl;
 
-	vtkFile << "</StructuredGrid>" << std::endl
-			<< "</VTKFile>" << std::endl;
+    vtkFile << "</StructuredGrid>" << std::endl
+            << "</VTKFile>" << std::endl;
 
-	// Increament time step
-	timeStep++;
+    // Increament time step
+    timeStep++;
 }

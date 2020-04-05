@@ -92,37 +92,36 @@
  * @param i_cudaDevice ID of the CUDA-device, which should be used.
  */
 SWE_WavePropagationBlockCuda::SWE_WavePropagationBlockCuda(
-		int l_nx, int l_ny,
-		float l_dx, float l_dy)
-	: SWE_BlockCUDA(l_nx, l_ny, l_dx, l_dy)
-{
-  // compute the size of one 1D net-update array.
-  int sizeOfNetUpdates = (nx+1)*(ny+1)*sizeof(float);
+        int l_nx, int l_ny,
+        float l_dx, float l_dy)
+        : SWE_BlockCUDA(l_nx, l_ny, l_dx, l_dy) {
+    // compute the size of one 1D net-update array.
+    int sizeOfNetUpdates = (nx + 1) * (ny + 1) * sizeof(float);
 
-  // allocate CUDA memory for the net-updates
-  cudaMalloc((void**)&hNetUpdatesLeftD, sizeOfNetUpdates);
-  checkCUDAError("allocate device memory for hNetUpdatesLeftD");
+    // allocate CUDA memory for the net-updates
+    cudaMalloc((void **) &hNetUpdatesLeftD, sizeOfNetUpdates);
+    checkCUDAError("allocate device memory for hNetUpdatesLeftD");
 
-  cudaMalloc((void**)&hNetUpdatesRightD, sizeOfNetUpdates);
-  checkCUDAError("allocate device memory for hNetUpdatesRightD");
+    cudaMalloc((void **) &hNetUpdatesRightD, sizeOfNetUpdates);
+    checkCUDAError("allocate device memory for hNetUpdatesRightD");
 
-  cudaMalloc((void**)&huNetUpdatesLeftD, sizeOfNetUpdates);
-  checkCUDAError("allocate device memory for huNetUpdatesLeftD");
+    cudaMalloc((void **) &huNetUpdatesLeftD, sizeOfNetUpdates);
+    checkCUDAError("allocate device memory for huNetUpdatesLeftD");
 
-  cudaMalloc((void**)&huNetUpdatesRightD, sizeOfNetUpdates);
-  checkCUDAError("allocate device memory for huNetUpdatesRightD");
+    cudaMalloc((void **) &huNetUpdatesRightD, sizeOfNetUpdates);
+    checkCUDAError("allocate device memory for huNetUpdatesRightD");
 
-  cudaMalloc((void**)&hNetUpdatesBelowD, sizeOfNetUpdates);
-  checkCUDAError("allocate device memory for hNetUpdatesBelowD");
+    cudaMalloc((void **) &hNetUpdatesBelowD, sizeOfNetUpdates);
+    checkCUDAError("allocate device memory for hNetUpdatesBelowD");
 
-  cudaMalloc((void**)&hNetUpdatesAboveD, sizeOfNetUpdates);
-  checkCUDAError("allocate device memory for hNetUpdatesAboveD");
+    cudaMalloc((void **) &hNetUpdatesAboveD, sizeOfNetUpdates);
+    checkCUDAError("allocate device memory for hNetUpdatesAboveD");
 
-  cudaMalloc((void**)&hvNetUpdatesBelowD, sizeOfNetUpdates);
-  checkCUDAError("allocate device memory for hvNetUpdatesBelowD");
+    cudaMalloc((void **) &hvNetUpdatesBelowD, sizeOfNetUpdates);
+    checkCUDAError("allocate device memory for hvNetUpdatesBelowD");
 
-  cudaMalloc((void**)&hvNetUpdatesAboveD, sizeOfNetUpdates);
-  checkCUDAError("allocate device memory for hNetUpdatesAboveD");
+    cudaMalloc((void **) &hvNetUpdatesAboveD, sizeOfNetUpdates);
+    checkCUDAError("allocate device memory for hNetUpdatesAboveD");
 }
 
 /**
@@ -132,16 +131,16 @@ SWE_WavePropagationBlockCuda::SWE_WavePropagationBlockCuda(
  * Resets the CUDA device: Useful if error occured and printf is used on the device (buffer).
  */
 SWE_WavePropagationBlockCuda::~SWE_WavePropagationBlockCuda() {
-  // free the net-updates memory
-  cudaFree(hNetUpdatesLeftD);
-  cudaFree(hNetUpdatesRightD);
-  cudaFree(huNetUpdatesLeftD);
-  cudaFree(huNetUpdatesRightD);
+    // free the net-updates memory
+    cudaFree(hNetUpdatesLeftD);
+    cudaFree(hNetUpdatesRightD);
+    cudaFree(huNetUpdatesLeftD);
+    cudaFree(huNetUpdatesRightD);
 
-  cudaFree(hNetUpdatesBelowD);
-  cudaFree(hNetUpdatesAboveD);
-  cudaFree(hvNetUpdatesBelowD);
-  cudaFree(hvNetUpdatesAboveD);
+    cudaFree(hNetUpdatesBelowD);
+    cudaFree(hNetUpdatesAboveD);
+    cudaFree(hvNetUpdatesBelowD);
+    cudaFree(hvNetUpdatesAboveD);
 }
 
 /**
@@ -156,11 +155,11 @@ SWE_WavePropagationBlockCuda::~SWE_WavePropagationBlockCuda() {
  */
 __host__
 void SWE_WavePropagationBlockCuda::simulateTimestep(float i_dT) {
- // Compute the numerical fluxes/net-updates in the wave propagation formulation.
- computeNumericalFluxes();
+    // Compute the numerical fluxes/net-updates in the wave propagation formulation.
+    computeNumericalFluxes();
 
- // Update the unknowns with the net-updates.
- updateUnknowns(i_dT);
+    // Update the unknowns with the net-updates.
+    updateUnknowns(i_dT);
 }
 
 /**
@@ -173,22 +172,22 @@ void SWE_WavePropagationBlockCuda::simulateTimestep(float i_dT) {
  */
 __host__
 float SWE_WavePropagationBlockCuda::simulate(float tStart, float tEnd) {
-  float t = tStart;
-  do {
-     // set values in ghost cells:
-     setGhostLayer();
-     
-     // Compute the numerical fluxes/net-updates in the wave propagation formulation.
-     computeNumericalFluxes();
+    float t = tStart;
+    do {
+        // set values in ghost cells:
+        setGhostLayer();
 
-     // Update the unknowns with the net-updates.
-     updateUnknowns(maxTimestep);
-	 
-	 t += maxTimestep;
+        // Compute the numerical fluxes/net-updates in the wave propagation formulation.
+        computeNumericalFluxes();
+
+        // Update the unknowns with the net-updates.
+        updateUnknowns(maxTimestep);
+
+        t += maxTimestep;
 //     cout << "Simulation at time " << t << endl << flush;
-  } while(t < tEnd);
+    } while (t < tEnd);
 
-  return t;
+    return t;
 }
 
 
@@ -210,138 +209,140 @@ float SWE_WavePropagationBlockCuda::simulate(float tStart, float tEnd) {
  *       => maximum time step (splitting the dimensions): min(11/10, 6/5.5) = 1.09..
  */
 void SWE_WavePropagationBlockCuda::computeNumericalFluxes() {
-  /*
-   * Initialization.
-   */
+    /*
+     * Initialization.
+     */
 
-  /**
-   * <b>Row-major vs column-major</b>
-   *
-   * C/C++ arrays are row-major whereas warps are constructed in column-major order from threads/blocks. To get coalesced
-   * memory access in CUDA, we can use a 2-dimensional CUDA structure but we have to switch x and y inside a block.
-   *
-   * This means, we have to switch threadIdx.x <-> threadIdx.y as well as blockDim.x <-> blockDim.y.
-   * Important: blockDim has to be switched for the kernel call as well!
-   */
+    /**
+     * <b>Row-major vs column-major</b>
+     *
+     * C/C++ arrays are row-major whereas warps are constructed in column-major order from threads/blocks. To get coalesced
+     * memory access in CUDA, we can use a 2-dimensional CUDA structure but we have to switch x and y inside a block.
+     *
+     * This means, we have to switch threadIdx.x <-> threadIdx.y as well as blockDim.x <-> blockDim.y.
+     * Important: blockDim has to be switched for the kernel call as well!
+     */
 
-  //! definition of one CUDA-block. Typical size are 8*8 or 16*16
-  dim3 dimBlock(TILE_SIZE, TILE_SIZE);
+    //! definition of one CUDA-block. Typical size are 8*8 or 16*16
+    dim3 dimBlock(TILE_SIZE, TILE_SIZE);
 
-  /**
-   * Definition of the "main" CUDA-grid.
-   * This grid covers only edges 0..#(edges in x-direction)-2 and 0..#(edges in y-direction)-2.
-   *
-   * An example with a computational domain of size
-   *  nx = 24, ny = 16
-   * with a 1 cell ghost layer would result in a grid with
-   *  (nx+2)*(ny+2) = (26*18)
-   * cells and
-   *  (nx+1)*(ny+1) = (25*17)
-   * edges.
-   *
-   * The CUDA-blocks (here 8*8) mentioned above would cover all edges except
-   * the ones lying between the computational domain and the right/top ghost layer:
-   * <pre>
-   *                                                          *
-   *                                                         **        top ghost layer,
-   *                                                        ********   cell ids
-   *                        *******************************  **        = (*, ny+1)
-   *                        *         *         *         *   *
-   *                        *   8*8   *   8*8   *   8*8   *
-   *                        *  block  *  block  *  block  *
-   *                        *         *         *         *
-   *                        *******************************
-   *                        *         *         *         *
-   *                        *   8*8   *   8*8   *   8*8   *
-   *                    *   *  block  *  block  *  block  *
-   *     bottom         **  *         *         *         *
-   *     ghost     ******** *******************************
-   *     layer,         **
-   *     cell ids       *   *                              *
-   *     =(*,0)            ***                            ***
-   *                        *                              *
-   *                        *                              *
-   *                  left ghost layer,             right ghost layer,
-   *                  cell ids = (0,*)             cell ids = (nx+1, *)
-   * </pre>
-   */
-  dim3 dimGrid(nx/TILE_SIZE,ny/TILE_SIZE);
+    /**
+     * Definition of the "main" CUDA-grid.
+     * This grid covers only edges 0..#(edges in x-direction)-2 and 0..#(edges in y-direction)-2.
+     *
+     * An example with a computational domain of size
+     *  nx = 24, ny = 16
+     * with a 1 cell ghost layer would result in a grid with
+     *  (nx+2)*(ny+2) = (26*18)
+     * cells and
+     *  (nx+1)*(ny+1) = (25*17)
+     * edges.
+     *
+     * The CUDA-blocks (here 8*8) mentioned above would cover all edges except
+     * the ones lying between the computational domain and the right/top ghost layer:
+     * <pre>
+     *                                                          *
+     *                                                         **        top ghost layer,
+     *                                                        ********   cell ids
+     *                        *******************************  **        = (*, ny+1)
+     *                        *         *         *         *   *
+     *                        *   8*8   *   8*8   *   8*8   *
+     *                        *  block  *  block  *  block  *
+     *                        *         *         *         *
+     *                        *******************************
+     *                        *         *         *         *
+     *                        *   8*8   *   8*8   *   8*8   *
+     *                    *   *  block  *  block  *  block  *
+     *     bottom         **  *         *         *         *
+     *     ghost     ******** *******************************
+     *     layer,         **
+     *     cell ids       *   *                              *
+     *     =(*,0)            ***                            ***
+     *                        *                              *
+     *                        *                              *
+     *                  left ghost layer,             right ghost layer,
+     *                  cell ids = (0,*)             cell ids = (nx+1, *)
+     * </pre>
+     */
+    dim3 dimGrid(nx / TILE_SIZE, ny / TILE_SIZE);
 
-  // assert a valid tile size
-  assert(nx%TILE_SIZE==0);
-  assert(ny%TILE_SIZE==0);
+    // assert a valid tile size
+    assert(nx % TILE_SIZE == 0);
+    assert(ny % TILE_SIZE == 0);
 
-  // "2D array" which holds the blockwise maximum wave speeds
-  float* l_maximumWaveSpeedsD;
+    // "2D array" which holds the blockwise maximum wave speeds
+    float *l_maximumWaveSpeedsD;
 
-  // size of the maximum wave speed array (dimension of the grid + ghost layers, without the top right block), sizeof(float) not included
-  int l_sizeMaxWaveSpeeds = ((dimGrid.x+1)*(dimGrid.y+1)-1);
-  cudaMalloc((void**)&l_maximumWaveSpeedsD, (l_sizeMaxWaveSpeeds*sizeof(float)) );
+    // size of the maximum wave speed array (dimension of the grid + ghost layers, without the top right block), sizeof(float) not included
+    int l_sizeMaxWaveSpeeds = ((dimGrid.x + 1) * (dimGrid.y + 1) - 1);
+    cudaMalloc((void **) &l_maximumWaveSpeedsD, (l_sizeMaxWaveSpeeds * sizeof(float)));
 
 
-  /*
-   * Compute the net updates for the 'main part and the two 'boundary' parts.
-   */
-  // compute the net-updates for the "main" part.
-  computeNetUpdatesKernel<<<dimGrid,dimBlock>>>( hd, hud, hvd, bd,
-                                                 hNetUpdatesLeftD,  hNetUpdatesRightD,
-                                                 huNetUpdatesLeftD, huNetUpdatesRightD,
-                                                 hNetUpdatesBelowD, hNetUpdatesAboveD,
-                                                 hvNetUpdatesBelowD, hvNetUpdatesAboveD,
-                                                 l_maximumWaveSpeedsD,
-                                                 nx,ny
-                                               );
+    /*
+     * Compute the net updates for the 'main part and the two 'boundary' parts.
+     */
+    // compute the net-updates for the "main" part.
+    computeNetUpdatesKernel << < dimGrid, dimBlock >> > (hd, hud, hvd, bd,
+            hNetUpdatesLeftD, hNetUpdatesRightD,
+            huNetUpdatesLeftD, huNetUpdatesRightD,
+            hNetUpdatesBelowD, hNetUpdatesAboveD,
+            hvNetUpdatesBelowD, hvNetUpdatesAboveD,
+            l_maximumWaveSpeedsD,
+            nx, ny
+    );
 
-  // compute the "remaining" net updates (edges "simulation domain"/"top ghost layer" and "simulation domain"/"right ghost layer")
-  // edges between cell nx and ghost layer nx+1
-  dim3 dimRightBlock(TILE_SIZE, 1);
-  dim3 dimRightGrid(1, ny/TILE_SIZE);
-  computeNetUpdatesKernel<<<dimRightGrid, dimRightBlock>>>( hd, hud, hvd, bd,
-                                                            hNetUpdatesLeftD,  hNetUpdatesRightD,
-                                                            huNetUpdatesLeftD, huNetUpdatesRightD,
-                                                            hNetUpdatesBelowD, hNetUpdatesAboveD,
-                                                            hvNetUpdatesBelowD, hvNetUpdatesAboveD,
-                                                            l_maximumWaveSpeedsD,
-                                                            nx, ny,
-                                                            nx, 0,
-                                                            dimGrid.x, 0);
+    // compute the "remaining" net updates (edges "simulation domain"/"top ghost layer" and "simulation domain"/"right ghost layer")
+    // edges between cell nx and ghost layer nx+1
+    dim3 dimRightBlock(TILE_SIZE, 1);
+    dim3 dimRightGrid(1, ny / TILE_SIZE);
+    computeNetUpdatesKernel << < dimRightGrid, dimRightBlock >> > (hd, hud, hvd, bd,
+            hNetUpdatesLeftD, hNetUpdatesRightD,
+            huNetUpdatesLeftD, huNetUpdatesRightD,
+            hNetUpdatesBelowD, hNetUpdatesAboveD,
+            hvNetUpdatesBelowD, hvNetUpdatesAboveD,
+            l_maximumWaveSpeedsD,
+            nx, ny,
+            nx, 0,
+            dimGrid.x, 0);
 
-  // edges between cell ny and ghost layer ny+1
-  dim3 dimTopBlock(1, TILE_SIZE);
-  dim3 dimTopGrid(nx/TILE_SIZE, 1);
-  computeNetUpdatesKernel<<<dimTopGrid, dimTopBlock>>>( hd, hud, hvd, bd,
-                                                        hNetUpdatesLeftD,  hNetUpdatesRightD,
-                                                        huNetUpdatesLeftD, huNetUpdatesRightD,
-                                                        hNetUpdatesBelowD, hNetUpdatesAboveD,
-                                                        hvNetUpdatesBelowD, hvNetUpdatesAboveD,
-                                                        l_maximumWaveSpeedsD,
-                                                        nx, ny,
-                                                        0, ny,
-                                                        0, dimGrid.y);
+    // edges between cell ny and ghost layer ny+1
+    dim3 dimTopBlock(1, TILE_SIZE);
+    dim3 dimTopGrid(nx / TILE_SIZE, 1);
+    computeNetUpdatesKernel << < dimTopGrid, dimTopBlock >> > (hd, hud, hvd, bd,
+            hNetUpdatesLeftD, hNetUpdatesRightD,
+            huNetUpdatesLeftD, huNetUpdatesRightD,
+            hNetUpdatesBelowD, hNetUpdatesAboveD,
+            hvNetUpdatesBelowD, hvNetUpdatesAboveD,
+            l_maximumWaveSpeedsD,
+            nx, ny,
+            0, ny,
+            0, dimGrid.y);
 
-  /*
-   * Finalize (max reduction of the maximumWaveSpeeds-array.)
-   *
-   * The Thrust library is used in this step.
-   * An optional kernel could be written for the maximum reduction.
-   */
-  // Thrust pointer to the device array
-  thrust::device_ptr<float> l_thrustDevicePointer(l_maximumWaveSpeedsD);
+    /*
+     * Finalize (max reduction of the maximumWaveSpeeds-array.)
+     *
+     * The Thrust library is used in this step.
+     * An optional kernel could be written for the maximum reduction.
+     */
+    // Thrust pointer to the device array
+    thrust::device_ptr<float> l_thrustDevicePointer(l_maximumWaveSpeedsD);
 
-  // use Thrusts max_element-function for the maximum reduction
-  thrust::device_ptr<float> l_thrustDevicePointerMax = thrust::max_element(l_thrustDevicePointer, l_thrustDevicePointer+l_sizeMaxWaveSpeeds);
+    // use Thrusts max_element-function for the maximum reduction
+    thrust::device_ptr<float> l_thrustDevicePointerMax = thrust::max_element(l_thrustDevicePointer,
+                                                                             l_thrustDevicePointer +
+                                                                             l_sizeMaxWaveSpeeds);
 
-  // get the result from the device
-  float l_maximumWaveSpeed = l_thrustDevicePointerMax[0];
+    // get the result from the device
+    float l_maximumWaveSpeed = l_thrustDevicePointerMax[0];
 
-  // free the max wave speeds array on the device
-  cudaFree(l_maximumWaveSpeedsD);
+    // free the max wave speeds array on the device
+    cudaFree(l_maximumWaveSpeedsD);
 
-  // set the maximum time step for this SWE_WavePropagationBlockCuda
-  maxTimestep = std::min( dx/l_maximumWaveSpeed, dy/l_maximumWaveSpeed );
+    // set the maximum time step for this SWE_WavePropagationBlockCuda
+    maxTimestep = std::min(dx / l_maximumWaveSpeed, dy / l_maximumWaveSpeed);
 
-  // CFL = 0.5
-  maxTimestep *= (float)0.4;
+    // CFL = 0.5
+    maxTimestep *= (float) 0.4;
 }
 
 /**
@@ -350,31 +351,31 @@ void SWE_WavePropagationBlockCuda::computeNumericalFluxes() {
  * @param i_deltaT time step size.
  */
 void SWE_WavePropagationBlockCuda::updateUnknowns(const float i_deltaT) {
-  //! definition of one CUDA-block. Typical size are 8*8 or 16*16
-  dim3 dimBlock(TILE_SIZE,TILE_SIZE);
+    //! definition of one CUDA-block. Typical size are 8*8 or 16*16
+    dim3 dimBlock(TILE_SIZE, TILE_SIZE);
 
-  //! definition of the CUDA-grid.
-  dim3 dimGrid(nx/TILE_SIZE,ny/TILE_SIZE);
+    //! definition of the CUDA-grid.
+    dim3 dimGrid(nx / TILE_SIZE, ny / TILE_SIZE);
 
-  // assert a valid tile size
-  assert(nx%TILE_SIZE==0);
-  assert(ny%TILE_SIZE==0);
+    // assert a valid tile size
+    assert(nx % TILE_SIZE == 0);
+    assert(ny % TILE_SIZE == 0);
 
-  // compute the update width.
-  float l_updateWidthX = i_deltaT / dx;
-  float l_updateWidthY = i_deltaT / dy;
+    // compute the update width.
+    float l_updateWidthX = i_deltaT / dx;
+    float l_updateWidthY = i_deltaT / dy;
 
-  // update the unknowns (global time step)
-  updateUnknownsKernel<<<dimGrid,dimBlock>>>( hNetUpdatesLeftD, hNetUpdatesRightD,
-                                              huNetUpdatesLeftD, huNetUpdatesRightD,
-                                              hNetUpdatesBelowD, hNetUpdatesAboveD,
-                                              hvNetUpdatesBelowD, hvNetUpdatesAboveD,
-                                              hd, hud, hvd,
-                                              l_updateWidthX, l_updateWidthY,
-                                              nx, ny);
+    // update the unknowns (global time step)
+    updateUnknownsKernel << < dimGrid, dimBlock >> > (hNetUpdatesLeftD, hNetUpdatesRightD,
+            huNetUpdatesLeftD, huNetUpdatesRightD,
+            hNetUpdatesBelowD, hNetUpdatesAboveD,
+            hvNetUpdatesBelowD, hvNetUpdatesAboveD,
+            hd, hud, hvd,
+            l_updateWidthX, l_updateWidthY,
+            nx, ny);
 
-  // synchronize the copy layer for MPI communication
-  #ifdef USEMPI
-  synchCopyLayerBeforeRead();
-  #endif
+    // synchronize the copy layer for MPI communication
+#ifdef USEMPI
+    synchCopyLayerBeforeRead();
+#endif
 }

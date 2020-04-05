@@ -46,24 +46,28 @@ using namespace std;
  */
 class SWE_RusanovBlockCUDA : public SWE_BlockCUDA {
 
-  public:
+public:
     // Constructor und Destructor
     SWE_RusanovBlockCUDA(float _offsetX = 0, float _offsetY = 0, const int i_cudaDevice = 0);
+
     virtual ~SWE_RusanovBlockCUDA();
-    
-  // object methods
+
+    // object methods
 
     virtual void computeNumericalFluxes();
+
     // simulate for specified time range
     // execute Euler time step
     virtual void updateUnknowns(float dt);
+
     /// execute a single time step of the simulation
     virtual void simulateTimestep(float dt);
+
     // compute flux terms on edges
     virtual float simulate(float tStart, float tEnd);
-    
-  private:
-     
+
+private:
+
     // compute bathymetry source terms
     void computeBathymetrySources();
 
@@ -71,24 +75,24 @@ class SWE_RusanovBlockCUDA : public SWE_BlockCUDA {
     void computeMaxTimestepCUDA();
 
     // arrays to hold the values of the flux terms at cell edges
-    float* Fhd;
-    float* Fhud;
-    float* Fhvd;
-    float* Ghd;
-    float* Ghud;
-    float* Ghvd;
+    float *Fhd;
+    float *Fhud;
+    float *Fhvd;
+    float *Ghd;
+    float *Ghud;
+    float *Ghvd;
 
     // arrays to hold the bathymetry source terms for the hu and hv equations
-    float* Bxd;
-    float* Byd;
-    
+    float *Bxd;
+    float *Byd;
+
     // helper arrays: store maximum height and velocities to determine time step
-    float* maxhd;
-    float* maxvd;
+    float *maxhd;
+    float *maxvd;
 
     // overload operator<< such that data can be written via cout <<
     // -> needs to be declared as friend to be allowed to access private data
-    friend ostream& operator<< (ostream& os, const SWE_RusanovBlockCUDA& swe);
+    friend ostream &operator<<(ostream &os, const SWE_RusanovBlockCUDA &swe);
 
 #ifdef DBG
     // --- only required for debugging purposes ---
@@ -102,9 +106,9 @@ class SWE_RusanovBlockCUDA : public SWE_BlockCUDA {
     // dump fluxes for h,hu,hv from CUDA device memory into main memory
     void cudaDumpFlux();
 #endif
-    
+
 };
 
-ostream& operator<< (ostream& os, const SWE_RusanovBlockCUDA& swe);
+ostream &operator<<(ostream &os, const SWE_RusanovBlockCUDA &swe);
 
 #endif

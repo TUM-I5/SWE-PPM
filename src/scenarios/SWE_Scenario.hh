@@ -40,20 +40,29 @@
  * for more interesting scenarios.
  */
 class SWE_Scenario {
-	public :
-		virtual ~SWE_Scenario() {}
-		virtual float getWaterHeight(float x, float y) { return 0; }
-		virtual float getBathymetry(float x, float y) { return 0; }
-		virtual float getVeloc_u(float x, float y) { return 0; }
-		virtual float getVeloc_v(float x, float y) { return 0; }
-		virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; }
-		virtual float getBoundaryPos(Boundary boundary) {
-			if (boundary == BND_LEFT || boundary == BND_BOTTOM)
-				return 0.0f;
-			else
-				return 1.0f; 
-		}
-		virtual float waterHeightAtRest() { return 0; };
-		virtual float endSimulation() { return 0; };
+public :
+    virtual ~SWE_Scenario() {}
+
+    virtual float getWaterHeight(float x, float y) { return 0; }
+
+    virtual float getBathymetry(float x, float y) { return 0; }
+
+    virtual float getVeloc_u(float x, float y) { return 0; }
+
+    virtual float getVeloc_v(float x, float y) { return 0; }
+
+    virtual BoundaryType getBoundaryType(Boundary boundary) { return OUTFLOW; }
+
+    virtual float getBoundaryPos(Boundary boundary) {
+        if (boundary == BND_LEFT || boundary == BND_BOTTOM)
+            return 0.0f;
+        else
+            return 1.0f;
+    }
+
+    virtual float waterHeightAtRest() { return 0; };
+
+    virtual float endSimulation() { return 0; };
 };
+
 #endif // _SWE_SCENARIO_HH

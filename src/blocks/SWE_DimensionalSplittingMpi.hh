@@ -38,39 +38,48 @@
 #include "tools/Float2DNative.hh"
 #include "tools/CollectorMpi.hpp"
 #include <mpi.h>
-#if WAVE_PROPAGATION_SOLVER==0
+
+#if WAVE_PROPAGATION_SOLVER == 0
 //#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
-#elif WAVE_PROPAGATION_SOLVER==1
+
+#elif WAVE_PROPAGATION_SOLVER == 1
 #include "solvers/FWave.hpp"
 #elif WAVE_PROPAGATION_SOLVER==2
 #include "solvers/AugRie.hpp"
 #endif
 
 class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
-	public:
-		// Constructor/Destructor
-		SWE_DimensionalSplittingMpi(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY,bool localTimestepping);
-		~SWE_DimensionalSplittingMpi() {};
+public:
+    // Constructor/Destructor
+    SWE_DimensionalSplittingMpi(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
+                                float cellSizeVertical, float originX, float originY, bool localTimestepping);
 
-		// Interface methods
-		void setGhostLayer();
-		void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
-		void computeNumericalFluxes();
-		void updateUnknowns(float dt);
+    ~SWE_DimensionalSplittingMpi() {};
 
-		// Mpi specific
-		void freeMpiType();
-		void connectNeighbours(int neighbourRankId[]);
-		void exchangeBathymetry();
+    // Interface methods
+    void setGhostLayer();
+
+    void connectBoundaries(Boundary boundary, SWE_Block &neighbour, Boundary neighbourBoundary);
+
+    void computeNumericalFluxes();
+
+    void updateUnknowns(float dt);
+
+    // Mpi specific
+    void freeMpiType();
+
+    void connectNeighbours(int neighbourRankId[]);
+
+    void exchangeBathymetry();
 
     int iteration = 0;
-	private:
-#if WAVE_PROPAGATION_SOLVER==0
+private:
+#if WAVE_PROPAGATION_SOLVER == 0
     //! Hybrid solver (f-wave + augmented)
     //solver::Hybrid<float> solver;
     solver::HLLEFun<float> solver;
-#elif WAVE_PROPAGATION_SOLVER==1
+#elif WAVE_PROPAGATION_SOLVER == 1
     //! F-wave Riemann solver
     solver::FWave<float> solver;
 #elif WAVE_PROPAGATION_SOLVER==2
@@ -78,39 +87,40 @@ class SWE_DimensionalSplittingMpi : public SWE_Block<Float2DNative> {
     solver::AugRie<float> solver;
 #endif
 
-		// Max timestep reduced over all upcxx ranks
-		float maxTimestepGlobal;
+    // Max timestep reduced over all upcxx ranks
+    float maxTimestepGlobal;
 
-		// Temporary values after x-sweep and before y-sweep
-		Float2DNative hStar;
-		Float2DNative huStar;
+    // Temporary values after x-sweep and before y-sweep
+    Float2DNative hStar;
+    Float2DNative huStar;
 
-		// net updates per cell
-		Float2DNative hNetUpdatesLeft;
-		Float2DNative hNetUpdatesRight;
+    // net updates per cell
+    Float2DNative hNetUpdatesLeft;
+    Float2DNative hNetUpdatesRight;
 
-		Float2DNative huNetUpdatesLeft;
-		Float2DNative huNetUpdatesRight;
+    Float2DNative huNetUpdatesLeft;
+    Float2DNative huNetUpdatesRight;
 
-		Float2DNative hNetUpdatesBelow;
-		Float2DNative hNetUpdatesAbove;
+    Float2DNative hNetUpdatesBelow;
+    Float2DNative hNetUpdatesAbove;
 
-		Float2DNative hvNetUpdatesBelow;
-		Float2DNative hvNetUpdatesAbove;
+    Float2DNative hvNetUpdatesBelow;
+    Float2DNative hvNetUpdatesAbove;
 
-		/* Copy buffer:
-		 * Since Float2D are stored column-wise in memory,
-		 * it is expensive to read rows from a Float2D since it is necessary to stride an entire column after each read element.
-		 * Therefore we duplicate elements belonging to the bottom/top copy layers into a copy buffer when updateUnkowns() runs.
-		 */
-		//float* topCopyBuffer[nx];
-		//float* bottomCopyBuffer[nx];
+    /* Copy buffer:
+     * Since Float2D are stored column-wise in memory,
+     * it is expensive to read rows from a Float2D since it is necessary to stride an entire column after each read element.
+     * Therefore we duplicate elements belonging to the bottom/top copy layers into a copy buffer when updateUnkowns() runs.
+     */
+    //float* topCopyBuffer[nx];
+    //float* bottomCopyBuffer[nx];
 
-		// Neighbouring block rank ids, indexed by Boundary
-		int neighbourRankId[4];
+    // Neighbouring block rank ids, indexed by Boundary
+    int neighbourRankId[4];
 
-		// Custom data types for bottom/top border which are requrired due to the stride
-		MPI_Datatype HORIZONTAL_BOUNDARY;
+    // Custom data types for bottom/top border which are requrired due to the stride
+    MPI_Datatype HORIZONTAL_BOUNDARY;
 
 };
+
 #endif /* SWEDIMENSIONALSPLITTINGMPI_HH_ */

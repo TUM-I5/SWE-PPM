@@ -42,47 +42,51 @@
 #include <sstream>
 
 class Float1D {
-	public:
-		int getSize() const;
-		//T getPointer() const;
-		float* getRawPointer() const;
+public:
+    int getSize() const;
 
-		inline float& operator[](int index);
+    //T getPointer() const;
+    float *getRawPointer() const;
 
-	protected:
-		Float1D(); 
-		Float1D(float* rawData, int size, int stride = 1);
-		virtual ~Float1D() = 0;
-		
-		int size;
-		int stride;
+    inline float &operator[](int index);
 
-		//T data;
-		float* rawData;
+protected:
+    Float1D();
+
+    Float1D(float *rawData, int size, int stride = 1);
+
+    virtual ~Float1D() = 0;
+
+    int size;
+    int stride;
+
+    //T data;
+    float *rawData;
 };
 
 Float1D::Float1D() {}
 
-Float1D::Float1D(float* rawData, int size, int stride) :
-			rawData(rawData),
-			size(size),
-			stride(stride) {}
+Float1D::Float1D(float *rawData, int size, int stride) :
+        rawData(rawData),
+        size(size),
+        stride(stride) {}
 
 Float1D::~Float1D() {}
 
 int Float1D::getSize() const {
-	return size;
+    return size;
 }
 
 //T Float1D::getPointer() const {
 //	return data;
 //}
 
-float* Float1D::getRawPointer() const {
-	return rawData;
+float *Float1D::getRawPointer() const {
+    return rawData;
 }
 
-inline float& Float1D::operator[](int index) { 
-	return rawData[index * stride]; 
+inline float &Float1D::operator[](int index) {
+    return rawData[index * stride];
 }
+
 #endif // FLOAT1D_HH

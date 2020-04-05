@@ -3,13 +3,13 @@
 
 // available boundary edges
 typedef enum Boundary {
-	BND_LEFT,
-	BND_RIGHT,
-	BND_BOTTOM,
-	BND_TOP
+    BND_LEFT,
+    BND_RIGHT,
+    BND_BOTTOM,
+    BND_TOP
 } Boundary;
 
-typedef enum GhostlayerState{
+typedef enum GhostlayerState {
     GL_UNVALID, //When neighbour has smaller timestep
     GL_INTER, //When neighbour has bigger timestep
     GL_SYNC, //When neighbour has same timestep
@@ -18,12 +18,12 @@ typedef enum GhostlayerState{
 
 // available types of boundary conditions
 typedef enum BoundaryType {
-	OUTFLOW,
-	WALL,
-	INFLOW,
-	CONNECT,
+    OUTFLOW,
+    WALL,
+    INFLOW,
+    CONNECT,
     CONNECT_WITHIN_RANK,
-	PASSIVE
+    PASSIVE
 } BoundaryType;
 
 /*

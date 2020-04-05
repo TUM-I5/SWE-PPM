@@ -108,138 +108,152 @@ using namespace std;
 class SWE_Block1D;
 
 class SWE_Block {
-	public:
-		// gravity constant (g = 9.81 m/s^2):
-		static const float g;
+public:
+    // gravity constant (g = 9.81 m/s^2):
+    static const float g;
 
-		// initialise unknowns to a specific scenario
-		void initScenario(float _offsetX, float _offsetY,
-				SWE_Scenario &i_scenario, const bool i_multipleBlocks = false);
+    // initialise unknowns to a specific scenario
+    void initScenario(float _offsetX, float _offsetY,
+                      SWE_Scenario &i_scenario, const bool i_multipleBlocks = false);
 
-		// initialise unknowns to some specific function
-		void setWaterHeight(float (*_h)(float, float));
-		void setDischarge(float (*_u)(float, float), float (*_v)(float, float));
-		void setBathymetry(float _b);
-		void setBathymetry(float (*_b)(float, float));
+    // initialise unknowns to some specific function
+    void setWaterHeight(float (*_h)(float, float));
 
-		// read access to arrays of unknowns
-		const Float2D& getWaterHeight();
-		const Float2D& getDischarge_hu(); // momentum/discharge (x-component)
-		const Float2D& getDischarge_hv(); // momentum/discharge (y-component)
-		const Float2D& getBathymetry();
+    void setDischarge(float (*_u)(float, float), float (*_v)(float, float));
 
-		// read access to block (grid) size
-		int getNx(){
-			return nx;
-		};
-		int getNy(){
-			return ny;
-		};
+    void setBathymetry(float _b);
 
-		// read access to the maximum timestep (maxTimestep guarantees stability)
-		float getMaxTimestep(){
-			return maxTimestep;
-		};
+    void setBathymetry(float (*_b)(float, float));
 
-		// set boundary conditions
-		void setBoundaryType(BoundaryEdge edge, BoundaryType boundtype,
-				const SWE_Block1D* inflow = NULL);
+    // read access to arrays of unknowns
+    const Float2D &getWaterHeight();
 
-		// set values in ghost layers according to the boundary type
-		// in the case of multiple blocks, it is a no-op for internal boundaries
-		// shared-memory blocks should overwrite this function to use
-		// 
-		virtual void setGhostLayer();
+    const Float2D &getDischarge_hu(); // momentum/discharge (x-component)
+    const Float2D &getDischarge_hv(); // momentum/discharge (y-component)
+    const Float2D &getBathymetry();
 
-		// connect multiple blocks (use case: mpi)
-		void connectBoundaries(BoundaryEdge edge, SWE_Block &neighbour, BoundaryEdge neighEdge);
+    // read access to block (grid) size
+    int getNx() {
+        return nx;
+    };
 
-		// return a pointer to proxy class to access the copy layer
-		virtual SWE_Block1D* registerCopyLayer(BoundaryEdge edge);
+    int getNy() {
+        return ny;
+    };
 
-		// "grab" the ghost layer in order to set these values externally
-		virtual SWE_Block1D* grabGhostLayer(BoundaryEdge edge);
+    // read access to the maximum timestep (maxTimestep guarantees stability)
+    float getMaxTimestep() {
+        return maxTimestep;
+    };
 
-		// compute the numerical fluxes for each edge of the Cartesian grid
-		/**
-		 * The computation of fluxes strongly depends on the chosen numerical
-		 * method. Hence, this purely virtual function has to be implemented
-		 * in the respective derived classes.
-		 */
-		virtual void computeNumericalFluxes() = 0;
+    // set boundary conditions
+    void setBoundaryType(BoundaryEdge edge, BoundaryType boundtype,
+                         const SWE_Block1D *inflow = NULL);
 
-		// compute the largest allowed time step for the current grid block
-		// TODO constants should be defined elsewhere
-		void computeMaxTimestep(const float i_dryTol = 0.1, const float i_cflNumber = 0.4);
+    // set values in ghost layers according to the boundary type
+    // in the case of multiple blocks, it is a no-op for internal boundaries
+    // shared-memory blocks should overwrite this function to use
+    //
+    virtual void setGhostLayer();
 
-		// compute the new values of the unknowns h, hu, and hv in all grid cells
-		/*
-		 * based on the numerical fluxes (computed by computeNumericalFluxes)
-		 * and the specified time step size dt, an Euler time step is executed.
-		 * As the computational fluxes will depend on the numerical method,
-		 * this purely virtual function has to be implemented separately for
-		 * each specific numerical model (and parallelisation approach).
-		 *
-		 * @param dt size of the time step
-		 */
-		virtual void updateUnknowns(float dt) = 0;
+    // connect multiple blocks (use case: mpi)
+    void connectBoundaries(BoundaryEdge edge, SWE_Block &neighbour, BoundaryEdge neighEdge);
 
-	protected:
-		SWE_Block(int l_nx, int l_ny, float l_dx, float l_dy);
-		virtual ~SWE_Block();
+    // return a pointer to proxy class to access the copy layer
+    virtual SWE_Block1D *registerCopyLayer(BoundaryEdge edge);
 
-		// grid size: number of cells (incl. ghost layer in x and y direction)
-		int nx;
-		int ny;
+    // "grab" the ghost layer in order to set these values externally
+    virtual SWE_Block1D *grabGhostLayer(BoundaryEdge edge);
 
-		// grid cell width and height
-		float dx;
-		float dy;
+    // compute the numerical fluxes for each edge of the Cartesian grid
+    /**
+     * The computation of fluxes strongly depends on the chosen numerical
+     * method. Hence, this purely virtual function has to be implemented
+     * in the respective derived classes.
+     */
+    virtual void computeNumericalFluxes() = 0;
 
-		/*
-		 * unknowns:
-		 * h (water height),
-		 * u, v (velocity in x and y direction respectively)
-		 * b (bathymetry)
-		 */
-		Float2D h;
-		Float2D hu;
-		Float2D hv;
-		Float2D b;
+    // compute the largest allowed time step for the current grid block
+    // TODO constants should be defined elsewhere
+    void computeMaxTimestep(const float i_dryTol = 0.1, const float i_cflNumber = 0.4);
 
-		// boundary type at the block edges (uses BoundaryEdge as index)
-		BoundaryType boundary[4];
+    // compute the new values of the unknowns h, hu, and hv in all grid cells
+    /*
+     * based on the numerical fluxes (computed by computeNumericalFluxes)
+     * and the specified time step size dt, an Euler time step is executed.
+     * As the computational fluxes will depend on the numerical method,
+     * this purely virtual function has to be implemented separately for
+     * each specific numerical model (and parallelisation approach).
+     *
+     * @param dt size of the time step
+     */
+    virtual void updateUnknowns(float dt) = 0;
 
-		// for CONNECT boundaries: pointer to connected neighbour block (uses BoundaryEdge as index)
-		const SWE_Block1D* neighbour[4];
+protected:
+    SWE_Block(int l_nx, int l_ny, float l_dx, float l_dy);
 
-		// maximum time step allowed to ensure stability of the method
-		// it may be updated as part of the method computeNumericalFluxes()
-		// or updateUnknowns() (depending on the numerical method)
-		float maxTimestep;
+    virtual ~SWE_Block();
 
-		// offset of current block
-		float offsetX;	///< x-coordinate of the origin (left-bottom corner) of the Cartesian grid
-		float offsetY;	///< y-coordinate of the origin (left-bottom corner) of the Cartesian grid
+    // grid size: number of cells (incl. ghost layer in x and y direction)
+    int nx;
+    int ny;
 
-		// Sets the bathymetry on outflow and wall boundaries
-		void setBoundaryBathymetry();
+    // grid cell width and height
+    float dx;
+    float dy;
 
-		// synchronization Methods
-		virtual void synchAfterWrite();
-		virtual void synchWaterHeightAfterWrite();
-		virtual void synchDischargeAfterWrite();
-		virtual void synchBathymetryAfterWrite();
-		virtual void synchGhostLayerAfterWrite();
+    /*
+     * unknowns:
+     * h (water height),
+     * u, v (velocity in x and y direction respectively)
+     * b (bathymetry)
+     */
+    Float2D h;
+    Float2D hu;
+    Float2D hv;
+    Float2D b;
 
-		virtual void synchBeforeRead();
-		virtual void synchWaterHeightBeforeRead();
-		virtual void synchDischargeBeforeRead();
-		virtual void synchBathymetryBeforeRead();
-		virtual void synchCopyLayerBeforeRead();
+    // boundary type at the block edges (uses BoundaryEdge as index)
+    BoundaryType boundary[4];
 
-		/// set boundary conditions in ghost layers (set boundary conditions)
-		virtual void applyBoundaryConditions();
+    // for CONNECT boundaries: pointer to connected neighbour block (uses BoundaryEdge as index)
+    const SWE_Block1D *neighbour[4];
+
+    // maximum time step allowed to ensure stability of the method
+    // it may be updated as part of the method computeNumericalFluxes()
+    // or updateUnknowns() (depending on the numerical method)
+    float maxTimestep;
+
+    // offset of current block
+    float offsetX;    ///< x-coordinate of the origin (left-bottom corner) of the Cartesian grid
+    float offsetY;    ///< y-coordinate of the origin (left-bottom corner) of the Cartesian grid
+
+    // Sets the bathymetry on outflow and wall boundaries
+    void setBoundaryBathymetry();
+
+    // synchronization Methods
+    virtual void synchAfterWrite();
+
+    virtual void synchWaterHeightAfterWrite();
+
+    virtual void synchDischargeAfterWrite();
+
+    virtual void synchBathymetryAfterWrite();
+
+    virtual void synchGhostLayerAfterWrite();
+
+    virtual void synchBeforeRead();
+
+    virtual void synchWaterHeightBeforeRead();
+
+    virtual void synchDischargeBeforeRead();
+
+    virtual void synchBathymetryBeforeRead();
+
+    virtual void synchCopyLayerBeforeRead();
+
+    /// set boundary conditions in ghost layers (set boundary conditions)
+    virtual void applyBoundaryConditions();
 };
 
 /**
@@ -250,17 +264,19 @@ class SWE_Block {
  * grids.
  */
 struct SWE_Block1D {
-	SWE_Block1D(const Float1D& _h, const Float1D& _hu, const Float1D& _hv) :
-		h(_h),
-		hu(_hu),
-		hv(_hv){};
-	SWE_Block1D(float* _h, float* _hu, float* _hv, int _size, int _stride=1) :
-		h(_h, _size, _stride),
-		hu(_hu, _size, _stride),
-		hv(_hv, _size, _stride){};
+    SWE_Block1D(const Float1D &_h, const Float1D &_hu, const Float1D &_hv) :
+            h(_h),
+            hu(_hu),
+            hv(_hv) {};
 
-	Float1D h;
-	Float1D hu;
-	Float1D hv;
+    SWE_Block1D(float *_h, float *_hu, float *_hv, int _size, int _stride = 1) :
+            h(_h, _size, _stride),
+            hu(_hu, _size, _stride),
+            hv(_hv, _size, _stride) {};
+
+    Float1D h;
+    Float1D hu;
+    Float1D hv;
 };
+
 #endif // __SWE_BLOCK_HH
