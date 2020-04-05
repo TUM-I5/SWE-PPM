@@ -116,7 +116,7 @@ module SWE_DimensionalSplittingCharm {
                         // If there is an iteration to go, propagate copy layers anew
                         if (currentSimulationTime >= simulationDuration) {
 
-                            collector->stopCoKunter(Collector::CTR_WALL);
+                            collector->stopCounter(Collector::CTR_WALL);
 
                             double serialize[5];
                             collector->serialize(serialize);
