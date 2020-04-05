@@ -51,7 +51,7 @@ public:
                                   float cellSizeVertical,
                                   float originX, float originY, int posX, int posY, BoundaryType boundaries[],
                                   std::string outputFileName, std::string bathymetryFileName = "",
-                                  std::string displacementFileName = "", bool localTimestepping = false,bool write = false);
+                                  std::string displacementFileName = "", bool localTimestepping = false,bool write =false);
 
     ~SWE_DimensionalSplittingCharm();
 

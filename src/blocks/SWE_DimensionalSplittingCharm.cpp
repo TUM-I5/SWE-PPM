@@ -71,6 +71,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 #endif
     initScenario(scenario, boundaries);
     if(write){
+
         // Initialize writer
         BoundarySize boundarySize = {{1, 1, 1, 1}};
         writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY);
@@ -138,9 +139,9 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
     maxTimestep = maxWaveSpeed;
-    CkPrintf("REDUCTTTTIO\n");
-    reductionTrigger();
 
+    reductionTrigger();
+if(!localTimestepping)
     collector->stopCounter(Collector::CTR_REDUCE);
 
 }

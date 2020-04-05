@@ -111,9 +111,11 @@ swe_charm::swe_charm(CkArgMsg *msg) {
             break;
     }
 
-    if (args.isSet("write") && args.getArgument<int>("write") == 1)
+    if (args.isSet("write") && args.getArgument<int>("write") == 1){
         CkPrintf("Write Output to file \n");
         write = true;
+    }
+
     if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
         localTimestepping = true;
     }
@@ -209,8 +211,9 @@ swe_charm::swe_charm(CkArgMsg *msg) {
         // Spawn chare for the current block and insert it into the proxy array
 #ifdef ASAGI
         blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY, localBlockPositionX[i], localBlockPositionY[i],
-                 boundaries, outputFilename, bathymetryFilename, displacementFilename, localTimestepping);
+                 boundaries, outputFilename, bathymetryFilename, displacementFilename, localTimestepping,write);
 #else
+
         blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,
                          localBlockPositionX[i], localBlockPositionY[i],
                          boundaries, outputFilename, "", "", localTimestepping,write);
