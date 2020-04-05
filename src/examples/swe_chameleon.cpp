@@ -226,7 +226,7 @@ int main(int argc, char **argv) {
 
     int x_blocksize = nxRequested / xBlockCount;
     int y_blocksize = nyRequested / yBlockCount;
-
+    int blockCnt = 0;
     for (int x = xBounds[myXRank]; x < xBounds[myXRank + 1]; x++) {
         for (int y = yBounds[myYRank]; y < yBounds[myYRank + 1]; y++) {
             //printf("%d: x=%d, y=%d\n", myRank, x, y);
@@ -265,6 +265,7 @@ int main(int argc, char **argv) {
             else
                 boundaries[BND_TOP] = CONNECT_WITHIN_RANK;
 
+            std::cout << blockCnt++ << "| " << x_blocksize << " " << y_blocksize << std::endl;
             blocks[x][y] = new SWE_DimensionalSplittingChameleon(x_blocksize, y_blocksize, dxSimulation, dySimulation,
                                                                  originX, originY, localTimestepping);
             blocks[x][y]->initScenario(scenario, boundaries);
@@ -509,8 +510,7 @@ int main(int argc, char **argv) {
                 for (int x = xLower; x < xUpper; x++) {
                     for (int y = yLower; y < yUpper; y++) {
                         // update the cell values
-                        // if(localTimestepping && blocks[x][y]->allGhostlayersInSync())
-                        //     blocks[x][y]->maxTimestep = blocks[x][y]->getRoundTimestep(blocks[x][y]->maxTimestep);
+
                         blocks[x][y]->updateUnknowns(timestep);
                     }
                 }

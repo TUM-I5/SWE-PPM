@@ -182,6 +182,8 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
         std::array<int, 4> myNeighbours = getNeighbours(localBlockPositionX, localBlockPositionY, blockCountX,
                                                         blockCountY, myHpxRank);
         std::string outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
+
+        std::cout << myHpxRank<< "| " << nxLocal << " " << nyLocal << std::endl;
         simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingHpx>(
                 new SWE_DimensionalSplittingHpx(nxLocal, nyLocal, dxSimulation, dySimulation,
                                                 localOriginX, localOriginY, localTimestepping, outputFileName,write)));
