@@ -120,13 +120,13 @@ void SWE_DimensionalSplittingChameleon::exchangeBathymetry() {
 
 
     if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK) {
-        for (int i = 1; i < ny + 2; i++) {
+        for (int i = 1; i < ny + 1; i++) {
             b[nx + 1][i] = right->getBathymetry()[1][i];
 
         }
     }
     if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK) {
-        for (int i = 1; i < ny + 2; i++) {
+        for (int i = 1; i < ny + 1; i++) {
             b[0][i] = left->getBathymetry()[nx][i];
 
         }
@@ -134,14 +134,14 @@ void SWE_DimensionalSplittingChameleon::exchangeBathymetry() {
     if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK) {
 
 
-        for (int i = 1; i < nx + 2; i++) {
+        for (int i = 1; i < nx + 1; i++) {
             b[i][ny + 1] = top->getBathymetry()[i][1];
 
         }
     }
     if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK) {
 
-        for (int i = 1; i < nx + 2; i++) {
+        for (int i = 1; i < nx + 1; i++) {
             b[i][0] = bottom->getBathymetry()[i][ny];
         }
     }
