@@ -488,6 +488,7 @@ int main(int argc, char** argv) {
                     //if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Spawning %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
                     chameleon_distributed_taskwait(0);
                 }
+
                 taskWaitHorizontalTime += getTime()-lastTime; lastTime = getTime();
                 //if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
                 if(!localTimestepping){
@@ -515,8 +516,11 @@ int main(int argc, char** argv) {
                     for(int x = xLower; x < xUpper; x++) {
                         for(int y = yLower; y < yUpper; y++) {
                             // compute numerical flux on each edge
+
                             if(!localTimestepping){
                                 blocks[x][y]->maxTimestep = timestep;
+                            }else {
+                                blocks[x][y]->maxTimestep = blocks[x][y]->getRoundTimestep(blocks[x][y]->maxTimestep);
                             }
                             blocks[x][y]->computeNumericalFluxesVertical();
                         }
