@@ -265,7 +265,7 @@ int main(int argc, char **argv) {
             else
                 boundaries[BND_TOP] = CONNECT_WITHIN_RANK;
 
-            std::cout << blockCnt++ << "| " << x_blocksize << " " << y_blocksize << std::endl;
+            std::cout << blockCnt++ << "| " <<originX<< " "<< originY<< " "<< x_blocksize << " " << y_blocksize << std::endl;
             blocks[x][y] = new SWE_DimensionalSplittingChameleon(x_blocksize, y_blocksize, dxSimulation, dySimulation,
                                                                  originX, originY, localTimestepping);
             blocks[x][y]->initScenario(scenario, boundaries);
