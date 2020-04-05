@@ -224,7 +224,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
     // Apply appropriate conditions for OUTFLOW/WALL boundaries
     SWE_Block::applyBoundaryConditions();
     collector.startCounter(Collector::CTR_EXCHANGE);
-    if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT) && right->isSendable(BND_LEFT)) {
+    if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT) ) {
         borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
         for (int i = 1; i < ny + 1; i++) {
             bufferH[nx + 1][i] = right->getWaterHeight()[1][i];
@@ -232,7 +232,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHv[nx + 1][i] = right->getMomentumVertical()[1][i];
         }
     }
-    if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT) && left->isSendable(BND_RIGHT)) {
+    if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)) {
         borderTimestep[BND_LEFT] = left->getTotalLocalTimestep();
 
         for (int i = 1; i < ny + 1; i++) {
@@ -241,7 +241,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHv[0][i] = left->getMomentumVertical()[nx][i];
         }
     }
-    if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP) && top->isSendable(BND_BOTTOM)) {
+    if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)) {
         borderTimestep[BND_TOP] = top->getTotalLocalTimestep();
 
         for (int i = 1; i < nx + 1; i++) {
@@ -250,7 +250,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHv[i][ny + 1] = top->getMomentumVertical()[i][1];
         }
     }
-    if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM) && bottom->isSendable(BND_TOP)) {
+    if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)) {
         borderTimestep[BND_BOTTOM] = bottom->getTotalLocalTimestep();
 
         for (int i = 1; i < nx + 1; i++) {
@@ -554,7 +554,40 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon *b
  * maximum allowed time step size
  */
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
+    if (!allGhostlayersInSync()) return;
 
+    //maximum (linearized) wave speed within one iteration
+    float maxHorizontalWaveSpeed = (float) 0.;
+    float maxVerticalWaveSpeed = (float) 0.;
+
+#pragma omp parallel private(solver)
+    {
+        // x-sweep, compute the actual domain plus ghost rows above and below
+        // iterate over cells on the x-axis, leave out the last column (two cells per computation)
+#pragma omp for reduction(max : maxHorizontalWaveSpeed) collapse(2)
+        for (int x = 0; x < nx + 1; x++) {
+            //const int ny_end = ny+2;
+            // iterate over all rows, including ghost layer
+/*#if defined(VECTORIZE)
+#pragma omp simd reduction(max:maxHorizontalWaveSpeed)
+#endif*/ // VECTORIZE
+            for (int y = 0; y < ny + 2; y++) {
+                solver.computeNetUpdates(
+                        h[x][y], h[x + 1][y],
+                        hu[x][y], hu[x + 1][y],
+                        b[x][y], b[x + 1][y],
+                        hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
+                        huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
+                        maxHorizontalWaveSpeed
+                );
+            }
+        }
+    }
+
+    CollectorMpi::getInstance().addFlops(nx * ny * 135);
+
+    maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+/*
     if (!allGhostlayersInSync()) return;
     collector.addFlops(nx * ny * 135);
 
@@ -580,7 +613,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
             (void *) &computeNumericalFluxesHorizontalKernel,
             9, // number of args
             args);
-    int32_t res = chameleon_add_task(cur_task);
+    int32_t res = chameleon_add_task(cur_task);*/
 }
 
 void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon *block, float *h_data, float *hu_data,
