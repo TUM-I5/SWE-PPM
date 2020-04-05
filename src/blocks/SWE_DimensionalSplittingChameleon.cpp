@@ -509,9 +509,9 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 
 
     if(block->localTimestepping){
-        *maxTimestep = blocks->getRoundTimestep(blocks->maxTimestep);
+        *maxTimestep = block->getRoundTimestep(block->maxTimestep);
     }else {
-        *maxTimestep = blocks->maxTimestep;
+        *maxTimestep = block->maxTimestep;
     }
 	//*maxTimestep = block->maxTimestep;
 
