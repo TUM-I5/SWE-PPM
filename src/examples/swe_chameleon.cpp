@@ -398,7 +398,7 @@ int main(int argc, char **argv) {
         // reduce over all ranks
 
         MPI_Allreduce(&timestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
-
+        maxLocalTimestep = 0.5;
         for (int x = xBounds[myXRank]; x < xBounds[myXRank + 1]; x++) {
             for (int y = yBounds[myYRank]; y < yBounds[myYRank + 1]; y++) {
                 blocks[x][y]->setMaxLocalTimestep(maxLocalTimestep);
@@ -474,6 +474,7 @@ int main(int argc, char **argv) {
                         }
                     }
                     // reduce over all ranks
+
                     float maxTimestepGlobal;
                     MPI_Allreduce(&timestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
                     timestep = maxTimestepGlobal;
