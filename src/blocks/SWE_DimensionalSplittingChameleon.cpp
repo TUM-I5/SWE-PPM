@@ -479,9 +479,9 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon *block, float *maxTimestep, float *h_data,
                                             float *hu_data, float *b_data,
                                             float *hNetUpdatesLeft_data, float *hNetUpdatesRight_data,
-                                            float *huNetUpdatesLeft_data, float *huNetUpdatesRight_data) {
+                                            float *huNetUpdatesLeft_data, float *huNetUpdatesRight_data, int oX, int oY) {
     // Set data pointers correctly
-
+    if(block->originX != oX || block->originY != oY)std::cout << "WTF ITSSSS WRONGGGG \n";
     block->getModifiableWaterHeight().setRawPointer(h_data);
     block->getModifiableMomentumHorizontal().setRawPointer(hu_data);
     block->getModifiableBathymetry().setRawPointer(b_data);
@@ -549,7 +549,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
     if (!allGhostlayersInSync()) return;
     collector.addFlops(nx * ny * 135);
 
-    chameleon_map_data_entry_t *args = new chameleon_map_data_entry_t[9];
+    chameleon_map_data_entry_t *args = new chameleon_map_data_entry_t[11];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
     args[1] = chameleon_map_data_entry_create(&(this->maxTimestep), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[2] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(),
@@ -566,10 +566,12 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
                                               sizeof(float) * (nx + 2) * (ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[8] = chameleon_map_data_entry_create(this->huNetUpdatesRight.getRawPointer(),
                                               sizeof(float) * (nx + 2) * (ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
+    args[9] = chameleon_map_data_entry_create(&(this->originX), sizeof(int), CHAM_OMP_TGT_MAPTYPE_FROM);
+    args[11] = chameleon_map_data_entry_create(&(this->originY), sizeof(int), CHAM_OMP_TGT_MAPTYPE_FROM);
 
     cham_migratable_task_t *cur_task = chameleon_create_task(
             (void *) &computeNumericalFluxesHorizontalKernel,
-            9, // number of args
+            11, // number of args
             args);
     int32_t res = chameleon_add_task(cur_task);
 }
