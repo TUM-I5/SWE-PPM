@@ -126,13 +126,12 @@ int main(int argc, char **argv) {
             ("displacement-file,d", value<std::string>(), "File containing the displacement")
             ("simulation-duration,e", value<float>()->default_value(100), "Time in seconds to simulate")
             ("checkpoint-count,n", value<int>()->default_value(100), "Number of simulation snapshots to be written")
-            ("resolution-horizontal", value<int>()->default_value(100),
-             "Number of simulation cells in horizontal direction")
+            ("resolution-horizontal", value<int>()->default_value(100),"Number of simulation cells in horizontal direction")
             ("resolution-vertical", value<int>()->default_value(100), "Number of simulated cells in y-direction")
             ("output-basepath,o", value<std::string>()->default_value("hpx_output"), "Output base file name")
             ("blocks", value<int>()->default_value(1), "Number of swe blocks")
             ("local-timestepping", value<bool>()->default_value(false), "Number of swe blocks");
-    ("write,w", value<bool>()->default_value(false), "Write netcdf if set");
+            ("write", value<bool>()->default_value(false), "Write netcdf if set");
     // Initialize and run HPX, this example requires to run hpx_main on all
     // localities
     std::vector<std::string> const cfg = {
