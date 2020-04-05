@@ -138,6 +138,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
 
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
     maxTimestep = maxWaveSpeed;
+    CkPrintf("REDUCTTTTIO\n");
     reductionTrigger();
 
     collector->stopCounter(Collector::CTR_REDUCE);
@@ -370,11 +371,9 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
 }
 
 void SWE_DimensionalSplittingCharm::writeTimestep() {
-            if(write){
-                writer->writeTimeStep(h, hu, hv, currentSimulationTime);
-
-            }
-
+    if(write){
+        writer->writeTimeStep(h, hu, hv, currentSimulationTime);
+    }
 }
 
 void SWE_DimensionalSplittingCharm::setGhostLayer() {

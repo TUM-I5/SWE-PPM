@@ -112,6 +112,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
     }
 
     if (args.isSet("write") && args.getArgument<int>("write") == 1)
+        CkPrintf("Write Output to file \n");
         write = true;
     if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
         localTimestepping = true;
