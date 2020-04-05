@@ -184,7 +184,7 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
         std::string outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
         simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingHpx>(
                 new SWE_DimensionalSplittingHpx(nxLocal, nyLocal, dxSimulation, dySimulation,
-                                                localOriginX, localOriginY, localTimestepping, outputFileName)));
+                                                localOriginX, localOriginY, localTimestepping, outputFileName,write)));
 
         simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
     }
@@ -416,6 +416,7 @@ void SWE_Hpx_No_Component::run() {
 
     for (auto &block: simulationBlocks) {
         collector += block->collector;
+        delete block->writer;
     }
 
     collector.logResults();

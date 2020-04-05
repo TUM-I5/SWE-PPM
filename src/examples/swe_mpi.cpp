@@ -232,13 +232,13 @@ int main(int argc, char **argv) {
      * INIT OUTPUT *
      ***************/
     // Initialize boundary size of the ghost layers
-
+    NetCdfWriter *writer;
 if(write){
     BoundarySize boundarySize = {{1, 1, 1, 1}};
     outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
 #ifdef WRITENETCDF
     // Construct a netCDF writer
-    NetCdfWriter writer(
+    writer = new NetCdfWriter(
             outputFileName,
             simulation.getBathymetry(),
             boundarySize,
@@ -265,7 +265,7 @@ if(write){
 
     // Write the output at t = 0
     if (write) {
-        writer.writeTimeStep(simulation.getWaterHeight(),
+        writer->writeTimeStep(simulation.getWaterHeight(),
                              simulation.getMomentumHorizontal(),
                              simulation.getMomentumVertical(),
                              (float) 0.);
@@ -325,7 +325,7 @@ if(write){
 
         if (write) {
             // write output
-            writer.writeTimeStep(
+            writer->writeTimeStep(
                     simulation.getWaterHeight(),
                     simulation.getMomentumHorizontal(),
                     simulation.getMomentumVertical(),
@@ -345,7 +345,8 @@ if(write){
 
     CollectorMpi::getInstance().logResults();
     simulation.freeMpiType();
+    if (write)
+        delete writer;
     MPI_Finalize();
-
     return 0;
 }

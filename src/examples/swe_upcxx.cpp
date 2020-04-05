@@ -269,13 +269,14 @@ int main(int argc, char **argv) {
      * INIT OUTPUT *
      ***************/
 
-
+// Initialize boundary size of the ghost layers
+    NetCdfWriter *writer;
     if(write){
         BoundarySize boundarySize = {{1, 1, 1, 1}};
         outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
 #ifdef WRITENETCDF
         // Construct a netCDF writer
-        NetCdfWriter writer(
+        writer = new NetCdfWriter(
                 outputFileName,
                 simulation.getBathymetry(),
                 boundarySize,
@@ -299,14 +300,14 @@ int main(int argc, char **argv) {
 
     }
 
+
     // Write the output at t = 0
     if (write) {
-        writer.writeTimeStep(simulation.getWaterHeight(),
-                             simulation.getMomentumHorizontal(),
-                             simulation.getMomentumVertical(),
-                             (float) 0.);
+        writer->writeTimeStep(simulation.getWaterHeight(),
+                              simulation.getMomentumHorizontal(),
+                              simulation.getMomentumVertical(),
+                              (float) 0.);
     }
-
 
     /********************
      * START SIMULATION *
@@ -360,7 +361,7 @@ int main(int argc, char **argv) {
 
         if (write) {
             // write output
-            writer.writeTimeStep(
+            writer->writeTimeStep(
                     simulation.getWaterHeight(),
                     simulation.getMomentumHorizontal(),
                     simulation.getMomentumVertical(),
@@ -378,6 +379,8 @@ int main(int argc, char **argv) {
     }
 
     CollectorUpcxx::getInstance().logResults();
+    if (write)
+        delete writer;
     upcxx::finalize();
 
     return 0;

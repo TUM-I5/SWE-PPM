@@ -57,7 +57,7 @@
  * @param l_dy Cell height
  */
 SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX,
-                                                         float originY, bool localTimestepping, std::string name) :
+                                                         float originY, bool localTimestepping, std::string name, bool write) :
 /*
  * Important note concerning grid allocations:
  * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -105,7 +105,7 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
                         dx,
                         dy,
                         originX,
-                        originY)
+                        originY);
 
             }
        }

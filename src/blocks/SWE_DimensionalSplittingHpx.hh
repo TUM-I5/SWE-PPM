@@ -68,7 +68,7 @@ public:
     // Constructor/Destructor
     SWE_DimensionalSplittingHpx(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal,
                                 float cellSizeVertical, float originX, float originY, bool localTimestepping,
-                                std::string name);
+                                std::string name, bool write);
 
     ~SWE_DimensionalSplittingHpx() {};
 
