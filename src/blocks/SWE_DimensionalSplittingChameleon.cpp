@@ -479,9 +479,9 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon *block, float *maxTimestep, float *h_data,
                                             float *hu_data, float *b_data,
                                             float *hNetUpdatesLeft_data, float *hNetUpdatesRight_data,
-                                            float *huNetUpdatesLeft_data, float *huNetUpdatesRight_data, int oX, int oY) {
+                                            float *huNetUpdatesLeft_data, float *huNetUpdatesRight_data, float * oX, float * oY) {
     // Set data pointers correctly
-    if(block->originX != oX || block->originY != oY)std::cout << "WTF ITSSSS WRONGGGG \n";
+    if(block->originX != *oX || block->originY != *oY)std::cout << "WTF ITSSSS WRONGGGG \n";
     block->getModifiableWaterHeight().setRawPointer(h_data);
     block->getModifiableMomentumHorizontal().setRawPointer(hu_data);
     block->getModifiableBathymetry().setRawPointer(b_data);
@@ -566,8 +566,8 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
                                               sizeof(float) * (nx + 2) * (ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[8] = chameleon_map_data_entry_create(this->huNetUpdatesRight.getRawPointer(),
                                               sizeof(float) * (nx + 2) * (ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
-    args[9] = chameleon_map_data_entry_create((this->originX), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
-    args[11] = chameleon_map_data_entry_create((this->originY), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
+    args[9] = chameleon_map_data_entry_create(&(this->originX), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
+    args[11] = chameleon_map_data_entry_create(&(this->originY), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
 
     cham_migratable_task_t *cur_task = chameleon_create_task(
             (void *) &computeNumericalFluxesHorizontalKernel,
