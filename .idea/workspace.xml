@@ -291,14 +291,7 @@
       <workItem from="1585747633398" duration="7706000" />
       <workItem from="1585842957634" duration="1657000" />
       <workItem from="1586002692663" duration="25861000" />
-      <workItem from="1586079765052" duration="17944000" />
-    </task>
-    <task id="LOCAL-00108" summary="Added Collect for all frameworks&#10;Chameleon not tested but very confident that it works&#10;Added Cmake support for all frameworks besides charm">
-      <created>1584734867091</created>
-      <option name="number" value="00108" />
-      <option name="presentableId" value="LOCAL-00108" />
-      <option name="project" value="LOCAL" />
-      <updated>1584734867091</updated>
+      <workItem from="1586079765052" duration="18235000" />
     </task>
     <task id="LOCAL-00109" summary="Cleaned HPX implementation&#10;Added cmake support">
       <created>1585072465905</created>
@@ -636,7 +629,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586105774499</updated>
     </task>
-    <option name="localTasksCounter" value="157" />
+    <task id="LOCAL-00157" summary="LTS bug chameleon oida">
+      <created>1586106515116</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
+      <option name="project" value="LOCAL" />
+      <updated>1586106515116</updated>
+    </task>
+    <option name="localTasksCounter" value="158" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -657,7 +657,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Fixed final HPX lts bug" />
     <MESSAGE value="added upcxx experimental" />
     <MESSAGE value="upcxx gts works without barrier&#10;upcxx lts has some bugs in it" />
     <MESSAGE value="Upcxx finished &#10;Charm work in progress" />
@@ -682,7 +681,8 @@
     <MESSAGE value="Added debug info" />
     <MESSAGE value="Fixed Chameleon Bug" />
     <MESSAGE value="Major Update ***&#10;Formatted all frameworks&#10;Working LTS and GTS&#10;Removed Old time Measurement all Frameworks&#10;Added Collector" />
-    <option name="LAST_COMMIT_MESSAGE" value="Major Update ***&#10;Formatted all frameworks&#10;Working LTS and GTS&#10;Removed Old time Measurement all Frameworks&#10;Added Collector" />
+    <MESSAGE value="LTS bug chameleon oida" />
+    <option name="LAST_COMMIT_MESSAGE" value="LTS bug chameleon oida" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2220" y="129" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586047613990">
@@ -694,11 +694,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586105774425">
+    <state x="554" y="116" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586106515042">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586105774425" />
+    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586106515042" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="2118" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586105141132">
