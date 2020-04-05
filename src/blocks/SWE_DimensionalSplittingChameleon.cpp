@@ -567,7 +567,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
     args[8] = chameleon_map_data_entry_create(this->huNetUpdatesRight.getRawPointer(),
                                               sizeof(float) * (nx + 2) * (ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[9] = chameleon_map_data_entry_create(&(this->originX), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
-    args[11] = chameleon_map_data_entry_create(&(this->originY), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
+    args[10] = chameleon_map_data_entry_create(&(this->originY), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
 
     cham_migratable_task_t *cur_task = chameleon_create_task(
             (void *) &computeNumericalFluxesHorizontalKernel,
