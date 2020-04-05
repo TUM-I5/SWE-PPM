@@ -292,10 +292,9 @@ void SWE_Hpx_No_Component::run() {
     timesteps.reserve(simulationBlocks.size());
     std::vector<hpx::future<void>> xsweepFuture(simulationBlocks.size());
 
-
     for (auto &block: simulationBlocks) {
         if (write) {
-            block.get()->writeTimestep(0.f);
+            block->writeTimestep(0.f);
 
         }
     }
@@ -409,14 +408,15 @@ void SWE_Hpx_No_Component::run() {
         }
         for (auto &block: simulationBlocks) {
             if (write) {
-                block.get()->writeTimestep(t);
+                block->writeTimestep(t);
             }
         }
     }
 
     for (auto &block: simulationBlocks) {
         collector += block->collector;
-        delete block->writer;
+        if(write)
+            delete block->writer;
     }
 
     collector.logResults();

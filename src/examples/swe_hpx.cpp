@@ -130,8 +130,8 @@ int main(int argc, char **argv) {
             ("resolution-vertical", value<int>()->default_value(100), "Number of simulated cells in y-direction")
             ("output-basepath,o", value<std::string>()->default_value("hpx_output"), "Output base file name")
             ("blocks", value<int>()->default_value(1), "Number of swe blocks")
-            ("local-timestepping", value<bool>()->default_value(false), "Number of swe blocks");
-            ("write", value<bool>()->default_value(false), "Write netcdf if set");
+            ("local-timestepping", value<bool>()->default_value(false), "Number of swe blocks")
+            ("write,w", value<bool>()->default_value(false), "Write netcdf if set");
     // Initialize and run HPX, this example requires to run hpx_main on all
     // localities
     std::vector<std::string> const cfg = {
