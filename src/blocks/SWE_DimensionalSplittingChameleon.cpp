@@ -178,17 +178,18 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
     if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isSendable(BND_TOP)) {
         top->borderTimestep[BND_BOTTOM] = getTotalLocalTimestep();
         for(int i = 1; i < nx+1; i++) {
-           top->bufferH[i][0]  =  h[1][ny] ;
-           top->bufferHu[i][0] =  hu[1][ny] ;
-           top->bufferHv[i][0] =  hv[1][ny];
+            top->bufferH[i][ny+1]  =  h[i][1];
+            top->bufferHu[i][ny+1] =  hu[i][1];
+            top->bufferHv[i][ny+1] =  hv[i][1];
         }
     }
     if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isSendable(BND_BOTTOM)) {
         bottom->borderTimestep[BND_TOP] = getTotalLocalTimestep();
         for(int i = 1; i < nx+1; i++) {
-            bottom->bufferH[i][ny+1]  =  h[i][1];
-            bottom->bufferHu[i][ny+1] =  hu[i][1];
-            bottom->bufferHv[i][ny+1] =  hv[i][1];
+            bottom->bufferH[i][0]  =  h[1][ny] ;
+            bottom->bufferHu[i][0] =  hu[1][ny] ;
+            bottom->bufferHv[i][0] =  hv[1][ny];
+
         }
     }
 	MPI_Status status;
