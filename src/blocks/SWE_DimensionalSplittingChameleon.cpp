@@ -162,33 +162,33 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
     if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isSendable(BND_RIGHT)) {
         right->borderTimestep[BND_LEFT] = getTotalLocalTimestep();
         for(int i = 1; i < ny+1; i++) {
-            right->bufferH[nx+1][i] = h[1][i];
-            right->bufferHu[nx+1][i] =hu[1][i];
-            right->bufferHv[nx+1][i] = hv[1][i];
+            right->bufferH[0][i] =  h[nx][i];
+            right->bufferHu[0][i] = hu[nx][i];
+            right->bufferHv[0][i] = hv[nx][i];
         }
     }
     if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isSendable(BND_LEFT)) {
         left->borderTimestep[BND_RIGHT] = getTotalLocalTimestep();
         for(int i = 1; i < ny+1; i++) {
-            left->bufferH[0][i] =  h[nx][i];
-            left->bufferHu[0][i] = hu[nx][i] ;
-            left->bufferHv[0][i] = hv[nx][i];
+            left->bufferH[nx+1][i] =  h[1][i];
+            left->bufferHu[nx+1][i] = hu[1][i] ;
+            left->bufferHv[nx+1][i] = hv[1][i];
         }
     }
     if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isSendable(BND_TOP)) {
         top->borderTimestep[BND_BOTTOM] = getTotalLocalTimestep();
         for(int i = 1; i < nx+1; i++) {
-           top->bufferH[i][ny+1] =   h[i][1] ;
-           top->bufferHu[i][ny+1] =  hu[i][1] ;
-           top->bufferHv[i][ny+1] =  hv[i][1];
+           top->bufferH[i][0]  =  h[1][ny] ;
+           top->bufferHu[i][0] =  hu[1][ny] ;
+           top->bufferHv[i][0] =  hv[1][ny];
         }
     }
     if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isSendable(BND_BOTTOM)) {
         bottom->borderTimestep[BND_TOP] = getTotalLocalTimestep();
         for(int i = 1; i < nx+1; i++) {
-            bottom->bufferH[i][0] =   h[i][ny];
-            bottom->bufferHu[i][0] =  hu[i][ny];
-            bottom->bufferHv[i][0] =  hv[i][ny];
+            bottom->bufferH[i][ny+1]  =  h[i][1];
+            bottom->bufferHu[i][ny+1] =  hu[i][1];
+            bottom->bufferHv[i][ny+1] =  hv[i][1];
         }
     }
 	MPI_Status status;
