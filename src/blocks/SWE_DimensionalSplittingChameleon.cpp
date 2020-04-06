@@ -424,7 +424,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
 void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* block, float* h_data, float* hu_data, float* hv_data, float* b_data,
 								float* hNetUpdatesLeft_data, float* hNetUpdatesRight_data, float* huNetUpdatesLeft_data, float* huNetUpdatesRight_data,
 								float* hNetUpdatesBelow_data, float* hNetUpdatesAbove_data, float* hvNetUpdatesBelow_data, float* hvNetUpdatesAbove_data,
-								float* hStar_data, float* huStar_data,float maxTimestep) {
+								float* hStar_data, float* huStar_data,float *maxTimestep) {
 	// Set data pointers correctly
 	block->getModifiableWaterHeight().setRawPointer(h_data);
 	block->getModifiableMomentumHorizontal().setRawPointer(hu_data);
@@ -494,6 +494,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
  */
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
     if (!allGhostlayersInSync()) return;
+
 	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[16];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
     args[1] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_TO);
@@ -510,7 +511,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
     args[12] = chameleon_map_data_entry_create(this->hvNetUpdatesAbove.getRawPointer(), sizeof(float)*(nx + 1)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[13] = chameleon_map_data_entry_create(this->hStar.getRawPointer(), sizeof(float)*(nx + 1)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[14] = chameleon_map_data_entry_create(this->huStar.getRawPointer(), sizeof(float)*(nx + 1)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
-    args[15] = chameleon_map_data_entry_create(this->maxTimestep, sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
+    args[15] = chameleon_map_data_entry_create(&(this->maxTimestep), sizeof(float), CHAM_OMP_TGT_MAPTYPE_TO);
 	cham_migratable_task_t *cur_task = chameleon_create_task(
         (void *)&computeNumericalFluxesVerticalKernel,
         16, // number of args
