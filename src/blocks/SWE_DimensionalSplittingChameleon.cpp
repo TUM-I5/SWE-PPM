@@ -125,7 +125,7 @@ void SWE_DimensionalSplittingChameleon::freeMpiType() {
 void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
 	SWE_Block::applyBoundaryConditions();
-/*
+
 	if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
         borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
 		for(int i = 1; i < ny+1; i++) {
@@ -157,8 +157,8 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHu[i][0] = bottom->getMomentumHorizontal()[i][ny];
             bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
 		}
-	}*/
-
+	}
+/*
     if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isSendable(BND_RIGHT)) {
         right->borderTimestep[BND_LEFT] = getTotalLocalTimestep();
         for(int i = 1; i < ny+1; i++) {
@@ -190,7 +190,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bottom->getModifiableMomentumHorizontal()[i][ny+1] =bufferHu[i][1];
             bottom->getModifiableMomentumVertical()[i][ny+1] =  bufferHv[i][1];
         }
-    }
+    }*/
 	MPI_Status status;
 
 	assert(h.getRows() == ny + 2);
