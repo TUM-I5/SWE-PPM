@@ -419,7 +419,7 @@ int main(int argc, char** argv) {
 	double writeOutputTime = 0;
 
 	float t = 0.0;
-	float timestep = 0;
+	timestep = 0;
 	int iterations = 0;
     bool synchronizedTimestep = true;
 
