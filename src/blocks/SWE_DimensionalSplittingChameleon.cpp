@@ -364,9 +364,18 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 	//maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
 	float maxVerticalWaveSpeed = (float) 0.;
-	solver::AugRie<float> localSolver = block->solver;
+#if WAVE_PROPAGATION_SOLVER == 0
+    solver::HLLEFun<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER == 1
+    //! F-wave Riemann solver
+    solver::FWave<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> localSolver = block->solver;
+#endif
 
-	// x-sweep, compute the actual domain plus ghost rows above and below
+
+    // x-sweep, compute the actual domain plus ghost rows above and below
 	// iterate over cells on the x-axis, leave out the last column (two cells per computation)
 	//#pragma omp for reduction(max : maxHorizontalWaveSpeed) collapse(2)
 	for (int x = 0; x < block->nx + 1; x++) {
@@ -444,8 +453,17 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
     block->maxTimestep = *maxTimestep;
 	//maximum (linearized) wave speed within one iteration
 	float maxVerticalWaveSpeed = (float) 0.;
-	solver::AugRie<float> localSolver = block->solver;
-    std::cout << "HALLO "<< *maxTimestep<< " " << block->maxTimestep << std::endl;
+#if WAVE_PROPAGATION_SOLVER == 0
+    solver::HLLEFun<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER == 1
+    //! F-wave Riemann solver
+    solver::FWave<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> localSolver = block->solver;
+#endif
+
+
 	// set intermediary Q* states
 	//#pragma omp for collapse(2)
 	for (int x = 1; x < block->nx + 1; x++) {

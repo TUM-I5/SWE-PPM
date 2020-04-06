@@ -71,9 +71,19 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		void setRank(int rank);
 		MPI_Datatype HORIZONTAL_BOUNDARY;
 
-		solver::AugRie<float> solver;
+#if WAVE_PROPAGATION_SOLVER == 0
+    solver::HLLEFun<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER == 1
+    //! F-wave Riemann solver
+    solver::FWave<float> localSolver = block->solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> localSolver = block->solver;
+#endif
 
-		// Temporary values after x-sweep and before y-sweep
+
+
+    // Temporary values after x-sweep and before y-sweep
 		Float2DNative hStar;
 		Float2DNative huStar;
 
