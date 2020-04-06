@@ -81,8 +81,8 @@ int main(int argc, char** argv) {
 	args.addOption("x-imbalance", 'u', "Imbalance in x-direction", tools::Args::Required, false);
 	args.addOption("y-imbalance", 'v', "Imbalance in y-direction", tools::Args::Required, false);
 	args.addOption("write", 'w', "Write results", tools::Args::Required, false);
-	args.addOption("iteration-count", 'i', "Iteration Count (Overrides t and n)", tools::Args::Required, false);
-
+	//args.addOption("iteration-count", 'i', "Iteration Count (Overrides t and n)", tools::Args::Required, false);
+    args.addOption("local-timestepping", 'l', "Activate local timestepping", tools::Args::Required, false);
 	// Parse command line arguments
 	tools::Args::Result ret = args.parse(argc, argv);
 	switch (ret) {
@@ -101,6 +101,11 @@ int main(int argc, char** argv) {
 	int nyRequested = args.getArgument<int>("resolution-vertical");
 	std::string outputBaseName = args.getArgument<std::string>("output-basepath");
 	bool write = false;
+    bool localTimestepping = false;
+    if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
+        localTimestepping = true;
+    }
+
 	if(args.isSet("write") && args.getArgument<int>("write") == 1)
 		write = true;
 	int iteration_count = 1000000;
