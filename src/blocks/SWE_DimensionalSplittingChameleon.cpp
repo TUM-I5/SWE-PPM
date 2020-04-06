@@ -422,7 +422,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
 void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* block, float* h_data, float* hu_data, float* hv_data, float* b_data,
 								float* hNetUpdatesLeft_data, float* hNetUpdatesRight_data, float* huNetUpdatesLeft_data, float* huNetUpdatesRight_data,
 								float* hNetUpdatesBelow_data, float* hNetUpdatesAbove_data, float* hvNetUpdatesBelow_data, float* hvNetUpdatesAbove_data,
-								float* hStar_data, float* huStar_data,float maxTimestep) {
+								float* hStar_data, float* huStar_data,float *maxTimestep) {
 	// Set data pointers correctly
 	block->getModifiableWaterHeight().setRawPointer(h_data);
 	block->getModifiableMomentumHorizontal().setRawPointer(hu_data);
