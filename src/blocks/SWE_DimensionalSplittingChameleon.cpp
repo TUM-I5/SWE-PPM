@@ -441,7 +441,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 	
 	// Start compute clocks
 	block->computeClock = getTime();
-
+    block->maxTimestep = *maxTimestep;
 	//maximum (linearized) wave speed within one iteration
 	float maxVerticalWaveSpeed = (float) 0.;
 	solver::AugRie<float> localSolver = block->solver;
