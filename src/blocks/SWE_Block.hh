@@ -394,28 +394,28 @@ void SWE_Block<T, Buffer>::interpolateGhostlayer(Boundary border, float remoteTi
 
     switch (border) {
         case BND_LEFT:
-            for (int i = 1; i < ny + 2; i++) {
+            for (int i = 1; i < ny + 1; i++) {
                 h[0][i] = interpolateValue(h[0][i], bufferH[0][i], remoteTimestep);
                 hu[0][i] = interpolateValue(hu[0][i], bufferHu[0][i], remoteTimestep);
                 hv[0][i] = interpolateValue(hv[0][i], bufferHv[0][i], remoteTimestep);
             }
             break;
         case BND_RIGHT:
-            for (int i = 1; i < ny + 2; i++) {
+            for (int i = 1; i < ny + 1; i++) {
                 h[nx + 1][i] = interpolateValue(h[nx + 1][i], bufferH[nx + 1][i], remoteTimestep);
                 hu[nx + 1][i] = interpolateValue(hu[nx + 1][i], bufferHu[nx + 1][i], remoteTimestep);
                 hv[nx + 1][i] = interpolateValue(hv[nx + 1][i], bufferHv[nx + 1][i], remoteTimestep);
             }
             break;
         case BND_BOTTOM:
-            for (int i = 1; i < nx + 2; i++) {
+            for (int i = 1; i < nx + 1; i++) {
                 h[i][0] = interpolateValue(h[i][0], bufferH[i][0], remoteTimestep);
                 hu[i][0] = interpolateValue(hu[i][0], bufferHu[i][0], remoteTimestep);
                 hv[i][0] = interpolateValue(hv[i][0], bufferHv[i][0], remoteTimestep);
             }
             break;
         case BND_TOP:
-            for (int i = 1; i < nx + 2; i++) {
+            for (int i = 1; i < nx + 1; i++) {
                 h[i][ny + 1] = interpolateValue(h[i][ny + 1], bufferH[i][ny + 1], remoteTimestep);
                 hu[i][ny + 1] = interpolateValue(hu[i][ny + 1], bufferHu[i][ny + 1], remoteTimestep);
                 hv[i][ny + 1] = interpolateValue(hv[i][ny + 1], bufferHv[i][ny + 1], remoteTimestep);
