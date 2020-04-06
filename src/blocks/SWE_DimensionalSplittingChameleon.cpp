@@ -335,6 +335,8 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	int code = MPI_Waitall(16, recvReqs, stati);
 	if(code != MPI_SUCCESS)
 		printf("%d: No success %d\n", myRank, code);
+
+    checkAllGhostlayers();
 	//if(leftReceive)
 	//	printf("%d: Received left from %d\n", myRank, neighbourRankId[BND_LEFT]);
 	//if(rightReceive)
@@ -398,7 +400,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
  * maximum allowed time step size
  */
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
-
+    if (!allGhostlayersInSync()) return;
 	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[9];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
 	args[1] = chameleon_map_data_entry_create(&(this->maxTimestep), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
@@ -486,7 +488,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
  * maximum allowed time step size
  */
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
-
+    if (!allGhostlayersInSync()) return;
 	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[15];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
     args[1] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_TO);
@@ -518,6 +520,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
  * since this is the step width used for the intermediary updates after the x-sweep.
  */
 void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
+    if (!allGhostlayersInSync()) return;
 	// Start compute clocks
 	computeClock = getTime();
 

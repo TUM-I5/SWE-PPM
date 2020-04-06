@@ -513,7 +513,13 @@ int main(int argc, char** argv) {
                     for(int x = xLower; x < xUpper; x++) {
                         for(int y = yLower; y < yUpper; y++) {
                             // compute numerical flux on each edge
-                            blocks[x][y]->maxTimestep = timestep;
+
+                            if (!localTimestepping) {
+                                blocks[x][y]->maxTimestep = timestep;
+                            } else {
+                                blocks[x][y]->maxTimestep = blocks[x][y]->getRoundTimestep(blocks[x][y]->maxTimestep);
+                            }
+
                             blocks[x][y]->computeNumericalFluxesVertical();
                         }
                     }
