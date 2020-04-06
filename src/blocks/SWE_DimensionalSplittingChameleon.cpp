@@ -162,33 +162,33 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
     if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isSendable(BND_RIGHT)) {
         right->borderTimestep[BND_LEFT] = getTotalLocalTimestep();
         for(int i = 1; i < ny+1; i++) {
-            right->getWaterHeight()[0][i] = bufferH[nx][i];
-            right->getMomentumHorizontal()[0][i] =bufferHu[nx][i];
-            right->getMomentumVertical()[0][i] = bufferHv[nx][i];
+            right->getModifiableWaterHeight()[0][i] = bufferH[nx][i];
+            right->getModifiableMomentumHorizontal()[0][i] =bufferHu[nx][i];
+            right->getModifiableMomentumVertical()[0][i] = bufferHv[nx][i];
         }
     }
     if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isSendable(BND_LEFT)) {
         left->borderTimestep[BND_RIGHT] = getTotalLocalTimestep();
         for(int i = 1; i < ny+1; i++) {
-           left->getWaterHeight()[nx+1][i] =   bufferH[1][i];
-            left->getMomentumHorizontal()[nx+1][i] = bufferHu[1][i] ;
-            left->getMomentumVertical()[nx+1][i] = bufferHv[1][i];
+           left->getModifiableWaterHeight()[nx+1][i] =   bufferH[1][i];
+            left->getModifiableMomentumHorizontal()[nx+1][i] = bufferHu[1][i] ;
+            left->getModifiableMomentumVertical()[nx+1][i] = bufferHv[1][i];
         }
     }
     if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isSendable(BND_TOP)) {
         top->borderTimestep[BND_BOTTOM] = getTotalLocalTimestep();
         for(int i = 1; i < nx+1; i++) {
-           top->getWaterHeight()[i][0] =  bufferH[1][ny] ;
-          top->getMomentumHorizontal()[i][0] =  bufferHu[1][ny] ;
-           top->getMomentumVertical()[i][0] = bufferHv[1][ny];
+           top->getModifiableWaterHeight()[i][0] =  bufferH[1][ny] ;
+          top->getModifiableMomentumHorizontal()[i][0] =  bufferHu[1][ny] ;
+           top->getModifiableMomentumVertical()[i][0] = bufferHv[1][ny];
         }
     }
     if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isSendable(BND_BOTTOM)) {
         bottom->borderTimestep[BND_TOP] = getTotalLocalTimestep();
         for(int i = 1; i < nx+1; i++) {
-            bottom->getWaterHeight()[i][ny+1] =  bufferH[i][1];
-            bottom->getMomentumHorizontal()[i][ny+1] =bufferHu[i][1];
-            bottom->getMomentumVertical()[i][ny+1] =  bufferHv[i][1];
+            bottom->getModifiableWaterHeight()[i][ny+1] =  bufferH[i][1];
+            bottom->getModifiableMomentumHorizontal()[i][ny+1] =bufferHu[i][1];
+            bottom->getModifiableMomentumVertical()[i][ny+1] =  bufferHv[i][1];
         }
     }
 	MPI_Status status;
