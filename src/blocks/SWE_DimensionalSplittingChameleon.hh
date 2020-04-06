@@ -37,13 +37,9 @@
 #include <time.h>
 #include <mpi.h>
 
-#if WAVE_PROPAGATION_SOLVER == 0
-#include "solvers/HLLEFun.hpp"
-#elif WAVE_PROPAGATION_SOLVER == 1
-#include "solvers/FWave.hpp"
-#elif WAVE_PROPAGATION_SOLVER==2
+
 #include "solvers/AugRie.hpp"
-#endif
+
 
 class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 	public:
