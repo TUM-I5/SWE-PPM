@@ -250,6 +250,7 @@ public:
  */
 template<typename T, typename Buffer>
 SWE_Block<T, Buffer>::SWE_Block() {
+    std::cout << "HMMMMMMMMMM\n";
     for (int i = 0; i < 4; i++) {
         boundaryType[i] = PASSIVE;
         receivedGhostlayer[i] = GL_NEXT;
