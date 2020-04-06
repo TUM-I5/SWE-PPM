@@ -19,7 +19,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,12 +73,12 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/SConscript" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/src_examples_swe_chameleon (1).cpp" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
-    <property name="two.files.diff.last.used.file" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src/SConscript" />
+    <property name="two.files.diff.last.used.file" value="$USER_HOME$/Downloads/src_examples_swe_chameleon (1).cpp" />
     <property name="two.files.diff.last.used.folder" value="$USER_HOME$/Documents/Arbeit/TUM/swe-chameleon/src" />
   </component>
   <component name="RecentsManager">
@@ -293,14 +293,7 @@
       <workItem from="1586002692663" duration="25861000" />
       <workItem from="1586079765052" duration="26174000" />
       <workItem from="1586169743971" duration="4161000" />
-      <workItem from="1586174490980" duration="5219000" />
-    </task>
-    <task id="LOCAL-00133" summary="Added debug info">
-      <created>1586040736274</created>
-      <option name="number" value="00133" />
-      <option name="presentableId" value="LOCAL-00133" />
-      <option name="project" value="LOCAL" />
-      <updated>1586040736274</updated>
+      <workItem from="1586174490980" duration="5535000" />
     </task>
     <task id="LOCAL-00134" summary="Added debug info">
       <created>1586042765772</created>
@@ -638,7 +631,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586191416637</updated>
     </task>
-    <option name="localTasksCounter" value="182" />
+    <task id="LOCAL-00182" summary="Added localtimestepping for main">
+      <created>1586191485854</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
+      <option name="project" value="LOCAL" />
+      <updated>1586191485854</updated>
+    </task>
+    <option name="localTasksCounter" value="183" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -696,23 +696,23 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586191416543">
+    <state x="554" y="116" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586191485788">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586191416543" />
+    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586191485788" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="2118" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586174140080">
+    <state x="2118" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586191824140">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
-    <state x="2118" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586174140080" />
+    <state x="2118" y="27" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586191824140" />
     <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777842585" />
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586190289966">
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586191823593">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586190289966" />
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586191823593" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777664875" />
     <state width="1874" height="263" key="GridCell.Tab.0.bottom" timestamp="1586105752929">
       <screen x="0" y="27" width="1920" height="1053" />
