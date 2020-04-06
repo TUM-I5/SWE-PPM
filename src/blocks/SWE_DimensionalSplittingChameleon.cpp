@@ -101,9 +101,7 @@ SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon (int nx, in
 	right(NULL) {
 		computeTime = 0.;
 		computeTimeWall = 0.;
-        if(localTimestepping){
-            std::cout << "local timestepping activated!\n";
-        }
+
 		MPI_Type_vector(nx, 1, ny + 2, MPI_FLOAT, &HORIZONTAL_BOUNDARY);
 		MPI_Type_commit(&HORIZONTAL_BOUNDARY);
 	}
@@ -131,33 +129,33 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
         borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
 		for(int i = 1; i < ny+2; i++) {
-			h[nx+1][i] = right->getWaterHeight()[1][i];
-			hu[nx+1][i] = right->getMomentumHorizontal()[1][i];
-			hv[nx+1][i] = right->getMomentumVertical()[1][i];
+			bufferH[nx+1][i] = right->getWaterHeight()[1][i];
+            bufferHu[nx+1][i] = right->getMomentumHorizontal()[1][i];
+            bufferHv[nx+1][i] = right->getMomentumVertical()[1][i];
 		}
 	}
 	if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)) {
         borderTimestep[BND_LEFT] = left->getTotalLocalTimestep();
 		for(int i = 1; i < ny+2; i++) {
-			h[0][i] = left->getWaterHeight()[nx][i];
-			hu[0][i] = left->getMomentumHorizontal()[nx][i];
-			hv[0][i] = left->getMomentumVertical()[nx][i];
+            bufferH[0][i] = left->getWaterHeight()[nx][i];
+            bufferHu[0][i] = left->getMomentumHorizontal()[nx][i];
+            bufferHv[0][i] = left->getMomentumVertical()[nx][i];
 		}
 	}
 	if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)) {
         borderTimestep[BND_TOP] = top->getTotalLocalTimestep();
 		for(int i = 1; i < nx+2; i++) {
-			h[i][ny+1] = top->getWaterHeight()[i][1];
-			hu[i][ny+1] = top->getMomentumHorizontal()[i][1];
-			hv[i][ny+1] = top->getMomentumVertical()[i][1];
+            bufferH[i][ny+1] = top->getWaterHeight()[i][1];
+            bufferHu[i][ny+1] = top->getMomentumHorizontal()[i][1];
+            bufferHv[i][ny+1] = top->getMomentumVertical()[i][1];
 		}
 	}
 	if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)) {
         borderTimestep[BND_BOTTOM] = bottom->getTotalLocalTimestep();
         for(int i = 1; i < nx+2; i++) {
-			h[i][0] = bottom->getWaterHeight()[i][ny];
-			hu[i][0] = bottom->getMomentumHorizontal()[i][ny];
-			hv[i][0] = bottom->getMomentumVertical()[i][ny];
+            bufferH[i][0] = bottom->getWaterHeight()[i][ny];
+            bufferHu[i][0] = bottom->getMomentumHorizontal()[i][ny];
+            bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
 		}
 	}
 
@@ -217,7 +215,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
     }
 	if (boundaryType[BND_BOTTOM] == CONNECT && isSendable(BND_BOTTOM)) {
 
-		//int code = 
+		//int code =
 		MPI_Isend(&h[1][1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagH, MPI_COMM_WORLD, &req);
 		//if(code != MPI_SUCCESS)
 		//	printf("%d: No success %d\n", myRank, code);
@@ -318,7 +316,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
         recvReqs[10] = MPI_REQUEST_NULL;
         recvReqs[11] = MPI_REQUEST_NULL;
     }
-	
+
 	if (boundaryType[BND_TOP] == CONNECT && isReceivable(BND_TOP)) {
 
         MPI_Irecv(&bufferH[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int) originX) & tagH,MPI_COMM_WORLD, &recvReqs[12]);
@@ -338,7 +336,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	if(code != MPI_SUCCESS)
 		printf("%d: No success %d\n", myRank, code);
 
-    //checkAllGhostlayers();
+    checkAllGhostlayers();
 	//if(leftReceive)
 	//	printf("%d: Received left from %d\n", myRank, neighbourRankId[BND_LEFT]);
 	//if(rightReceive)
@@ -359,7 +357,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 	block->hNetUpdatesRight.setRawPointer(hNetUpdatesRight_data);
 	block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
 	block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
-	
+
 	// Start compute clocks
 	block->computeClock = getTime();
 
@@ -415,7 +413,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
     args[6] = chameleon_map_data_entry_create(this->hNetUpdatesRight.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[7] = chameleon_map_data_entry_create(this->huNetUpdatesLeft.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[8] = chameleon_map_data_entry_create(this->huNetUpdatesRight.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
-	
+
 	cham_migratable_task_t *cur_task = chameleon_create_task(
         (void *)&computeNumericalFluxesHorizontalKernel,
         9, // number of args
@@ -442,7 +440,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 	block->hvNetUpdatesAbove.setRawPointer(hvNetUpdatesAbove_data);
 	block->hStar.setRawPointer(hStar_data);
 	block->huStar.setRawPointer(huStar_data);
-	
+
 	// Start compute clocks
 	block->computeClock = getTime();
     //block->maxTimestep = *maxTimestep;
@@ -476,7 +474,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 					);
 		}
 	}
-	
+
 	#ifndef NDEBUG
 	if(block->maxTimestep >= (float) .7 * (block->dy / maxVerticalWaveSpeed)) {
 		printf("%d: %f, %f, %f\n", block->myRank, block->maxTimestep, block->dy, maxVerticalWaveSpeed);
