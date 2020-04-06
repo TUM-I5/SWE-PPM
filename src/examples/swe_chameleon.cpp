@@ -484,7 +484,7 @@ int main(int argc, char** argv) {
                     #pragma omp master
                         taskCreateHorizontalTime += getTime()-lastTime; lastTime = getTime();
                     //if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Spawning %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
-                    chameleon_distributed_taskwait(0);
+                    //chameleon_distributed_taskwait(0);
                 }
                 taskWaitHorizontalTime += getTime()-lastTime;
                 //if(myRank == 0) printf("After computeNumericalFluxesHorizontal() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
@@ -526,7 +526,7 @@ int main(int argc, char** argv) {
                     #pragma omp master
                         taskCreateVerticalTime += getTime()-lastTime; lastTime = getTime();
                     //if(myRank == 0) printf("After computeNumericalFluxesVertical() Task Spawning %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
-                    chameleon_distributed_taskwait(0);
+                   // chameleon_distributed_taskwait(0);
                 }
                 taskWaitVerticalTime += getTime()-lastTime; lastTime = getTime();
                 //if(myRank == 0) printf("After computeNumericalFluxesVertical() Task Wait %f\n", (float)(clock() - commClock) / CLOCKS_PER_SEC);
