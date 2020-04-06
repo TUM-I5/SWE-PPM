@@ -453,14 +453,14 @@ void SWE_Block<T, Buffer>::copyGhostlayer(Boundary border) {
                       hv.getRawPointer() + startIndex);
             break;
         case BND_BOTTOM:
-            for (int i = 1; i < nx + 2; i++) {
+            for (int i = 1; i < nx + 1; i++) {
                 h[i][0] = bufferH[i][0];
                 hu[i][0] = bufferHu[i][0];
                 hv[i][0] = bufferHv[i][0];
             }
             break;
         case BND_TOP:
-            for (int i = 1; i < nx + 2; i++) {
+            for (int i = 1; i < nx + 1; i++) {
                 h[i][ny + 1] = bufferH[i][ny + 1];
                 hu[i][ny + 1] = bufferHu[i][ny + 1];
                 hv[i][ny + 1] = bufferHv[i][ny + 1];
