@@ -432,7 +432,6 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
         }
     }
 
-    CollectorMpi::getInstance().addFlops(nx * ny * 135);
 
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
 	/*chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[9];
