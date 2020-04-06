@@ -445,7 +445,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 	//maximum (linearized) wave speed within one iteration
 	float maxVerticalWaveSpeed = (float) 0.;
 	solver::AugRie<float> localSolver = block->solver;
-    if(*maxTimestep != block->maxTimestep) std::cout << "HALLO "<< *maxTimestep<< " " << block->maxTimestep << std::endl;
+    std::cout << "HALLO "<< *maxTimestep<< " " << block->maxTimestep << std::endl;
 	// set intermediary Q* states
 	//#pragma omp for collapse(2)
 	for (int x = 1; x < block->nx + 1; x++) {
