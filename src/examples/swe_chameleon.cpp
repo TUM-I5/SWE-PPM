@@ -360,11 +360,11 @@ int main(int argc, char** argv) {
 
     #pragma omp parallel
     {
-        chameleon_thread_init();
+        //chameleon_thread_init();
     }
 	
     // necessary to be aware of binary base addresses to calculate offset for target functions
-    chameleon_determine_base_addresses((void *)&main);
+    //chameleon_determine_base_addresses((void *)&main);
 
 
     float maxLocalTimestep;
@@ -657,9 +657,9 @@ int main(int argc, char** argv) {
 
     #pragma omp parallel
     {
-        chameleon_thread_finalize();
+       // chameleon_thread_finalize();
     }
-    chameleon_finalize();
+   // chameleon_finalize();
 
 	if(write && myRank == 0)
 		delete writer;
