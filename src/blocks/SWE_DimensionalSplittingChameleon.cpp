@@ -336,7 +336,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	if(code != MPI_SUCCESS)
 		printf("%d: No success %d\n", myRank, code);
 
-    checkAllGhostlayers();
+    //checkAllGhostlayers();
 	//if(leftReceive)
 	//	printf("%d: Received left from %d\n", myRank, neighbourRankId[BND_LEFT]);
 	//if(rightReceive)
