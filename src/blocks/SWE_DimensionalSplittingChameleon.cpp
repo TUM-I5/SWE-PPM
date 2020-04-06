@@ -59,7 +59,7 @@ double getTime() {
  * @param l_dx Cell width
  * @param l_dy Cell height
  */
-SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon (int nx, int ny, float dx, float dy, float originX, float originY) :
+SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon (int nx, int ny, float dx, float dy, float originX, float originY, bool localTimestepping) :
 	/*
 	 * Important note concerning grid allocations:
 	 * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -71,7 +71,7 @@ SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon (int nx, in
 	 */
 
 	// Initialize grid metadata using the base class constructor
-	SWE_Block(nx, ny, dx, dy, originX, originY),
+	SWE_Block(nx, ny, dx, dy, originX, originY, localTimestepping),
 
 	// intermediate state Q after x-sweep
 	hStar (nx + 1, ny + 2),

@@ -260,7 +260,7 @@ int main(int argc, char** argv) {
 			else
 				boundaries[BND_TOP] = CONNECT_WITHIN_RANK;
 
-			blocks[x][y] = new SWE_DimensionalSplittingChameleon(x_blocksize, y_blocksize, dxSimulation, dySimulation, originX, originY);
+			blocks[x][y] = new SWE_DimensionalSplittingChameleon(x_blocksize, y_blocksize, dxSimulation, dySimulation, originX, originY,localTimestepping);
 			blocks[x][y]->initScenario(scenario, boundaries);
 
 			blocks[x][y]->myRank = myRank;
