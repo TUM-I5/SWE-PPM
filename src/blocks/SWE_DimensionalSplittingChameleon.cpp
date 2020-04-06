@@ -125,7 +125,7 @@ void SWE_DimensionalSplittingChameleon::freeMpiType() {
 void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
 	SWE_Block::applyBoundaryConditions();
-
+/*
 	if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
         borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
 		for(int i = 1; i < ny+1; i++) {
@@ -157,40 +157,40 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHu[i][0] = bottom->getMomentumHorizontal()[i][ny];
             bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
 		}
-	}
-/*
+	}*/
+
     if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isSendable(BND_RIGHT)) {
         right->borderTimestep[BND_LEFT] = getTotalLocalTimestep();
         for(int i = 1; i < ny+1; i++) {
-            right->getModifiableWaterHeight()[0][i] = bufferH[nx][i];
-            right->getModifiableMomentumHorizontal()[0][i] =bufferHu[nx][i];
-            right->getModifiableMomentumVertical()[0][i] = bufferHv[nx][i];
+            right->bufferH[0][i] = h[nx][i];
+            right->bufferHu[0][i] =hu[nx][i];
+            right->bufferHv[0][i] = hv[nx][i];
         }
     }
     if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isSendable(BND_LEFT)) {
         left->borderTimestep[BND_RIGHT] = getTotalLocalTimestep();
         for(int i = 1; i < ny+1; i++) {
-           left->getModifiableWaterHeight()[nx+1][i] =   bufferH[1][i];
-            left->getModifiableMomentumHorizontal()[nx+1][i] = bufferHu[1][i] ;
-            left->getModifiableMomentumVertical()[nx+1][i] = bufferHv[1][i];
+            left->bufferH[nx+1][i] =  h[1][i];
+            left->bufferHu[nx+1][i] = hu[1][i] ;
+            left->bufferHv[nx+1][i] = hv[1][i];
         }
     }
     if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isSendable(BND_TOP)) {
         top->borderTimestep[BND_BOTTOM] = getTotalLocalTimestep();
         for(int i = 1; i < nx+1; i++) {
-           top->getModifiableWaterHeight()[i][0] =  bufferH[1][ny] ;
-          top->getModifiableMomentumHorizontal()[i][0] =  bufferHu[1][ny] ;
-           top->getModifiableMomentumVertical()[i][0] = bufferHv[1][ny];
+           top->bufferH[i][0] =   h[1][ny] ;
+           top->bufferHu[i][0] =  hu[1][ny] ;
+           top->bufferHv[i][0] =  hv[1][ny];
         }
     }
     if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isSendable(BND_BOTTOM)) {
         bottom->borderTimestep[BND_TOP] = getTotalLocalTimestep();
         for(int i = 1; i < nx+1; i++) {
-            bottom->getModifiableWaterHeight()[i][ny+1] =  bufferH[i][1];
-            bottom->getModifiableMomentumHorizontal()[i][ny+1] =bufferHu[i][1];
-            bottom->getModifiableMomentumVertical()[i][ny+1] =  bufferHv[i][1];
+            bottom->bufferH[i][ny+1] =  h[i][1];
+            bottom->bufferHu[i][ny+1] =hu[i][1];
+            bottom->bufferHv[i][ny+1] =  hv[i][1];
         }
-    }*/
+    }
 	MPI_Status status;
 
 	assert(h.getRows() == ny + 2);
