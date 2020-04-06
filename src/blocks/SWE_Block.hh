@@ -327,8 +327,7 @@ void SWE_Block<T, Buffer>::printLtsStats() {
 
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::allGhostlayersInSync() {
-    std::cout <<  "allGhostlayersInSync "<< (receivedGhostlayer[BND_LEFT] != GL_UNVALID && receivedGhostlayer[BND_RIGHT] != GL_UNVALID
-    && receivedGhostlayer[BND_TOP] != GL_UNVALID && receivedGhostlayer[BND_BOTTOM] != GL_UNVALID) << std::endl;
+
     return receivedGhostlayer[BND_LEFT] != GL_UNVALID && receivedGhostlayer[BND_RIGHT] != GL_UNVALID
            && receivedGhostlayer[BND_TOP] != GL_UNVALID && receivedGhostlayer[BND_BOTTOM] != GL_UNVALID;
 }
