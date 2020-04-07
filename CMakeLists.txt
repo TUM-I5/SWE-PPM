@@ -6,9 +6,9 @@ project(swe_benchmark)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(BUILDS Default Mpi Upcxx Hpx)
+set(BUILDS Default Mpi Upcxx Hpx Chameleon)
 
-set(BUILDS Hpx Mpi)
+#set(BUILDS Hpx Mpi)
 
 include_directories(src)
 include(FindNetCDF.cmake)

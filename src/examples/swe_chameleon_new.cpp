@@ -34,22 +34,7 @@
 #include "blocks/SWE_DimensionalSplittingChameleon.hh"
 
 
-std::array<BoundaryType, 4>
-getBoundaries(int localBlockPositionX, int localBlockPositionY, int blockCountX, int blockCountY, SWE_Scenario *scen) {
-#ifdef ASAGI
-    SWE_AsagiScenario * scenario = (SWE_AsagiScenario *) scen;
-#else
-    SWE_RadialDamBreakScenario *scenario = (SWE_RadialDamBreakScenario *) scen;
-    // SWE_HalfDomainDry * scenario =  (SWE_HalfDomainDry *) scen  ;
-    //SWE_RadialDamBreakScenario scenario;
-#endif
-    std::array<BoundaryType, 4> boundaries;
-    boundaries[BND_LEFT] = (localBlockPositionX > 0) ? CONNECT : scenario->getBoundaryType(BND_LEFT);
-    boundaries[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? CONNECT : scenario->getBoundaryType(BND_RIGHT);
-    boundaries[BND_BOTTOM] = (localBlockPositionY > 0) ? CONNECT : scenario->getBoundaryType(BND_BOTTOM);
-    boundaries[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? CONNECT : scenario->getBoundaryType(BND_TOP);
-    return boundaries;
-}
+
 
 std::array<int, 4>
 getNeighbours(int localBlockPositionX, int localBlockPositionY, int blockCountX, int blockCountY, int myRank) {
