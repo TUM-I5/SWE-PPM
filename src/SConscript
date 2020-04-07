@@ -143,7 +143,7 @@ elif env['parallelization'] in ['charm']:
 elif env['parallelization'] in ['hpx']:
     sourceFiles.append(['examples/swe_hpx.cpp'])
 elif env['parallelization'] in ['chameleon']:
-    sourceFiles.append(['examples/swe_chameleon.cpp'])
+    sourceFiles.append(['examples/swe_chameleon_new.cpp'])
 elif env['parallelization'] in ['starpu']:
     sourceFiles.append(['examples/swe_starpu.cpp'])
 else:

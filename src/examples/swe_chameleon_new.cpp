@@ -1,0 +1,410 @@
+//
+// Created by martin on 07/04/2020.
+//
+
+//
+// Created by martin on 01/07/19.
+//
+
+
+//
+// Created by martin on 16/06/19.
+
+
+#include <mpi.h>
+#include <algorithm>
+#include <iostream>
+#include "tools/args.hh"
+
+#ifdef WRITENETCDF
+
+#include "writer/NetCdfWriter.hh"
+
+#else
+#include "writer/VtkWriter.hh"
+#endif
+
+#ifdef ASAGI
+#include "scenarios/SWE_AsagiScenario.hh"
+#else
+
+#include "scenarios/SWE_simple_scenarios.hh"
+
+#endif
+#include "blocks/SWE_DimensionalSplittingChameleon.hh"
+
+
+std::array<BoundaryType, 4>
+getBoundaries(int localBlockPositionX, int localBlockPositionY, int blockCountX, int blockCountY, SWE_Scenario *scen) {
+#ifdef ASAGI
+    SWE_AsagiScenario * scenario = (SWE_AsagiScenario *) scen;
+#else
+    SWE_RadialDamBreakScenario *scenario = (SWE_RadialDamBreakScenario *) scen;
+    // SWE_HalfDomainDry * scenario =  (SWE_HalfDomainDry *) scen  ;
+    //SWE_RadialDamBreakScenario scenario;
+#endif
+    std::array<BoundaryType, 4> boundaries;
+    boundaries[BND_LEFT] = (localBlockPositionX > 0) ? CONNECT : scenario->getBoundaryType(BND_LEFT);
+    boundaries[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? CONNECT : scenario->getBoundaryType(BND_RIGHT);
+    boundaries[BND_BOTTOM] = (localBlockPositionY > 0) ? CONNECT : scenario->getBoundaryType(BND_BOTTOM);
+    boundaries[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? CONNECT : scenario->getBoundaryType(BND_TOP);
+    return boundaries;
+}
+
+std::array<int, 4>
+getNeighbours(int localBlockPositionX, int localBlockPositionY, int blockCountX, int blockCountY, int myRank) {
+    std::array<int, 4> myNeighbours;
+    myNeighbours[BND_LEFT] = (localBlockPositionX > 0) ? myRank - blockCountY : -1;
+    myNeighbours[BND_RIGHT] = (localBlockPositionX < blockCountX - 1) ? myRank + blockCountY : -1;
+    myNeighbours[BND_BOTTOM] = (localBlockPositionY > 0) ? myRank - 1 : -1;
+    myNeighbours[BND_TOP] = (localBlockPositionY < blockCountY - 1) ? myRank + 1 : -1;
+    return myNeighbours;
+}
+
+
+int main(int argc, char** argv) {
+
+
+
+    // Define command line arguments
+    tools::Args args;
+
+#ifdef ASAGI
+    args.addOption("bathymetry-file", 'b', "File containing the bathymetry");
+	args.addOption("displacement-file", 'd', "File containing the displacement");
+#endif
+    args.addOption("simulation-duration", 't', "Time in seconds to simulate");
+    args.addOption("checkpoint-count", 'n', "Number of simulation snapshots to be written");
+    args.addOption("resolution-horizontal", 'x', "Number of simulation cells in horizontal direction");
+    args.addOption("resolution-vertical", 'y', "Number of simulated cells in y-direction");
+    args.addOption("output-basepath", 'o', "Output base file name");
+    args.addOption("blocks", 'b', "Blocks per rank", tools::Args::Required, false);
+
+    args.addOption("write", 'w', "Write results", tools::Args::Required, false);
+    //args.addOption("iteration-count", 'i', "Iteration Count (Overrides t and n)", tools::Args::Required, false);
+    args.addOption("local-timestepping", 'l', "Activate local timestepping", tools::Args::Required, false);
+    // Parse command line arguments
+    tools::Args::Result ret = args.parse(argc, argv);
+    switch (ret) {
+        case tools::Args::Error:
+            return 1;
+        case tools::Args::Help:
+            return 0;
+        case tools::Args::Success:
+            break;
+    }
+
+    // Read in command line arguments
+    float simulationDuration = args.getArgument<float>("simulation-duration");
+    int numberOfCheckPoints = args.getArgument<int>("checkpoint-count");
+    int nxRequested = args.getArgument<int>("resolution-horizontal");
+    int nyRequested = args.getArgument<int>("resolution-vertical");
+    std::string outputBaseName = args.getArgument<std::string>("output-basepath");
+    bool write = false;
+    bool localTimestepping = false;
+    std::vector<std::shared_ptr<SWE_DimensionalSplittingChameleon>> simulationBlocks;
+    int ranksPerLocality = 1;
+    if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
+        localTimestepping = true;
+    }
+    if (args.isSet("blocks")) {
+        ranksPerLocality = args.getArgument<int>("blocks");
+    }
+    if(args.isSet("write") && args.getArgument<int>("write") == 1)
+        write = true;
+
+
+    // Initialize Scenario
+#ifdef ASAGI
+    SWE_AsagiScenario scenario(args.getArgument<std::string>("bathymetry-file"), args.getArgument<std::string>("displacement-file"));
+#else
+    SWE_RadialDamBreakScenario scenario;
+#endif
+
+    // Init MPI
+    int localityRank, localityCount;
+    int provided;
+    int requested = MPI_THREAD_MULTIPLE;
+    MPI_Init_thread(&argc, &argv, requested, &provided);
+    MPI_Comm_size(MPI_COMM_WORLD, &localityCount);
+    MPI_Comm_rank(MPI_COMM_WORLD, &localityRank);
+
+
+    int totalRanks = ranksPerLocality * localityCount;
+
+    // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
+    float *checkpointInstantOfTime = new float[numberOfCheckPoints];
+    // Time delta is the time between any two checkpoints
+    float checkpointTimeDelta = simulationDuration / numberOfCheckPoints;
+    // The first checkpoint is reached after 0 + delta t
+    checkpointInstantOfTime[0] = checkpointTimeDelta;
+    for (int i = 1; i < numberOfCheckPoints; i++) {
+        checkpointInstantOfTime[i] = checkpointInstantOfTime[i - 1] + checkpointTimeDelta;
+    }
+
+
+    int widthScenario = scenario.getBoundaryPos(BND_RIGHT) - scenario.getBoundaryPos(BND_LEFT);
+    int heightScenario = scenario.getBoundaryPos(BND_TOP) - scenario.getBoundaryPos(BND_BOTTOM);
+
+    float dxSimulation = (float) widthScenario / nxRequested;
+    float dySimulation = (float) heightScenario / nyRequested;
+
+
+
+    // number of SWE-Blocks in x- and y-direction
+    int blockCountY = std::sqrt(totalRanks);
+    while (totalRanks % blockCountY != 0) blockCountY--;
+    int blockCountX = totalRanks / blockCountY;
+
+
+    int startPoint = localityRank * ranksPerLocality;
+
+    for (int i = startPoint; i < startPoint + ranksPerLocality; i++) {
+        auto myRank = i;
+        int localBlockPositionX = myRank / blockCountY;
+        int localBlockPositionY = myRank % blockCountY;
+
+
+
+        // compute local number of cells for each SWE_Block w.r.t. the simulation domain
+        // (particularly not the original scenario domain, which might be finer in resolution)
+        // (blocks at the domain boundary are assigned the "remainder" of cells)
+
+        int nxBlockSimulation = (nxRequested) / blockCountX;
+        int nxRemainderSimulation = nxRequested - (blockCountX - 1) * nxBlockSimulation;
+        int nyBlockSimulation = nyRequested / blockCountY;
+        int nyRemainderSimulation = nyRequested - (blockCountY - 1) * nyBlockSimulation;
+
+        int nxLocal = (localBlockPositionX < blockCountX - 1) ? nxBlockSimulation : nxRemainderSimulation;
+        int nyLocal = (localBlockPositionY < blockCountY - 1) ? nyBlockSimulation : nyRemainderSimulation;
+
+
+
+        // Compute the origin of the local simulation block w.r.t. the original scenario domain.
+        float localOriginX =
+                scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX * dxSimulation * nxBlockSimulation;
+        float localOriginY =
+                scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY * dySimulation * nyBlockSimulation;
+
+
+        std::cout << myRank<< "| " <<localOriginX<< " "<< localOriginY<< " " <<  nxLocal << " " << nyLocal << std::endl;
+        simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingChameleon>(
+                new SWE_DimensionalSplittingChameleon(nxLocal, nyLocal, dxSimulation, dySimulation,
+                                                localOriginX, localOriginY, localTimestepping)));
+
+        //simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
+    }
+
+    for (int i = startPoint; i < startPoint + ranksPerLocality; i++) {
+        auto myRank = i;
+        int localBlockPositionX = myRank / blockCountY;
+        int localBlockPositionY = myRank % blockCountY;
+        std::array<int, 4> myNeighbours = getNeighbours(localBlockPositionX, localBlockPositionY, blockCountX,
+                                                        blockCountY, myRank);
+
+        std::array<int, 4> refinedNeighbours;
+        std::array<std::shared_ptr<SWE_DimensionalSplittingHpx>, 4> neighbourBlocks;
+        std::array<BoundaryType, 4> boundaries;
+
+        for (int j = 0; j < 4; j++) {
+            if (myNeighbours[j] >= startPoint && myNeighbours[j] < (startPoint + ranksPerLocality)) {
+                refinedNeighbours[j] = -2;
+                neighbourBlocks[j] = simulationBlocks[myNeighbours[j] - startPoint];
+                boundaries[j] = CONNECT_WITHIN_RANK;
+            else if(myNeighbours[j] == -1){
+                boundaries[j] = scenario.getBoundaryType(j);
+            } else {
+
+                refinedNeighbours[j] = myNeighbours[j] / ranksPerLocality;
+                boundaries[j] = CONNECT;
+            }
+        }
+        simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
+        simulationBlocks[i - startPoint]->connectNeighbours(refinedNeighbours);
+        simulationBlocks[i - startPoint]->connectLocalNeighbours(neighbourBlocks);
+        simulationBlocks[i - startPoint]->setRank(myRank);
+    }
+
+    SWE_DimensionalSplittingChameleon writeBlock(nxRequested, nyRequested, dxSimulation, dySimulation, 0, 0,localTimestepping);
+    BoundaryType boundaries[4];
+    boundaries[BND_LEFT] = scenario.getBoundaryType(BND_LEFT);
+    boundaries[BND_RIGHT] = scenario.getBoundaryType(BND_RIGHT);
+    boundaries[BND_TOP] = scenario.getBoundaryType(BND_TOP);
+    boundaries[BND_BOTTOM] = scenario.getBoundaryType(BND_BOTTOM);
+    if(write && myRank == 0)
+        writeBlock.initScenario(scenario, boundaries);
+
+    // Prepare writeBlock for usage with One-Sided Communication
+    MPI_Win writeBlockWin_h;
+    MPI_Win writeBlockWin_hu;
+    MPI_Win writeBlockWin_hv;
+
+    MPI_Win_create(writeBlock.h.getRawPointer(), (nxRequested+2)*(nyRequested*2), sizeof(float), MPI_INFO_NULL, MPI_COMM_WORLD, &writeBlockWin_h);
+    MPI_Win_create(writeBlock.hu.getRawPointer(), (nxRequested+2)*(nyRequested*2), sizeof(float), MPI_INFO_NULL, MPI_COMM_WORLD, &writeBlockWin_hu);
+    MPI_Win_create(writeBlock.hv.getRawPointer(), (nxRequested+2)*(nyRequested*2), sizeof(float), MPI_INFO_NULL, MPI_COMM_WORLD, &writeBlockWin_hv);
+#ifdef WRITENETCDF
+        // Construct a netCDF writer
+        std::string outputFileName = outputBaseName;
+        NetCdfWriter* writer;
+        if(write && myRank == 0) {
+            writer = new NetCdfWriter(
+                    outputFileName,
+                    writeBlock.getBathymetry(),
+                    boundarySize,
+                    writeBlock.getCellCountHorizontal(),
+                    writeBlock.getCellCountVertical(),
+                    dxSimulation,
+                    dySimulation,
+                    writeBlock.getOriginX(),
+                    writeBlock.getOriginY());
+            //printf("%d: Init writer with CellCountHorizontal:%d, CellCountVertical:%d, OriginX:%d, getOriginX:%d\n", myRank, writeBlock.getCellCountHorizontal(), writeBlock.getCellCountVertical(), writeBlock.getOriginX(), writeBlock.getOriginY());
+        }
+#else
+        // Construct a vtk writer
+	std::string outputFileName = outputBaseName;
+	VtkWriter writer(
+		outputFileName,
+		writeBlock.getBathymetry(),
+		boundarySize,
+		writeBlock.getCellCountHorizontal(),
+		writeBlock.getCellCountVertical(),
+		dxSimulation,
+		dySimulation);
+#endif // WRITENETCDF
+
+
+        if(write && myRank == 0) {
+        writer->writeTimeStep(
+                writeBlock.getWaterHeight(),
+                writeBlock.getMomentumHorizontal(),
+                writeBlock.getMomentumVertical(),
+                (float) 0.);
+    }
+
+
+    
+    std::vector<float> timesteps;
+    float maxLocalTimestep;
+
+    //for (auto &block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
+
+    if (localTimestepping) {
+        float localTimestep = 0;
+        for (auto &block: simulationBlocks){
+            block->computeMaxTimestep(0.01, 0.4);
+            localTimestep = std::max(localTimestep, block->getMaxTimestep());
+        }
+
+        MPI_Allreduce(&timestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
+
+        for (auto &block: simulationBlocks)block->setMaxLocalTimestep(maxLocalTimestep);
+    }
+
+
+
+    float t = 0.;
+    bool synchronizedTimestep = true;
+
+    float timestep;
+
+
+    // loop over the count of requested checkpoints
+    for (int i = 0; i < numberOfCheckPoints; i++) {
+        // Simulate until the checkpoint is reached
+        while (t < checkpointInstantOfTime[i]) {
+            do {
+
+                for (auto &block: simulationBlocks)block->setGhostLayer();
+
+                for (auto &block: simulationBlocks)block->receiveGhostLayer();
+
+
+                for (auto &block: simulationBlocks)block->computeNumericalFluxesHorizontal();
+
+                if (!localTimestepping) {
+                    for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
+
+                    float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
+
+                    float maxTimestepGlobal;
+                    MPI_Allreduce(&minTimestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+
+                    for (auto &block: simulationBlocks)block->maxTimestep = maxTimestepGlobal;
+                }
+
+                for (auto &block: simulationBlocks)block->computeNumericalFluxesVertical();
+
+
+                for (auto &block: simulationBlocks)block->updateUnknowns(timestep);
+
+
+                if (localTimestepping) {
+                    //if each block got the maxLocalTimestep the timestep is finished
+                    synchronizedTimestep = true;
+                    for (auto &block : simulationBlocks) {
+                        if (!block->hasMaxLocalTimestep()) {
+                            synchronizedTimestep = false;
+                            // break;
+                        }
+                    }
+                }
+
+            } while (localTimestepping && !synchronizedTimestep);
+            // update simulation time with time step width.
+            t += localTimestepping ? maxLocalTimestep : timestep;
+
+        }
+
+        if (localityRank == 0) {
+            printf("Write timestep (%fs)\n", t);
+        }
+        if(write) {
+            MPI_Win_fence(0, writeBlockWin_h);
+            MPI_Win_fence(0, writeBlockWin_hu);
+            MPI_Win_fence(0, writeBlockWin_hv);
+            for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
+                for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
+                    // Send all data to rank 0, which will write it to a single file
+                    // send each column separately
+                    for(int j=1; j<blocks[x][y]->nx+1; j++) {
+                        int x_pos = x*x_blocksize;
+                        int y_pos = y*y_blocksize;
+                        MPI_Put(blocks[x][y]->h.getRawPointer()+1+(blocks[x][y]->ny+2)*j, blocks[x][y]->ny, MPI_FLOAT,
+                                0, 1+(nyRequested+2)*(1+j+x_pos)+y_pos, blocks[x][y]->ny, MPI_FLOAT, writeBlockWin_h);
+                        MPI_Put(blocks[x][y]->hu.getRawPointer()+1+(blocks[x][y]->ny+2)*j, blocks[x][y]->ny, MPI_FLOAT,
+                                0, 1+(nyRequested+2)*(1+j+x_pos)+y_pos, blocks[x][y]->ny, MPI_FLOAT, writeBlockWin_hu);
+                        MPI_Put(blocks[x][y]->hv.getRawPointer()+1+(blocks[x][y]->ny+2)*j, blocks[x][y]->ny, MPI_FLOAT,
+                                0, 1+(nyRequested+2)*(1+j+x_pos)+y_pos, blocks[x][y]->ny, MPI_FLOAT, writeBlockWin_hv);
+                    }
+                }
+            }
+            MPI_Win_fence(0, writeBlockWin_h);
+            MPI_Win_fence(0, writeBlockWin_hu);
+            MPI_Win_fence(0, writeBlockWin_hv);
+        }
+
+        if(write && myRank == 0) {
+            writer->writeTimeStep(
+                    writeBlock.getWaterHeight(),
+                    writeBlock.getMomentumHorizontal(),
+                    writeBlock.getMomentumVertical(),
+                    t);
+        }
+        if(write)
+            MPI_Barrier(MPI_COMM_WORLD);
+    }
+
+   /* for (auto &block: simulationBlocks) {
+        collector += block->collector;
+        if(write)
+            delete block->writer;
+    }
+
+    collector.logResults();
+*/
+
+}
+
+
+
+
