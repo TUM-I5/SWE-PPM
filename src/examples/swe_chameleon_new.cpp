@@ -212,7 +212,7 @@ int main(int argc, char** argv) {
                 neighbourBlocks[j] = simulationBlocks[myNeighbours[j] - startPoint];
                 boundaries[j] = CONNECT_WITHIN_RANK;
             }else if(myNeighbours[j] == -1){
-                boundaries[j] = scenario.getBoundaryType(j);
+                boundaries[j] = scenario.getBoundaryType((Boundary)j);
             } else {
 
                 refinedNeighbours[j] = myNeighbours[j] / ranksPerLocality;
