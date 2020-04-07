@@ -289,6 +289,8 @@ int main(int argc, char** argv) {
                     MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
 
                     for (auto &block: simulationBlocks)block->maxTimestep = timestep;
+                }else {
+                    for (auto &block: simulationBlocks)block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
                 }
 
                 for (auto &block: simulationBlocks)block->computeNumericalFluxesVertical();
@@ -333,7 +335,7 @@ int main(int argc, char** argv) {
     }
 
 //    collector.logResults();
-
+    MPI_Finalize();
 
 }
 
