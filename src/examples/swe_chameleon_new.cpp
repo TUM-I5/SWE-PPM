@@ -202,8 +202,8 @@ int main(int argc, char** argv) {
         std::array<int, 4> myNeighbours = getNeighbours(localBlockPositionX, localBlockPositionY, blockCountX,
                                                         blockCountY, myRank);
 
-        std::array<int, 4> refinedNeighbours;
-        std::array<std::shared_ptr<SWE_DimensionalSplittingHpx>, 4> neighbourBlocks;
+        int refinedNeighbours[4];
+        std::array<std::shared_ptr<SWE_DimensionalSplittingChameleon>, 4> neighbourBlocks;
         std::array<BoundaryType, 4> boundaries;
 
         for (int j = 0; j < 4; j++) {
@@ -321,7 +321,7 @@ int main(int argc, char** argv) {
     }
 
     for (auto &block: simulationBlocks) {
-        collector += block->collector;
+     //   collector += block->collector;
         if(write)
             delete block->writer;
     }
