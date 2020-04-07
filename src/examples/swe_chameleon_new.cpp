@@ -224,8 +224,9 @@ int main(int argc, char** argv) {
         simulationBlocks[i - startPoint]->connectNeighbours(refinedNeighbours);
         simulationBlocks[i - startPoint]->connectLocalNeighbours(neighbourBlocks);
         simulationBlocks[i - startPoint]->setRank(myRank);
-        std::cout << i << "| " << myNeighbours[0] << " " << myNeighbours[1] << " "<< myNeighbours[2] << " "<< myNeighbours[3] << "\n";
-        std::cout << i << "| " << refinedNeighbours[0] << " " << refinedNeighbours[1] << " "<< refinedNeighbours[2] << " "<< refinedNeighbours[3] << "\n";
+        std::cout << i << "|my " << myNeighbours[0] << " " << myNeighbours[1] << " "<< myNeighbours[2] << " "<< myNeighbours[3] << "\n";
+        std::cout << i << "|refined " << refinedNeighbours[0] << " " << refinedNeighbours[1] << " "<< refinedNeighbours[2] << " "<< refinedNeighbours[3] << "\n";
+        std::cout << i << "|boundary " << boundaries[0] << " " << boundaries[1] << " "<< boundaries[2] << " "<< boundaries[3] << "\n";
     }
 
 
