@@ -307,7 +307,9 @@ int main(int argc, char** argv) {
                         }
                     }
                 }
-
+                if (localityRank == 0) {
+                    printf("Write timestep (%fs)\n", t);
+                }
             } while (localTimestepping && !synchronizedTimestep);
             // update simulation time with time step width.
             t += localTimestepping ? maxLocalTimestep : timestep;
