@@ -72,7 +72,7 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		void setRight(SWE_DimensionalSplittingChameleon* argRight);
 		void freeMpiType();
         void connectNeighbours(int neighbourRankId[]);
-        void connectLocalNeighbours(std::array<std::shared_ptr,4> neighbourBlocks);
+        void connectLocalNeighbours(std::array<std::shared_ptr<SWE_DimensionalSplittingChameleon>,4> neighbourBlocks);
 		int neighbourRankId[4];
 		// TODO: remove
 		int myRank;

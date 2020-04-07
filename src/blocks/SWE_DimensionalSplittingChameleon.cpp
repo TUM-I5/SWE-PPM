@@ -113,7 +113,7 @@ void SWE_DimensionalSplittingChameleon::setLeft(SWE_DimensionalSplittingChameleo
 void SWE_DimensionalSplittingChameleon::setRight(SWE_DimensionalSplittingChameleon* argRight) {
 	right = argRight;
 }
-void SWE_DimensionalSplittingChameleon::connectLocalNeighbours(std::array<std::shared_ptr,4> neighbourBlocks){
+void SWE_DimensionalSplittingChameleon::connectLocalNeighbours(std::array<std::shared_ptr<SWE_DimensionalSplittingChameleon>,4> neighbourBlocks){
     for (int i = 0; i < 4; i++) {
         if(boundaryType[i] == CONNECT_WITHIN_RANK){
             switch (i){
