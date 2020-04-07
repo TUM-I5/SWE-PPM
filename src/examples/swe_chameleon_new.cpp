@@ -285,10 +285,10 @@ int main(int argc, char** argv) {
 
                     float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
 
-                    float maxTimestepGlobal;
-                    MPI_Allreduce(&minTimestep, &maxTimestepGlobal, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
 
-                    for (auto &block: simulationBlocks)block->maxTimestep = maxTimestepGlobal;
+                    MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+
+                    for (auto &block: simulationBlocks)block->maxTimestep = timestep;
                 }
 
                 for (auto &block: simulationBlocks)block->computeNumericalFluxesVertical();
