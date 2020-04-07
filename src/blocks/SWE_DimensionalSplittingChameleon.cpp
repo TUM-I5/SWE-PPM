@@ -519,7 +519,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
 
 
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-    maxTimestep = getRoundTimestep(maxTimestep);
+    //maxTimestep = getRoundTimestep(maxTimestep);
 	/*chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[9];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
 	args[1] = chameleon_map_data_entry_create(&(this->maxTimestep), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
