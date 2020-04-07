@@ -275,10 +275,10 @@ int main(int argc, char** argv) {
 
                     for (auto &block: simulationBlocks)block->maxTimestep = timestep;
                 }else {
-                    for (auto &block: simulationBlocks)block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                   // for (auto &block: simulationBlocks)block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
                 }
 
-                for (auto &block: simulationBlocks)block->computeNumericalFluxesVertical();
+                //for (auto &block: simulationBlocks)block->computeNumericalFluxesVertical();
 
 
                 for (auto &block: simulationBlocks)block->updateUnknowns(timestep);
