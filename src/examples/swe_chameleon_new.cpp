@@ -244,7 +244,7 @@ int main(int argc, char** argv) {
             localTimestep = std::max(localTimestep, block->getMaxTimestep());
         }
 
-        MPI_Allreduce(&timestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
+        MPI_Allreduce(&localTimestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
 
         for (auto &block: simulationBlocks)block->setMaxLocalTimestep(maxLocalTimestep);
     }
