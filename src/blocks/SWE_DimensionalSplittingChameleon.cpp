@@ -122,13 +122,7 @@ void SWE_DimensionalSplittingChameleon::writeTimestep(float timestep) {
     }
 
 }
-void SWE_DimensionalSplittingChameleon::setLeft(SWE_DimensionalSplittingChameleon* argLeft) {
-	left = argLeft;
-}
 
-void SWE_DimensionalSplittingChameleon::setRight(SWE_DimensionalSplittingChameleon* argRight) {
-	right = argRight;
-}
 void SWE_DimensionalSplittingChameleon::connectLocalNeighbours(std::array<std::shared_ptr<SWE_DimensionalSplittingChameleon>,4> neighbourBlocks){
     for (int i = 0; i < 4; i++) {
         if(boundaryType[i] == CONNECT_WITHIN_RANK){
@@ -200,41 +194,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 		}
 	}*/
 
-    if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isSendable(BND_RIGHT)) {
-        right->borderTimestep[BND_LEFT] = getTotalLocalTimestep();
-        for(int i = 1; i < ny+1; i++) {
 
-
-            right->bufferH[0][i] =  h[nx][i];
-            right->bufferHu[0][i] = hu[nx][i];
-            right->bufferHv[0][i] = hv[nx][i];
-        }
-    }
-    if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isSendable(BND_LEFT)) {
-        left->borderTimestep[BND_RIGHT] = getTotalLocalTimestep();
-        for(int i = 1; i < ny+1; i++) {
-            left->bufferH[ left->nx+1][i] =  h[1][i];
-            left->bufferHu[ left->nx+1][i] = hu[1][i];
-            left->bufferHv[ left->nx+1][i] = hv[1][i];
-        }
-    }
-    if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isSendable(BND_TOP)) {
-        top->borderTimestep[BND_BOTTOM] = getTotalLocalTimestep();
-        for(int i = 1; i < nx+1; i++) {
-
-            top->bufferH[i][0]  =   h[i][ny];
-            top->bufferHu[i][0]  =  hu[i][ny];
-            top->bufferHv[i][0]  =  hv[i][ny];
-        }
-    }
-    if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isSendable(BND_BOTTOM)) {
-        bottom->borderTimestep[BND_TOP] = getTotalLocalTimestep();
-        for(int i = 1; i < nx+1; i++) {
-            bottom->bufferH[i][bottom->ny+1]  =  h[i][1];
-            bottom->bufferHu[i][bottom->ny+1] =  hu[i][1];
-            bottom->bufferHv[i][bottom->ny+1] =  hv[i][1];
-        }
-    }
 	MPI_Status status;
 
 	assert(h.getRows() == ny + 2);
@@ -330,7 +290,73 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	/***********
 	 * RECEIVE *
 	 **********/
+    if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
+        borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
+        for(int i = 1; i < ny+1; i++) {
+            bufferH[nx+1][i] = right->getWaterHeight()[1][i];
+            bufferHu[nx+1][i] = right->getMomentumHorizontal()[1][i];
+            bufferHv[nx+1][i] = right->getMomentumVertical()[1][i];
+        }
+    }
+    if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)) {
+        borderTimestep[BND_LEFT] = left->getTotalLocalTimestep();
+        for(int i = 1; i < ny+1; i++) {
+            bufferH[0][i] = left->getWaterHeight()[nx][i];
+            bufferHu[0][i] = left->getMomentumHorizontal()[nx][i];
+            bufferHv[0][i] = left->getMomentumVertical()[nx][i];
+        }
+    }
+    if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)) {
+        borderTimestep[BND_TOP] = top->getTotalLocalTimestep();
+        for(int i = 1; i < nx+1; i++) {
+            bufferH[i][ny+1] = top->getWaterHeight()[i][1];
+            bufferHu[i][ny+1] = top->getMomentumHorizontal()[i][1];
+            bufferHv[i][ny+1] = top->getMomentumVertical()[i][1];
+        }
+    }
+    if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)) {
+        borderTimestep[BND_BOTTOM] = bottom->getTotalLocalTimestep();
+        for(int i = 1; i < nx+1; i++) {
+            bufferH[i][0] = bottom->getWaterHeight()[i][ny];
+            bufferHu[i][0] = bottom->getMomentumHorizontal()[i][ny];
+            bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
+        }
+    }
+    /*if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isSendable(BND_RIGHT)) {
+        right->borderTimestep[BND_LEFT] = getTotalLocalTimestep();
+        for(int i = 1; i < ny+1; i++) {
 
+
+            right->bufferH[0][i] =  h[nx][i];
+            right->bufferHu[0][i] = hu[nx][i];
+            right->bufferHv[0][i] = hv[nx][i];
+        }
+    }
+    if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isSendable(BND_LEFT)) {
+        left->borderTimestep[BND_RIGHT] = getTotalLocalTimestep();
+        for(int i = 1; i < ny+1; i++) {
+            left->bufferH[ left->nx+1][i] =  h[1][i];
+            left->bufferHu[ left->nx+1][i] = hu[1][i];
+            left->bufferHv[ left->nx+1][i] = hv[1][i];
+        }
+    }
+    if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isSendable(BND_TOP) ) {
+        top->borderTimestep[BND_BOTTOM] = getTotalLocalTimestep();
+        for(int i = 1; i < nx+1; i++) {
+
+            top->bufferH[i][0]  =   h[i][ny];
+            top->bufferHu[i][0]  =  hu[i][ny];
+            top->bufferHv[i][0]  =  hv[i][ny];
+        }
+    }
+    if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isSendable(BND_BOTTOM)) {
+        bottom->borderTimestep[BND_TOP] = getTotalLocalTimestep();
+        for(int i = 1; i < nx+1; i++) {
+            bottom->bufferH[i][bottom->ny+1]  =  h[i][1];
+            bottom->bufferHu[i][bottom->ny+1] =  hu[i][1];
+            bottom->bufferHv[i][bottom->ny+1] =  hv[i][1];
+        }
+    }*/
 	// 4 Boundaries times 3 arrays (h, hu, hv) means 12 requests
 	MPI_Request recvReqs[16];
 	MPI_Status stati[16];
@@ -340,12 +366,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	int tagHV = 3 << 30;
     int tagTS = 0 << 30;
 
-	int leftReceive = 0;
-	int rightReceive = 0;
-	int bottomReceive = 0;
-	int topReceive = 0;
-
-	if (boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
+    if (boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
 		int startIndex = 1;
 
         MPI_Irecv(bufferH.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT],((int) originY) & tagH, MPI_COMM_WORLD, &recvReqs[0]);
@@ -353,8 +374,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
         MPI_Irecv(bufferHv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT],((int) originY) & tagHV, MPI_COMM_WORLD, &recvReqs[2]);
         MPI_Irecv(&borderTimestep[BND_LEFT], 1, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int) originY) & tagTS, MPI_COMM_WORLD, &recvReqs[3]);
 
-        leftReceive = 1;
-	} else {
+    } else {
         recvReqs[0] = MPI_REQUEST_NULL;
         recvReqs[1] = MPI_REQUEST_NULL;
         recvReqs[2] = MPI_REQUEST_NULL;
@@ -369,8 +389,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
         MPI_Irecv(bufferHv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT],((int) originY) & tagHV, MPI_COMM_WORLD, &recvReqs[6]);
         MPI_Irecv(&borderTimestep[BND_RIGHT], 1, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int) originY) & tagTS, MPI_COMM_WORLD, &recvReqs[7]);
 
-        rightReceive = 1;
-	} else {
+    } else {
         recvReqs[4] = MPI_REQUEST_NULL;
         recvReqs[5] = MPI_REQUEST_NULL;
         recvReqs[6] = MPI_REQUEST_NULL;
@@ -385,8 +404,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
         MPI_Irecv(&bufferHv[1][0], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int) originX) & tagHV,MPI_COMM_WORLD, &recvReqs[10]);
         MPI_Irecv(&borderTimestep[BND_BOTTOM], 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM], ((int) originX) & tagTS,MPI_COMM_WORLD, &recvReqs[11]);
 
-        bottomReceive = 1;
-	} else {
+    } else {
         recvReqs[8] = MPI_REQUEST_NULL;
         recvReqs[9] = MPI_REQUEST_NULL;
         recvReqs[10] = MPI_REQUEST_NULL;
@@ -400,8 +418,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
         MPI_Irecv(&bufferHv[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int) originX) & tagHV,MPI_COMM_WORLD, &recvReqs[14]);
         MPI_Irecv(&borderTimestep[BND_TOP], 1, MPI_FLOAT, neighbourRankId[BND_TOP], ((int) originX) & tagTS,MPI_COMM_WORLD, &recvReqs[15]);
 
-        topReceive = 1;
-	} else {
+    } else {
         recvReqs[12] = MPI_REQUEST_NULL;
         recvReqs[13] = MPI_REQUEST_NULL;
         recvReqs[14] = MPI_REQUEST_NULL;
@@ -517,6 +534,9 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
 
 
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+    if(localTimestepping){
+        maxTimestep = getRoundTimestep(maxTimestep);
+    }
     //maxTimestep = getRoundTimestep(maxTimestep);
 	/*chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[9];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);

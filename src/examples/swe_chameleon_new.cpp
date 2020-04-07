@@ -149,8 +149,6 @@ int main(int argc, char** argv) {
         int localBlockPositionX = myRank / blockCountY;
         int localBlockPositionY = myRank % blockCountY;
 
-
-
         // compute local number of cells for each SWE_Block w.r.t. the simulation domain
         // (particularly not the original scenario domain, which might be finer in resolution)
         // (blocks at the domain boundary are assigned the "remainder" of cells)
@@ -209,9 +207,7 @@ int main(int argc, char** argv) {
         simulationBlocks[i - startPoint]->connectNeighbours(refinedNeighbours);
         simulationBlocks[i - startPoint]->connectLocalNeighbours(neighbourBlocks);
         simulationBlocks[i - startPoint]->setRank(myRank);
-        std::cout << i << "|my " << myNeighbours[0] << " " << myNeighbours[1] << " "<< myNeighbours[2] << " "<< myNeighbours[3] << "\n";
-        std::cout << i << "|refined " << refinedNeighbours[0] << " " << refinedNeighbours[1] << " "<< refinedNeighbours[2] << " "<< refinedNeighbours[3] << "\n";
-        std::cout << i << "|boundary " << boundaries[0] << " " << boundaries[1] << " "<< boundaries[2] << " "<< boundaries[3] << "\n";
+
     }
 
 
@@ -266,6 +262,7 @@ int main(int argc, char** argv) {
                 for (auto &block: simulationBlocks)block->computeNumericalFluxesHorizontal();
 
                 if (!localTimestepping) {
+                    timesteps.clear();
                     for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
 
                     float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
@@ -275,10 +272,14 @@ int main(int argc, char** argv) {
 
                     for (auto &block: simulationBlocks)block->maxTimestep = timestep;
                 }else {
-                   // for (auto &block: simulationBlocks)block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+
+                    for (auto &block: simulationBlocks){
+                        //if(block->allGhostlayersInSync())
+                        //block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                    }
                 }
 
-                //for (auto &block: simulationBlocks)block->computeNumericalFluxesVertical();
+                for (auto &block: simulationBlocks)block->computeNumericalFluxesVertical();
 
 
                 for (auto &block: simulationBlocks)block->updateUnknowns(timestep);
@@ -290,13 +291,11 @@ int main(int argc, char** argv) {
                     for (auto &block : simulationBlocks) {
                         if (!block->hasMaxLocalTimestep()) {
                             synchronizedTimestep = false;
-                            // break;
+                             //break;
                         }
                     }
                 }
-                if (localityRank == 0) {
-                    printf("Write timestep (%fs)\n", t);
-                }
+
             } while (localTimestepping && !synchronizedTimestep);
             // update simulation time with time step width.
             t += localTimestepping ? maxLocalTimestep : timestep;

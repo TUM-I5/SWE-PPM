@@ -250,11 +250,7 @@ public:
  */
 template<typename T, typename Buffer>
 SWE_Block<T, Buffer>::SWE_Block() {
-    std::cout << "HMMMMMMMMMM\n";
-    for (int i = 0; i < 4; i++) {
-        boundaryType[i] = PASSIVE;
-        receivedGhostlayer[i] = GL_NEXT;
-    }
+
 }
 
 template<typename T, typename Buffer>
@@ -590,8 +586,8 @@ template<typename T, typename Buffer>
 void SWE_Block<T, Buffer>::initScenario(SWE_Scenario &scenario, BoundaryType boundaries[]) {
     float x = 0;
     float y = 0;
-    for (int i = 1; i < ny + 1; i++) {
-        for (int j = 1; j < nx + 1; j++) {
+    for (int i = 0; i < ny + 2; i++) {
+        for (int j = 0; j < nx + 2; j++) {
             /*
              * Map the indices to actual points, shift by one because the ghost layer
              * is inserted at indices [0][*], [*][0], [nx + 1][*], [*][ny + 1].

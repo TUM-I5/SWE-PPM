@@ -23,7 +23,7 @@ simulate_hpx:
 	./build/SWE_gnu_release_hpx_hybrid_vec -e 1000 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 2 --local-timestepping 0
 
 simulate_hpx_rad:
-	mpirun -np 2 ./build/SWE_gnu_release_hpx_hybrid_vec -e 20 -n 20 --resolution-horizontal 1024 --resolution-vertical 1024 -o ./output/hpx --blocks 64 --local-timestepping 1
+	 ./build/SWE_gnu_release_hpx_hybrid_vec -e 20 -n 20 --resolution-horizontal 1024 --resolution-vertical 1024 -o ./output/hpx --blocks 32 -local-timestepping 1
 
 simulate_chameleon:
 	I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=11 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -np 2 ./build/SWE_gnu_release_chameleon_omp_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -u 1 -v 1 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
@@ -37,7 +37,7 @@ simulate_charm:
 	mpirun -n 4  ./build/SWE_gnu_release_charm_hybrid_vec -t 1000 -n 20 -x 1000 -y 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc -l 1
 
 simulate_charm_rad:
-	${CHARM_PATH}/bin/charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 20 -n 20 -x 1024 -y 1024 -o ./charm -l 1 -w 0 #--chares 64
+	${CHARM_PATH}/bin/charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 20 -n 20 -x 1024 -y 1024 -o ./charm -l 0 -w 0 --chares 32
 simulate_charm_test:
 	./charmrun +p4 ./build/SWE_gnu_release_charm_hybrid -t 60 -n 10 -x 10 -y 10 -o ~/storage/tsunami/simulation/radial_charm
 

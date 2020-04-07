@@ -49,7 +49,7 @@
 class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 	public:
 		// Constructor/Destructor
-    	SWE_DimensionalSplittingChameleon() = default;
+    	//SWE_DimensionalSplittingChameleon() = default;
 		SWE_DimensionalSplittingChameleon(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY,bool localTimestepping,std::string name, bool write);
 		~SWE_DimensionalSplittingChameleon() {};
 
