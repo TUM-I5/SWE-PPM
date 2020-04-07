@@ -313,7 +313,9 @@ if(write){
 
                 // Accumulate wall time
                 CollectorMpi::getInstance().stopCounter(CollectorMpi::CTR_WALL);
-
+                if (myMpiRank == 0) {
+                    printf("Write timestep (%fs)\n", t);
+                }
             } while (localTimestepping && !simulation.hasMaxLocalTimestep());
             // update simulation time with time step width.
             t += localTimestepping ? maxLocalTimestep : timestep;
