@@ -36,7 +36,7 @@
 #include <ctime>
 #include <time.h>
 #include <mpi.h>
-
+#include "writer/NetCdfWriter.hh"
 #if WAVE_PROPAGATION_SOLVER == 0
 //#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
