@@ -50,7 +50,7 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 	public:
 		// Constructor/Destructor
     	SWE_DimensionalSplittingChameleon() = default;
-		SWE_DimensionalSplittingChameleon(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY,bool localTimestepping);
+		SWE_DimensionalSplittingChameleon(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY,bool localTimestepping,std::string name, bool write);
 		~SWE_DimensionalSplittingChameleon() {};
 
 		// Interface methods
@@ -77,8 +77,10 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		// TODO: remove
 		int myRank;
 		void setRank(int rank);
+    void writeTimestep(float timestep);
 		MPI_Datatype HORIZONTAL_BOUNDARY;
-
+        NetCdfWriter *writer;
+        bool write;
 #if WAVE_PROPAGATION_SOLVER == 0
     //! Hybrid solver (f-wave + augmented)
     //solver::Hybrid<float> solver;

@@ -185,12 +185,12 @@ int main(int argc, char** argv) {
                 scenario.getBoundaryPos(BND_LEFT) + localBlockPositionX * dxSimulation * nxBlockSimulation;
         float localOriginY =
                 scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY * dySimulation * nyBlockSimulation;
-
+        std::string outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
 
         std::cout << myRank<< "| " <<localOriginX<< " "<< localOriginY<< " " <<  nxLocal << " " << nyLocal << std::endl;
         simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingChameleon>(
                 new SWE_DimensionalSplittingChameleon(nxLocal, nyLocal, dxSimulation, dySimulation,
-                                                localOriginX, localOriginY, localTimestepping)));
+                                                localOriginX, localOriginY, localTimestepping, outputFileName,write)));
 
         //simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
     }
@@ -225,61 +225,10 @@ int main(int argc, char** argv) {
         simulationBlocks[i - startPoint]->setRank(myRank);
     }
 
-    SWE_DimensionalSplittingChameleon writeBlock(nxRequested, nyRequested, dxSimulation, dySimulation, 0, 0,localTimestepping);
-    BoundaryType boundaries[4];
-    boundaries[BND_LEFT] = scenario.getBoundaryType(BND_LEFT);
-    boundaries[BND_RIGHT] = scenario.getBoundaryType(BND_RIGHT);
-    boundaries[BND_TOP] = scenario.getBoundaryType(BND_TOP);
-    boundaries[BND_BOTTOM] = scenario.getBoundaryType(BND_BOTTOM);
-    if(write && myRank == 0)
-        writeBlock.initScenario(scenario, boundaries);
-
-    // Prepare writeBlock for usage with One-Sided Communication
-    MPI_Win writeBlockWin_h;
-    MPI_Win writeBlockWin_hu;
-    MPI_Win writeBlockWin_hv;
-
-    MPI_Win_create(writeBlock.h.getRawPointer(), (nxRequested+2)*(nyRequested*2), sizeof(float), MPI_INFO_NULL, MPI_COMM_WORLD, &writeBlockWin_h);
-    MPI_Win_create(writeBlock.hu.getRawPointer(), (nxRequested+2)*(nyRequested*2), sizeof(float), MPI_INFO_NULL, MPI_COMM_WORLD, &writeBlockWin_hu);
-    MPI_Win_create(writeBlock.hv.getRawPointer(), (nxRequested+2)*(nyRequested*2), sizeof(float), MPI_INFO_NULL, MPI_COMM_WORLD, &writeBlockWin_hv);
-#ifdef WRITENETCDF
-        // Construct a netCDF writer
-        std::string outputFileName = outputBaseName;
-        NetCdfWriter* writer;
-        if(write && myRank == 0) {
-            writer = new NetCdfWriter(
-                    outputFileName,
-                    writeBlock.getBathymetry(),
-                    boundarySize,
-                    writeBlock.getCellCountHorizontal(),
-                    writeBlock.getCellCountVertical(),
-                    dxSimulation,
-                    dySimulation,
-                    writeBlock.getOriginX(),
-                    writeBlock.getOriginY());
-            //printf("%d: Init writer with CellCountHorizontal:%d, CellCountVertical:%d, OriginX:%d, getOriginX:%d\n", myRank, writeBlock.getCellCountHorizontal(), writeBlock.getCellCountVertical(), writeBlock.getOriginX(), writeBlock.getOriginY());
-        }
-#else
-        // Construct a vtk writer
-	std::string outputFileName = outputBaseName;
-	VtkWriter writer(
-		outputFileName,
-		writeBlock.getBathymetry(),
-		boundarySize,
-		writeBlock.getCellCountHorizontal(),
-		writeBlock.getCellCountVertical(),
-		dxSimulation,
-		dySimulation);
-#endif // WRITENETCDF
 
 
-        if(write && myRank == 0) {
-        writer->writeTimeStep(
-                writeBlock.getWaterHeight(),
-                writeBlock.getMomentumHorizontal(),
-                writeBlock.getMomentumVertical(),
-                (float) 0.);
-    }
+
+
 
 
     
@@ -306,6 +255,12 @@ int main(int argc, char** argv) {
     bool synchronizedTimestep = true;
 
     float timestep;
+
+    if (write) {
+        for (auto &block: simulationBlocks) {
+            block->writeTimestep(0);
+        }
+    }
 
 
     // loop over the count of requested checkpoints
@@ -358,50 +313,21 @@ int main(int argc, char** argv) {
         if (localityRank == 0) {
             printf("Write timestep (%fs)\n", t);
         }
-        if(write) {
-            MPI_Win_fence(0, writeBlockWin_h);
-            MPI_Win_fence(0, writeBlockWin_hu);
-            MPI_Win_fence(0, writeBlockWin_hv);
-            for(int x = xBounds[myXRank]; x < xBounds[myXRank+1]; x++) {
-                for(int y = yBounds[myYRank]; y < yBounds[myYRank+1]; y++) {
-                    // Send all data to rank 0, which will write it to a single file
-                    // send each column separately
-                    for(int j=1; j<blocks[x][y]->nx+1; j++) {
-                        int x_pos = x*x_blocksize;
-                        int y_pos = y*y_blocksize;
-                        MPI_Put(blocks[x][y]->h.getRawPointer()+1+(blocks[x][y]->ny+2)*j, blocks[x][y]->ny, MPI_FLOAT,
-                                0, 1+(nyRequested+2)*(1+j+x_pos)+y_pos, blocks[x][y]->ny, MPI_FLOAT, writeBlockWin_h);
-                        MPI_Put(blocks[x][y]->hu.getRawPointer()+1+(blocks[x][y]->ny+2)*j, blocks[x][y]->ny, MPI_FLOAT,
-                                0, 1+(nyRequested+2)*(1+j+x_pos)+y_pos, blocks[x][y]->ny, MPI_FLOAT, writeBlockWin_hu);
-                        MPI_Put(blocks[x][y]->hv.getRawPointer()+1+(blocks[x][y]->ny+2)*j, blocks[x][y]->ny, MPI_FLOAT,
-                                0, 1+(nyRequested+2)*(1+j+x_pos)+y_pos, blocks[x][y]->ny, MPI_FLOAT, writeBlockWin_hv);
-                    }
-                }
+        if (write) {
+        for (auto &block: simulationBlocks) {
+                block->writeTimestep(t);
             }
-            MPI_Win_fence(0, writeBlockWin_h);
-            MPI_Win_fence(0, writeBlockWin_hu);
-            MPI_Win_fence(0, writeBlockWin_hv);
         }
-
-        if(write && myRank == 0) {
-            writer->writeTimeStep(
-                    writeBlock.getWaterHeight(),
-                    writeBlock.getMomentumHorizontal(),
-                    writeBlock.getMomentumVertical(),
-                    t);
-        }
-        if(write)
-            MPI_Barrier(MPI_COMM_WORLD);
     }
 
-   /* for (auto &block: simulationBlocks) {
+    for (auto &block: simulationBlocks) {
         collector += block->collector;
         if(write)
             delete block->writer;
     }
 
-    collector.logResults();
-*/
+//    collector.logResults();
+
 
 }
 

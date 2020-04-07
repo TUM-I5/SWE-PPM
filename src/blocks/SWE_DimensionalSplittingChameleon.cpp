@@ -59,7 +59,7 @@ double getTime() {
  * @param l_dx Cell width
  * @param l_dy Cell height
  */
-SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon (int nx, int ny, float dx, float dy, float originX, float originY, bool localTimestepping) :
+SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon (int nx, int ny, float dx, float dy, float originX, float originY, bool localTimestepping,std::string name, bool write) :
 	/*
 	 * Important note concerning grid allocations:
 	 * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -72,7 +72,7 @@ SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon (int nx, in
 
 	// Initialize grid metadata using the base class constructor
 	SWE_Block(nx, ny, dx, dy, originX, originY, localTimestepping),
-
+    write(write),
 	// intermediate state Q after x-sweep
 	hStar (nx + 1, ny + 2),
 	huStar (nx + 1, ny + 2),
@@ -104,8 +104,26 @@ SWE_DimensionalSplittingChameleon::SWE_DimensionalSplittingChameleon (int nx, in
 
 		MPI_Type_vector(nx, 1, ny + 2, MPI_FLOAT, &HORIZONTAL_BOUNDARY);
 		MPI_Type_commit(&HORIZONTAL_BOUNDARY);
-	}
+    if(write){
+        writer = new NetCdfWriter(
+                name,
+                b,
+                {{1, 1, 1, 1}},
+                nx,
+                ny,
+                dx,
+                dy,
+                originX,
+                originY);
 
+    }
+	}
+void SWE_DimensionalSplittingChameleon::writeTimestep(float timestep) {
+    if(write){
+        writer->writeTimeStep(h, hu, hv, timestep);
+    }
+
+}
 void SWE_DimensionalSplittingChameleon::setLeft(SWE_DimensionalSplittingChameleon* argLeft) {
 	left = argLeft;
 }
