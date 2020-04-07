@@ -213,6 +213,7 @@ int main(int argc, char** argv) {
                 boundaries[j] = CONNECT_WITHIN_RANK;
             }else if(myNeighbours[j] == -1){
                 boundaries[j] = scenario.getBoundaryType((Boundary)j);
+                refinedNeighbours[j] = -1;
             } else {
 
                 refinedNeighbours[j] = myNeighbours[j] / ranksPerLocality;
