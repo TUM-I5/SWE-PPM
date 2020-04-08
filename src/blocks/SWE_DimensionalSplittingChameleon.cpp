@@ -149,6 +149,12 @@ void SWE_DimensionalSplittingChameleon::connectNeighbours(int p_neighbourRankId[
         neighbourRankId[i] = p_neighbourRankId[i];
     }
 }
+void SWE_DimensionalSplittingChameleon::connectNeighbourLocalities(int p_neighbourRankId[]) {
+    for (int i = 0; i < 4; i++) {
+        neighbourLocality[i] = p_neighbourRankId[i];
+    }
+}
+
 void SWE_DimensionalSplittingChameleon::setRank(int rank) {
 	myRank = rank;
 }
@@ -156,7 +162,10 @@ void SWE_DimensionalSplittingChameleon::setRank(int rank) {
 void SWE_DimensionalSplittingChameleon::freeMpiType() {
 	MPI_Type_free(&HORIZONTAL_BOUNDARY);
 }
+int getTag(int rank, int tag){
 
+    return (rank<<10)|tag;
+}
 void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
 	SWE_Block::applyBoundaryConditions();
@@ -193,8 +202,77 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
             bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
 		}
 	}*/
+    MPI_Request req;
 
+    float totalLocalTimestep = getTotalLocalTimestep();
 
+    if (boundaryType[BND_LEFT] == CONNECT && isSendable(BND_LEFT)) {
+        int startIndex = ny + 2 + 1;
+
+        MPI_Isend(h.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_LEFT], getTag(neighbourRankId[BND_LEFT], MPI_TAG_OUT_H_LEFT), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(hu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_LEFT], getTag(neighbourRankId[BND_LEFT], MPI_TAG_OUT_HU_LEFT), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(hv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_LEFT], getTag(neighbourRankId[BND_LEFT], MPI_TAG_OUT_HV_LEFT), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourLocality[BND_LEFT], getTag(neighbourRankId[BND_LEFT], MPI_TAG_TIMESTEP_LEFT), MPI_COMM_WORLD,&req);
+        MPI_Request_free(&req);
+
+    }
+    if (boundaryType[BND_RIGHT] == CONNECT && isSendable(BND_RIGHT)) {
+        int startIndex = nx * (ny + 2) + 1;
+
+        MPI_Isend(h.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_RIGHT], getTag(neighbourRankId[BND_RIGHT], MPI_TAG_OUT_H_RIGHT), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(hu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_RIGHT], getTag(neighbourRankId[BND_RIGHT], MPI_TAG_OUT_HU_RIGHT), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(hv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_RIGHT], getTag(neighbourRankId[BND_RIGHT], MPI_TAG_OUT_HV_RIGHT), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourLocality[BND_RIGHT], getTag(neighbourRankId[BND_RIGHT], MPI_TAG_TIMESTEP_RIGHT),MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+    }
+    if (boundaryType[BND_BOTTOM] == CONNECT && isSendable(BND_BOTTOM)) {
+
+        //int code =
+        MPI_Isend(&h[1][1], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_BOTTOM], getTag(neighbourRankId[BND_BOTTOM], MPI_TAG_OUT_H_BOTTOM), MPI_COMM_WORLD, &req);
+        //if(code != MPI_SUCCESS)
+        //	printf("%d: No success %d\n", myRank, code);
+        MPI_Request_free(&req);
+
+        MPI_Isend(&hu[1][1], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_BOTTOM], getTag(neighbourRankId[BND_BOTTOM], MPI_TAG_OUT_HU_BOTTOM), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(&hv[1][1], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_BOTTOM], getTag(neighbourRankId[BND_BOTTOM], MPI_TAG_OUT_HV_BOTTOM), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+        //printf("%d: Sent to bottom %d, %f at %f\n", myRank, neighbourRankId[BND_BOTTOM], h[1][1], originX);
+
+        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourLocality[BND_BOTTOM], getTag(neighbourRankId[BND_BOTTOM], MPI_TAG_TIMESTEP_BOTTOM),MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+    }
+    if (boundaryType[BND_TOP] == CONNECT && isSendable(BND_TOP)) {
+
+        MPI_Isend(&h[1][ny], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_TOP], getTag(neighbourRankId[BND_TOP], MPI_TAG_OUT_H_TOP), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(&hu[1][ny], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_TOP], getTag(neighbourRankId[BND_TOP], MPI_TAG_OUT_HU_TOP), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+
+        MPI_Isend(&hv[1][ny], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_TOP], getTag(neighbourRankId[BND_TOP], MPI_TAG_OUT_HV_TOP), MPI_COMM_WORLD, &req);
+        MPI_Request_free(&req);
+        //printf("%d: Sent to top %d, %f at %f\n", myRank, neighbourRankId[BND_TOP], h[1][ny], originX);
+
+        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourLocality[BND_TOP], getTag(neighbourRankId[BND_TOP], MPI_TAG_TIMESTEP_TOP), MPI_COMM_WORLD,&req);
+        MPI_Request_free(&req);
+
+    }
 	MPI_Status status;
 
 	assert(h.getRows() == ny + 2);
@@ -208,82 +286,8 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	 * SEND *
 	 ********/
 
-	int tagH = 1 << 30;
-	int tagHU = 2 << 30;
-	int tagHV = 3 << 30;
-    int tagTS = 0 << 30;
 
-    float totalLocalTimestep = getTotalLocalTimestep();
-	// The requests generated by the Isends are immediately freed, since we will wait on the requests generated by the corresponding receives
-	MPI_Request req;
 
-	if (boundaryType[BND_LEFT] == CONNECT && isSendable(BND_LEFT)) {
-		int startIndex = ny + 2 + 1;
-
-		MPI_Isend(h.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagH, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-		MPI_Isend(hu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagHU, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-		MPI_Isend(hv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int)originY)&tagHV, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int) originY) & tagTS, MPI_COMM_WORLD,&req);
-        MPI_Request_free(&req);
-
-    }
-	if (boundaryType[BND_RIGHT] == CONNECT && isSendable(BND_RIGHT)) {
-		int startIndex = nx * (ny + 2) + 1;
-
-		MPI_Isend(h.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagH, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-		MPI_Isend(hu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagHU, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-		MPI_Isend(hv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int)originY)&tagHV, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int) originY) & tagTS,MPI_COMM_WORLD, &req);
-        MPI_Request_free(&req);
-
-    }
-	if (boundaryType[BND_BOTTOM] == CONNECT && isSendable(BND_BOTTOM)) {
-
-		//int code =
-		MPI_Isend(&h[1][1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagH, MPI_COMM_WORLD, &req);
-		//if(code != MPI_SUCCESS)
-		//	printf("%d: No success %d\n", myRank, code);
-		MPI_Request_free(&req);
-
-		MPI_Isend(&hu[1][1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagHU, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-		MPI_Isend(&hv[1][1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int)originX)&tagHV, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-		//printf("%d: Sent to bottom %d, %f at %f\n", myRank, neighbourRankId[BND_BOTTOM], h[1][1], originX);
-
-        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM], ((int) originX) & tagTS,MPI_COMM_WORLD, &req);
-        MPI_Request_free(&req);
-
-    }
-	if (boundaryType[BND_TOP] == CONNECT && isSendable(BND_TOP)) {
-
-		MPI_Isend(&h[1][ny], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int)originX)&tagH, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-		MPI_Isend(&hu[1][ny], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int)originX)&tagHU, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-
-		MPI_Isend(&hv[1][ny], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int)originX)&tagHV, MPI_COMM_WORLD, &req);
-		MPI_Request_free(&req);
-		//printf("%d: Sent to top %d, %f at %f\n", myRank, neighbourRankId[BND_TOP], h[1][ny], originX);
-
-        MPI_Isend(&totalLocalTimestep, 1, MPI_FLOAT, neighbourRankId[BND_TOP], ((int) originX) & tagTS, MPI_COMM_WORLD,&req);
-        MPI_Request_free(&req);
-
-    }
 }
 
 void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
@@ -357,22 +361,23 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
             bottom->bufferHv[i][bottom->ny+1] =  hv[i][1];
         }
     }*/
+
+    // The requests generated by the Isends are immediately freed, since we will wait on the requests generated by the corresponding receives
+
+
 	// 4 Boundaries times 3 arrays (h, hu, hv) means 12 requests
 	MPI_Request recvReqs[16];
 	MPI_Status stati[16];
 
-	int tagH = 1 << 30;
-	int tagHU = 2 << 30;
-	int tagHV = 3 << 30;
-    int tagTS = 0 << 30;
+
 
     if (boundaryType[BND_LEFT] == CONNECT && isReceivable(BND_LEFT)) {
 		int startIndex = 1;
 
-        MPI_Irecv(bufferH.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT],((int) originY) & tagH, MPI_COMM_WORLD, &recvReqs[0]);
-        MPI_Irecv(bufferHu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT],((int) originY) & tagHU, MPI_COMM_WORLD, &recvReqs[1]);
-        MPI_Irecv(bufferHv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_LEFT],((int) originY) & tagHV, MPI_COMM_WORLD, &recvReqs[2]);
-        MPI_Irecv(&borderTimestep[BND_LEFT], 1, MPI_FLOAT, neighbourRankId[BND_LEFT], ((int) originY) & tagTS, MPI_COMM_WORLD, &recvReqs[3]);
+        MPI_Irecv(bufferH.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_LEFT],getTag(myRank, MPI_TAG_OUT_H_RIGHT), MPI_COMM_WORLD, &recvReqs[0]);
+        MPI_Irecv(bufferHu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_LEFT],getTag(myRank, MPI_TAG_OUT_HU_RIGHT), MPI_COMM_WORLD, &recvReqs[1]);
+        MPI_Irecv(bufferHv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_LEFT],getTag(myRank, MPI_TAG_OUT_HV_RIGHT), MPI_COMM_WORLD, &recvReqs[2]);
+        MPI_Irecv(&borderTimestep[BND_LEFT], 1, MPI_FLOAT, neighbourLocality[BND_LEFT], getTag(myRank, MPI_TAG_TIMESTEP_RIGHT), MPI_COMM_WORLD, &recvReqs[3]);
 
     } else {
         recvReqs[0] = MPI_REQUEST_NULL;
@@ -384,10 +389,10 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 
 	if (boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
 		int startIndex = (nx + 1) * (ny + 2) + 1;
-        MPI_Irecv(bufferH.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT],((int) originY) & tagH, MPI_COMM_WORLD, &recvReqs[4]);
-        MPI_Irecv(bufferHu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT],((int) originY) & tagHU, MPI_COMM_WORLD, &recvReqs[5]);
-        MPI_Irecv(bufferHv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourRankId[BND_RIGHT],((int) originY) & tagHV, MPI_COMM_WORLD, &recvReqs[6]);
-        MPI_Irecv(&borderTimestep[BND_RIGHT], 1, MPI_FLOAT, neighbourRankId[BND_RIGHT], ((int) originY) & tagTS, MPI_COMM_WORLD, &recvReqs[7]);
+        MPI_Irecv(bufferH.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_RIGHT],getTag(myRank, MPI_TAG_OUT_H_LEFT), MPI_COMM_WORLD, &recvReqs[4]);
+        MPI_Irecv(bufferHu.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_RIGHT],getTag(myRank, MPI_TAG_OUT_HU_LEFT), MPI_COMM_WORLD, &recvReqs[5]);
+        MPI_Irecv(bufferHv.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_RIGHT],getTag(myRank, MPI_TAG_OUT_HV_LEFT), MPI_COMM_WORLD, &recvReqs[6]);
+        MPI_Irecv(&borderTimestep[BND_RIGHT], 1, MPI_FLOAT, neighbourLocality[BND_RIGHT], getTag(myRank, MPI_TAG_TIMESTEP_LEFT), MPI_COMM_WORLD, &recvReqs[7]);
 
     } else {
         recvReqs[4] = MPI_REQUEST_NULL;
@@ -399,10 +404,10 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 
 	if (boundaryType[BND_BOTTOM] == CONNECT && isReceivable(BND_BOTTOM)) {
 
-        MPI_Irecv(&bufferH[1][0], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int) originX) & tagH,MPI_COMM_WORLD, &recvReqs[8]);
-        MPI_Irecv(&bufferHu[1][0], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int) originX) & tagHU,MPI_COMM_WORLD, &recvReqs[9]);
-        MPI_Irecv(&bufferHv[1][0], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_BOTTOM], ((int) originX) & tagHV,MPI_COMM_WORLD, &recvReqs[10]);
-        MPI_Irecv(&borderTimestep[BND_BOTTOM], 1, MPI_FLOAT, neighbourRankId[BND_BOTTOM], ((int) originX) & tagTS,MPI_COMM_WORLD, &recvReqs[11]);
+        MPI_Irecv(&bufferH[1][0], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_BOTTOM], getTag(myRank, MPI_TAG_OUT_H_TOP),MPI_COMM_WORLD, &recvReqs[8]);
+        MPI_Irecv(&bufferHu[1][0], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_BOTTOM], getTag(myRank, MPI_TAG_OUT_HU_TOP),MPI_COMM_WORLD, &recvReqs[9]);
+        MPI_Irecv(&bufferHv[1][0], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_BOTTOM], getTag(myRank, MPI_TAG_OUT_HV_TOP),MPI_COMM_WORLD, &recvReqs[10]);
+        MPI_Irecv(&borderTimestep[BND_BOTTOM], 1, MPI_FLOAT, neighbourLocality[BND_BOTTOM], getTag(myRank, MPI_TAG_TIMESTEP_TOP),MPI_COMM_WORLD, &recvReqs[11]);
 
     } else {
         recvReqs[8] = MPI_REQUEST_NULL;
@@ -413,10 +418,10 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 
 	if (boundaryType[BND_TOP] == CONNECT && isReceivable(BND_TOP)) {
 
-        MPI_Irecv(&bufferH[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int) originX) & tagH,MPI_COMM_WORLD, &recvReqs[12]);
-        MPI_Irecv(&bufferHu[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int) originX) & tagHU,MPI_COMM_WORLD, &recvReqs[13]);
-        MPI_Irecv(&bufferHv[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourRankId[BND_TOP], ((int) originX) & tagHV,MPI_COMM_WORLD, &recvReqs[14]);
-        MPI_Irecv(&borderTimestep[BND_TOP], 1, MPI_FLOAT, neighbourRankId[BND_TOP], ((int) originX) & tagTS,MPI_COMM_WORLD, &recvReqs[15]);
+        MPI_Irecv(&bufferH[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_TOP], getTag(myRank, MPI_TAG_OUT_H_BOTTOM),MPI_COMM_WORLD, &recvReqs[12]);
+        MPI_Irecv(&bufferHu[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_TOP], getTag(myRank, MPI_TAG_OUT_HU_BOTTOM),MPI_COMM_WORLD, &recvReqs[13]);
+        MPI_Irecv(&bufferHv[1][ny + 1], 1, HORIZONTAL_BOUNDARY, neighbourLocality[BND_TOP], getTag(myRank, MPI_TAG_OUT_HV_BOTTOM),MPI_COMM_WORLD, &recvReqs[14]);
+        MPI_Irecv(&borderTimestep[BND_TOP], 1, MPI_FLOAT, neighbourLocality[BND_TOP], getTag(myRank, MPI_TAG_TIMESTEP_BOTTOM),MPI_COMM_WORLD, &recvReqs[15]);
 
     } else {
         recvReqs[12] = MPI_REQUEST_NULL;
@@ -430,14 +435,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 		printf("%d: No success %d\n", myRank, code);
 
     checkAllGhostlayers();
-	//if(leftReceive)
-	//	printf("%d: Received left from %d\n", myRank, neighbourRankId[BND_LEFT]);
-	//if(rightReceive)
-	//	printf("%d: Received right from %d\n", myRank, neighbourRankId[BND_RIGHT]);
-	//if(bottomReceive)
-	//	printf("%d: Received bottom from %d, %f at %f\n", myRank, neighbourRankId[BND_BOTTOM], h[1][0], originX);
-	//if(topReceive)
-	//	printf("%d: Received top from %d, %f at %f\n", myRank, neighbourRankId[BND_TOP], h[1][ny + 1], originX);
+
 }
 
 void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* block, float* maxTimestep, float* h_data, float* hu_data, float* b_data,
@@ -733,3 +731,4 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
 	// Accumulate compute time
 	computeTimeWall += getTime() - computeClock;
 }
+

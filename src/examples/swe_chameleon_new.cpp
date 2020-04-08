@@ -170,7 +170,7 @@ int main(int argc, char** argv) {
                 scenario.getBoundaryPos(BND_BOTTOM) + localBlockPositionY * dySimulation * nyBlockSimulation;
         std::string outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
 
-        std::cout << myRank<< "| " <<localOriginX<< " "<< localOriginY<< " " <<  nxLocal << " " << nyLocal << std::endl;
+
         simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingChameleon>(
                 new SWE_DimensionalSplittingChameleon(nxLocal, nyLocal, dxSimulation, dySimulation,
                                                 localOriginX, localOriginY, localTimestepping, outputFileName,write)));
@@ -186,26 +186,33 @@ int main(int argc, char** argv) {
                                                         blockCountY, myRank);
 
         int refinedNeighbours[4];
+        int realNeighbours[4];
         std::array<std::shared_ptr<SWE_DimensionalSplittingChameleon>, 4> neighbourBlocks;
         std::array<BoundaryType, 4> boundaries;
 
         for (int j = 0; j < 4; j++) {
             if (myNeighbours[j] >= startPoint && myNeighbours[j] < (startPoint + ranksPerLocality)) {
                 refinedNeighbours[j] = -2;
+                realNeighbours[j] = -2;
                 neighbourBlocks[j] = simulationBlocks[myNeighbours[j] - startPoint];
                 boundaries[j] = CONNECT_WITHIN_RANK;
             }else if(myNeighbours[j] == -1){
                 boundaries[j] = scenario.getBoundaryType((Boundary)j);
                 refinedNeighbours[j] = -1;
+                realNeighbours[j] = -1;
             } else {
-
+                realNeighbours[j] = myNeighbours[j];
                 refinedNeighbours[j] = myNeighbours[j] / ranksPerLocality;
                 boundaries[j] = CONNECT;
             }
         }
         simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
-        simulationBlocks[i - startPoint]->connectNeighbours(refinedNeighbours);
+        simulationBlocks[i - startPoint]->connectNeighbourLocalities(refinedNeighbours);
+        simulationBlocks[i - startPoint]->connectNeighbours(realNeighbours);
+
         simulationBlocks[i - startPoint]->connectLocalNeighbours(neighbourBlocks);
+
+
         simulationBlocks[i - startPoint]->setRank(myRank);
 
     }
