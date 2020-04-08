@@ -260,7 +260,7 @@ int main(int argc, char** argv) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
             do {
-
+                for (auto &block: simulationBlocks)block->applyBoundaryConditions();
                 for (auto &block: simulationBlocks)block->setGhostLayer();
 
                 for (auto &block: simulationBlocks)block->receiveGhostLayer();

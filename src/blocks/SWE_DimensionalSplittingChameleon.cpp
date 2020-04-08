@@ -168,40 +168,9 @@ int getTag(int rank, int tag){
 }
 void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
-	SWE_Block::applyBoundaryConditions();
-/*
-	if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
-        borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
-		for(int i = 1; i < ny+1; i++) {
-			bufferH[nx+1][i] = right->getWaterHeight()[1][i];
-            bufferHu[nx+1][i] = right->getMomentumHorizontal()[1][i];
-            bufferHv[nx+1][i] = right->getMomentumVertical()[1][i];
-		}
-	}
-	if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)) {
-        borderTimestep[BND_LEFT] = left->getTotalLocalTimestep();
-		for(int i = 1; i < ny+1; i++) {
-            bufferH[0][i] = left->getWaterHeight()[nx][i];
-            bufferHu[0][i] = left->getMomentumHorizontal()[nx][i];
-            bufferHv[0][i] = left->getMomentumVertical()[nx][i];
-		}
-	}
-	if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)) {
-        borderTimestep[BND_TOP] = top->getTotalLocalTimestep();
-		for(int i = 1; i < nx+1; i++) {
-            bufferH[i][ny+1] = top->getWaterHeight()[i][1];
-            bufferHu[i][ny+1] = top->getMomentumHorizontal()[i][1];
-            bufferHv[i][ny+1] = top->getMomentumVertical()[i][1];
-		}
-	}
-	if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)) {
-        borderTimestep[BND_BOTTOM] = bottom->getTotalLocalTimestep();
-        for(int i = 1; i < nx+1; i++) {
-            bufferH[i][0] = bottom->getWaterHeight()[i][ny];
-            bufferHu[i][0] = bottom->getMomentumHorizontal()[i][ny];
-            bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
-		}
-	}*/
+	//SWE_Block::applyBoundaryConditions();
+
+
     MPI_Request req;
 
     float totalLocalTimestep = getTotalLocalTimestep();
@@ -294,73 +263,74 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	/***********
 	 * RECEIVE *
 	 **********/
-    if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
-        borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
-        for(int i = 1; i < ny+1; i++) {
-            bufferH[nx+1][i] = right->getWaterHeight()[1][i];
-            bufferHu[nx+1][i] = right->getMomentumHorizontal()[1][i];
-            bufferHv[nx+1][i] = right->getMomentumVertical()[1][i];
-        }
-    }
-    if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)) {
-        borderTimestep[BND_LEFT] = left->getTotalLocalTimestep();
-        for(int i = 1; i < ny+1; i++) {
-            bufferH[0][i] = left->getWaterHeight()[nx][i];
-            bufferHu[0][i] = left->getMomentumHorizontal()[nx][i];
-            bufferHv[0][i] = left->getMomentumVertical()[nx][i];
-        }
-    }
-    if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)) {
-        borderTimestep[BND_TOP] = top->getTotalLocalTimestep();
-        for(int i = 1; i < nx+1; i++) {
-            bufferH[i][ny+1] = top->getWaterHeight()[i][1];
-            bufferHu[i][ny+1] = top->getMomentumHorizontal()[i][1];
-            bufferHv[i][ny+1] = top->getMomentumVertical()[i][1];
-        }
-    }
-    if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)) {
-        borderTimestep[BND_BOTTOM] = bottom->getTotalLocalTimestep();
-        for(int i = 1; i < nx+1; i++) {
-            bufferH[i][0] = bottom->getWaterHeight()[i][ny];
-            bufferHu[i][0] = bottom->getMomentumHorizontal()[i][ny];
-            bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
-        }
-    }
-    /*if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isSendable(BND_RIGHT)) {
-        right->borderTimestep[BND_LEFT] = getTotalLocalTimestep();
-        for(int i = 1; i < ny+1; i++) {
+    /*
+   if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
+       borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
+       for(int i = 1; i < ny+1; i++) {
+           bufferH[nx+1][i] = right->getWaterHeight()[1][i];
+           bufferHu[nx+1][i] = right->getMomentumHorizontal()[1][i];
+           bufferHv[nx+1][i] = right->getMomentumVertical()[1][i];
+       }
+   }
+   if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)) {
+       borderTimestep[BND_LEFT] = left->getTotalLocalTimestep();
+       for(int i = 1; i < ny+1; i++) {
+           bufferH[0][i] = left->getWaterHeight()[nx][i];
+           bufferHu[0][i] = left->getMomentumHorizontal()[nx][i];
+           bufferHv[0][i] = left->getMomentumVertical()[nx][i];
+       }
+   }
+   if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)) {
+       borderTimestep[BND_TOP] = top->getTotalLocalTimestep();
+       for(int i = 1; i < nx+1; i++) {
+           bufferH[i][ny+1] = top->getWaterHeight()[i][1];
+           bufferHu[i][ny+1] = top->getMomentumHorizontal()[i][1];
+           bufferHv[i][ny+1] = top->getMomentumVertical()[i][1];
+       }
+   }
+   if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)) {
+       borderTimestep[BND_BOTTOM] = bottom->getTotalLocalTimestep();
+       for(int i = 1; i < nx+1; i++) {
+           bufferH[i][0] = bottom->getWaterHeight()[i][ny];
+           bufferHu[i][0] = bottom->getMomentumHorizontal()[i][ny];
+           bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
+       }
+   }
+   if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isSendable(BND_RIGHT)) {
+       right->borderTimestep[BND_LEFT] = getTotalLocalTimestep();
+       for(int i = 1; i < ny+1; i++) {
 
 
-            right->bufferH[0][i] =  h[nx][i];
-            right->bufferHu[0][i] = hu[nx][i];
-            right->bufferHv[0][i] = hv[nx][i];
-        }
-    }
-    if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isSendable(BND_LEFT)) {
-        left->borderTimestep[BND_RIGHT] = getTotalLocalTimestep();
-        for(int i = 1; i < ny+1; i++) {
-            left->bufferH[ left->nx+1][i] =  h[1][i];
-            left->bufferHu[ left->nx+1][i] = hu[1][i];
-            left->bufferHv[ left->nx+1][i] = hv[1][i];
-        }
-    }
-    if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isSendable(BND_TOP) ) {
-        top->borderTimestep[BND_BOTTOM] = getTotalLocalTimestep();
-        for(int i = 1; i < nx+1; i++) {
+           right->bufferH[0][i] =  h[nx][i];
+           right->bufferHu[0][i] = hu[nx][i];
+           right->bufferHv[0][i] = hv[nx][i];
+       }
+   }
+   if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isSendable(BND_LEFT)) {
+       left->borderTimestep[BND_RIGHT] = getTotalLocalTimestep();
+       for(int i = 1; i < ny+1; i++) {
+           left->bufferH[ left->nx+1][i] =  h[1][i];
+           left->bufferHu[ left->nx+1][i] = hu[1][i];
+           left->bufferHv[ left->nx+1][i] = hv[1][i];
+       }
+   }
+   if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isSendable(BND_TOP) ) {
+       top->borderTimestep[BND_BOTTOM] = getTotalLocalTimestep();
+       for(int i = 1; i < nx+1; i++) {
 
-            top->bufferH[i][0]  =   h[i][ny];
-            top->bufferHu[i][0]  =  hu[i][ny];
-            top->bufferHv[i][0]  =  hv[i][ny];
-        }
-    }
-    if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isSendable(BND_BOTTOM)) {
-        bottom->borderTimestep[BND_TOP] = getTotalLocalTimestep();
-        for(int i = 1; i < nx+1; i++) {
-            bottom->bufferH[i][bottom->ny+1]  =  h[i][1];
-            bottom->bufferHu[i][bottom->ny+1] =  hu[i][1];
-            bottom->bufferHv[i][bottom->ny+1] =  hv[i][1];
-        }
-    }*/
+           top->bufferH[i][0]  =   h[i][ny];
+           top->bufferHu[i][0]  =  hu[i][ny];
+           top->bufferHv[i][0]  =  hv[i][ny];
+       }
+   }
+   if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isSendable(BND_BOTTOM)) {
+       bottom->borderTimestep[BND_TOP] = getTotalLocalTimestep();
+       for(int i = 1; i < nx+1; i++) {
+           bottom->bufferH[i][bottom->ny+1]  =  h[i][1];
+           bottom->bufferHu[i][bottom->ny+1] =  hu[i][1];
+           bottom->bufferHv[i][bottom->ny+1] =  hv[i][1];
+       }
+   }*/
 
     // The requests generated by the Isends are immediately freed, since we will wait on the requests generated by the corresponding receives
 
@@ -433,6 +403,41 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 	int code = MPI_Waitall(16, recvReqs, stati);
 	if(code != MPI_SUCCESS)
 		printf("%d: No success %d\n", myRank, code);
+
+
+    if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
+        borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();
+        for(int i = 1; i < ny+1; i++) {
+            bufferH[nx+1][i] = right->getWaterHeight()[1][i];
+            bufferHu[nx+1][i] = right->getMomentumHorizontal()[1][i];
+            bufferHv[nx+1][i] = right->getMomentumVertical()[1][i];
+        }
+    }
+    if (boundaryType[BND_LEFT] == CONNECT_WITHIN_RANK && isReceivable(BND_LEFT)) {
+        borderTimestep[BND_LEFT] = left->getTotalLocalTimestep();
+        for(int i = 1; i < ny+1; i++) {
+            bufferH[0][i] = left->getWaterHeight()[nx][i];
+            bufferHu[0][i] = left->getMomentumHorizontal()[nx][i];
+            bufferHv[0][i] = left->getMomentumVertical()[nx][i];
+        }
+    }
+    if (boundaryType[BND_TOP] == CONNECT_WITHIN_RANK && isReceivable(BND_TOP)) {
+        borderTimestep[BND_TOP] = top->getTotalLocalTimestep();
+        for(int i = 1; i < nx+1; i++) {
+            bufferH[i][ny+1] = top->getWaterHeight()[i][1];
+            bufferHu[i][ny+1] = top->getMomentumHorizontal()[i][1];
+            bufferHv[i][ny+1] = top->getMomentumVertical()[i][1];
+        }
+    }
+    if (boundaryType[BND_BOTTOM] == CONNECT_WITHIN_RANK && isReceivable(BND_BOTTOM)) {
+        borderTimestep[BND_BOTTOM] = bottom->getTotalLocalTimestep();
+        for(int i = 1; i < nx+1; i++) {
+            bufferH[i][0] = bottom->getWaterHeight()[i][ny];
+            bufferHu[i][0] = bottom->getMomentumHorizontal()[i][ny];
+            bufferHv[i][0] = bottom->getMomentumVertical()[i][ny];
+        }
+    }
+
 
     checkAllGhostlayers();
 
