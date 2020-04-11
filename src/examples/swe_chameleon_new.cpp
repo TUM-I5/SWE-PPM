@@ -103,7 +103,8 @@ int main(int argc, char** argv) {
 #ifdef ASAGI
     SWE_AsagiScenario scenario(args.getArgument<std::string>("bathymetry-file"), args.getArgument<std::string>("displacement-file"));
 #else
-    SWE_RadialDamBreakScenario scenario;
+    //SWE_RadialDamBreakScenario scenario;
+    SWE_RadialBathymetryDamBreakScenario scenario;
 #endif
 
     // Init MPI
@@ -193,7 +194,7 @@ int main(int argc, char** argv) {
         for (int j = 0; j < 4; j++) {
             if (myNeighbours[j] >= startPoint && myNeighbours[j] < (startPoint + ranksPerLocality)) {
                 refinedNeighbours[j] = -2;
-                realNeighbours[j] = -2;
+                realNeighbours[j] = myNeighbours[j];
                 neighbourBlocks[j] = simulationBlocks[myNeighbours[j] - startPoint];
                 boundaries[j] = CONNECT_WITHIN_RANK;
             }else if(myNeighbours[j] == -1){
@@ -209,18 +210,17 @@ int main(int argc, char** argv) {
         simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
         simulationBlocks[i - startPoint]->connectNeighbourLocalities(refinedNeighbours);
         simulationBlocks[i - startPoint]->connectNeighbours(realNeighbours);
-
         simulationBlocks[i - startPoint]->connectLocalNeighbours(neighbourBlocks);
-
-
         simulationBlocks[i - startPoint]->setRank(myRank);
+
+       //std::cout << myRank <<"| " << realNeighbours[0] << " " << realNeighbours[1] << " " << realNeighbours[2] << " " << realNeighbours[3] << std::endl;
 
     }
 
 
 
 
-
+    for (auto &block: simulationBlocks)block->exchangeBathymetry();
 
 
     
@@ -260,7 +260,7 @@ int main(int argc, char** argv) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
             do {
-                for (auto &block: simulationBlocks)block->applyBoundaryConditions();
+
                 for (auto &block: simulationBlocks)block->setGhostLayer();
 
                 for (auto &block: simulationBlocks)block->receiveGhostLayer();
@@ -306,7 +306,9 @@ int main(int argc, char** argv) {
             } while (localTimestepping && !synchronizedTimestep);
             // update simulation time with time step width.
             t += localTimestepping ? maxLocalTimestep : timestep;
-
+            if(localTimestepping){
+                for (auto &block: simulationBlocks)block->resetStepSizeCounter();
+            }
         }
 
         if (localityRank == 0) {

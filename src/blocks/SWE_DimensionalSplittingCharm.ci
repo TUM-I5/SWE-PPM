@@ -95,6 +95,9 @@ module SWE_DimensionalSplittingCharm {
                         // Once the simulation state progressed one iteration, increase the simulation time accordingly
                         if((!localTimestepping || hasMaxLocalTimestep()) ){
                             currentSimulationTime +=localTimestepping?maxTimestepLocal:maxTimestep;
+
+                            resetStepSizeCounter();
+
                         }
                         // If a checkpoint was reached after the last step, write current state
                         if (  currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {

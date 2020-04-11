@@ -105,7 +105,7 @@
 #include <algorithm>
 #include "tools/Float2DBuffer.hh"
 #include <iostream>
-
+#include <iomanip>
 template<typename T, typename Buffer = Float2DBuffer>
 class SWE_Block {
 public:
@@ -216,9 +216,16 @@ public:
     bool localTimestepping; //true to activate localtimestepping
     int stepSize; //is used to determine the localstepsize;
     int stepSizeCounter; //used to count the steps;
+    void resetStepSizeCounter();
     GhostlayerState receivedGhostlayer[4]; //determines if border received a valid timestep, thus is bigger or same then localtimestep.
     float borderTimestep[4]; //timesteps of each border are put in here
     int timestepCounter = 0;
+    int myRank;
+    int neighbourRankId[4];
+    int iteration = 0;
+    void connectNeighbours(int neighbourRankId[]);
+    void setRank(int rank);
+
     // Unknowns
     T h;
     T hu;
@@ -235,7 +242,16 @@ public:
 
     std::string stateToString(GhostlayerState state);
 };
-
+template<typename T, typename Buffer>
+void SWE_Block<T, Buffer>::setRank(int rank) {
+    myRank = rank;
+}
+template<typename T, typename Buffer>
+void SWE_Block<T, Buffer>::connectNeighbours(int p_neighbourRankId[]) {
+    for (int i = 0; i < 4; i++) {
+        neighbourRankId[i] = p_neighbourRankId[i];
+    }
+}
 /***************************
  * Default Implementations *
  ***************************/
@@ -287,15 +303,9 @@ SWE_Block<T, Buffer>::~SWE_Block() {
 
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::hasMaxLocalTimestep() {
-    // If block is at the biggest Timestep and received all ghostlayers, then it is ready to write timestep
-    if (stepSizeCounter == 1 && allGhostlayersInSync()) {
-        timestepCounter++;
-        return true;
-    }
-    if (stepSizeCounter > stepSize && allGhostlayersInSync()) {
-        stepSizeCounter = 0;
-    }
-    return false;
+
+    return (stepSizeCounter >= stepSize && allGhostlayersInSync());
+
 
 }
 
@@ -315,10 +325,11 @@ std::string SWE_Block<T, Buffer>::stateToString(GhostlayerState state) {
 
 template<typename T, typename Buffer>
 void SWE_Block<T, Buffer>::printLtsStats() {
-    std::cout << originX << " " << originY << "|" << timestepCounter << "| L: "
-              << stateToString(receivedGhostlayer[BND_LEFT]) << " R: " << stateToString(receivedGhostlayer[BND_RIGHT])
-              << " B: " << stateToString(receivedGhostlayer[BND_BOTTOM]) << " T: "
-              << stateToString(receivedGhostlayer[BND_TOP]) << " " << getTotalLocalTimestep() << " " << std::endl;
+
+    std::cout <<myRank << "|" << timestepCounter << "|"<< iteration<< "| L("<< neighbourRankId[BND_LEFT]<< ","<< receivedGhostlayer[BND_LEFT]<<"): " <<  std::setprecision(6)<< std::fixed
+              <<borderTimestep[BND_LEFT] << " R("<< neighbourRankId[BND_RIGHT]<< ","<< receivedGhostlayer[BND_RIGHT]<<"): " <<borderTimestep[BND_RIGHT]
+              << " B("<< neighbourRankId[BND_BOTTOM]<< ","<< receivedGhostlayer[BND_BOTTOM]<<"): " << borderTimestep[BND_BOTTOM]  << " T("<< neighbourRankId[BND_TOP]<< ","<< receivedGhostlayer[BND_TOP]<<"): "
+              <<borderTimestep[BND_TOP] << " | " << getTotalLocalTimestep() << " " << std::endl;
 }
 
 template<typename T, typename Buffer>
@@ -330,14 +341,12 @@ bool SWE_Block<T, Buffer>::allGhostlayersInSync() {
 
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::isSendable(Boundary border) {
-    // return receivedGhostlayer[border] != GL_UNVALID && receivedGhostlayer[border] != GL_SYNC ;
-    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_INTER;
+    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_INTER || receivedGhostlayer[border] == GL_SYNC;
 }
 
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::isReceivable(Boundary border) {
-    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] ==
-                                                    GL_UNVALID; //@todo check if this really holds, i believe that we need to receive when we are interpolating.
+    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_UNVALID || receivedGhostlayer[border] == GL_SYNC;
 }
 
 template<typename T, typename Buffer>
@@ -355,13 +364,15 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
         for (int border = BND_LEFT; border <= BND_TOP; border++) {
             if ((boundaryType[border] == CONNECT) || boundaryType[border] == CONNECT_WITHIN_RANK) {
 
-                if (borderTimestep[border] == getTotalLocalTimestep()) {
+                if (borderTimestep[border] == getTotalLocalTimestep() ) {
                     //This case the neighbor progressed as much as local block did and thus the received Ghostlayer is valid and we can expect
                     // a new timestep incoming in the next iteration.
                     //interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
                     copyGhostlayer(static_cast<Boundary>(border));
-                    receivedGhostlayer[border] = GL_SYNC;
-                } else if ((borderTimestep[border] > getTotalLocalTimestep()) && stepSizeCounter != 0) {
+                    receivedGhostlayer[border] =  GL_SYNC;
+
+
+                } else if ((borderTimestep[border] > getTotalLocalTimestep())) {
                     //This case we need to interpolate and thus do not expect a new timestep in the next iteration.
                     interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
                     receivedGhostlayer[border] = GL_INTER;
@@ -372,6 +383,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
             }
         }
 
+
         if (allGhostlayersInSync()) {
             //If it is interpolated we do need to receive next timestep
             receivedGhostlayer[BND_LEFT] = (receivedGhostlayer[BND_LEFT] == GL_INTER) ? GL_INTER : GL_NEXT;
@@ -379,10 +391,22 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
             receivedGhostlayer[BND_TOP] = (receivedGhostlayer[BND_TOP] == GL_INTER) ? GL_INTER : GL_NEXT;
             receivedGhostlayer[BND_BOTTOM] = (receivedGhostlayer[BND_BOTTOM] == GL_INTER) ? GL_INTER : GL_NEXT;
         }
-#ifdef DEBUG
+
+
+
+
+#ifndef DEBUG
         printLtsStats();
 #endif
-    }
+
+        if (allGhostlayersInSync()) {
+
+           if(stepSizeCounter < stepSize)
+                stepSizeCounter++;
+            }
+        }
+        iteration++;
+
 }
 
 template<typename T, typename Buffer>
@@ -470,7 +494,11 @@ template<typename T, typename Buffer>
 void SWE_Block<T, Buffer>::setMaxLocalTimestep(float timestep) {
     maxTimestepLocal = timestep;
 }
-
+template<typename T, typename Buffer>
+void SWE_Block<T, Buffer>::resetStepSizeCounter() {
+    stepSizeCounter = 0;
+    timestepCounter++;
+}
 template<typename T, typename Buffer>
 float SWE_Block<T, Buffer>::getRoundTimestep(float timestep) {
 
@@ -485,7 +513,6 @@ float SWE_Block<T, Buffer>::getRoundTimestep(float timestep) {
         }
     }
 
-    stepSizeCounter++;
     return (float) maxTimestepLocal / stepSize;
 
 }
@@ -493,7 +520,8 @@ float SWE_Block<T, Buffer>::getRoundTimestep(float timestep) {
 template<typename T, typename Buffer>
 float SWE_Block<T, Buffer>::getTotalLocalTimestep() {
     //std::cout << "stepsize " << stepSize << std::endl;
-    return (float) (maxTimestepLocal * stepSizeCounter) / stepSize;
+
+    return (float) (maxTimestepLocal*timestepCounter)+((maxTimestepLocal * stepSizeCounter) / stepSize);
 }
 
 template<typename T, typename Buffer>
@@ -844,5 +872,8 @@ void SWE_Block<T, Buffer>::applyBoundaryConditions() {
     hu[nx + 1][ny + 1] = hu[nx][ny];
     hv[nx + 1][ny + 1] = hv[nx][ny];
 }
+
+
+
 
 #endif // __SWE_BLOCK_HH

@@ -79,7 +79,7 @@ class SWE_RadialDamBreakScenario : public SWE_Scenario {
 public:
 
     float getBathymetry(float x, float y) {
-        return 0;//10.f;
+        return 10.f;
     };
 
     float getWaterHeight(float x, float y) {
@@ -107,6 +107,45 @@ public:
     };
 };
 
+class SWE_RadialBathymetryDamBreakScenario : public SWE_Scenario {
+
+public:
+
+    float getBathymetry(float x, float y) {
+        return (std::sqrt((x - 500.f) * (x - 500.f) + (y - 500.f) * (y - 500.f)) < 50.f) ? 40.f : 10.f;
+    };
+
+    virtual float endSimulation() { return (float) 15; };
+
+    virtual BoundaryType getBoundaryType(Boundary edge) { return OUTFLOW; };
+
+    /** Get the boundary positions
+     *
+     * @param boundary which edge
+     * @return value in the corresponding dimension
+     */
+    float getBoundaryPos(Boundary boundary) {
+        if (boundary == BND_LEFT)
+            return (float) 0;
+        else if (boundary == BND_RIGHT)
+            return (float) 1000;
+        else if (boundary == BND_BOTTOM)
+            return (float) 0;
+        else
+            return (float) 1000;
+    };
+
+    /**
+     * Get the water height at a specific location.
+     *
+     * @param i_positionX position relative to the origin of the bathymetry grid in x-direction
+     * @param i_positionY position relative to the origin of the bathymetry grid in y-direction
+     * @return water height (before the initial displacement)
+     */
+    float getWaterHeight(float x, float y) {
+        return (sqrt((x - 250.f) * (x - 250.f) + (y - 250.f) * (y - 250.f)) < 100.f) ? 20.f : 10.0f;
+    };
+};
 /**
  * Scenario "Bathymetry Dam Break":
  * uniform water depth, but elevated bathymetry in the centre of the domain

@@ -71,14 +71,13 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		void setLeft(SWE_DimensionalSplittingChameleon* argLeft);
 		void setRight(SWE_DimensionalSplittingChameleon* argRight);
 		void freeMpiType();
-        void connectNeighbours(int neighbourRankId[]);
+
         void connectNeighbourLocalities(int neighbourRankId[]);
         void connectLocalNeighbours(std::array<std::shared_ptr<SWE_DimensionalSplittingChameleon>,4> neighbourBlocks);
-		int neighbourRankId[4];
+
         int neighbourLocality[4];
 		// TODO: remove
-		int myRank;
-		void setRank(int rank);
+
     void writeTimestep(float timestep);
 		MPI_Datatype HORIZONTAL_BOUNDARY;
         NetCdfWriter *writer;
@@ -117,6 +116,7 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		struct timespec startTime;
 		struct timespec endTime;
 
+    void exchangeBathymetry();
 };
 
 double getTime();

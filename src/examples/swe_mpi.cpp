@@ -317,6 +317,9 @@ if(write){
             } while (localTimestepping && !simulation.hasMaxLocalTimestep());
             // update simulation time with time step width.
             t += localTimestepping ? maxLocalTimestep : timestep;
+            if(localTimestepping){
+                simulation.resetStepSizeCounter();
+            }
         }
 
         if (myMpiRank == 0) {

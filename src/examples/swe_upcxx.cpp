@@ -352,7 +352,9 @@ int main(int argc, char **argv) {
             } while (localTimestepping && !simulation.hasMaxLocalTimestep());
             // update simulation time with time step width.
             t += localTimestepping ? maxLocalTimestep : timestep;
-
+            if(localTimestepping){
+                simulation.resetStepSizeCounter();
+            }
         }
 
         if (myUpcxxRank == 0) {

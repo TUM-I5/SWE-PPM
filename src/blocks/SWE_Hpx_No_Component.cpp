@@ -402,7 +402,9 @@ void SWE_Hpx_No_Component::run() {
             } while (localTimestepping && !synchronizedTimestep);
             // update simulation time with time step width.
             t += localTimestepping ? maxLocalTimestep : timestep;
-
+            if(localTimestepping){
+                for (auto &block: simulationBlocks)block->resetStepSizeCounter();
+            }
         }
 
         if (localityRank == 0) {
