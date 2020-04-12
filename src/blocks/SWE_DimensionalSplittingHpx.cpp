@@ -499,11 +499,7 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
 void SWE_DimensionalSplittingHpx::computeYSweep() {
     if (!allGhostlayersInSync()) return;
 
-    if (localTimestepping) {
-
-        maxTimestep = getRoundTimestep(maxTimestep);
-
-    } else {
+  if(!localTimestepping){
         maxTimestep = maxTimestepGlobal;
     }
     float maxVerticalWaveSpeed = (float) 0.;
