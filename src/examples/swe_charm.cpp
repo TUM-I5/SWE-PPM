@@ -135,7 +135,8 @@ swe_charm::swe_charm(CkArgMsg *msg) {
     SWE_AsagiScenario scenario(bathymetryFilename, displacementFilename);
 #else
     //SWE_HalfDomainDry scenario;
-    SWE_RadialDamBreakScenario scenario;
+    //SWE_RadialDamBreakScenario scenario;
+    SWE_RadialBathymetryDamBreakScenario scenario;
 #endif
 
 

@@ -468,7 +468,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 }
 
 void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* block, float* maxTimestep, float* h_data, float* hu_data, float* b_data,
-								float* hNetUpdatesLeft_data, float* hNetUpdatesRight_data, float* huNetUpdatesLeft_data, float* huNetUpdatesRight_data) {
+								float* hNetUpdatesLeft_data, float* hNetUpdatesRight_data, float* huNetUpdatesLeft_data, float* huNetUpdatesRight_data, int *myRank) {
 	// Set data pointers correctly
 	block->getModifiableWaterHeight().setRawPointer(h_data);
 	block->getModifiableMomentumHorizontal().setRawPointer(hu_data);
@@ -478,7 +478,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 	block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
 	block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
 
-
+    if(block->myRank != *myRank)std::cout << "UNEQUAL RANKS "<< block->myRank << " " << *myRank<< std::endl;
 
 	//maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
@@ -529,7 +529,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
     if (!allGhostlayersInSync()) return;
     collector.addFlops(135*nx*ny);
 
-	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[9];
+	chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[10];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
 	args[1] = chameleon_map_data_entry_create(&(this->maxTimestep), sizeof(float), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[2] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_TO);
@@ -539,10 +539,10 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesHorizontal() {
     args[6] = chameleon_map_data_entry_create(this->hNetUpdatesRight.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[7] = chameleon_map_data_entry_create(this->huNetUpdatesLeft.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
     args[8] = chameleon_map_data_entry_create(this->huNetUpdatesRight.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
-
+    args[9] = chameleon_map_data_entry_create(&(this->myRank), sizeof(int), CHAM_OMP_TGT_MAPTYPE_TO);
 	cham_migratable_task_t *cur_task = chameleon_create_task(
         (void *)&computeNumericalFluxesHorizontalKernel,
-        9, // number of args
+        10, // number of args
         args);
 	int32_t res = chameleon_add_task(cur_task);
 }
@@ -568,7 +568,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 	block->huStar.setRawPointer(huStar_data);
 
 
-    //block->maxTimestep = *maxTimestep;
+    block->maxTimestep = *maxTimestep;
 	//maximum (linearized) wave speed within one iteration
 	float maxVerticalWaveSpeed = (float) 0.;
 
