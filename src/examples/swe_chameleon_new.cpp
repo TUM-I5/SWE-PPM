@@ -271,8 +271,8 @@ int main(int argc, char** argv) {
 #pragma omp parallel
                 {
 #pragma omp for
-                    for (auto &block: simulationBlocks){
-                        block->computeNumericalFluxesHorizontal();
+                    for (int i = 0; i < simulationBlocks.size(); i++){
+                        simulationBlocks[i]->computeNumericalFluxesHorizontal();
                     }
                     chameleon_distributed_taskwait(0);
                 }
@@ -300,15 +300,15 @@ int main(int argc, char** argv) {
 #pragma omp parallel
                 {
 #pragma omp for
-                    for (auto &block: simulationBlocks){
-                        block->computeNumericalFluxesVertical();
+                    for (int i = 0; i < simulationBlocks.size(); i++){
+                        simulationBlocks[i]->computeNumericalFluxesVertical();
                     }
                     chameleon_distributed_taskwait(0);
                 }
 
 #pragma omp parallel for
-                for (auto &block: simulationBlocks){
-                    block->updateUnknowns(timestep);
+                for (int i = 0; i < simulationBlocks.size(); i++){
+                    simulationBlocks[i]->updateUnknowns(timestep);
                 }
 
                 collector.stopCounter(CollectorChameleon::CTR_WALL);
