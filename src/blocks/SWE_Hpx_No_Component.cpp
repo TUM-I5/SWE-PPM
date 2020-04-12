@@ -234,8 +234,8 @@ void SWE_Hpx_No_Component::run() {
     }
 
 
-    //for (auto &block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
-    //hpx::wait_all(fut);
+    for (auto &block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
+    hpx::wait_all(fut);
 
 
     if (localTimestepping) {
