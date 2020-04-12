@@ -222,7 +222,7 @@ int main(int argc, char** argv) {
     {
         chameleon_thread_init();
     }
-
+    chameleon_determine_base_addresses((void *)&main);
 
 
     for (auto &block: simulationBlocks)block->exchangeBathymetry();
