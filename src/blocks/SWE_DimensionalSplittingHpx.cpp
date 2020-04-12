@@ -487,7 +487,10 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
 
     // compute max timestep according to cautious CFL-condition
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+    if (localTimestepping) {
+        maxTimestep = getRoundTimestep(maxTimestep);
 
+    }
     maxTimestepGlobal = maxTimestep;
 
 
