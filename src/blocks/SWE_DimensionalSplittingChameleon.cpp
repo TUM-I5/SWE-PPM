@@ -264,7 +264,7 @@ void SWE_DimensionalSplittingChameleon::exchangeBathymetry() {
 
 void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 	// Apply appropriate conditions for OUTFLOW/WALL boundaries
-	SWE_Block::applyBoundaryConditions();
+
     collector.startCounter(CollectorChameleon::CTR_EXCHANGE);
     if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK && isReceivable(BND_RIGHT)) {
         borderTimestep[BND_RIGHT] = right->getTotalLocalTimestep();

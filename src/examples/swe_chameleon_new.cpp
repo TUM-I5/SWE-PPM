@@ -266,6 +266,7 @@ int main(int argc, char** argv) {
             do {
                 iteration++;
                 collector.startCounter(CollectorChameleon::CTR_WALL);
+                for (auto &block: simulationBlocks)block->applyBoundaryConditions();
                 for (auto &block: simulationBlocks)block->setGhostLayer();
 
                 for (auto &block: simulationBlocks)block->receiveGhostLayer();
