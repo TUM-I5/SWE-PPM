@@ -66,10 +66,9 @@ getBoundaries(int localBlockPositionX, int localBlockPositionY, int blockCountX,
 #ifdef ASAGI
     SWE_AsagiScenario * scenario = (SWE_AsagiScenario *) scen;
 #else
-    SWE_RadialDamBreakScenario *scenario = (SWE_RadialDamBreakScenario *) scen;
+    //SWE_RadialDamBreakScenario *scenario = (SWE_RadialDamBreakScenario *) scen;
     // SWE_HalfDomainDry * scenario =  (SWE_HalfDomainDry *) scen  ;
-    //SWE_RadialDamBreakScenario scenario;
-    //SWE_RadialDamBreakScenario scenario;
+
     SWE_RadialBathymetryDamBreakScenario *scenario = (SWE_RadialBathymetryDamBreakScenario *) scen;;
 #endif
     std::array<BoundaryType, 4> boundaries;
