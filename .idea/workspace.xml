@@ -20,10 +20,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/CollectorHpx.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/CollectorHpx.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_hpx.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -310,14 +307,7 @@
       <workItem from="1586438732997" duration="5011000" />
       <workItem from="1586544718432" duration="116000" />
       <workItem from="1586626274190" duration="11277000" />
-      <workItem from="1586691990063" duration="14026000" />
-    </task>
-    <task id="LOCAL-00220" summary="changed from get to put">
-      <created>1586214607868</created>
-      <option name="number" value="00220" />
-      <option name="presentableId" value="LOCAL-00220" />
-      <option name="project" value="LOCAL" />
-      <updated>1586214607868</updated>
+      <workItem from="1586691990063" duration="14565000" />
     </task>
     <task id="LOCAL-00221" summary="changed from get to put">
       <created>1586215234945</created>
@@ -655,7 +645,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586709659710</updated>
     </task>
-    <option name="localTasksCounter" value="269" />
+    <task id="LOCAL-00269" summary="&#10;added fast reduce hpx">
+      <created>1586715024919</created>
+      <option name="number" value="00269" />
+      <option name="presentableId" value="LOCAL-00269" />
+      <option name="project" value="LOCAL" />
+      <updated>1586715024919</updated>
+    </task>
+    <option name="localTasksCounter" value="270" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -686,7 +683,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Finished but not tested CollectorCharm.hpp" />
     <MESSAGE value="Added Collect for all frameworks&#10;Chameleon not tested but very confident that it works&#10;Added Cmake support for all frameworks besides charm" />
     <MESSAGE value="Cleaned HPX implementation&#10;Added cmake support" />
     <MESSAGE value="Improved Performance of local timestepping&#10;fixed bug in upcxx implementation" />
@@ -711,7 +707,8 @@
     <MESSAGE value="Added Counter FW to chameleon and chameleon parallelization" />
     <MESSAGE value="Added all new scenarios" />
     <MESSAGE value="fixed lts bug in hpx" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed lts bug in hpx" />
+    <MESSAGE value="&#10;added fast reduce hpx" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;added fast reduce hpx" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2224" y="125" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586284687472">
@@ -723,18 +720,18 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586709659636">
+    <state x="554" y="116" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586715024743">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586709659636" />
+    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586715024743" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586714376820">
+    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586715016851">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
-    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586714376820" />
+    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586715016851" />
     <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777842585" />
     <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586714223845">
       <screen x="0" y="27" width="1920" height="1053" />

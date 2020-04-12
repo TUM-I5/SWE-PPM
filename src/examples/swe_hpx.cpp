@@ -65,7 +65,7 @@
 #include <hpx/collectives/broadcast.hpp>
 
 HPX_REGISTER_ALLREDUCE(double, reduction_test);
-
+HPX_REGISTER_ALLREDUCE(float, reduction_main);
 int hpx_main(hpx::program_options::variables_map &vm) {
 
 
