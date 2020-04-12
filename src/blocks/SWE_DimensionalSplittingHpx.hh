@@ -84,8 +84,6 @@ public:
 
     void updateUnknowns(float dt);
 
-    copyLayerStruct<std::vector<float>> getGhostLayer(Boundary boundary, bool bath);
-
     void connectNeighbours(communicator_type comm);
 
     void exchangeBathymetry();

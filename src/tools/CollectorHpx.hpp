@@ -14,6 +14,12 @@ public:
         return a < b ? b : a;
     }
 };
+class min {
+public:
+    float operator()(float a, float b) const {
+        return a < b ? a : b;
+    }
+};
 
 class CollectorHpx : public Collector {
 public:
