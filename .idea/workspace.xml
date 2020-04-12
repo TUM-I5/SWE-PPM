@@ -20,7 +20,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -307,14 +306,7 @@
       <workItem from="1586438732997" duration="5011000" />
       <workItem from="1586544718432" duration="116000" />
       <workItem from="1586626274190" duration="11277000" />
-      <workItem from="1586691990063" duration="16836000" />
-    </task>
-    <task id="LOCAL-00224" summary="added experimental swe_chameleon_new.cpp">
-      <created>1586258179054</created>
-      <option name="number" value="00224" />
-      <option name="presentableId" value="LOCAL-00224" />
-      <option name="project" value="LOCAL" />
-      <updated>1586258179054</updated>
+      <workItem from="1586691990063" duration="17533000" />
     </task>
     <task id="LOCAL-00225" summary="added experimental swe_chameleon_new.cpp">
       <created>1586258729291</created>
@@ -652,7 +644,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586717181885</updated>
     </task>
-    <option name="localTasksCounter" value="273" />
+    <task id="LOCAL-00273" summary="&#10;added fast reduce hpx">
+      <created>1586718913975</created>
+      <option name="number" value="00273" />
+      <option name="presentableId" value="LOCAL-00273" />
+      <option name="project" value="LOCAL" />
+      <updated>1586718913975</updated>
+    </task>
+    <option name="localTasksCounter" value="274" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -720,12 +719,12 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="2478" y="149" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586717181828">
+    <state x="2478" y="149" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586718913911">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
     <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586716561036" />
-    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586717181828" />
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586718913911" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586715016851">
       <screen x="0" y="27" width="1920" height="1053" />
