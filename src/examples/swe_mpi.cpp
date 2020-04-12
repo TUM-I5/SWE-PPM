@@ -292,12 +292,13 @@ if(write){
     float t = 0.0;
 
     float timestep;
-
+    int iteration = 0;
     // loop over the count of requested checkpoints
     for (int i = 0; i < numberOfCheckPoints; i++) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
             do {
+                iteration++;
                 // Start measurement
                 CollectorMpi::getInstance().startCounter(CollectorMpi::CTR_WALL);
                 // this is an implicit block (mpi recv in setGhostLayer()
@@ -337,7 +338,7 @@ if(write){
         }
 
     }
-
+    std::cout << "ITERATTIONNN < " << iteration << std::endl;
 
     /************
      * FINALIZE *

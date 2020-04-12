@@ -259,11 +259,12 @@ int main(int argc, char** argv) {
 
     CollectorChameleon collector;
     // loop over the count of requested
-
+    int iteration = 0;
     for (int i = 0; i < numberOfCheckPoints; i++) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
             do {
+                iteration++;
                 collector.startCounter(CollectorChameleon::CTR_WALL);
                 for (auto &block: simulationBlocks)block->setGhostLayer();
 
@@ -354,7 +355,7 @@ int main(int argc, char** argv) {
             block->freeMpiType();
         }
 
-
+    std::cout << "ITERATTIONNN < " << iteration << std::endl;
 #pragma omp parallel
     {
         chameleon_thread_finalize();
