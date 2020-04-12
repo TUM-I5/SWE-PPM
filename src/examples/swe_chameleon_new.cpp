@@ -259,7 +259,7 @@ int main(int argc, char** argv) {
 
     CollectorChameleon collector;
     // loop over the count of requested
-    std::cout << "hier\n";
+
     for (int i = 0; i < numberOfCheckPoints; i++) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
@@ -268,7 +268,7 @@ int main(int argc, char** argv) {
                 for (auto &block: simulationBlocks)block->setGhostLayer();
 
                 for (auto &block: simulationBlocks)block->receiveGhostLayer();
-                std::cout << "d1a\n";
+
 #pragma omp parallel
                 {
 #pragma omp for
@@ -277,7 +277,6 @@ int main(int argc, char** argv) {
                     }
                     chameleon_distributed_taskwait(0);
                 }
-                std::cout << "da\n";
 
 
                 if (!localTimestepping) {
