@@ -482,7 +482,7 @@ void computeNumericalFluxesHorizontalKernel(SWE_DimensionalSplittingChameleon* b
 
 	//maximum (linearized) wave speed within one iteration
 	float maxHorizontalWaveSpeed = (float) 0.;
-	float maxVerticalWaveSpeed = (float) 0.;
+
 
 #if WAVE_PROPAGATION_SOLVER == 0
     solver::HLLEFun<float> localSolver = block->solver;
@@ -568,7 +568,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 	block->huStar.setRawPointer(huStar_data);
 
 
-    block->maxTimestep = *maxTimestep;
+    //block->maxTimestep = *maxTimestep;
 	//maximum (linearized) wave speed within one iteration
 	float maxVerticalWaveSpeed = (float) 0.;
 
