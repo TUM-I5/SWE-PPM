@@ -69,6 +69,8 @@ getBoundaries(int localBlockPositionX, int localBlockPositionY, int blockCountX,
     SWE_RadialDamBreakScenario *scenario = (SWE_RadialDamBreakScenario *) scen;
     // SWE_HalfDomainDry * scenario =  (SWE_HalfDomainDry *) scen  ;
     //SWE_RadialDamBreakScenario scenario;
+    //SWE_RadialDamBreakScenario scenario;
+    SWE_RadialBathymetryDamBreakScenario *scenario = (SWE_RadialBathymetryDamBreakScenario *) scen;;
 #endif
     std::array<BoundaryType, 4> boundaries;
     boundaries[BND_LEFT] = (localBlockPositionX > 0) ? CONNECT : scenario->getBoundaryType(BND_LEFT);
@@ -104,7 +106,8 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
     SWE_AsagiScenario scenario(batFile, displFile);
 #else
     //SWE_HalfDomainDry scenario;
-    SWE_RadialDamBreakScenario scenario;
+    //SWE_RadialDamBreakScenario scenario;
+    SWE_RadialBathymetryDamBreakScenario scenario;
 #endif
 
     int totalRanks = ranksPerLocality * localityCount;
