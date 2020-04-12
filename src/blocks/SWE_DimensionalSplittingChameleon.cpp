@@ -659,6 +659,7 @@ void computeNumericalFluxesVerticalKernel(SWE_DimensionalSplittingChameleon* blo
 void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
     if (!allGhostlayersInSync()) return;
     float  maxVerticalWaveSpeed= 0.f;
+
 #pragma omp parallel private(solver)
     {
         // set intermediary Q* states
@@ -693,6 +694,15 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxesVertical() {
                 );
             }
         }
+
+#ifndef NDEBUG
+        #pragma omp single
+        {
+            // check if the cfl condition holds in the y-direction
+            //assert(maxTimestep < (float) .5 * (dy / maxVerticalWaveSpeed));
+        }
+#endif // NDEBUG
+    }
     collector.addFlops(135*nx*ny);
 
 
