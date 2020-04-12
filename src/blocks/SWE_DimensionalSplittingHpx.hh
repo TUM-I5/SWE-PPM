@@ -91,7 +91,7 @@ public:
     CollectorHpx collector;
     NetCdfWriter *writer;
     float maxTimestepGlobal;
-
+    float currentTotalLocalTimestep; //used to not have raceconditions in local copying
     void writeTimestep(float timestep);
 
 private:

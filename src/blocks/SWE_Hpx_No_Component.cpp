@@ -315,7 +315,7 @@ void SWE_Hpx_No_Component::run() {
                 collector.startCounter(Collector::CTR_WALL);
                 // set values in ghost cells.
                 // this function blocks until everything has been received
-
+                for (auto &block: simulationBlocks)block->currentTotalLocalTimestep = block->getTotalLocalTimestep();
                 blockFuture.clear();
                 for (auto &block: simulationBlocks)blockFuture.push_back(hpx::async(setGhostLayer, block.get()));
                 hpx::wait_all(blockFuture);

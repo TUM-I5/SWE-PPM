@@ -194,7 +194,7 @@ struct communicator {
     get_local(Boundary n, int nx, int ny, Float2DBuffer *h, Float2DBuffer *hu, Float2DBuffer *hv, Float2DNative *b,
               float *borderTimestep, bool bat) {
         if (n == BND_LEFT) {
-            borderTimestep[BND_LEFT] = neighbourBlocks[n]->getTotalLocalTimestep();
+            borderTimestep[BND_LEFT] = neighbourBlocks[n]->currentTotalLocalTimestep;
             int startIndexSender = (neighbourBlocks[n]->nx) * (ny + 2) + 1;
             int startIndexReceiver = 1;
 
@@ -214,7 +214,7 @@ struct communicator {
         }
 
         if (n == BND_RIGHT) {
-            borderTimestep[BND_RIGHT] = neighbourBlocks[n]->getTotalLocalTimestep();
+            borderTimestep[BND_RIGHT] = neighbourBlocks[n]->currentTotalLocalTimestep;
             int startIndexSender = ny + 2 + 1;
             int startIndexReceiver = (nx + 1) * (ny + 2) + 1;
 
@@ -234,7 +234,7 @@ struct communicator {
         }
 
         if (n == BND_TOP) {
-            borderTimestep[BND_TOP] = neighbourBlocks[n]->getTotalLocalTimestep();
+            borderTimestep[BND_TOP] = neighbourBlocks[n]->currentTotalLocalTimestep;
             if (!bat) {
                 for (int i = 0; i < nx; i++) {
                     (*h)[i + 1][ny + 1] = neighbourBlocks[n]->h[i + 1][1];
@@ -250,7 +250,7 @@ struct communicator {
 
         }
         if (n == BND_BOTTOM) {
-            borderTimestep[BND_BOTTOM] = neighbourBlocks[n]->getTotalLocalTimestep();
+            borderTimestep[BND_BOTTOM] = neighbourBlocks[n]->currentTotalLocalTimestep;
             if (!bat) {
                 for (int i = 0; i < nx; i++) {
                     (*h)[i + 1][0] = neighbourBlocks[n]->h[i + 1][neighbourBlocks[n]->ny];
