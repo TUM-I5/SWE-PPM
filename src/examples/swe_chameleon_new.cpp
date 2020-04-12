@@ -268,7 +268,7 @@ int main(int argc, char** argv) {
                 for (auto &block: simulationBlocks)block->setGhostLayer();
 
                 for (auto &block: simulationBlocks)block->receiveGhostLayer();
-
+                std::cout << "d1a\n";
 #pragma omp parallel
                 {
 #pragma omp for
