@@ -344,8 +344,8 @@ void SWE_Hpx_No_Component::run() {
 
                     float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
                     collector.startCounter(Collector::CTR_REDUCE);
-                     timestep= hpx::all_reduce("timestep_reduce", minTimestep, min{}).get();
-                    /*if (localityRank == 0) {
+                    // timestep= hpx::all_reduce("timestep_reduce", minTimestep, min{}).get();
+                    if (localityRank == 0) {
                         if (localityCount > 1) {
                             timestep = hpx::dataflow(hpx::util::unwrapping(
                                     [](std::vector<float> globalTimesteps, float localTimestep) -> float {
@@ -364,7 +364,7 @@ void SWE_Hpx_No_Component::run() {
                         localityChannel.set(std::move(minTimestep));
 
                         timestep = localityChannel.get()[0].get();
-                    }*/
+                    }
                     collector.stopCounter(Collector::CTR_REDUCE);
 
                     for (auto &block: simulationBlocks)block->maxTimestepGlobal = timestep;
