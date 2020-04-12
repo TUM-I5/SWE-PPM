@@ -258,7 +258,8 @@ int main(int argc, char** argv) {
     }
 
     CollectorChameleon collector;
-    // loop over the count of requested checkpoints
+    // loop over the count of requested
+    std::cout << "hier\n";
     for (int i = 0; i < numberOfCheckPoints; i++) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
@@ -276,6 +277,7 @@ int main(int argc, char** argv) {
                     }
                     chameleon_distributed_taskwait(0);
                 }
+                std::cout << "da\n";
 
 
                 if (!localTimestepping) {
