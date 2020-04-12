@@ -4,11 +4,11 @@
     <generated>
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_chameleon" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -18,19 +18,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="added experimental swe_chameleon_new.cpp">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_mpi.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types/Boundary.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/types/Boundary.hh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tags" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -316,14 +310,8 @@
       <workItem from="1586343018519" duration="22127000" />
       <workItem from="1586438732997" duration="5011000" />
       <workItem from="1586544718432" duration="116000" />
-      <workItem from="1586626274190" duration="11024000" />
-    </task>
-    <task id="LOCAL-00197" summary="Test on Bug in Chameleon">
-      <created>1586200955139</created>
-      <option name="number" value="00197" />
-      <option name="presentableId" value="LOCAL-00197" />
-      <option name="project" value="LOCAL" />
-      <updated>1586200955139</updated>
+      <workItem from="1586626274190" duration="11277000" />
+      <workItem from="1586691990063" duration="2857000" />
     </task>
     <task id="LOCAL-00198" summary="Test on Bug in Chameleon">
       <created>1586201376216</created>
@@ -661,7 +649,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586351778711</updated>
     </task>
-    <option name="localTasksCounter" value="246" />
+    <task id="LOCAL-00246" summary="&#10;Finally fixed lts (bless)">
+      <created>1586645890841</created>
+      <option name="number" value="00246" />
+      <option name="presentableId" value="LOCAL-00246" />
+      <option name="project" value="LOCAL" />
+      <updated>1586645890841</updated>
+    </task>
+    <option name="localTasksCounter" value="247" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -692,7 +687,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Fixed bug with weird posiiton of timestep calculation" />
     <MESSAGE value="&#10;dsafd" />
     <MESSAGE value="Finished CollectorMpi.hpp and CollectorUpcxx.hpp&#10;Removed redundant measurement code and replaced with collectors" />
     <MESSAGE value="Finished but not tested chameleonCollector" />
@@ -717,7 +711,8 @@
     <MESSAGE value="experimental addon to charm map" />
     <MESSAGE value="changed from get to put" />
     <MESSAGE value="added experimental swe_chameleon_new.cpp" />
-    <option name="LAST_COMMIT_MESSAGE" value="added experimental swe_chameleon_new.cpp" />
+    <MESSAGE value="&#10;Finally fixed lts (bless)" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;Finally fixed lts (bless)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2224" y="125" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586284687472">
@@ -729,23 +724,23 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586373993175">
+    <state x="554" y="116" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586645890635">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586373993175" />
+    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586645890635" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585844188798" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="112" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586297200808">
+    <state x="112" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586694214228">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
-    <state x="112" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586297200808" />
+    <state x="112" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586694214228" />
     <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777842585" />
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586297200363">
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586694201007">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586297200363" />
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586694201007" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777664875" />
     <state width="1874" height="731" key="GridCell.Tab.0.bottom" timestamp="1586284750908">
       <screen x="0" y="27" width="1920" height="1053" />
@@ -827,10 +822,10 @@
     </state>
     <state x="761" y="487" width="464" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586271355696" />
     <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579700332116" />
-    <state x="2422" y="27" width="1350" height="1008" maximized="true" key="dock-window-1" timestamp="1586203458007">
+    <state x="2344" y="27" width="1452" height="831" maximized="true" key="dock-window-1" timestamp="1586692745204">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2422" y="27" width="1350" height="1008" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586203458007" />
+    <state x="2344" y="27" width="1452" height="831" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586692745204" />
     <state x="160" y="0" width="1336" height="1011" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584718094877" />
     <state x="2261" y="27" width="1350" height="1008" maximized="true" key="dock-window-2" timestamp="1586343075915">
       <screen x="1920" y="0" width="1920" height="1080" />

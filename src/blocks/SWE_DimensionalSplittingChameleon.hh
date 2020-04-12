@@ -37,6 +37,7 @@
 #include <time.h>
 #include <mpi.h>
 #include "writer/NetCdfWriter.hh"
+#include "tools/CollectorChameleon.hpp"
 #if WAVE_PROPAGATION_SOLVER == 0
 //#include "solvers/Hybrid.hpp"
 #include "solvers/HLLEFun.hpp"
@@ -49,7 +50,7 @@
 class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 	public:
 		// Constructor/Destructor
-    	//SWE_DimensionalSplittingChameleon() = default;
+    	SWE_DimensionalSplittingChameleon() = default;
 		SWE_DimensionalSplittingChameleon(int cellCountHorizontal, int cellCountVertical, float cellSizeHorizontal, float cellSizeVertical, float originX, float originY,bool localTimestepping,std::string name, bool write);
 		~SWE_DimensionalSplittingChameleon() {};
 
@@ -61,8 +62,6 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		void computeNumericalFluxesVertical();
 		void updateUnknowns(float dt);
 
-		float computeTime;
-		double computeTimeWall;
 
 		SWE_DimensionalSplittingChameleon* left;
 		SWE_DimensionalSplittingChameleon* right;
@@ -76,9 +75,9 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
         void connectLocalNeighbours(std::array<std::shared_ptr<SWE_DimensionalSplittingChameleon>,4> neighbourBlocks);
 
         int neighbourLocality[4];
-		// TODO: remove
 
-    void writeTimestep(float timestep);
+        CollectorChameleon collector;
+        void writeTimestep(float timestep);
 		MPI_Datatype HORIZONTAL_BOUNDARY;
         NetCdfWriter *writer;
         bool write;
@@ -111,14 +110,11 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		Float2DNative hvNetUpdatesBelow;
 		Float2DNative hvNetUpdatesAbove;
 
-		// timer
-		double computeClock;
-		struct timespec startTime;
-		struct timespec endTime;
+
 
     void exchangeBathymetry();
 };
 
-double getTime();
+
 
 #endif /* SWEDIMENSIONALSPLITTING_HH_ */

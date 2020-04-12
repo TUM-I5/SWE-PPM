@@ -15,7 +15,8 @@
 #include <algorithm>
 #include <iostream>
 #include "tools/args.hh"
-
+#include "chameleon.h"
+#include "tools/CollectorChameleon.hpp"
 #ifdef WRITENETCDF
 
 #include "writer/NetCdfWriter.hh"
@@ -217,6 +218,10 @@ int main(int argc, char** argv) {
 
     }
 
+#pragma omp parallel
+    {
+        chameleon_thread_init();
+    }
 
 
 
@@ -226,8 +231,6 @@ int main(int argc, char** argv) {
     
     std::vector<float> timesteps;
     float maxLocalTimestep;
-
-    //for (auto &block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
 
     if (localTimestepping) {
         float localTimestep = 0;
@@ -254,43 +257,61 @@ int main(int argc, char** argv) {
         }
     }
 
-
+    CollectorChameleon collector;
     // loop over the count of requested checkpoints
     for (int i = 0; i < numberOfCheckPoints; i++) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
             do {
-
+                collector.startCounter(CollectorChameleon::CTR_WALL);
                 for (auto &block: simulationBlocks)block->setGhostLayer();
 
                 for (auto &block: simulationBlocks)block->receiveGhostLayer();
 
+#pragma omp parallel
+                {
+#pragma omp for
+                    for (auto &block: simulationBlocks){
+                        block->computeNumericalFluxesHorizontal();
+                    }
+                    chameleon_distributed_taskwait(0);
+                }
 
-                for (auto &block: simulationBlocks)block->computeNumericalFluxesHorizontal();
 
                 if (!localTimestepping) {
+                    collector.startCounter(CollectorChameleon::CTR_REDUCE);
                     timesteps.clear();
                     for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
 
                     float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
-
-
                     MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
 
                     for (auto &block: simulationBlocks)block->maxTimestep = timestep;
+                    collector.stopCounter(CollectorChameleon::CTR_REDUCE);
                 }else {
-
                     for (auto &block: simulationBlocks){
-                        //if(block->allGhostlayersInSync())
-                        //block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                        if(block->allGhostlayersInSync()){
+                            block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                        }
                     }
+
                 }
 
-                for (auto &block: simulationBlocks)block->computeNumericalFluxesVertical();
+#pragma omp parallel
+                {
+#pragma omp for
+                    for (auto &block: simulationBlocks){
+                        block->computeNumericalFluxesVertical();
+                    }
+                    chameleon_distributed_taskwait(0);
+                }
 
+#pragma omp parallel for
+                for (auto &block: simulationBlocks){
+                    block->updateUnknowns(timestep);
+                }
 
-                for (auto &block: simulationBlocks)block->updateUnknowns(timestep);
-
+                collector.stopCounter(CollectorChameleon::CTR_WALL);
 
                 if (localTimestepping) {
                     //if each block got the maxLocalTimestep the timestep is finished
@@ -298,7 +319,6 @@ int main(int argc, char** argv) {
                     for (auto &block : simulationBlocks) {
                         if (!block->hasMaxLocalTimestep()) {
                             synchronizedTimestep = false;
-                             //break;
                         }
                     }
                 }
@@ -320,14 +340,27 @@ int main(int argc, char** argv) {
             }
         }
     }
-
+    if (localityRank == 0) {
+       collector.setMasterSettings(true, outputBaseName + ".log");
+    }
     for (auto &block: simulationBlocks) {
-     //   collector += block->collector;
+        collector += block->collector;
         if(write)
             delete block->writer;
     }
 
-//    collector.logResults();
+    for (auto &block: simulationBlocks) {
+            block->freeMpiType();
+        }
+
+
+#pragma omp parallel
+    {
+        chameleon_thread_finalize();
+    }
+     chameleon_finalize();
+
+   collector.logResults();
     MPI_Finalize();
 
 }

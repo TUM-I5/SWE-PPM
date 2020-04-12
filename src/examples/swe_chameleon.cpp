@@ -657,9 +657,9 @@ int main(int argc, char** argv) {
 
     #pragma omp parallel
     {
-       // chameleon_thread_finalize();
+	    chameleon_thread_finalize();
     }
-   // chameleon_finalize();
+	chameleon_finalize();
 
 	if(write && myRank == 0)
 		delete writer;

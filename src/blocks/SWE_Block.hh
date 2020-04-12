@@ -371,7 +371,6 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
                     copyGhostlayer(static_cast<Boundary>(border));
                     receivedGhostlayer[border] =  GL_SYNC;
 
-
                 } else if ((borderTimestep[border] > getTotalLocalTimestep())) {
                     //This case we need to interpolate and thus do not expect a new timestep in the next iteration.
                     interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
@@ -395,7 +394,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
 
 
 
-#ifndef DEBUG
+#ifdef DEBUG
         printLtsStats();
 #endif
 
