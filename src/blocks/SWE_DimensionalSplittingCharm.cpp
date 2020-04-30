@@ -67,7 +67,8 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 #ifdef ASAGI
     SWE_AsagiScenario scenario(bathymetryFilename, displacementFilename);
 #else
-    SWE_RadialDamBreakScenario scenario = SWE_RadialDamBreakScenario();
+    //SWE_RadialDamBreakScenario scenario = SWE_RadialDamBreakScenario();
+    SWE_RadialBathymetryDamBreakScenario scenario = SWE_RadialBathymetryDamBreakScenario();
 #endif
     initScenario(scenario, boundaries);
     if(write){

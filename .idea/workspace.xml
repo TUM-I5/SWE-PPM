@@ -2,11 +2,10 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
+      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_chameleon" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
     </generated>
@@ -20,6 +19,10 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +68,6 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -74,6 +76,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -88,53 +91,53 @@
       <recent name="$PROJECT_DIR$/src/types" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.swe_benchmark_chameleon">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
+  <component name="RunManager" selected="CMake Application.swe_benchmark_default">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="block_component_component" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="block_component_component" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="execute_chameleon" type="CMakeRunConfiguration" factoryName="Application" activateToolWindowBeforeRun="false" PROGRAM_PARAMS="mpirun -n 256 cmake-build-release/swe_benchmark_chameleon -t 20 -n 20 -x 1024 -y 1024 -o ./mpi -l 1 " WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="swe_benchmark" TARGET_NAME="swe_benchmark_chameleon" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_chameleon">
+    <configuration name="execute_chameleon" type="CMakeRunConfiguration" factoryName="Application" activateToolWindowBeforeRun="false" PROGRAM_PARAMS="mpirun -n 256 cmake-build-release/swe_benchmark_chameleon -t 20 -n 20 -x 1024 -y 1024 -o ./mpi -l 1 " REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="swe_benchmark" TARGET_NAME="swe_benchmark_chameleon" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_chameleon">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="no_component_component" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="no_component_component" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe-benchmark" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_default" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe-benchmark" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_default" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_chameleon" type="CMakeRunConfiguration" factoryName="Application" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_chameleon" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_chameleon" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_chameleon" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_default" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_default" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_default" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_default" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_hpx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--simulation-duration 20 --checkpoint-count 20 --resolution-horizontal 1024 --resolution-vertical 1024 --output-basepath output/hpx --blocks 256 --local-timestepping 1" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_hpx" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_hpx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="--simulation-duration 20 --checkpoint-count 20 --resolution-horizontal 1024 --resolution-vertical 1024 --output-basepath output/hpx --blocks 256 --local-timestepping 1" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_hpx" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_mpi" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_mpi" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_mpi" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_mpi" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_upcxx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_upcxx" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_upcxx" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-t 30 -n 5 -x 100 -y 100 -o output/test" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_upcxx" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -150,18 +153,6 @@
       <item itemvalue="CMake Application.swe_benchmark_mpi" />
       <item itemvalue="CMake Application.swe_benchmark_upcxx" />
     </list>
-  </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -306,14 +297,13 @@
       <workItem from="1586438732997" duration="5011000" />
       <workItem from="1586544718432" duration="116000" />
       <workItem from="1586626274190" duration="11277000" />
-      <workItem from="1586691990063" duration="17533000" />
-    </task>
-    <task id="LOCAL-00225" summary="added experimental swe_chameleon_new.cpp">
-      <created>1586258729291</created>
-      <option name="number" value="00225" />
-      <option name="presentableId" value="LOCAL-00225" />
-      <option name="project" value="LOCAL" />
-      <updated>1586258729291</updated>
+      <workItem from="1586691990063" duration="17831000" />
+      <workItem from="1586864762516" duration="303000" />
+      <workItem from="1586958829636" duration="332000" />
+      <workItem from="1587147161838" duration="1555000" />
+      <workItem from="1587477167306" duration="2835000" />
+      <workItem from="1587562638341" duration="2015000" />
+      <workItem from="1588268692567" duration="2110000" />
     </task>
     <task id="LOCAL-00226" summary="added experimental swe_chameleon_new.cpp">
       <created>1586259041619</created>
@@ -651,11 +641,18 @@
       <option name="project" value="LOCAL" />
       <updated>1586718913975</updated>
     </task>
-    <option name="localTasksCounter" value="274" />
+    <task id="LOCAL-00274" summary="&#10;added fast reduce hpx">
+      <created>1586719624685</created>
+      <option name="number" value="00274" />
+      <option name="presentableId" value="LOCAL-00274" />
+      <option name="project" value="LOCAL" />
+      <updated>1586719624685</updated>
+    </task>
+    <option name="localTasksCounter" value="275" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ORDER">
@@ -672,16 +669,14 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="Added Collect for all frameworks&#10;Chameleon not tested but very confident that it works&#10;Added Cmake support for all frameworks besides charm" />
     <MESSAGE value="Cleaned HPX implementation&#10;Added cmake support" />
     <MESSAGE value="Improved Performance of local timestepping&#10;fixed bug in upcxx implementation" />
@@ -719,12 +714,12 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="2478" y="149" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586718913911">
+    <state x="2478" y="149" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586719624630">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
     <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586716561036" />
-    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586718913911" />
+    <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586719624630" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586715016851">
       <screen x="0" y="27" width="1920" height="1053" />
