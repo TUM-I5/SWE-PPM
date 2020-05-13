@@ -15,8 +15,10 @@
 #include <algorithm>
 #include <iostream>
 #include "tools/args.hh"
+#include <limits.h>
 #include "chameleon.h"
 #include "tools/CollectorChameleon.hpp"
+#include <unistd.h>
 #ifdef WRITENETCDF
 
 #include "writer/NetCdfWriter.hh"
@@ -116,7 +118,11 @@ int main(int argc, char** argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &localityCount);
     MPI_Comm_rank(MPI_COMM_WORLD, &localityRank);
 
+    // Print status
+    char hostname[HOST_NAME_MAX];
+    gethostname(hostname, HOST_NAME_MAX);
 
+    printf("%i Spawned at %s\n", localityRank, hostname);
     int totalRanks = ranksPerLocality * localityCount;
 
     // Compute when (w.r.t. to the simulation time in seconds) the checkpoints are reached
