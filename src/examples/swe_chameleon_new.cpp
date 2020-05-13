@@ -267,10 +267,25 @@ int main(int argc, char** argv) {
             do {
 
                 collector.startCounter(CollectorChameleon::CTR_WALL);
+#pragma omp parallel
+                {
+#pragma omp for
+                for (int i = 0; i < simulationBlocks.size(); i++){
+                        simulationBlocks[i]->setGhostLayer();
+                    }
 
-                for (auto &block: simulationBlocks)block->setGhostLayer();
+                }
+#pragma omp parallel
+                {
+#pragma omp for
+                    for (int i = 0; i < simulationBlocks.size(); i++){
+                        simulationBlocks[i]->receiveGhostLayer();
+                    }
 
-                for (auto &block: simulationBlocks)block->receiveGhostLayer();
+                }
+                /*for (auto &block: simulationBlocks)block->setGhostLayer();
+
+                for (auto &block: simulationBlocks)block->receiveGhostLayer();*/
 
 #pragma omp parallel
                 {

@@ -21,8 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -311,13 +309,6 @@
       <workItem from="1587477167306" duration="2835000" />
       <workItem from="1587562638341" duration="2015000" />
       <workItem from="1588268692567" duration="2110000" />
-    </task>
-    <task id="LOCAL-00226" summary="added experimental swe_chameleon_new.cpp">
-      <created>1586259041619</created>
-      <option name="number" value="00226" />
-      <option name="presentableId" value="LOCAL-00226" />
-      <option name="project" value="LOCAL" />
-      <updated>1586259041619</updated>
     </task>
     <task id="LOCAL-00227" summary="added experimental swe_chameleon_new.cpp">
       <created>1586259154713</created>
@@ -655,7 +646,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586719624685</updated>
     </task>
-    <option name="localTasksCounter" value="275" />
+    <task id="LOCAL-00275" summary="Changed exchangeBathymetry for Chameleon">
+      <created>1589369900464</created>
+      <option name="number" value="00275" />
+      <option name="presentableId" value="LOCAL-00275" />
+      <option name="project" value="LOCAL" />
+      <updated>1589369900465</updated>
+    </task>
+    <option name="localTasksCounter" value="276" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -684,7 +682,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added Collect for all frameworks&#10;Chameleon not tested but very confident that it works&#10;Added Cmake support for all frameworks besides charm" />
     <MESSAGE value="Cleaned HPX implementation&#10;Added cmake support" />
     <MESSAGE value="Improved Performance of local timestepping&#10;fixed bug in upcxx implementation" />
     <MESSAGE value="Fixed CHARM bug with double send of messages&#10;&#10;what kind of retard implemented this ?!" />
@@ -709,7 +706,8 @@
     <MESSAGE value="Added all new scenarios" />
     <MESSAGE value="fixed lts bug in hpx" />
     <MESSAGE value="&#10;added fast reduce hpx" />
-    <option name="LAST_COMMIT_MESSAGE" value="&#10;added fast reduce hpx" />
+    <MESSAGE value="Changed exchangeBathymetry for Chameleon" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed exchangeBathymetry for Chameleon" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2224" y="125" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1586284687472">
@@ -721,11 +719,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="2478" y="149" width="865" height="930" key="CommitChangelistDialog2" timestamp="1586719624630">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1589369900360">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
-    <state x="554" y="116" width="909" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586716561036" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1589369900360" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586719624630" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586715016851">
@@ -799,7 +797,6 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="430" y="187" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585765313288" />
-    <state x="2350" y="164" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579716034703" />
     <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1580915228026" />
     <state x="733" y="206" width="444" height="665" key="VCS.ChangeListViewerDialog" timestamp="1586200396879">
       <screen x="0" y="27" width="1920" height="1053" />
@@ -818,7 +815,6 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586700226128" />
-    <state x="2681" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579700332116" />
     <state x="2344" y="27" width="1452" height="831" maximized="true" key="dock-window-1" timestamp="1586692745204">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -828,7 +824,6 @@
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2261" y="27" width="1350" height="1008" maximized="true" key="dock-window-2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586343075915" />
-    <state x="429" y="0" width="1369" height="1011" key="dock-window-2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579746881312" />
     <state x="2273" y="27" width="1368" height="872" maximized="true" key="dock-window-3" timestamp="1586043995535">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
@@ -846,13 +841,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="657" y="274" key="run.anything.popup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585163484839" />
-    <state x="2577" y="253" key="run.anything.popup/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579614118945" />
     <state x="701" y="274" key="run.anything.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1583179683642" />
     <state x="656" y="278" width="672" height="662" key="search.everywhere.popup" timestamp="1586343057560">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="656" y="278" width="672" height="662" key="search.everywhere.popup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586343057560" />
-    <state x="2576" y="257" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1579729284488" />
     <state x="700" y="278" width="672" height="662" key="search.everywhere.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1583607050863" />
   </component>
   <component name="XDebuggerManager">
