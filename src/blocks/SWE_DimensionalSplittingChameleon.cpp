@@ -156,8 +156,56 @@ int getTag(int rank, int tag){
     return (rank<<10)|tag;
 }
 
-void SWE_DimensionalSplittingChameleon::exchangeBathymetry() {
 
+
+void SWE_DimensionalSplittingChameleon::recvBathymetry() {
+
+    /***********
+     * RECEIVE *
+     **********/
+
+    MPI_Request recvReqs[4];
+    MPI_Status stati[4];
+
+    if (boundaryType[BND_LEFT] == CONNECT) {
+        int startIndex = 1;
+        MPI_Irecv(b.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_LEFT], getTag(myRank,MPI_TAG_OUT_B_RIGHT),
+                  MPI_COMM_WORLD, &recvReqs[BND_LEFT]);
+    } else {
+        recvReqs[BND_LEFT] = MPI_REQUEST_NULL;
+    }
+
+    if (boundaryType[BND_RIGHT] == CONNECT) {
+        int startIndex = (nx + 1) * (ny + 2) + 1;
+        MPI_Irecv(b.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_RIGHT], getTag(myRank,MPI_TAG_OUT_B_LEFT),
+                  MPI_COMM_WORLD, &recvReqs[BND_RIGHT]);
+    } else {
+        recvReqs[BND_RIGHT] = MPI_REQUEST_NULL;
+    }
+
+    if (boundaryType[BND_BOTTOM] == CONNECT) {
+        for (int i = 1; i < nx + 1; i++) {
+            MPI_Irecv(&b[i][0], 1, MPI_FLOAT, neighbourLocality[BND_BOTTOM], getTag(myRank,MPI_TAG_OUT_B_TOP), MPI_COMM_WORLD,
+                      &recvReqs[BND_BOTTOM]);
+        }
+    } else {
+        recvReqs[BND_BOTTOM] = MPI_REQUEST_NULL;
+    }
+
+    if (boundaryType[BND_TOP] == CONNECT) {
+        for (int i = 1; i < nx + 1; i++) {
+            MPI_Irecv(&b[i][ny + 1], 1, MPI_FLOAT, neighbourLocality[BND_TOP], getTag(myRank,MPI_TAG_OUT_B_BOTTOM), MPI_COMM_WORLD,
+                      &recvReqs[BND_TOP]);
+        }
+    } else {
+        recvReqs[BND_TOP] = MPI_REQUEST_NULL;
+    }
+
+    MPI_Waitall(4, recvReqs, stati);
+
+}
+
+void SWE_DimensionalSplittingChameleon::sendBathymetry() {
 
     if (boundaryType[BND_RIGHT] == CONNECT_WITHIN_RANK) {
         for (int i = 1; i < ny + 1; i++) {
@@ -215,51 +263,7 @@ void SWE_DimensionalSplittingChameleon::exchangeBathymetry() {
         }
     }
 
-    /***********
-     * RECEIVE *
-     **********/
-
-    MPI_Request recvReqs[4];
-    MPI_Status stati[4];
-
-    if (boundaryType[BND_LEFT] == CONNECT) {
-        int startIndex = 1;
-        MPI_Irecv(b.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_LEFT], getTag(myRank,MPI_TAG_OUT_B_RIGHT),
-                  MPI_COMM_WORLD, &recvReqs[BND_LEFT]);
-    } else {
-        recvReqs[BND_LEFT] = MPI_REQUEST_NULL;
-    }
-
-    if (boundaryType[BND_RIGHT] == CONNECT) {
-        int startIndex = (nx + 1) * (ny + 2) + 1;
-        MPI_Irecv(b.getRawPointer() + startIndex, ny, MPI_FLOAT, neighbourLocality[BND_RIGHT], getTag(myRank,MPI_TAG_OUT_B_LEFT),
-                  MPI_COMM_WORLD, &recvReqs[BND_RIGHT]);
-    } else {
-        recvReqs[BND_RIGHT] = MPI_REQUEST_NULL;
-    }
-
-    if (boundaryType[BND_BOTTOM] == CONNECT) {
-        for (int i = 1; i < nx + 1; i++) {
-            MPI_Irecv(&b[i][0], 1, MPI_FLOAT, neighbourLocality[BND_BOTTOM], getTag(myRank,MPI_TAG_OUT_B_TOP), MPI_COMM_WORLD,
-                      &recvReqs[BND_BOTTOM]);
-        }
-    } else {
-        recvReqs[BND_BOTTOM] = MPI_REQUEST_NULL;
-    }
-
-    if (boundaryType[BND_TOP] == CONNECT) {
-        for (int i = 1; i < nx + 1; i++) {
-            MPI_Irecv(&b[i][ny + 1], 1, MPI_FLOAT, neighbourLocality[BND_TOP], getTag(myRank,MPI_TAG_OUT_B_BOTTOM), MPI_COMM_WORLD,
-                      &recvReqs[BND_TOP]);
-        }
-    } else {
-        recvReqs[BND_TOP] = MPI_REQUEST_NULL;
-    }
-
-    MPI_Waitall(4, recvReqs, stati);
-
 }
-
 
 
 void SWE_DimensionalSplittingChameleon::setGhostLayer() {

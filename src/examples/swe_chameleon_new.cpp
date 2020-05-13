@@ -225,7 +225,8 @@ int main(int argc, char** argv) {
     chameleon_determine_base_addresses((void *)&main);
 
 
-    for (auto &block: simulationBlocks)block->exchangeBathymetry();
+    for (auto &block: simulationBlocks)block->sendBathymetry();
+    for (auto &block: simulationBlocks)block->recvBathymetry();
 
 
     

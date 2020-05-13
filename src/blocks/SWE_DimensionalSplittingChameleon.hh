@@ -112,7 +112,9 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 
 
 
-    void exchangeBathymetry();
+
+    void sendBathymetry();
+    void recvBathymetry();
 };
 
 
