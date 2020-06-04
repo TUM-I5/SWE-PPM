@@ -97,7 +97,7 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
                                            std::string outputBaseName,
                                            std::string const &batFile,
                                            std::string const &displFile,
-                                           bool localTimestepping, bool write) {
+                                          float localTimestepping, bool write) {
 
 
     // Initialize Scenario
@@ -107,6 +107,7 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
     //SWE_HalfDomainDry scenario;
     //SWE_RadialDamBreakScenario scenario;
     SWE_RadialBathymetryDamBreakScenario scenario;
+
 #endif
 
     int totalRanks = ranksPerLocality * localityCount;
@@ -183,7 +184,7 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
 
         std::array<int, 4> myNeighbours = getNeighbours(localBlockPositionX, localBlockPositionY, blockCountX,
                                                         blockCountY, myHpxRank);
-        std::string outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
+        std::string outputFileName = outputBaseName+"_"+std::to_string(myHpxRank);
 
        // std::cout << myHpxRank<< "| " <<localOriginX<< " "<< localOriginY<< " " <<  nxLocal << " " << nyLocal << std::endl;
         simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingHpx>(
@@ -216,6 +217,7 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
         simulationBlocks[i - startPoint]->connectNeighbours(
                 SWE_DimensionalSplittingHpx::communicator_type(myHpxRank, totalHpxRanks, refinedNeighbours,
                                                                neighbourBlocks));
+        simulationBlocks[i - startPoint]->setRank(i);
     }
 
 }
@@ -269,7 +271,9 @@ void SWE_Hpx_No_Component::run() {
             localityChannel.set(std::move(minTimestep));
             maxLocalTimestep = localityChannel.get()[0].get();
         }
+        maxLocalTimestep = localTimestepping;
         std::cout << "Max Local Timestep is " << maxLocalTimestep << std::endl;
+
         for (auto &block: simulationBlocks)block->setMaxLocalTimestep(maxLocalTimestep);
     }
 
@@ -405,7 +409,10 @@ void SWE_Hpx_No_Component::run() {
             // update simulation time with time step width.
             t += localTimestepping ? maxLocalTimestep : timestep;
             if(localTimestepping){
-                for (auto &block: simulationBlocks)block->resetStepSizeCounter();
+                for (auto &block: simulationBlocks){
+
+                    block->resetStepSizeCounter();
+                }
             }
         }
 

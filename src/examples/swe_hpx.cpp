@@ -80,7 +80,7 @@ int hpx_main(hpx::program_options::variables_map &vm) {
     std::string outputBaseName;
     std::string batFile;
     std::string displFile;
-    bool localTimestepping;
+    float localTimestepping;
     bool write;
     simulationDuration = vm["simulation-duration"].as<float>();
     numberOfCheckPoints = vm["checkpoint-count"].as<int>();
@@ -88,7 +88,7 @@ int hpx_main(hpx::program_options::variables_map &vm) {
     nyRequested = vm["resolution-vertical"].as<int>();
     totalRanks = vm["blocks"].as<int>();
     outputBaseName = vm["output-basepath"].as<std::string>();
-    localTimestepping = vm["local-timestepping"].as<bool>();
+    localTimestepping = vm["local-timestepping"].as<float>();
     write = vm["write"].as<bool>();
 #ifdef ASAGI
     batFile = vm["bathymetry-file"].as<std::string>();
@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
             ("resolution-vertical", value<int>()->default_value(100), "Number of simulated cells in y-direction")
             ("output-basepath,o", value<std::string>()->default_value("hpx_output"), "Output base file name")
             ("blocks", value<int>()->default_value(1), "Number of swe blocks")
-            ("local-timestepping", value<bool>()->default_value(false), "Number of swe blocks")
+            ("local-timestepping", value<float>()->default_value(0), "Number of swe blocks")
             ("write,w", value<bool>()->default_value(false), "Write netcdf if set");
     // Initialize and run HPX, this example requires to run hpx_main on all
     // localities

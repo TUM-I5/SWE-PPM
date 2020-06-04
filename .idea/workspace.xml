@@ -7,9 +7,9 @@
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -21,7 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +45,7 @@
     <expand />
     <select />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="FavoritesManager">
     <favorites_list name="swe_benchmark" />
   </component>
@@ -126,7 +126,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="swe_benchmark_gpi" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_gpi" EXPLICIT_BUILD_TARGET_NAME="all">
+    <configuration name="swe_benchmark_gpi" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Release" RUN_TARGET_PROJECT_NAME="swe_benchmark" RUN_TARGET_NAME="swe_benchmark_gpi" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -722,15 +722,13 @@
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1589371566745">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="558" y="172" width="860" height="807" key="CommitChangelistDialog2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914466603" />
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1589371566745" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586719624630" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1586715016851">
+    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1591287980046">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="167" y="149" key="DiffContextDialog/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914290668" />
-    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586715016851" />
+    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591287980046" />
     <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777842585" />
     <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586714223845">
       <screen x="0" y="27" width="1920" height="1053" />
@@ -797,7 +795,6 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="430" y="187" key="SettingsEditor/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585765313288" />
-    <state x="482" y="187" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1580915228026" />
     <state x="733" y="206" width="444" height="665" key="VCS.ChangeListViewerDialog" timestamp="1586200396879">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -805,8 +802,15 @@
     <state x="588" y="308" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1585569817768">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="588" y="308" key="Vcs.Push.Dialog.v2/0.27.1920.1053/1920.0.1920.1080@0.27.1920.1053" timestamp="1580914313599" />
     <state x="588" y="308" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569817768" />
+    <state x="100" y="98" width="1720" height="882" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1591287980046">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="100" y="98" width="1720" height="882" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591287980046" />
+    <state x="100" y="98" width="1720" height="882" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1591287980046">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="100" y="98" width="1720" height="882" key="com.intellij.history.integration.ui.views.FileHistoryDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591287980046" />
     <state x="613" y="157" width="613" height="764" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1586215200624">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -864,11 +868,6 @@
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/types/BlockConnectInterface.hh</url>
           <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/examples/swe_upcxx.cpp</url>
-          <line>245</line>
-          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -36,7 +36,7 @@ public:
                          std::string outputBaseName,
                          std::string const &batFile,
                          std::string const &displFile,
-                         bool localTimestepping,
+                         float localTimestepping,
                          bool write);
 
     void run();
@@ -50,7 +50,7 @@ private:
     localityChannel_type localityChannel;
     std::vector<std::shared_ptr<SWE_DimensionalSplittingHpx>> simulationBlocks;
     std::string outputBaseName;
-    bool localTimestepping;
+    float localTimestepping;
     bool write;
 
 };

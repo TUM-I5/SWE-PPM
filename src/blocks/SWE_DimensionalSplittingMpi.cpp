@@ -412,8 +412,9 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
     }
 
     CollectorMpi::getInstance().addFlops(nx * ny * 135);
-
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+
+
     if (localTimestepping) {
 
         maxTimestep = getRoundTimestep(maxTimestep);
@@ -429,7 +430,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
         maxTimestep = maxTimestepGlobal;
 
     }
-
+    CollectorMpi::getInstance().addTimestep(maxTimestep);
 
 #pragma omp parallel private(solver)
     {

@@ -112,12 +112,14 @@ class SWE_RadialBathymetryDamBreakScenario : public SWE_Scenario {
 public:
 
     float getBathymetry(float x, float y) {
-        return (std::sqrt((x - 500.f) * (x - 500.f) + (y - 500.f) * (y - 500.f)) < 50.f) ? 40.f : 10.f;
+        return (std::sqrt((x - 500.f) * (x - 500.f) + (y - 500.f) * (y - 500.f)) < 50.f)
+        || (std::sqrt((x - 500.f) * (x - 500.f) + (y - 250.f) * (y - 250.f)) < 50.f)
+        ? 40.f : -10.f;
     };
 
     virtual float endSimulation() { return (float) 15; };
 
-    virtual BoundaryType getBoundaryType(Boundary edge) { return OUTFLOW; };
+    virtual BoundaryType getBoundaryType(Boundary edge) { return WALL; };
 
     /** Get the boundary positions
      *
@@ -143,7 +145,9 @@ public:
      * @return water height (before the initial displacement)
      */
     float getWaterHeight(float x, float y) {
-        return (sqrt((x - 250.f) * (x - 250.f) + (y - 250.f) * (y - 250.f)) < 100.f) ? 20.f : 10.0f;
+        return (sqrt((x - 250.f) * (x - 250.f) + (y - 250.f) * (y - 250.f)) < 100.f) ||
+                       (sqrt((x - 750.f) * (x - 750.f) + (y - 750.f) * (y - 750.f)) < 100.f)
+        ? 30.f : 20.0f;
     };
 };
 /**

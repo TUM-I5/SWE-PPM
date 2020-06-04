@@ -386,10 +386,13 @@ for(int i = 0; i < nx+1 ; i++)test.push_back(i);
 
     // compute max timestep according to cautious CFL-condition
     maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-    if (localTimestepping) {
-        maxTimestep = getRoundTimestep(maxTimestep);
 
+    if (localTimestepping) {
+        maxTimestep = getRoundTimestep(maxHorizontalWaveSpeed);
     }
+    //maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+   // if( maxTimestep > (float) .4 * (dx / maxHorizontalWaveSpeed))std::cout << "Timestep too big!" << maxHorizontalWaveSpeed<<" " << ((float) .4 * (dx / maxHorizontalWaveSpeed)) << " " << maxTimestep <<std::endl;
+    collector.addTimestep(maxTimestep);
     maxTimestepGlobal = maxTimestep;
 
 
@@ -469,6 +472,7 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
     for (int x = 1; x < nx + 1; x++) {
         for (int y = 1; y < ny + 1; y++) {
             h[x][y] = hStar[x][y] - (maxTimestep / dx) * (hNetUpdatesBelow[x][y] + hNetUpdatesAbove[x][y]);
+            //if(h[x][y]< 0){ std::cout << "negative val " <<h[x][y] << std::endl; }
             hu[x][y] = huStar[x][y];
             hv[x][y] = hv[x][y] - (maxTimestep / dx) * (hvNetUpdatesBelow[x][y] + hvNetUpdatesAbove[x][y]);
         }

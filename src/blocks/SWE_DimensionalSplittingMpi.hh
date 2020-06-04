@@ -116,7 +116,7 @@ private:
     //float* bottomCopyBuffer[nx];
 
     // Neighbouring block rank ids, indexed by Boundary
-    int neighbourRankId[4];
+    //int neighbourRankId[4];
 
     // Custom data types for bottom/top border which are requrired due to the stride
     MPI_Datatype HORIZONTAL_BOUNDARY;

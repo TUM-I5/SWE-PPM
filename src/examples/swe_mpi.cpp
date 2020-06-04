@@ -225,7 +225,7 @@ int main(int argc, char **argv) {
 
 
     simulation.connectNeighbours(myNeighbours);
-
+    simulation.setRank(myMpiRank);
     simulation.exchangeBathymetry();
 
 
@@ -283,8 +283,10 @@ if(write){
         // reduce over all ranks
         MPI_Allreduce(&localTimestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
 
-        simulation.setMaxLocalTimestep(maxLocalTimestep);
 
+
+        simulation.setMaxLocalTimestep(maxLocalTimestep);
+        std::cout << "Max Local Timestep is " << maxLocalTimestep << std::endl;
     }
 
     // Initialize wall timer

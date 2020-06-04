@@ -9,7 +9,9 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
-
+#include <vector>
+#include <numeric>
+#include <algorithm>
 class Collector {
 protected:
 
@@ -20,7 +22,7 @@ protected:
     std::array<std::chrono::duration<double>, 4> total_ctrs;
     std::array<double, 4> result_ctrs;
     std::array<std::chrono::steady_clock::time_point, 4> measure_ctrs;
-
+    std::vector<float> timesteps;
 public:
     enum COUNTERS {
         CTR_EXCHANGE, CTR_BARRIER, CTR_REDUCE, CTR_WALL
@@ -33,6 +35,7 @@ public:
         }
         total_ctrs[CTR_WALL] = std::max(total_ctrs[CTR_WALL],
                                         other.total_ctrs[CTR_WALL]); //so we dont add WALL time together
+        timesteps.insert( timesteps.end(), other.timesteps.begin(), other.timesteps.end() );
         return *this;
     }
 
@@ -43,7 +46,9 @@ public:
         is_master = master;
         this->log_name = log_name;
     }
-
+    void addTimestep(float timestep){
+        timesteps.push_back(timestep);
+    }
     void startCounter(COUNTERS ctr) {
         measure_ctrs[ctr] = std::chrono::steady_clock::now();
     }
@@ -57,15 +62,34 @@ public:
     }
 
     void printCounter() {
+
+        auto timestepMinMax =  std::minmax_element(timesteps.begin(),timesteps.end());
+        float timestepAvg = std::accumulate(timesteps.begin(), timesteps.end(), 0.0f)/(float)timesteps.size();
+
         std::cout << "Flop count: " << group_flop_ctr << std::endl
                   << "Flops: " << ((float) 1e-9 * group_flop_ctr / result_ctrs[CTR_WALL]) << "GFLOPS" << std::endl
                   << "Wall Time: " << result_ctrs[CTR_WALL] << "s" << std::endl
                   << "Communication Time: " << result_ctrs[CTR_EXCHANGE] << "s" << std::endl
-                  << "Reduction Time: " << result_ctrs[CTR_REDUCE] << "s" << std::endl;
+                  << "Reduction Time: " << result_ctrs[CTR_REDUCE] << "s" << std::endl
+                  << "Timesteps Min: " << *timestepMinMax.first << " Max: " << *timestepMinMax.second << " Average: "<< timestepAvg << std::endl;
     }
 
     virtual void collect() = 0;
+    void writeTimestepData(){
 
+        std::ofstream logfile;
+        std::size_t pos = log_name.find(".log");      // position of "live" in str
+
+        std::string stripped_log_name = log_name.substr (0,pos);
+        std::string filename = stripped_log_name+"_timesteps.log";
+
+        logfile.open(filename, std::ios_base::out);
+        for(auto ts : timesteps){
+            logfile << ts<< std::endl;
+        }
+
+        logfile.close();
+    }
     void writeLog() {
         std::ifstream tmp(log_name);
         bool exists = false;
@@ -98,6 +122,7 @@ public:
         if (is_master) {
             printCounter();
             writeLog();
+            writeTimestepData();
         }
     }
 
