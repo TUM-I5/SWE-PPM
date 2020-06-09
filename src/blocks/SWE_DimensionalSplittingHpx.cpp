@@ -323,83 +323,81 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 }
 
 void SWE_DimensionalSplittingHpx::computeXSweep() {
+//maximum (linearized) wave speed within one iteration
+    float maxWaveSpeed = (float) 0.;
 
-    if (!allGhostlayersInSync()) return;
+    /***************************************************************************************
+     * compute the net-updates for the vertical edges
+     **************************************************************************************/
 
+    for (int i = 1; i < nx+2; i++) {
+        for (int j=1; j < ny+1; ++j) {
+            float maxEdgeSpeed;
 
-    //maximum (linearized) wave speed within one iteration
-    float maxHorizontalWaveSpeed = (float) 0.;
-
-
-
-    // x-sweep, compute the actual domain plus ghost rows above and below
-    // iterate over cells on the x-axis, leave out the last column (two cells per computation)
-
-
-/*std::vector<int> test;
-test.reserve(nx+1);
-for(int i = 0; i < nx+1 ; i++)test.push_back(i);
-*/
-/*
-    hpx::parallel::for_loop(hpx::parallel::execution::par,
-                                                      0,nx+1,
-
-                                                       [this ,&maxHorizontalWaveSpeed](int x)
-                                                       {
-                                                            float localWaveSpeed;
-                                                           for (int y = 0; y < ny+2; y++) {
-                                                               solver.computeNetUpdates (
-                                                                       h[x][y], h[x + 1][y],
-                                                                       hu[x][y], hu[x + 1][y],
-                                                                       b[x][y], b[x + 1][y],
-                                                                       hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
-                                                                       huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                                                                       localWaveSpeed
-                                                               );
-                                                           }
-                                                            if(x == nx) maxHorizontalWaveSpeed =localWaveSpeed;
-                                                       }
-                                                               );*/
-    //   std::cout<< maxHorizontalWaveSpeed << std::endl;
-    //  maxHorizontalWaveSpeed= *std::min_element(wave.begin(), wave.end());
-
-
-    for (int x = 0; x < nx + 1; x++) {
-        const int ny_end = ny + 2;
-        // iterate over all rows, including ghost layer
-
-        for (int y = 0; y < ny_end; y++) {
-            solver.computeNetUpdates(
-                    h[x][y], h[x + 1][y],
-                    hu[x][y], hu[x + 1][y],
-                    b[x][y], b[x + 1][y],
-                    hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
-                    huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                    maxHorizontalWaveSpeed
+            solver.computeNetUpdates (
+                    h[i - 1][j], h[i][j],
+                    hu[i - 1][j], hu[i][j],
+                    b[i - 1][j], b[i][j],
+                    hNetUpdatesLeft[i - 1][j - 1], hNetUpdatesRight[i - 1][j - 1],
+                    huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
+                    maxEdgeSpeed
             );
+
+            //update the thread-local maximum wave speed
+            maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
         }
     }
 
+    /***************************************************************************************
+     * compute the net-updates for the horizontal edges
+     **************************************************************************************/
 
-    collector.addFlops(nx * ny * 135);
+    for (int i=1; i < nx + 1; i++) {
+        for (int j=1; j < ny + 2; j++) {
+            float maxEdgeSpeed;
+
+            solver.computeNetUpdates (
+                    h[i][j - 1], h[i][j],
+                    hv[i][j - 1], hv[i][j],
+                    b[i][j - 1], b[i][j],
+                    hNetUpdatesBelow[i - 1][j - 1], hNetUpdatesAbove[i - 1][j - 1],
+                    hvNetUpdatesBelow[i - 1][j - 1], hvNetUpdatesAbove[i - 1][j - 1],
+                    maxEdgeSpeed
+            );
+
+            //update the maximum wave speed
+            maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
+        }
+    }
+
+    if (maxWaveSpeed > 0.00001) {
+
+        maxTimestep = std::min (dx / maxWaveSpeed, dy / maxWaveSpeed);
+
+        maxTimestep *= (float) .4; //CFL-number = .5
+    } else {
+        //might happen in dry cells
+        maxTimestep = std::numeric_limits<float>::max ();
+    }
+    if (!allGhostlayersInSync()) return;
 
 
-    // compute max timestep according to cautious CFL-condition
-    maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+    collector.addFlops(2*nx * ny * 135);
+
+
 
     if (localTimestepping) {
-        maxTimestep = getRoundTimestep(maxHorizontalWaveSpeed);
+        maxTimestep = getRoundTimestep(maxTimestep);
     }
-    //maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
-   // if( maxTimestep > (float) .4 * (dx / maxHorizontalWaveSpeed))std::cout << "Timestep too big!" << maxHorizontalWaveSpeed<<" " << ((float) .4 * (dx / maxHorizontalWaveSpeed)) << " " << maxTimestep <<std::endl;
+
     collector.addTimestep(maxTimestep);
-    maxTimestepGlobal = maxTimestep;
+
 
 
 }
 
 void SWE_DimensionalSplittingHpx::computeYSweep() {
-    if (!allGhostlayersInSync()) return;
+   /* if (!allGhostlayersInSync()) return;
 
   if(!localTimestepping){
         maxTimestep = maxTimestepGlobal;
@@ -416,27 +414,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep() {
             huStar[x][y] = hu[x][y] - (maxTimestep / dx) * (huNetUpdatesLeft[x][y] + huNetUpdatesRight[x][y]);
         }
     }
-/*
-    hpx::parallel::for_loop(hpx::parallel::execution::par,
-                            0,nx+1,
 
-                            [this ](int x)
-                            {
-                                float localWaveSpeed;
-                                for (int y = 0; y < ny+1; y++) {
-                                    solver.computeNetUpdates (
-                                            h[x][y], h[x][y + 1],
-                                            hv[x][y], hv[x][y + 1],
-                                            b[x][y], b[x][y + 1],
-                                            hNetUpdatesBelow[x][y], hNetUpdatesAbove[x][y + 1],
-                                            hvNetUpdatesBelow[x][y], hvNetUpdatesAbove[x][y + 1],
-                                           localWaveSpeed
-                                    );
-                                }
-
-                            }
-    );
-  */
     for (int x = 1; x < nx + 1; x++) {
         const int ny_end = ny + 1;
         // iterate over all rows, including ghost layer
@@ -453,7 +431,7 @@ void SWE_DimensionalSplittingHpx::computeYSweep() {
     }
     collector.addFlops(nx * ny * 135);
 
-
+*/
 }
 
 
@@ -465,16 +443,28 @@ void SWE_DimensionalSplittingHpx::computeYSweep() {
  */
 void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
     if (!allGhostlayersInSync()) return;
+//update cell averages with the net-updates
+    dt=maxTimestep;
+    for (int i = 1; i < nx+1; i++) {
+        for (int j = 1; j < ny + 1; j++) {
+            h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
+            hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
+            hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
 
-    // this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
-    assert(std::abs(dt - maxTimestep) < 0.00001);
-    //update cell averages with the net-updates
-    for (int x = 1; x < nx + 1; x++) {
-        for (int y = 1; y < ny + 1; y++) {
-            h[x][y] = hStar[x][y] - (maxTimestep / dx) * (hNetUpdatesBelow[x][y] + hNetUpdatesAbove[x][y]);
-            //if(h[x][y]< 0){ std::cout << "negative val " <<h[x][y] << std::endl; }
-            hu[x][y] = huStar[x][y];
-            hv[x][y] = hv[x][y] - (maxTimestep / dx) * (hvNetUpdatesBelow[x][y] + hvNetUpdatesAbove[x][y]);
+            if (h[i][j] < 0) {
+                //TODO: dryTol
+#ifndef NDEBUG
+                // Only print this warning when debug is enabled
+				// Otherwise we cannot vectorize this loop
+				if (h[i][j] < -0.1) {
+					std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" << h[i][j] << std::endl;
+					std::cerr << "         b: " << b[i][j] << std::endl;
+				}
+#endif // NDEBUG
+                //zero (small) negative depths
+                h[i][j] = hu[i][j] = hv[i][j] = 0.;
+            } else if (h[i][j] < 0.1)
+                hu[i][j] = hv[i][j] = 0.; //no water, no speed!
         }
     }
 

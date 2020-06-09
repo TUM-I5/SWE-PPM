@@ -505,7 +505,7 @@ if env['parallelization'] == 'hpx':
 
     boostInstallLib = boostInstall+ '/stage/lib/'
     hpxInstallLib = hpxInstall + '/lib/'
-    hpxInstallLib = hpxInstall + '/lib64/'
+    #hpxInstallLib = hpxInstall + '/lib64/'
     #boostInstallLib = boostInstall
     hwInstallLib = hwInstall + '/lib/'
     hpxIncDir=[hpxInstall+'/include',boostInstall, hwInstall+'/include']

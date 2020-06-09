@@ -20,7 +20,7 @@ simulate_mpi:
 simulate_mpi_rad:
 	mpirun -np 64 ./build/SWE_gnu_release_mpi_hybrid -t 20 -n 20 -x 1024 -y 1024 -o ./mpi -l 1
 simulate_hpx:
-	./build/SWE_gnu_release_hpx_hybrid_vec -e 1000 -n 20 --resolution-horizontal 1000 --resolution-vertical 1000 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 2 --local-timestepping 0
+	./build/SWE_gnu_release_hpx_hybrid_vec -e 16000 -n 20 --resolution-horizontal 1024 --resolution-vertical 1024 -o ./mpi -b ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_bath.nc -d ${DATA_PATH}/tohoku_gebco_ucsb3_2000m_hawaii_displ.nc  --blocks 64 --local-timestepping 12 --write 1
 
 simulate_hpx_rad:
 	 ./build/SWE_gnu_release_hpx_hybrid_vec -e 20 -n 20 --resolution-horizontal 1024 --resolution-vertical 1024 -o ./output/hpx --blocks 32 -local-timestepping 1

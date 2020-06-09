@@ -343,7 +343,7 @@ void SWE_Hpx_No_Component::run() {
                 //barrier
                 if (!localTimestepping) {
                     timesteps.clear();
-                    for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestepGlobal);
+                    for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
 
 
                     float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
@@ -371,7 +371,7 @@ void SWE_Hpx_No_Component::run() {
                     }
                     collector.stopCounter(Collector::CTR_REDUCE);
 
-                    for (auto &block: simulationBlocks)block->maxTimestepGlobal = timestep;
+                    for (auto &block: simulationBlocks)block->maxTimestep = timestep;
 
                 }
 

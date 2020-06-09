@@ -3,13 +3,12 @@
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
       <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_chameleon" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -21,7 +20,14 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SConstruct" beforeDir="false" afterPath="$PROJECT_DIR$/SConstruct" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/scenarios/SWE_simple_scenarios.hh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,9 +52,6 @@
     <select />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
-  <component name="FavoritesManager">
-    <favorites_list name="swe_benchmark" />
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -725,11 +728,11 @@
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1589371566745" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586719624630" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
-    <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog" timestamp="1591287980046">
-      <screen x="0" y="27" width="1920" height="1053" />
+    <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog" timestamp="1591700492103">
+      <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591287980046" />
-    <state x="2087" y="125" width="1536" height="894" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777842585" />
+    <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591700492103" />
     <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1586714223845">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -868,6 +871,11 @@
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/src/types/BlockConnectInterface.hh</url>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/blocks/SWE_Block.hh</url>
+          <line>417</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

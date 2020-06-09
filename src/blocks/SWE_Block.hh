@@ -304,8 +304,8 @@ SWE_Block<T, Buffer>::~SWE_Block() {
 
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::hasMaxLocalTimestep() {
-    return (timestepCounter+1)* maxTimestepLocal < currentTimestep;
-    //return (stepSizeCounter >= stepSize && allGhostlayersInSync());
+    //return (timestepCounter+1)* maxTimestepLocal < currentTimestep;
+    return (stepSizeCounter >= stepSize && allGhostlayersInSync());
 
 
 }
@@ -353,9 +353,6 @@ bool SWE_Block<T, Buffer>::isReceivable(Boundary border) {
 template<typename T, typename Buffer>
 float SWE_Block<T, Buffer>::interpolateValue(float oldval, float newval, float remoteTimestep, Boundary boundary) {
 
-
-    float interpolated= (oldval + (newval - std::abs(oldval)) * (getTotalLocalTimestep() / remoteTimestep));
-    //if (interpolated <0 ) std::cout << myRank<< "| " << boundary<<"|"<< interpolated << " " <<oldval  << " " << newval << " " << remoteTimestep << " " << getTotalLocalTimestep() << std::endl;
     return (oldval + (newval - oldval) * (getTotalLocalTimestep() / remoteTimestep));
 }
 
@@ -403,7 +400,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
         if (allGhostlayersInSync()) {
 
             if (stepSizeCounter < stepSize) {
-                // stepSizeCounter++;
+                stepSizeCounter++;
             }
         }
         iteration++;
@@ -427,6 +424,8 @@ void SWE_Block<T, Buffer>::interpolateGhostlayer(Boundary border, float remoteTi
                 h[nx + 1][i] = interpolateValue(h[nx + 1][i], bufferH[nx + 1][i], remoteTimestep,BND_RIGHT);
                 hu[nx + 1][i] = interpolateValue(hu[nx + 1][i], bufferHu[nx + 1][i], remoteTimestep,BND_RIGHT);
                 hv[nx + 1][i] = interpolateValue(hv[nx + 1][i], bufferHv[nx + 1][i], remoteTimestep,BND_RIGHT);
+
+
             }
             break;
         case BND_BOTTOM:
@@ -434,6 +433,8 @@ void SWE_Block<T, Buffer>::interpolateGhostlayer(Boundary border, float remoteTi
                 h[i][0] = interpolateValue(h[i][0], bufferH[i][0], remoteTimestep,BND_BOTTOM);
                 hu[i][0] = interpolateValue(hu[i][0], bufferHu[i][0], remoteTimestep,BND_BOTTOM);
                 hv[i][0] = interpolateValue(hv[i][0], bufferHv[i][0], remoteTimestep,BND_BOTTOM);
+
+
             }
             break;
         case BND_TOP:
@@ -441,6 +442,8 @@ void SWE_Block<T, Buffer>::interpolateGhostlayer(Boundary border, float remoteTi
                 h[i][ny + 1] = interpolateValue(h[i][ny + 1], bufferH[i][ny + 1], remoteTimestep,BND_TOP);
                 hu[i][ny + 1] = interpolateValue(hu[i][ny + 1], bufferHu[i][ny + 1], remoteTimestep,BND_TOP);
                 hv[i][ny + 1] = interpolateValue(hv[i][ny + 1], bufferHv[i][ny + 1], remoteTimestep,BND_TOP);
+
+
             }
             break;
     }
@@ -503,19 +506,21 @@ void SWE_Block<T, Buffer>::resetStepSizeCounter() {
     timestepCounter++;
 }
 template<typename T, typename Buffer>
-float SWE_Block<T, Buffer>::getRoundTimestep(float waveSpeed) {
+float SWE_Block<T, Buffer>::getRoundTimestep(float timestep) {
 
     if (stepSizeCounter <= 0) {
 
         stepSize = 1;
 
-        float maxPossibleTimestep = (float) .4 * (dx / waveSpeed);
-        while( (((float)maxTimestepLocal)/stepSize) > maxPossibleTimestep){
+        float maxPossibleTimestep = timestep;
+        while( (((float)maxTimestepLocal)/stepSize) > maxPossibleTimestep
+        && (((float)maxTimestepLocal)/maxDivisor) <=  (((float)maxTimestepLocal)/stepSize)){
             stepSize*=2;
         }
 
     }
-    currentTimestep +=   (float) maxTimestepLocal / stepSize;
+    //stepSize = 32;
+    //currentTimestep +=  (float) maxTimestepLocal / stepSize;
     return (float) maxTimestepLocal / stepSize;
 
 }
@@ -523,8 +528,8 @@ float SWE_Block<T, Buffer>::getRoundTimestep(float waveSpeed) {
 template<typename T, typename Buffer>
 float SWE_Block<T, Buffer>::getTotalLocalTimestep() {
     //std::cout << "stepsize " << stepSize << std::endl;
-    return currentTimestep;
-    //return (float) (maxTimestepLocal*timestepCounter)+(stepSize>0?((float)(maxTimestepLocal * stepSizeCounter) / (float)stepSize):0);
+   // return currentTimestep;
+    return (float) (maxTimestepLocal*timestepCounter)+(stepSize>0?((float)(maxTimestepLocal * stepSizeCounter) / (float)stepSize):0);
 }
 
 template<typename T, typename Buffer>

@@ -6,7 +6,7 @@ project(swe_benchmark)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(BUILDS Default Mpi Upcxx Hpx Chameleon)
+set(BUILDS Default Mpi Upcxx Hpx)
 
 #set(BUILDS Hpx Mpi)
 
