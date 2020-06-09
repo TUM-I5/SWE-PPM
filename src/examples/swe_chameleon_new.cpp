@@ -360,7 +360,7 @@ int main(int argc, char** argv) {
     }
 
     if(localTimestepping){
-
+    std::cout << "done sending ghostlayer\n";
         for (int i = 0; i < simulationBlocks.size(); i++){
             simulationBlocks[i]->setGhostLayer();
         }
