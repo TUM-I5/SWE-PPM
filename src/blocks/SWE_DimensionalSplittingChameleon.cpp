@@ -493,8 +493,6 @@ void computeNumericalFluxesKernel(SWE_DimensionalSplittingChameleon* block, floa
     block->hNetUpdatesAbove.setRawPointer(hNetUpdatesAbove_data);
     block->hvNetUpdatesBelow.setRawPointer(hvNetUpdatesBelow_data);
     block->hvNetUpdatesAbove.setRawPointer(hvNetUpdatesAbove_data);
-    block->hStar.setRawPointer(hStar_data);
-    block->huStar.setRawPointer(huStar_data);
 
 
 #if WAVE_PROPAGATION_SOLVER == 0
@@ -555,7 +553,7 @@ void computeNumericalFluxesKernel(SWE_DimensionalSplittingChameleon* block, floa
 
     if (maxWaveSpeed > 0.00001) {
 
-        *maxTimestep = std::min (dx / maxWaveSpeed, dy / maxWaveSpeed);
+        *maxTimestep = std::min ( block->dx / maxWaveSpeed, block->dy / maxWaveSpeed);
 
         *maxTimestep *= (float) .4; //CFL-number = .5
     } else {
@@ -625,8 +623,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
     block->hNetUpdatesAbove.setRawPointer(hNetUpdatesAbove_data);
     block->hvNetUpdatesBelow.setRawPointer(hvNetUpdatesBelow_data);
     block->hvNetUpdatesAbove.setRawPointer(hvNetUpdatesAbove_data);
-    block->hStar.setRawPointer(hStar_data);
-    block->huStar.setRawPointer(huStar_data);
+
 
     float dt=*maxTimestep;
     for (int i = 1; i < block->nx+1; i++) {
@@ -676,7 +673,7 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
     args[12] = chameleon_map_data_entry_create(this->hvNetUpdatesAbove.getRawPointer(), sizeof(float)*(nx + 1)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_TO);
 
     cham_migratable_task_t *cur_task = chameleon_create_task(
-            (void *)&computeUpdateUnknownsKernel,
+            (void *)&updateUnknownsKernel,
             13, // number of args
             args);
     int32_t res = chameleon_add_task(cur_task);
