@@ -673,7 +673,7 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
     args[12] = chameleon_map_data_entry_create(this->hvNetUpdatesAbove.getRawPointer(), sizeof(float)*(nx + 1)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_TO);
 
     cham_migratable_task_t *cur_task = chameleon_create_task(
-            (void *)&updateUnknownsKernel,
+            (void *)&updateUnkownsKernel,
             13, // number of args
             args);
     int32_t res = chameleon_add_task(cur_task);
