@@ -385,14 +385,14 @@ int main(int argc, char** argv) {
             block->freeMpiType();
         }
 
-
+    collector.logResults();
 #pragma omp parallel
     {
         chameleon_thread_finalize();
     }
      chameleon_finalize();
 
-   collector.logResults();
+
     MPI_Finalize();
 
 }
