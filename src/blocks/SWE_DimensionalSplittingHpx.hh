@@ -76,9 +76,6 @@ public:
     hpx::future<void> setGhostLayer();
 
 
-    void computeXSweep();
-
-    void computeYSweep();
 
     void computeNumericalFluxes();
 

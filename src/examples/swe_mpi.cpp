@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
     int numberOfCheckPoints;
     int nxRequested;
     int nyRequested;
-    bool localTimestepping = false;
+    float localTimestepping = 0.f;
     bool write = false;
     std::string outputBaseName;
 
@@ -105,8 +105,8 @@ int main(int argc, char **argv) {
             break;
     }
 
-    if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
-        localTimestepping = true;
+    if (args.isSet("local-timestepping") && args.getArgument<float>("local-timestepping") > 0 ) {
+        localTimestepping =  args.getArgument<float>("local-timestepping");
 
     }
 
@@ -227,7 +227,7 @@ int main(int argc, char **argv) {
     simulation.connectNeighbours(myNeighbours);
     simulation.setRank(myMpiRank);
     simulation.exchangeBathymetry();
-
+    simulation.setDuration(simulationDuration);
 
     /***************
      * INIT OUTPUT *
@@ -284,7 +284,7 @@ if(write){
         MPI_Allreduce(&localTimestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
 
 
-
+        maxLocalTimestep = localTimestepping;
         simulation.setMaxLocalTimestep(maxLocalTimestep);
         std::cout << "Max Local Timestep is " << maxLocalTimestep << std::endl;
     }
@@ -325,6 +325,7 @@ if(write){
             }
         }
 
+
         if (myMpiRank == 0) {
             printf("Write timestep (%fs)\n", t);
         }
@@ -340,7 +341,9 @@ if(write){
 
     }
 
-
+    if(localTimestepping){
+        simulation.setGhostLayer();
+    }
     /************
      * FINALIZE *
      ************/
@@ -348,7 +351,6 @@ if(write){
     if (myMpiRank == 0) {
         CollectorMpi::getInstance().setMasterSettings(true, outputBaseName + ".log");
     }
-
     CollectorMpi::getInstance().logResults();
     simulation.freeMpiType();
     if (write)

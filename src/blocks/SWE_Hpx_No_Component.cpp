@@ -41,17 +41,15 @@ hpx::future<void> setGhostLayer(SWE_DimensionalSplittingHpx *simulation) {
     return simulation->setGhostLayer();
 }
 
-void computeXSweep(SWE_DimensionalSplittingHpx *simulation) {
-    simulation->computeXSweep();
+void computeNumericalFluxes(SWE_DimensionalSplittingHpx *simulation) {
+    simulation->computeNumericalFluxes();
 }
 
 void computeMaxTimestep(SWE_DimensionalSplittingHpx *simulation, const float dryTol, const float cflNumber) {
     simulation->computeMaxTimestep(dryTol, cflNumber);
 }
 
-void computeYSweep(SWE_DimensionalSplittingHpx *simulation) {
-    simulation->computeYSweep();
-}
+
 
 void exchangeBathymetry(SWE_DimensionalSplittingHpx *simulation) {
     simulation->exchangeBathymetry();
@@ -218,6 +216,8 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
                 SWE_DimensionalSplittingHpx::communicator_type(myHpxRank, totalHpxRanks, refinedNeighbours,
                                                                neighbourBlocks));
         simulationBlocks[i - startPoint]->setRank(i);
+        simulationBlocks[i - startPoint]->setDuration(simulationDuration);
+
     }
 
 }
@@ -323,21 +323,12 @@ void SWE_Hpx_No_Component::run() {
                 blockFuture.clear();
                 for (auto &block: simulationBlocks)blockFuture.push_back(hpx::async(setGhostLayer, block.get()));
                 hpx::wait_all(blockFuture);
-                /* hpx::when_each_n(hpx::util::unwrapping([this,&xsweepFuture](int id) -> void {
-                    xsweepFuture[id] = hpx::async(computeXSweep,simulationBlocks[id].get());
-                }),blockFuture.begin(),simulationBlocks.size()).wait();
 
                 blockFuture.clear();
 
 
-                 hpx::wait_all(xsweepFuture);*/
-                blockFuture.clear();
-
-
-                for (auto &block: simulationBlocks)blockFuture.push_back(hpx::async(computeXSweep, block.get()));
+                for (auto &block: simulationBlocks)blockFuture.push_back(hpx::async(computeNumericalFluxes, block.get()));
                 hpx::wait_all(blockFuture);
-
-
 
 
                 //barrier
@@ -375,17 +366,6 @@ void SWE_Hpx_No_Component::run() {
 
                 }
 
-                /*for(auto & block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep,block.get()));
-                //hpx::wait_all(blockFuture);
-                 hpx::when_each_n(hpx::util::unwrapping([this,&xsweepFuture](int id) -> void {
-                    xsweepFuture[id] = hpx::async(updateUnknowns,simulationBlocks[id].get());
-                }),blockFuture.begin(),simulationBlocks.size()).wait();
-
-                blockFuture.clear();
-
-                hpx::wait_all(xsweepFuture);*/
-                for (auto &block: simulationBlocks)blockFuture.push_back(hpx::async(computeYSweep, block.get()));
-                hpx::wait_all(blockFuture);
 
                 blockFuture.clear();
 

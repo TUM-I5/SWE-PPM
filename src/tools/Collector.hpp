@@ -63,15 +63,15 @@ public:
 
     void printCounter() {
 
-        auto timestepMinMax =  std::minmax_element(timesteps.begin(),timesteps.end());
-        float timestepAvg = std::accumulate(timesteps.begin(), timesteps.end(), 0.0f)/(float)timesteps.size();
+        auto timestepMinMax = std::minmax_element(timesteps.begin(),timesteps.end());
+        float timestepAvg =  timesteps.size()>0?std::accumulate(timesteps.begin(), timesteps.end(), 0.0f)/(float)timesteps.size():0;
 
         std::cout << "Flop count: " << group_flop_ctr << std::endl
                   << "Flops: " << ((float) 1e-9 * group_flop_ctr / result_ctrs[CTR_WALL]) << "GFLOPS" << std::endl
                   << "Wall Time: " << result_ctrs[CTR_WALL] << "s" << std::endl
                   << "Communication Time: " << result_ctrs[CTR_EXCHANGE] << "s" << std::endl
                   << "Reduction Time: " << result_ctrs[CTR_REDUCE] << "s" << std::endl
-                  << "Timesteps Min: " << *timestepMinMax.first << " Max: " << *timestepMinMax.second << " Average: "<< timestepAvg << std::endl;
+                  << "Timesteps Min: " << (timesteps.size()>0?*timestepMinMax.first:0) << " Max: " << (timesteps.size()>0?*timestepMinMax.second:0) << " Average: "<< timestepAvg << std::endl;
     }
 
     virtual void collect() = 0;

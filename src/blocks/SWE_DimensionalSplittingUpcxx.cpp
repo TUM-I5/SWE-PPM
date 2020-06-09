@@ -238,7 +238,8 @@ void SWE_DimensionalSplittingUpcxx::exchangeBathymetry() {
 void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
     for (int i = 0; i < 4; i++) {
 
-        if (boundaryType[i] == CONNECT) {
+        if (boundaryType[i] == CONNECT ) {
+
             rpc_ff(neighbourCopyLayer[i].rank,
                    [](upcxx::global_ptr <std::atomic<bool>> dataFlag) { dataFlag.local()[0] = true; },
                    sync ?
@@ -261,11 +262,18 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
            !flag[BND_TOP] ||
            !flag[BND_BOTTOM]) {
         for (int i = 0; i < 4; i++) {
+            if(sync){
+                if (boundaryType[i] != CONNECT || (!isSendable((Boundary) i))) {
 
-            if (boundaryType[i] != CONNECT || (!isSendable((Boundary) i))) {
+                    flag[i] = true; //only set true the ones who are either not sending anymore or not connected.
+                }
+            } else{
+                if (boundaryType[i] != CONNECT || (!isReceivable((Boundary) i))) {
 
-                flag[i] = true; //only set true the ones who are either not sending anymore or not connected.
+                    flag[i] = true; //only set true the ones who are either not sending anymore or not connected.
+                }
             }
+
         }
         upcxx::progress();
 
@@ -423,8 +431,13 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
         dataTransmitted[i] = false;
     }
     checkAllGhostlayers();
-    CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_EXCHANGE);
 
+    if(!localTimestepping){
+        for (int i = 0; i < 4; i++) {
+            copyGhostlayer(static_cast<Boundary>(i));
+        }
+    }
+    CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_EXCHANGE);
     iteration++;
 }
 
@@ -435,40 +448,67 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
  */
 void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
     if (!allGhostlayersInSync()) return;
-    // Start compute clocks
+//maximum (linearized) wave speed within one iteration
+    float maxWaveSpeed = (float) 0.;
 
+    /***************************************************************************************
+     * compute the net-updates for the vertical edges
+     **************************************************************************************/
 
-    //maximum (linearized) wave speed within one iteration
-    float maxHorizontalWaveSpeed = (float) 0.;
-    float maxVerticalWaveSpeed = (float) 0.;
+    for (int i = 1; i < nx+2; i++) {
+        for (int j=1; j < ny+1; ++j) {
+            float maxEdgeSpeed;
 
-#pragma omp parallel private(solver)
-    {
-        // x-sweep, compute the actual domain plus ghost rows above and below
-        // iterate over cells on the x-axis, leave out the last column (two cells per computation)
-#pragma omp for reduction(max : maxHorizontalWaveSpeed) collapse(2)
-        for (int x = 0; x < nx + 1; x++) {
-#if defined(VECTORIZE)
-            const int ny_end = ny+2;
-            // iterate over all rows, including ghost layer
-#pragma omp simd reduction(max:maxHorizontalWaveSpeed)
-#endif // VECTORIZE
-            for (int y = 0; y < ny + 2; y++) {
-                solver.computeNetUpdates(
-                        h[x][y], h[x + 1][y],
-                        hu[x][y], hu[x + 1][y],
-                        b[x][y], b[x + 1][y],
-                        hNetUpdatesLeft[x][y], hNetUpdatesRight[x + 1][y],
-                        huNetUpdatesLeft[x][y], huNetUpdatesRight[x + 1][y],
-                        maxHorizontalWaveSpeed
-                );
-            }
+            solver.computeNetUpdates (
+                    h[i - 1][j], h[i][j],
+                    hu[i - 1][j], hu[i][j],
+                    b[i - 1][j], b[i][j],
+                    hNetUpdatesLeft[i - 1][j - 1], hNetUpdatesRight[i - 1][j - 1],
+                    huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
+                    maxEdgeSpeed
+            );
+
+            //update the thread-local maximum wave speed
+            maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
         }
     }
-    CollectorUpcxx::getInstance().addFlops(nx * ny * 135);
+
+    /***************************************************************************************
+     * compute the net-updates for the horizontal edges
+     **************************************************************************************/
+
+    for (int i=1; i < nx + 1; i++) {
+        for (int j=1; j < ny + 2; j++) {
+            float maxEdgeSpeed;
+
+            solver.computeNetUpdates (
+                    h[i][j - 1], h[i][j],
+                    hv[i][j - 1], hv[i][j],
+                    b[i][j - 1], b[i][j],
+                    hNetUpdatesBelow[i - 1][j - 1], hNetUpdatesAbove[i - 1][j - 1],
+                    hvNetUpdatesBelow[i - 1][j - 1], hvNetUpdatesAbove[i - 1][j - 1],
+                    maxEdgeSpeed
+            );
+
+            //update the maximum wave speed
+            maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
+        }
+    }
+
+    if (maxWaveSpeed > 0.00001) {
+
+        maxTimestep = std::min (dx / maxWaveSpeed, dy / maxWaveSpeed);
+
+        maxTimestep *= (float) .4; //CFL-number = .5
+    } else {
+        //might happen in dry cells
+        maxTimestep = std::numeric_limits<float>::max ();
+    }
 
 
-    maxTimestep = (float) .4 * (dx / maxHorizontalWaveSpeed);
+    CollectorUpcxx::getInstance().addFlops(2*nx * ny * 135);
+
+
     if (localTimestepping) {
 
         maxTimestep = getRoundTimestep(maxTimestep);
@@ -482,54 +522,6 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
         CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_REDUCE);
         maxTimestep = maxTimestepGlobal;
     }
-
-
-#pragma omp parallel private(solver)
-    {
-        // set intermediary Q* states
-#pragma omp for collapse(2)
-        for (int x = 1; x < nx + 1; x++) {
-            for (int y = 0; y < ny + 2; y++) {
-                hStar[x][y] = h[x][y] - (maxTimestep / dx) * (hNetUpdatesLeft[x][y] + hNetUpdatesRight[x][y]);
-                huStar[x][y] = hu[x][y] - (maxTimestep / dx) * (huNetUpdatesLeft[x][y] + huNetUpdatesRight[x][y]);
-            }
-        }
-
-        // y-sweep
-#ifndef NDEBUG
-#pragma omp for
-#else
-#pragma omp for reduction(max : maxVerticalWaveSpeed) collapse(2)
-#endif
-        for (int x = 1; x < nx + 1; x++) {
-#if defined(VECTORIZE)
-            const int ny_end = ny+1;
-            // iterate over all rows, including ghost layer
-#pragma omp simd reduction(max:maxVerticalWaveSpeed)
-#endif // VECTORIZE
-            for (int y = 0; y < ny + 1; y++) {
-                solver.computeNetUpdates(
-                        h[x][y], h[x][y + 1],
-                        hv[x][y], hv[x][y + 1],
-                        b[x][y], b[x][y + 1],
-                        hNetUpdatesBelow[x][y], hNetUpdatesAbove[x][y + 1],
-                        hvNetUpdatesBelow[x][y], hvNetUpdatesAbove[x][y + 1],
-                        maxVerticalWaveSpeed
-                );
-            }
-        }
-
-#ifndef NDEBUG
-#pragma omp single
-        {
-            // check if the cfl condition holds in the y-direction
-        //	assert(maxTimestep < (float) .5 * (dy / maxVerticalWaveSpeed));
-        }
-#endif // NDEBUG
-    }
-
-    CollectorUpcxx::getInstance().addFlops(nx * ny * 135);
-
 }
 
 /**
@@ -540,18 +532,29 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
  */
 void SWE_DimensionalSplittingUpcxx::updateUnknowns(float dt) {
     if (!allGhostlayersInSync()) return;
+//update cell averages with the net-updates
+    dt=maxTimestep;
+    for (int i = 1; i < nx+1; i++) {
+        for (int j = 1; j < ny + 1; j++) {
+            h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
+            hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
+            hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
 
-    // this assertion has to hold since the intermediary star states were calculated internally using a timestep width of maxTimestep
-    assert(std::abs(dt - maxTimestep) < 0.00001);
-    //update cell averages with the net-updates
-    for (int x = 1; x < nx + 1; x++) {
-        for (int y = 1; y < ny + 1; y++) {
-            h[x][y] = hStar[x][y] - (maxTimestep / dx) * (hNetUpdatesBelow[x][y] + hNetUpdatesAbove[x][y]);
-            hu[x][y] = huStar[x][y];
-            hv[x][y] = hv[x][y] - (maxTimestep / dx) * (hvNetUpdatesBelow[x][y] + hvNetUpdatesAbove[x][y]);
+            if (h[i][j] < 0) {
+                //TODO: dryTol
+#ifndef NDEBUG
+                // Only print this warning when debug is enabled
+				// Otherwise we cannot vectorize this loop
+				if (h[i][j] < -0.1) {
+					std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" << h[i][j] << std::endl;
+					std::cerr << "         b: " << b[i][j] << std::endl;
+				}
+#endif // NDEBUG
+                //zero (small) negative depths
+                h[i][j] = hu[i][j] = hv[i][j] = 0.;
+            } else if (h[i][j] < 0.1)
+                hu[i][j] = hv[i][j] = 0.; //no water, no speed!
         }
     }
-
-    // Accumulate compute time
 }
 

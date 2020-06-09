@@ -210,6 +210,10 @@ public:
     // maximum time step allowed to ensure stability of the method
     // it may be updated as part of the method computeNumericalFluxes()
     // or updateUnknowns() (depending on the numerical method)
+    float duration;
+
+    void setDuration(float duration);
+
     float maxTimestep;
     float maxTimestepLocal; // used for local timestepping
     float currentTimestep = 0;
@@ -376,9 +380,14 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
                     //This case we need to interpolate and thus do not expect a new timestep in the next iteration.
                     interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
                     receivedGhostlayer[border] = GL_INTER;
-                } else {
+                }  else {
                     //in this case we need to wait for the next iteration to receive a valid timestep, block will not compute until received a valid timestep.
                     receivedGhostlayer[border] = GL_UNVALID;
+                }
+
+                if(borderTimestep[border]>= duration){
+                    //when the neighbor has reached the simulation duration
+                    receivedGhostlayer[border] = GL_DONE;
                 }
             }
         }
@@ -386,10 +395,14 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
 
         if (allGhostlayersInSync()) {
             //If it is interpolated we do need to receive next timestep
+            if(receivedGhostlayer[BND_LEFT] != GL_DONE)
             receivedGhostlayer[BND_LEFT] = (receivedGhostlayer[BND_LEFT] == GL_INTER) ? GL_INTER : GL_NEXT;
+            if(receivedGhostlayer[BND_RIGHT] != GL_DONE)
             receivedGhostlayer[BND_RIGHT] = (receivedGhostlayer[BND_RIGHT] == GL_INTER) ? GL_INTER : GL_NEXT;
-            receivedGhostlayer[BND_TOP] = (receivedGhostlayer[BND_TOP] == GL_INTER) ? GL_INTER : GL_NEXT;
-            receivedGhostlayer[BND_BOTTOM] = (receivedGhostlayer[BND_BOTTOM] == GL_INTER) ? GL_INTER : GL_NEXT;
+            if(receivedGhostlayer[BND_TOP] != GL_DONE)
+                receivedGhostlayer[BND_TOP] = (receivedGhostlayer[BND_TOP] == GL_INTER) ? GL_INTER : GL_NEXT;
+            if(receivedGhostlayer[BND_BOTTOM] != GL_DONE)
+                receivedGhostlayer[BND_BOTTOM] = (receivedGhostlayer[BND_BOTTOM] == GL_INTER) ? GL_INTER : GL_NEXT;
         }
 
 
@@ -881,7 +894,10 @@ void SWE_Block<T, Buffer>::applyBoundaryConditions() {
     hv[nx + 1][ny + 1] = hv[nx][ny];
 }
 
-
+template<typename T, typename Buffer>
+void SWE_Block<T, Buffer>::setDuration(float duration) {
+   this->duration = duration;
+}
 
 
 #endif // __SWE_BLOCK_HH

@@ -14,7 +14,7 @@ include_directories(src)
 include(FindNetCDF.cmake)
 include(Structure.cmake)
 
-add_definitions(-DWRITENETCDF )#-DNDEBUG -DVECTORIZE
+add_definitions(-DWRITENETCDF) #-DVECTORIZE
 list(APPEND SOURCE_FILES ${MAIN_FILE} )
 
 file(GLOB SCENARIO_FILES ${SCENARIOS}/*)

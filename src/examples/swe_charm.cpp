@@ -94,7 +94,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
     std::string bathymetryFilename;
     std::string displacementFilename;
     std::string outputBasename;
-    bool localTimestepping = false;
+    float localTimestepping = 0.f;
     bool write = false;
     // Declare variables for the output and the simulation time
     std::string outputFilename;
@@ -116,8 +116,9 @@ swe_charm::swe_charm(CkArgMsg *msg) {
         write = true;
     }
 
-    if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
-        localTimestepping = true;
+    if (args.isSet("local-timestepping") && args.getArgument<float>("local-timestepping") > 0 ) {
+        localTimestepping =  args.getArgument<float>("local-timestepping");
+
     }
     // Read in command line arguments
     simulationDuration = args.getArgument<float>("simulation-duration");

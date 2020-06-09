@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
     int nxRequested;
     int nyRequested;
     std::string outputBaseName;
-    bool localTimestepping = false;
+    float localTimestepping = 0.f;
     bool write = false;
     // Declare variables for the output and the simulation time
     std::string outputFileName;
@@ -103,8 +103,8 @@ int main(int argc, char **argv) {
         case tools::Args::Success:
             break;
     }
-    if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
-        localTimestepping = true;
+    if (args.isSet("local-timestepping") && args.getArgument<float>("local-timestepping") > 0 ) {
+        localTimestepping =  args.getArgument<float>("local-timestepping");
 
     }
     // Read in command line arguments
@@ -209,7 +209,7 @@ int main(int argc, char **argv) {
     SWE_DimensionalSplittingUpcxx simulation(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,
                                              localTimestepping);
     simulation.initScenario(scenario, boundaries);
-
+    simulation.setDuration(simulationDuration);
     // calculate neighbours to the current ranks simulation block
     int leftNeighborRank = (localBlockPositionX > 0) ? myUpcxxRank - blockCountY : -1;
     int rightNeighborRank = (localBlockPositionX < blockCountX - 1) ? myUpcxxRank + blockCountY : -1;
@@ -319,7 +319,7 @@ int main(int argc, char **argv) {
         float localTimestep = simulation.getMaxTimestep();
         // reduce over all ranks
         maxLocalTimestep = upcxx::reduce_all(localTimestep, [](float a, float b) { return std::max(a, b); }).wait();
-
+        maxLocalTimestep = localTimestepping;
         simulation.setMaxLocalTimestep(maxLocalTimestep);
     }
 
@@ -372,7 +372,9 @@ int main(int argc, char **argv) {
         }
     }
 
-
+    if(localTimestepping){
+        simulation.setGhostLayer();
+    }
     /************
      * FINALIZE *
      ************/

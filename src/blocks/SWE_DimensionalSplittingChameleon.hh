@@ -57,9 +57,8 @@ class SWE_DimensionalSplittingChameleon : public SWE_Block<Float2DNative> {
 		// Interface methods
 		void setGhostLayer();
 		void receiveGhostLayer();
-		void computeNumericalFluxes() {};
-		void computeNumericalFluxesHorizontal();
-		void computeNumericalFluxesVertical();
+		void computeNumericalFluxes();
+
 		void updateUnknowns(float dt);
 
 

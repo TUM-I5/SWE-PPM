@@ -89,11 +89,12 @@ int main(int argc, char** argv) {
     int nyRequested = args.getArgument<int>("resolution-vertical");
     std::string outputBaseName = args.getArgument<std::string>("output-basepath");
     bool write = false;
-    bool localTimestepping = false;
+    float localTimestepping = 0.f;
     std::vector<std::shared_ptr<SWE_DimensionalSplittingChameleon>> simulationBlocks;
     int ranksPerLocality = 1;
-    if (args.isSet("local-timestepping") && args.getArgument<int>("local-timestepping") == 1) {
-        localTimestepping = true;
+    if (args.isSet("local-timestepping") && args.getArgument<float>("local-timestepping") > 0 ) {
+        localTimestepping =  args.getArgument<float>("local-timestepping");
+
     }
     if (args.isSet("blocks")) {
         ranksPerLocality = args.getArgument<int>("blocks");
@@ -247,7 +248,7 @@ int main(int argc, char** argv) {
         }
 
         MPI_Allreduce(&localTimestep, &maxLocalTimestep, 1, MPI_FLOAT, MPI_MAX, MPI_COMM_WORLD);
-
+        maxLocalTimestep = localTimestepping;
         for (auto &block: simulationBlocks)block->setMaxLocalTimestep(maxLocalTimestep);
     }
 
@@ -297,7 +298,7 @@ int main(int argc, char** argv) {
                 {
 #pragma omp for
                     for (int i = 0; i < simulationBlocks.size(); i++){
-                        simulationBlocks[i]->computeNumericalFluxesHorizontal();
+                        simulationBlocks[i]->computeNumericalFluxes();
                     }
                     chameleon_distributed_taskwait(0);
                 }
@@ -326,14 +327,9 @@ int main(int argc, char** argv) {
                 {
 #pragma omp for
                     for (int i = 0; i < simulationBlocks.size(); i++){
-                        simulationBlocks[i]->computeNumericalFluxesVertical();
+                        simulationBlocks[i]->updateUnknowns(timestep);
                     }
                     chameleon_distributed_taskwait(0);
-                }
-
-#pragma omp parallel for
-                for (int i = 0; i < simulationBlocks.size(); i++){
-                    simulationBlocks[i]->updateUnknowns(timestep);
                 }
 
                 collector.stopCounter(CollectorChameleon::CTR_WALL);
@@ -365,10 +361,24 @@ int main(int argc, char** argv) {
             }
         }
     }
+
+    if(localTimestepping){
+
+        for (int i = 0; i < simulationBlocks.size(); i++){
+            simulationBlocks[i]->setGhostLayer();
+        }
+
+        for (int i = 0; i < simulationBlocks.size(); i++){
+            simulationBlocks[i]->receiveGhostLayer();
+        }
+
+    }
+
     if (localityRank == 0) {
        collector.setMasterSettings(true, outputBaseName + ".log");
     }
     for (auto &block: simulationBlocks) {
+
         collector += block->collector;
         if(write)
             delete block->writer;
