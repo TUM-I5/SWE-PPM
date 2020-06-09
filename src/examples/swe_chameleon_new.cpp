@@ -220,7 +220,7 @@ int main(int argc, char** argv) {
         simulationBlocks[i - startPoint]->connectNeighbours(realNeighbours);
         simulationBlocks[i - startPoint]->connectLocalNeighbours(neighbourBlocks);
         simulationBlocks[i - startPoint]->setRank(myRank);
-
+        simulationBlocks[i - startPoint]->setDuration(simulationDuration);
        //std::cout << myRank <<"| " << realNeighbours[0] << " " << realNeighbours[1] << " " << realNeighbours[2] << " " << realNeighbours[3] << std::endl;
 
     }
@@ -290,9 +290,6 @@ int main(int argc, char** argv) {
                     }
 
                 }
-                /*for (auto &block: simulationBlocks)block->setGhostLayer();
-
-                for (auto &block: simulationBlocks)block->receiveGhostLayer();*/
 
 #pragma omp parallel
                 {
