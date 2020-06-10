@@ -359,8 +359,16 @@ int main(int argc, char** argv) {
         }
     }
 
+
+
+
+#pragma omp parallel
+    {
+        chameleon_thread_finalize();
+    }
+     chameleon_finalize();
     if(localTimestepping){
-    std::cout << "done sending ghostlayer\n";
+        std::cout << "done sending ghostlayer\n";
         for (int i = 0; i < simulationBlocks.size(); i++){
             simulationBlocks[i]->setGhostLayer();
         }
@@ -370,9 +378,8 @@ int main(int argc, char** argv) {
         }
 
     }
-
     if (localityRank == 0) {
-       collector.setMasterSettings(true, outputBaseName + ".log");
+        collector.setMasterSettings(true, outputBaseName + ".log");
     }
     for (auto &block: simulationBlocks) {
 
@@ -382,17 +389,10 @@ int main(int argc, char** argv) {
     }
 
     for (auto &block: simulationBlocks) {
-            block->freeMpiType();
-        }
+        block->freeMpiType();
+    }
 
     collector.logResults();
-#pragma omp parallel
-    {
-        chameleon_thread_finalize();
-    }
-     chameleon_finalize();
-
-
     MPI_Finalize();
 
 }
