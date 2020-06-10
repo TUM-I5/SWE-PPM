@@ -409,7 +409,11 @@ void SWE_Hpx_No_Component::run() {
         }
     }
     if(localTimestepping){
-        for (auto &block: simulationBlocks)blockFuture.push_back(hpx::async(setGhostLayer, block.get()));
+
+        for (auto &block: simulationBlocks){
+            std::cout << block->myRank<< "|last send\n";
+            blockFuture.push_back(hpx::async(setGhostLayer, block.get()));
+        }
         hpx::wait_all(blockFuture);
         std::cout << "doneso\n";
     }

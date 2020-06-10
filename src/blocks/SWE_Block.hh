@@ -219,6 +219,7 @@ public:
     float currentTimestep = 0;
     int maxDivisor = 128; //smallest timestep possible maxTimestepLocal/maxDivisor
     bool localTimestepping; //true to activate localtimestepping
+    bool notifiedLastTimestep = false;
     int stepSize; //is used to determine the localstepsize;
     int stepSizeCounter; //used to count the steps;
     void resetStepSizeCounter();
@@ -346,12 +347,22 @@ bool SWE_Block<T, Buffer>::allGhostlayersInSync() {
 
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::isSendable(Boundary border) {
-    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_INTER || receivedGhostlayer[border] == GL_SYNC;
+    if(!notifiedLastTimestep){
+        return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_INTER || receivedGhostlayer[border] == GL_SYNC;
+    }else {
+        return false;
+    }
+
 }
 
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::isReceivable(Boundary border) {
-    return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_UNVALID || receivedGhostlayer[border] == GL_SYNC;
+    if(!notifiedLastTimestep){
+        return receivedGhostlayer[border] == GL_NEXT || receivedGhostlayer[border] == GL_UNVALID || receivedGhostlayer[border] == GL_SYNC;
+
+    }else {
+        return false;
+    }
 }
 
 template<typename T, typename Buffer>
@@ -391,7 +402,9 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
                 }
             }
         }
-
+        if(std::fabs(duration-getTotalLocalTimestep()) <= std::numeric_limits<double>::epsilon() || getTotalLocalTimestep()> duration){
+            notifiedLastTimestep = true;
+        }
 
         if (allGhostlayersInSync()) {
             //If it is interpolated we do need to receive next timestep
