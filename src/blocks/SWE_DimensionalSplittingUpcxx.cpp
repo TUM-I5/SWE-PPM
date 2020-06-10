@@ -239,14 +239,14 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
     for (int i = 0; i < 4; i++) {
 
         if (boundaryType[i] == CONNECT ) {
+            if(isSendable((Boundary)i)){
+                rpc_ff(neighbourCopyLayer[i].rank,
+                       [](upcxx::global_ptr <std::atomic<bool>> dataFlag) { dataFlag.local()[0] = true; },
+                       sync ?
+                       neighbourCopyLayer[i].dataReady :
+                       neighbourCopyLayer[i].dataTransmitted);
 
-            rpc_ff(neighbourCopyLayer[i].rank,
-                   [](upcxx::global_ptr <std::atomic<bool>> dataFlag) { dataFlag.local()[0] = true; },
-                   sync ?
-                   neighbourCopyLayer[i].dataReady :
-                   neighbourCopyLayer[i].dataTransmitted);
-
-
+            }
         }
     }
 
@@ -263,9 +263,10 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
     while (count < 3) {
         for (int i = 0; i < 4; i++) {
             if(sync){
-                if (boundaryType[i] != CONNECT || (!isSendable((Boundary) i))) {
+                if (boundaryType[i] != CONNECT || (!isSendable((Boundary) i))||flag[i]) {
 
-                    flag[i] = true; //only set true the ones who are either not sending anymore or not connected.
+
+                    flag[i] = false; //only set true the ones who are either not sending anymore or not connected.
                 }
             } else{
                 if (boundaryType[i] != CONNECT || (!isReceivable((Boundary) i)) ||flag[i]) {
@@ -428,7 +429,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
     for (int i = 0; i < 4; i++) {
         if (isReceivable((Boundary) i))
             borderTimestep[i] = upcxxBorderTimestep[i];
-        dataTransmitted[i] = false;
+        //dataTransmitted[i] = false;
     }
     checkAllGhostlayers();
 
