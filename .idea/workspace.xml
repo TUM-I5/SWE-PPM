@@ -305,14 +305,7 @@
       <workItem from="1587477167306" duration="2835000" />
       <workItem from="1587562638341" duration="2015000" />
       <workItem from="1588268692567" duration="2110000" />
-      <workItem from="1591781813969" duration="11911000" />
-    </task>
-    <task id="LOCAL-00263" summary="Added Counter FW to chameleon and chameleon parallelization">
-      <created>1586702209907</created>
-      <option name="number" value="00263" />
-      <option name="presentableId" value="LOCAL-00263" />
-      <option name="project" value="LOCAL" />
-      <updated>1586702209907</updated>
+      <workItem from="1591781813969" duration="12114000" />
     </task>
     <task id="LOCAL-00264" summary="Added all new scenarios">
       <created>1586703013964</created>
@@ -650,7 +643,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591795738368</updated>
     </task>
-    <option name="localTasksCounter" value="312" />
+    <task id="LOCAL-00312" summary="Fixed Bug in Computation for all frameworks">
+      <created>1591796124453</created>
+      <option name="number" value="00312" />
+      <option name="presentableId" value="LOCAL-00312" />
+      <option name="project" value="LOCAL" />
+      <updated>1591796124453</updated>
+    </task>
+    <option name="localTasksCounter" value="313" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -720,10 +720,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1591795738318">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1591796124394">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591795738318" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591796124394" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586719624630" />
     <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1591746802875">

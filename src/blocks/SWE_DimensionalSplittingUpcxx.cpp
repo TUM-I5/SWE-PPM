@@ -279,12 +279,14 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
         for (int i = 0; i < 4; i++) {
             if(sync){
                 if (flag[i]) {
-
+                    if(!isSendable((Boundary)i)) std::cout << "should not receive the flag\n";
                     count++;
                     flag[i] = false; //only set true the ones who are either not sending anymore or not connected.
                 }
             } else{
                 if (flag[i]) {
+                    if(!isReceivable((Boundary)i)) std::cout << "should not receive the flag\n";
+
                     count++;
                     flag[i] = false; //only set true the ones who are either not sending anymore or not connected.
                 }
