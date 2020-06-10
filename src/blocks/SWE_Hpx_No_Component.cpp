@@ -210,7 +210,7 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
                 neighbourBlocks[j] = simulationBlocks[myNeighbours[j] - startPoint];
             } else {
                 refinedNeighbours[j] = myNeighbours[j];
-                simulationBlocks[i - startPoint]->neighbourRankId[j]  = -1;
+                simulationBlocks[i - startPoint]->neighbourRankId[j]  =  myNeighbours[j];
             }
         }
 
