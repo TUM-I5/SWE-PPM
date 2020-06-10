@@ -360,12 +360,6 @@ float SWE_Block<T, Buffer>::interpolateValue(float oldval, float newval, float r
     return (oldval + (newval - oldval) * (getTotalLocalTimestep() / remoteTimestep));
 }
 
-bool almost_equal(float x, float y)
-{
-    // the machine epsilon has to be scaled to the magnitude of the values used
-    // and multiplied by the desired precision in ULPs (units in the last place)
-    return std::fabs(x - y) <= std::numeric_limits<double>::epsilon() ;
-}
 template<typename T, typename Buffer>
 void SWE_Block<T, Buffer>::checkAllGhostlayers() {
 
@@ -375,7 +369,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
         for (int border = BND_LEFT; border <= BND_TOP; border++) {
             if ((boundaryType[border] == CONNECT) || boundaryType[border] == CONNECT_WITHIN_RANK) {
 
-                if (almost_equal(borderTimestep[border],getTotalLocalTimestep()) ) {
+                if (std::fabs(borderTimestep[border]-getTotalLocalTimestep()) <= std::numeric_limits<double>::epsilon()) {
                     //This case the neighbor progressed as much as local block did and thus the received Ghostlayer is valid and we can expect
                     // a new timestep incoming in the next iteration.
                     //interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
