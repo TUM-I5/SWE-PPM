@@ -297,7 +297,7 @@ int main(int argc, char** argv) {
                     for (int i = 0; i < simulationBlocks.size(); i++){
                         simulationBlocks[i]->computeNumericalFluxes();
                     }
-                   // chameleon_distributed_taskwait(0);
+                    chameleon_distributed_taskwait(0);
                 }
 
 
@@ -314,7 +314,7 @@ int main(int argc, char** argv) {
                 }else {
                     for (auto &block: simulationBlocks){
                         if(block->allGhostlayersInSync()){
-                          //  block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                            block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
                         }
                     }
 
