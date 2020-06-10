@@ -340,9 +340,9 @@ void SWE_Block<T, Buffer>::printLtsStats() {
 
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::allGhostlayersInSync() {
-
+//@todo add clause stepSizeCounter <= stepSize so we dont continue if other local blocks are not finished
     return receivedGhostlayer[BND_LEFT] != GL_UNVALID && receivedGhostlayer[BND_RIGHT] != GL_UNVALID
-           && receivedGhostlayer[BND_TOP] != GL_UNVALID && receivedGhostlayer[BND_BOTTOM] != GL_UNVALID;
+           && receivedGhostlayer[BND_TOP] != GL_UNVALID && receivedGhostlayer[BND_BOTTOM] != GL_UNVALID && (stepSizeCounter <= stepSize);
 }
 
 template<typename T, typename Buffer>
@@ -420,7 +420,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
         }
 
 
-#ifndef DEBUG
+#ifdef DEBUG
         printLtsStats();
 #endif
 
