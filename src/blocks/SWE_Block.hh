@@ -217,7 +217,7 @@ public:
     float maxTimestep;
     float maxTimestepLocal; // used for local timestepping
     float currentTimestep = 0;
-    int maxDivisor = 128; //smallest timestep possible maxTimestepLocal/maxDivisor
+    int maxDivisor = 512; //smallest timestep possible maxTimestepLocal/maxDivisor
     bool localTimestepping; //true to activate localtimestepping
     bool notifiedLastTimestep = false;
     int stepSize; //is used to determine the localstepsize;
@@ -541,7 +541,7 @@ float SWE_Block<T, Buffer>::getRoundTimestep(float timestep) {
 
         float maxPossibleTimestep = timestep;
         while( (((float)maxTimestepLocal)/stepSize) > maxPossibleTimestep
-        //&& (((float)maxTimestepLocal)/maxDivisor) <=  (((float)maxTimestepLocal)/stepSize)
+        && (((float)maxTimestepLocal)/maxDivisor) <=  (((float)maxTimestepLocal)/stepSize)
         ){
             stepSize*=2;
         }
