@@ -314,7 +314,7 @@ int main(int argc, char** argv) {
                 }else {
                     for (auto &block: simulationBlocks){
                         if(block->allGhostlayersInSync()){
-                            block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                          //  block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
                         }
                     }
 

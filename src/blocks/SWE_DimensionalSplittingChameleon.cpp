@@ -648,7 +648,9 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
         //might happen in dry cells
         maxTimestep = std::numeric_limits<float>::max ();
     }
-
+    if (localTimestepping) {
+        maxTimestep = getRoundTimestep(maxTimestep);
+    }
 }
 
 
