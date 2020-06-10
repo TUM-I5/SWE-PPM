@@ -259,17 +259,31 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
     } else {
         flag = dataTransmitted;
     }
+    for (int i = 0; i < 4; i++) {
+        if(sync){
+            if (boundaryType[i] != CONNECT || (!isSendable((Boundary) i))) {
 
+                count++;
+                flag[i] = false; //only set true the ones who are either not sending anymore or not connected.
+            }
+        } else{
+            if (boundaryType[i] != CONNECT || (!isReceivable((Boundary) i)) ) {
+                count++;
+                flag[i] = false; //only set true the ones who are either not sending anymore or not connected.
+            }
+        }
+
+    }
     while (count < 3) {
         for (int i = 0; i < 4; i++) {
             if(sync){
                 if (boundaryType[i] != CONNECT || (!isSendable((Boundary) i))||flag[i]) {
 
-
+                    count++;
                     flag[i] = false; //only set true the ones who are either not sending anymore or not connected.
                 }
             } else{
-                if (boundaryType[i] != CONNECT || (!isReceivable((Boundary) i)) ||flag[i]) {
+                if (flag[i]) {
                     count++;
                     flag[i] = false; //only set true the ones who are either not sending anymore or not connected.
                 }
