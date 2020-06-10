@@ -299,7 +299,7 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
     upcxx::future<> topFuture = upcxx::make_future<>();
 
     CollectorUpcxx::getInstance().startCounter(CollectorUpcxx::CTR_EXCHANGE);
-    notifyNeighbours(true);
+    //notifyNeighbours(true);
 
     for (int i = 0; i < 4; i++) {
         dataReady[i] = false;
