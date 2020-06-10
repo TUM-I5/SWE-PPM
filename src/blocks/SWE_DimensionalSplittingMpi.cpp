@@ -444,7 +444,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
     if (localTimestepping) {
 
         maxTimestep = getRoundTimestep(maxTimestep);
-
+        std::cout << "maxtimestep "<< maxTimestep << std::endl;
     } else {
         // compute max timestep according to cautious CFL-condition
         CollectorMpi::getInstance().startCounter(CollectorMpi::CTR_REDUCE);
