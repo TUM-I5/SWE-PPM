@@ -274,6 +274,7 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
         }
 
     }
+    std::cout << "count " << count << std::endl;
     while (count < 3) {
         for (int i = 0; i < 4; i++) {
             if(sync){
