@@ -275,7 +275,7 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
 
     }
     std::cout << "count " << count << std::endl;
-    while (count < 3) {
+    while (count < 4) {
         for (int i = 0; i < 4; i++) {
             if(sync){
                 if (boundaryType[i] != CONNECT || (!isSendable((Boundary) i))||flag[i]) {
