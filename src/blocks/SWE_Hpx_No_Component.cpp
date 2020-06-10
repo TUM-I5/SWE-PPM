@@ -206,9 +206,11 @@ SWE_Hpx_No_Component::SWE_Hpx_No_Component(int ranksPerLocality, int rank, int l
         for (int j = 0; j < 4; j++) {
             if (myNeighbours[j] >= startPoint && myNeighbours[j] < (startPoint + ranksPerLocality)) {
                 refinedNeighbours[j] = -2;
+                simulationBlocks[i - startPoint]->neighbourRankId[j] = myNeighbours[j];
                 neighbourBlocks[j] = simulationBlocks[myNeighbours[j] - startPoint];
             } else {
                 refinedNeighbours[j] = myNeighbours[j];
+                simulationBlocks[i - startPoint]->neighbourRankId[j]  = -1;
             }
         }
 
