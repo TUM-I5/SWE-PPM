@@ -310,7 +310,7 @@ SWE_Block<T, Buffer>::~SWE_Block() {
 template<typename T, typename Buffer>
 bool SWE_Block<T, Buffer>::hasMaxLocalTimestep() {
     //return (timestepCounter+1)* maxTimestepLocal < currentTimestep;
-    return (stepSizeCounter >= stepSize && allGhostlayersInSync());
+    return (stepSizeCounter >= stepSize && allGhostlayersInSync())||notifiedLastTimestep;
 
 
 }
@@ -403,6 +403,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
             }
         }
         if(std::fabs(duration-getTotalLocalTimestep()) <= std::numeric_limits<double>::epsilon() || getTotalLocalTimestep()> duration){
+            //notify neighbours that we have finished computation;
             notifiedLastTimestep = true;
         }
 
