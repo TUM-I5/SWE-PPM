@@ -378,7 +378,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
         for (int border = BND_LEFT; border <= BND_TOP; border++) {
             if ((boundaryType[border] == CONNECT) || boundaryType[border] == CONNECT_WITHIN_RANK) {
 
-                if (almost_equal(borderTimestep[border],getTotalLocalTimestep(),5) ) {
+                if (almost_equal(borderTimestep[border],getTotalLocalTimestep(),1) ) {
                     //This case the neighbor progressed as much as local block did and thus the received Ghostlayer is valid and we can expect
                     // a new timestep incoming in the next iteration.
                     //interpolateGhostlayer(static_cast<Boundary>(border), borderTimestep[border]);
