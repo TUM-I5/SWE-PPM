@@ -250,7 +250,8 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
         }
     }
 
-
+    std::atomic<int> count;
+    count = 0;
     std::atomic<bool> *flag;
     if (sync) {
         flag = dataReady;
@@ -259,10 +260,7 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
         flag = dataTransmitted;
     }
 
-    while (!flag[BND_LEFT] ||
-           !flag[BND_RIGHT] ||
-           !flag[BND_TOP] ||
-           !flag[BND_BOTTOM]) {
+    while (count < 3) {
         for (int i = 0; i < 4; i++) {
             if(sync){
                 if (boundaryType[i] != CONNECT || (!isSendable((Boundary) i))) {
@@ -270,9 +268,9 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
                     flag[i] = true; //only set true the ones who are either not sending anymore or not connected.
                 }
             } else{
-                if (boundaryType[i] != CONNECT || (!isReceivable((Boundary) i))) {
-
-                    flag[i] = true; //only set true the ones who are either not sending anymore or not connected.
+                if (boundaryType[i] != CONNECT || (!isReceivable((Boundary) i)) ||flag[i]) {
+                    count++;
+                    flag[i] = false; //only set true the ones who are either not sending anymore or not connected.
                 }
             }
 
