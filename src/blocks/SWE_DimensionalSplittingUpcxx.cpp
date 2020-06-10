@@ -291,7 +291,7 @@ void SWE_DimensionalSplittingUpcxx::notifyNeighbours(bool sync) {
             }
 
         }
-        //upcxx::progress();
+        upcxx::progress();
 
     }
 
