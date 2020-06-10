@@ -374,6 +374,7 @@ int main(int argc, char **argv) {
 
     if(localTimestepping){
         simulation.setGhostLayer();
+        std::cout << "donso\n";
     }
     /************
      * FINALIZE *

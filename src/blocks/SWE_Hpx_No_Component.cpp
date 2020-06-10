@@ -409,6 +409,7 @@ void SWE_Hpx_No_Component::run() {
     if(localTimestepping){
         for (auto &block: simulationBlocks)blockFuture.push_back(hpx::async(setGhostLayer, block.get()));
         hpx::wait_all(blockFuture);
+        std::cout << "doneso\n";
     }
     for (auto &block: simulationBlocks) {
         collector += block->collector;
