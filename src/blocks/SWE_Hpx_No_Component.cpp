@@ -336,14 +336,16 @@ void SWE_Hpx_No_Component::run() {
                 //barrier
                 if (!localTimestepping) {
                     timesteps.clear();
+                    collector.startCounter(Collector::CTR_REDUCE);
                     for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
 
 
                     float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
-                    collector.startCounter(Collector::CTR_REDUCE);
+                    timestep = hpx::all_reduce("gts_reduce", minTimestep, min{}).get();
                     //timestep= hpx::all_reduce("timestep_reduce", minTimestep, min{}).get();
-                    if (localityRank == 0) {
+                   /* if (localityRank == 0) {
                         if (localityCount > 1) {
+
                             timestep = hpx::dataflow(hpx::util::unwrapping(
                                     [](std::vector<float> globalTimesteps, float localTimestep) -> float {
                                         return std::min(localTimestep, *std::min_element(globalTimesteps.begin(),
@@ -361,7 +363,7 @@ void SWE_Hpx_No_Component::run() {
                         localityChannel.set(std::move(minTimestep));
 
                         timestep = localityChannel.get()[0].get();
-                    }
+                    }*/
                     collector.stopCounter(Collector::CTR_REDUCE);
 
                     for (auto &block: simulationBlocks)block->maxTimestep = timestep;
