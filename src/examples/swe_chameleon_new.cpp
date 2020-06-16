@@ -272,7 +272,7 @@ int main(int argc, char** argv) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
             do {
-                std::cout << "start iteration\n";
+
                 collector.startCounter(CollectorChameleon::CTR_WALL);
 #pragma omp parallel
                 {

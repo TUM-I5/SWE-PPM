@@ -4,11 +4,11 @@
     <generated>
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -19,7 +19,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -305,13 +305,7 @@
       <workItem from="1587562638341" duration="2015000" />
       <workItem from="1588268692567" duration="2110000" />
       <workItem from="1591781813969" duration="19548000" />
-    </task>
-    <task id="LOCAL-00277" summary="Apperantly all versions of this benchmark repo have a faulty timestep computation&#10;fixed hpx version more to come">
-      <created>1591726823227</created>
-      <option name="number" value="00277" />
-      <option name="presentableId" value="LOCAL-00277" />
-      <option name="project" value="LOCAL" />
-      <updated>1591726823227</updated>
+      <workItem from="1592303204113" duration="317000" />
     </task>
     <task id="LOCAL-00278" summary="Fixed Bug in Computation for all frameworks">
       <created>1591743195332</created>
@@ -649,7 +643,14 @@
       <option name="project" value="LOCAL" />
       <updated>1591806550602</updated>
     </task>
-    <option name="localTasksCounter" value="326" />
+    <task id="LOCAL-00326" summary="Fixed Bug in Computation for all frameworks">
+      <created>1592303330574</created>
+      <option name="number" value="00326" />
+      <option name="presentableId" value="LOCAL-00326" />
+      <option name="project" value="LOCAL" />
+      <updated>1592303330574</updated>
+    </task>
+    <option name="localTasksCounter" value="327" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -719,12 +720,11 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1591806550514">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1592303330464">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591806550514" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592303330464" />
     <state x="2478" y="149" width="860" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1586719624630" />
-    <state x="606" y="150" width="865" height="930" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1583611737958" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1591804985568">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -845,12 +845,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="657" y="274" key="run.anything.popup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591790040660" />
-    <state x="701" y="274" key="run.anything.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1583179683642" />
     <state x="656" y="278" width="672" height="662" key="search.everywhere.popup" timestamp="1591790035436">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="656" y="278" width="672" height="662" key="search.everywhere.popup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591790035436" />
-    <state x="700" y="278" width="672" height="662" key="search.everywhere.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1583607050863" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
