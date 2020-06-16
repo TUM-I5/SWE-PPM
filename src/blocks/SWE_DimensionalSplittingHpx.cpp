@@ -363,18 +363,18 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 #pragma omp simd reduction(max:maxWaveSpeed)
 #endif // VECTORIZE
         for (int j=1; j < ny_end1; j++) {
-            float test;
+
             solver.computeNetUpdates (
                     h[i][j - 1], h[i][j],
                     hv[i][j - 1], hv[i][j],
                     b[i][j - 1], b[i][j],
                     hNetUpdatesBelow[i - 1][j - 1], hNetUpdatesAbove[i - 1][j - 1],
                     hvNetUpdatesBelow[i - 1][j - 1], hvNetUpdatesAbove[i - 1][j - 1],
-                    test
+                    maxEdgeSpeed
             );
 
             //update the maximum wave speed
-            maxWaveSpeed = std::max (maxWaveSpeed, test);
+            maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
         }
     }
 
