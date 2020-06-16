@@ -365,7 +365,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 #endif // VECTORIZE
 
         for (int j=1; j < ny_end; j++) {
-            float maxEdgeSpeed;
+            //float maxEdgeSpeed;
 
             solver.computeNetUpdates (
                     h[i][j - 1], h[i][j],
