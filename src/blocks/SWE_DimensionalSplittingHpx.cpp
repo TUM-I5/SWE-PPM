@@ -328,14 +328,14 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     for (int i = 1; i < nx+2; i++) {
         const int ny_end = ny+1;
-        int j;
+
 #if defined(VECTORIZE)
 
             // iterate over all rows, including ghost layer
-#pragma omp simd
+//#pragma omp simd
 #endif // VECTORIZE
 
-        for (j=1; j < ny_end; ++j) {
+        for (int j=1; j < ny_end; ++j) {
             float maxEdgeSpeed;
 
             solver.computeNetUpdates (
@@ -358,14 +358,14 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     for (int i=1; i < nx + 1; i++) {
         const int ny_end = ny+2;
-        int j;
+
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-#pragma omp simd
+//#pragma omp simd
 #endif // VECTORIZE
 
-        for (j=1; j < ny_end; j++) {
+        for (int j=1; j < ny_end; j++) {
             float maxEdgeSpeed;
 
             solver.computeNetUpdates (
@@ -419,14 +419,14 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
     dt=maxTimestep;
     for (int i = 1; i < nx+1; i++) {
         const int ny_end = ny+1;
-        int j;
+
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
 #pragma omp simd
 #endif // VECTORIZE
 
-        for (j = 1; j < ny_end; j++) {
+        for (int j = 1; j < ny_end; j++) {
             h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
             hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
             hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
