@@ -328,7 +328,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     for (int i = 1; i < nx+2; i++) {
         const int ny_end = ny+1;
-        float maxEdgeSpeed = 0;
+
 #if defined(VECTORIZE)
 
             // iterate over all rows, including ghost layer
@@ -336,7 +336,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 #endif // VECTORIZE
         for (int j=1; j < ny_end; ++j) {
 
-
+            float maxEdgeSpeed = 0;
             solver.computeNetUpdates (
                     h[i - 1][j], h[i][j],
                     hu[i - 1][j], hu[i][j],
@@ -357,14 +357,14 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     for (int i=1; i < nx + 1; i++) {
         const int ny_end = ny+2;
-        float maxEdgeSpeed = 0;
+
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
 #pragma omp simd reduction(max:maxWaveSpeed)
 #endif // VECTORIZE
         for (int j=1; j < ny_end; j++) {
-
+            float maxEdgeSpeed = 0;
             solver.computeNetUpdates (
                     h[i][j - 1], h[i][j],
                     hv[i][j - 1], hv[i][j],
