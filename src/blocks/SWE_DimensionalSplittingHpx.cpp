@@ -331,7 +331,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
             // iterate over all rows, including ghost layer
-#pragma omp simd reduction(max:maxEdgeSpeed)
+#pragma omp simd
 #endif // VECTORIZE
 
         for (int j=1; j < ny_end; ++j) {
@@ -360,7 +360,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-#pragma omp simd reduction(max:maxEdgeSpeed)
+#pragma omp simd
 #endif // VECTORIZE
 
         for (int j=1; j < ny_end; j++) {
@@ -420,7 +420,7 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-#pragma omp simd reduction(max:maxEdgeSpeed)
+#pragma omp simd
 #endif // VECTORIZE
 
         for (int j = 1; j < ny_end; j++) {
