@@ -321,14 +321,14 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
     if (!allGhostlayersInSync()) return;
 //maximum (linearized) wave speed within one iteration
     float maxWaveSpeed = (float) 0.;
-    float maxEdgeSpeed = 0;
+
     /***************************************************************************************
      * compute the net-updates for the vertical edges
      **************************************************************************************/
 
     for (int i = 1; i < nx+2; i++) {
         const int ny_end = ny+1;
-
+        float maxEdgeSpeed = 0;
 #if defined(VECTORIZE)
 
             // iterate over all rows, including ghost layer
@@ -357,7 +357,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     for (int i=1; i < nx + 1; i++) {
         const int ny_end = ny+2;
-
+        float maxEdgeSpeed = 0;
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
