@@ -332,11 +332,11 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
             // iterate over all rows, including ghost layer
-//#pragma omp simd
+#pragma omp simd reduction(max:maxEdgeSpeed)
 #endif // VECTORIZE
-
+        float maxEdgeSpeed;
         for (int j=1; j < ny_end; ++j) {
-            float maxEdgeSpeed;
+
 
             solver.computeNetUpdates (
                     h[i - 1][j], h[i][j],
@@ -348,9 +348,10 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
             );
 
             //update the thread-local maximum wave speed
-            maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
         }
+        maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
     }
+
 
     /***************************************************************************************
      * compute the net-updates for the horizontal edges
