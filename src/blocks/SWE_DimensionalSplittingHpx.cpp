@@ -328,13 +328,12 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     for (int i = 1; i < nx+2; i++) {
         const int ny_end = ny+1;
-
+        float maxEdgeSpeed;
 #if defined(VECTORIZE)
 
             // iterate over all rows, including ghost layer
 #pragma omp simd reduction(max:maxEdgeSpeed)
 #endif // VECTORIZE
-        float maxEdgeSpeed;
         for (int j=1; j < ny_end; ++j) {
 
 
