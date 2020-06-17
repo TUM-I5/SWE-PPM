@@ -618,7 +618,7 @@ float* hu_in, float* hv_in){
     block->hvNetUpdatesBelow.setRawPointer(hvNetUpdatesBelow_data);
     block->hvNetUpdatesAbove.setRawPointer(hvNetUpdatesAbove_data);
     Float2DNative htest = Float2DNative(block->nx+2, block->ny+2);
-    h.setRawPointer(h_in);
+    htest.setRawPointer(h_in);
     Float2DNative hutest = Float2DNative(block->nx+2, block->ny+2);
     hutest.setRawPointer(hu_in);
     Float2DNative hvtest = Float2DNative(block->nx+2, block->ny+2);
