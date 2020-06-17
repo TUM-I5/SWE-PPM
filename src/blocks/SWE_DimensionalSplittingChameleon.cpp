@@ -483,14 +483,10 @@ void computeNumericalFluxesKernel(SWE_DimensionalSplittingChameleon* block, floa
     block->getModifiableBathymetry().setRawPointer(b_data);
     block->hNetUpdatesLeft.setRawPointer(hNetUpdatesLeft_data);
     block->hNetUpdatesRight.setRawPointer(hNetUpdatesRight_data);
-    block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
-    block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
-    block->hNetUpdatesLeft.setRawPointer(hNetUpdatesLeft_data);
-    block->hNetUpdatesRight.setRawPointer(hNetUpdatesRight_data);
-    block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
-    block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
     block->hNetUpdatesBelow.setRawPointer(hNetUpdatesBelow_data);
     block->hNetUpdatesAbove.setRawPointer(hNetUpdatesAbove_data);
+    block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
+    block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
     block->hvNetUpdatesBelow.setRawPointer(hvNetUpdatesBelow_data);
     block->hvNetUpdatesAbove.setRawPointer(hvNetUpdatesAbove_data);
 
@@ -614,14 +610,10 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
     block->getModifiableMomentumVertical().setRawPointer(hv_data);
     block->hNetUpdatesLeft.setRawPointer(hNetUpdatesLeft_data);
     block->hNetUpdatesRight.setRawPointer(hNetUpdatesRight_data);
-    block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
-    block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
-    block->hNetUpdatesLeft.setRawPointer(hNetUpdatesLeft_data);
-    block->hNetUpdatesRight.setRawPointer(hNetUpdatesRight_data);
-    block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
-    block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
     block->hNetUpdatesBelow.setRawPointer(hNetUpdatesBelow_data);
     block->hNetUpdatesAbove.setRawPointer(hNetUpdatesAbove_data);
+    block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
+    block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
     block->hvNetUpdatesBelow.setRawPointer(hvNetUpdatesBelow_data);
     block->hvNetUpdatesAbove.setRawPointer(hvNetUpdatesAbove_data);
 
@@ -629,24 +621,24 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
     float dt=*maxTimestep;
     for (int i = 1; i < block->nx+1; i++) {
         for (int j = 1; j < block->ny + 1; j++) {
-            block->h[i][j] -= dt / block->dx * (block->hNetUpdatesRight[i - 1][j - 1] + block->hNetUpdatesLeft[i][j - 1]) + dt / block->dy * (block->hNetUpdatesAbove[i - 1][j - 1] + block->hNetUpdatesBelow[i - 1][j]);
-            block->hu[i][j] -= dt / block->dx * (block->huNetUpdatesRight[i - 1][j - 1] + block->huNetUpdatesLeft[i][j - 1]);
-            block->hv[i][j] -= dt / block->dy * (block->hvNetUpdatesAbove[i - 1][j - 1] + block->hvNetUpdatesBelow[i - 1][j]);
+            block->getModifiableWaterHeight()[i][j] -= dt / block->dx * (block->hNetUpdatesRight[i - 1][j - 1] + block->hNetUpdatesLeft[i][j - 1]) + dt / block->dy * (block->hNetUpdatesAbove[i - 1][j - 1] + block->hNetUpdatesBelow[i - 1][j]);
+            block->getModifiableMomentumHorizontal()[i][j] -= dt / block->dx * (block->huNetUpdatesRight[i - 1][j - 1] + block->huNetUpdatesLeft[i][j - 1]);
+            block->getModifiableMomentumVertical()[i][j] -= dt / block->dy * (block->hvNetUpdatesAbove[i - 1][j - 1] + block->hvNetUpdatesBelow[i - 1][j]);
 
-            if ( block->h[i][j] < 0) {
+            if ( block->getModifiableWaterHeight()[i][j] < 0) {
                 //TODO: dryTol
 #ifndef NDEBUG
                 // Only print this warning when debug is enabled
 				// Otherwise we cannot vectorize this loop
-				if ( block->h[i][j] < -0.1) {
+				if ( block->getModifiableWaterHeight()[i][j] < -0.1) {
 					std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" <<  block->h[i][j] << std::endl;
 					//std::cerr << "         b: " <<  block->b[i][j] << std::endl;
 				}
 #endif // NDEBUG
                 //zero (small) negative depths
-                block->h[i][j] =  block->hu[i][j] =  block->hv[i][j] = 0.;
-            } else if ( block->h[i][j] < 0.1)
-                block->hu[i][j] =  block->hv[i][j] = 0.; //no water, no speed!
+                block->getModifiableWaterHeight()[i][j] =   block->getModifiableMomentumHorizontal()[i][j] =  block->getModifiableMomentumVertical()[i][j] = 0.;
+            } else if ( block->getModifiableWaterHeight()[i][j] < 0.1)
+                block->getModifiableMomentumHorizontal()[i][j] =  block->getModifiableMomentumVertical()[i][j] = 0.; //no water, no speed!
         }
     }
 
