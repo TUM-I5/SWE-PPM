@@ -311,6 +311,7 @@ int main(int argc, char** argv) {
 
                     for (auto &block: simulationBlocks)block->maxTimestep = timestep;
                     collector.stopCounter(CollectorChameleon::CTR_REDUCE);
+                    std::cout << "timestep " << timestep << std::endl;
                 }else {
                     for (auto &block: simulationBlocks){
                         if(block->allGhostlayersInSync()){
