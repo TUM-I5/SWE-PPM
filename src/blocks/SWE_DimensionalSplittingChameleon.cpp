@@ -651,7 +651,7 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
      if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
 
-    chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[13];
+    chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[16];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
     args[1] = chameleon_map_data_entry_create(&(this->maxTimestep), sizeof(float), CHAM_OMP_TGT_MAPTYPE_TO);
     args[2] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2),CHAM_OMP_TGT_MAPTYPE_ALWAYS);
@@ -675,7 +675,7 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
 
     cham_migratable_task_t *cur_task = chameleon_create_task(
             (void *)&updateUnkownsKernel,
-            13, // number of args
+            16, // number of args
             args);
     int32_t res = chameleon_add_task(cur_task);
 }
