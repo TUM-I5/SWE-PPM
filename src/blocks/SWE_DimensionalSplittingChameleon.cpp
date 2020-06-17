@@ -617,18 +617,19 @@ float* hu_in, float* hv_in){
     block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
     block->hvNetUpdatesBelow.setRawPointer(hvNetUpdatesBelow_data);
     block->hvNetUpdatesAbove.setRawPointer(hvNetUpdatesAbove_data);
-    Float2DNative h = Float2DNative(block->nx+2, block->ny+2);
+    Float2DNative htest = Float2DNative(block->nx+2, block->ny+2);
     h.setRawPointer(h_in);
-    Float2DNative hu = Float2DNative(block->nx+2, block->ny+2);
+    Float2DNative hutest = Float2DNative(block->nx+2, block->ny+2);
     h.setRawPointer(hu_in);
-    Float2DNative hv = Float2DNative(block->nx+2, block->ny+2);
+    Float2DNative hvtest = Float2DNative(block->nx+2, block->ny+2);
     h.setRawPointer(hv_in);
     float dt=*maxTimestep;
     for (int i = 1; i < block->nx+1; i++) {
         for (int j = 1; j < block->ny + 1; j++) {
-            block->getModifiableWaterHeight()[i][j] =h[i][j] -dt / block->dx * (block->hNetUpdatesRight[i - 1][j - 1] + block->hNetUpdatesLeft[i][j - 1]) + dt / block->dy * (block->hNetUpdatesAbove[i - 1][j - 1] + block->hNetUpdatesBelow[i - 1][j]);
-            block->getModifiableMomentumHorizontal()[i][j]  =hu[i][j] - dt / block->dx * (block->huNetUpdatesRight[i - 1][j - 1] + block->huNetUpdatesLeft[i][j - 1]);
-            block->getModifiableMomentumVertical()[i][j]  =hv[i][j] - dt / block->dy * (block->hvNetUpdatesAbove[i - 1][j - 1] + block->hvNetUpdatesBelow[i - 1][j]);
+            if(block->h[i][j] != h[i])
+            block->getModifiableWaterHeight()[i][j] =htest[i][j] -dt / block->dx * (block->hNetUpdatesRight[i - 1][j - 1] + block->hNetUpdatesLeft[i][j - 1]) + dt / block->dy * (block->hNetUpdatesAbove[i - 1][j - 1] + block->hNetUpdatesBelow[i - 1][j]);
+            block->getModifiableMomentumHorizontal()[i][j]  =hutest[i][j] - dt / block->dx * (block->huNetUpdatesRight[i - 1][j - 1] + block->huNetUpdatesLeft[i][j - 1]);
+            block->getModifiableMomentumVertical()[i][j]  =hvtest[i][j] - dt / block->dy * (block->hvNetUpdatesAbove[i - 1][j - 1] + block->hvNetUpdatesBelow[i - 1][j]);
 
             if ( block->getModifiableWaterHeight()[i][j] < 0) {
                 //TODO: dryTol
