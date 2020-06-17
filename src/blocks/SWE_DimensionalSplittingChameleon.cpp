@@ -600,11 +600,11 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
  * since this is the step width used for the intermediary updates after the x-sweep.
  */
  void updateUnkownsKernel(SWE_DimensionalSplittingChameleon* block, float* maxTimestep, float* h_data,
-                          float* hu_data, float* hv_data,
+                          float* h_in,  float* hv_data,
                           float* hNetUpdatesLeft_data, float* hNetUpdatesRight_data,
                           float* hNetUpdatesBelow_data, float* hNetUpdatesAbove_data,
                           float* huNetUpdatesLeft_data, float* huNetUpdatesRight_data,
-                          float* hvNetUpdatesBelow_data, float* hvNetUpdatesAbove_data,float* h_in,
+                          float* hvNetUpdatesBelow_data, float* hvNetUpdatesAbove_data,float* hu_data,
 float* hu_in, float* hv_in){
     block->getModifiableWaterHeight().setRawPointer(h_data);
     block->getModifiableMomentumHorizontal().setRawPointer(hu_data);
