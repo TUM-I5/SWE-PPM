@@ -620,9 +620,9 @@ float* hu_in, float* hv_in){
     Float2DNative htest = Float2DNative(block->nx+2, block->ny+2);
     h.setRawPointer(h_in);
     Float2DNative hutest = Float2DNative(block->nx+2, block->ny+2);
-    h.setRawPointer(hu_in);
+    hutest.setRawPointer(hu_in);
     Float2DNative hvtest = Float2DNative(block->nx+2, block->ny+2);
-    h.setRawPointer(hv_in);
+    hvtest.setRawPointer(hv_in);
     float dt=*maxTimestep;
     for (int i = 1; i < block->nx+1; i++) {
         for (int j = 1; j < block->ny + 1; j++) {
