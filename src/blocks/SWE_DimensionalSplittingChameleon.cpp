@@ -622,6 +622,7 @@ float* hu_in, float* hv_in){
     float dt=*maxTimestep;
     for (int i = 1; i < block->nx+1; i++) {
         for (int j = 1; j < block->ny + 1; j++) {
+            if( block->getModifiableWaterHeight()[i][j] != *(h_in + (rows *i)+j)) std::cout <<  block->getModifiableWaterHeight()[i][j] <<"!="<< *(h_in + (rows *i)+j)<< std::endl;
             block->getModifiableWaterHeight()[i][j] =*(h_in + (rows *i)+j) - dt / block->dx * (block->hNetUpdatesRight[i - 1][j - 1] + block->hNetUpdatesLeft[i][j - 1]) + dt / block->dy * (block->hNetUpdatesAbove[i - 1][j - 1] + block->hNetUpdatesBelow[i - 1][j]);
             block->getModifiableMomentumHorizontal()[i][j] =*(hu_in + (rows *i)+j)- dt / block->dx * (block->huNetUpdatesRight[i - 1][j - 1] + block->huNetUpdatesLeft[i][j - 1]);
             block->getModifiableMomentumVertical()[i][j] =*(hv_in + (rows *i)+j) - dt / block->dy * (block->hvNetUpdatesAbove[i - 1][j - 1] + block->hvNetUpdatesBelow[i - 1][j]);
