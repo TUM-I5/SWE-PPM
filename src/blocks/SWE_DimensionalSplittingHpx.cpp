@@ -419,7 +419,7 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-#pragma omp simd
+//#pragma omp simd
 #endif // VECTORIZE
 
         for (int j = 1; j < ny_end; j++) {
