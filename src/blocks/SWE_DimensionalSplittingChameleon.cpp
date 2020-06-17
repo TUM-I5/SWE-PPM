@@ -624,7 +624,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
     Float2DNative h = Float2DNative(block->nx+2,block->ny+2);
     h.setRawPointer(h_in);
     Float2DNative hu = Float2DNative(block->nx+2,block->ny+2);
-    h.setRawPointer(hu_in);
+    hu.setRawPointer(hu_in);
     Float2DNative hv = Float2DNative(block->nx+2,block->ny+2);
     hv.setRawPointer(hv_in);
 
