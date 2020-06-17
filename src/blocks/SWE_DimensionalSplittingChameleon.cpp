@@ -606,45 +606,42 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
                           float* huNetUpdatesLeft_data, float* huNetUpdatesRight_data,
                           float* hvNetUpdatesBelow_data, float* hvNetUpdatesAbove_data,float* h_data, float* hu_data, float* hv_data
 ){
-    block->getModifiableWaterHeight().setRawPointer(h_data);
-    block->getModifiableMomentumHorizontal().setRawPointer(hu_data);
-    block->getModifiableMomentumVertical().setRawPointer(hv_data);
+    block->h.setRawPointer(h_data);
+    block->hu.setRawPointer(hu_data);
+    block->hv.setRawPointer(hv_data);
+
     block->hNetUpdatesLeft.setRawPointer(hNetUpdatesLeft_data);
     block->hNetUpdatesRight.setRawPointer(hNetUpdatesRight_data);
     block->hNetUpdatesBelow.setRawPointer(hNetUpdatesBelow_data);
     block->hNetUpdatesAbove.setRawPointer(hNetUpdatesAbove_data);
+
     block->huNetUpdatesLeft.setRawPointer(huNetUpdatesLeft_data);
     block->huNetUpdatesRight.setRawPointer(huNetUpdatesRight_data);
+
     block->hvNetUpdatesBelow.setRawPointer(hvNetUpdatesBelow_data);
     block->hvNetUpdatesAbove.setRawPointer(hvNetUpdatesAbove_data);
-    Float2DNative htest = Float2DNative(block->nx+2, block->ny+2);
-    htest.setRawPointer(h_in);
-    Float2DNative hutest = Float2DNative(block->nx+2, block->ny+2);
-    hutest.setRawPointer(hu_in);
-    Float2DNative hvtest = Float2DNative(block->nx+2, block->ny+2);
-    hvtest.setRawPointer(hv_in);
-    float dt=*maxTimestep;
-    for (int i = 1; i < block->nx+1; i++) {
-        for (int j = 1; j < block->ny + 1; j++) {
-            //if(block->h[i][j] != htest[i][j]) std::cout << block->h[i][j] <<"!= "<< htest[i][j] << " " << block->nx << " "<< block->ny << " " << block->h.getRows()<< std::endl;
-            block->getModifiableWaterHeight()[i][j] =htest[i][j]- (dt / block->dx * (block->hNetUpdatesRight[i - 1][j - 1] + block->hNetUpdatesLeft[i][j - 1]) + dt / block->dy * (block->hNetUpdatesAbove[i - 1][j - 1] + block->hNetUpdatesBelow[i - 1][j]));
-            block->getModifiableMomentumHorizontal()[i][j]  =hutest[i][j]- (dt / block->dx * (block->huNetUpdatesRight[i - 1][j - 1] + block->huNetUpdatesLeft[i][j - 1]));
-            block->getModifiableMomentumVertical()[i][j]  =hvtest[i][j]- (dt/ block->dy * (block->hvNetUpdatesAbove[i - 1][j - 1] + block->hvNetUpdatesBelow[i - 1][j]));
 
-            if ( block->getModifiableWaterHeight()[i][j] < 0) {
+    float dt=*maxTimestep;
+    for (int i = 1; i < block->nx +1; i++) {
+        for (int j = 1; j < block->ny + 1; j++) {
+            block->h[i][j] -= dt / block->dx * (block->hNetUpdatesRight[i - 1][j - 1] + block->hNetUpdatesLeft[i][j - 1]) + dt / block->dy * (block->hNetUpdatesAbove[i - 1][j - 1] + block->hNetUpdatesBelow[i - 1][j]);
+            block->hu[i][j] -= dt / block->dx * (block->huNetUpdatesRight[i - 1][j - 1] + block->huNetUpdatesLeft[i][j - 1]);
+            block->hv[i][j] -= dt / block->dy * (block->hvNetUpdatesAbove[i - 1][j - 1] + block->hvNetUpdatesBelow[i - 1][j]);
+
+            if (block->h[i][j] < 0) {
                 //TODO: dryTol
 #ifndef NDEBUG
                 // Only print this warning when debug is enabled
 				// Otherwise we cannot vectorize this loop
-				if ( block->getModifiableWaterHeight()[i][j] < -0.1) {
-					std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" <<  block->h[i][j] << std::endl;
-					//std::cerr << "         b: " <<  block->b[i][j] << std::endl;
+				if (block->h[i][j] < -0.1) {
+					std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" << block->h[i][j] << std::endl;
+					//std::cerr << "         b: " << b[i][j] << std::endl;
 				}
 #endif // NDEBUG
                 //zero (small) negative depths
-                block->getModifiableWaterHeight()[i][j] =   block->getModifiableMomentumHorizontal()[i][j] =  block->getModifiableMomentumVertical()[i][j] = 0.;
-            } else if ( block->getModifiableWaterHeight()[i][j] < 0.1)
-                block->getModifiableMomentumHorizontal()[i][j] =  block->getModifiableMomentumVertical()[i][j] = 0.; //no water, no speed!
+                block->h[i][j] = block->hu[i][j] = block->hv[i][j] = 0.;
+            } else if (block->h[i][j] < 0.1)
+                block->hu[i][j] = block->hv[i][j] = 0.; //no water, no speed!
         }
     }
 
@@ -654,7 +651,7 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
      if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
 
-    chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[16];
+    chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[13];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
     args[1] = chameleon_map_data_entry_create(&(this->maxTimestep), sizeof(float), CHAM_OMP_TGT_MAPTYPE_TO);
     args[2] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2),CHAM_OMP_TGT_MAPTYPE_ALWAYS);
@@ -678,7 +675,7 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
 
     cham_migratable_task_t *cur_task = chameleon_create_task(
             (void *)&updateUnkownsKernel,
-            16, // number of args
+            13, // number of args
             args);
     int32_t res = chameleon_add_task(cur_task);
 }
