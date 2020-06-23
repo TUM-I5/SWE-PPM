@@ -357,7 +357,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     for (int i=1; i < nx + 1; i++) {
         const int ny_end = ny+2;
-        float maxEdgeSpeed = 0;
+
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
