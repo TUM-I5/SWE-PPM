@@ -361,7 +361,6 @@ int main(int argc, char** argv) {
     }
 
     if(localTimestepping){
-    std::cout << "done sending ghostlayer\n";
 
         for (int i = 0; i < simulationBlocks.size(); i++){
             simulationBlocks[i]->setGhostLayer();
@@ -369,6 +368,17 @@ int main(int argc, char** argv) {
 
         for (int i = 0; i < simulationBlocks.size(); i++){
             simulationBlocks[i]->receiveGhostLayer();
+        }
+        MPI_Request req;
+        MPI_Ibarrier(MPI_COMM_WORLD,&req);
+        MPI_Status status;
+        int flag=0;
+        MPI_Test(&req,&flag,&status);
+
+        while(!flag){
+            chameleon_distributed_taskwait(0);
+            chameleon_distributed_taskwait(0);
+            MPI_Test(&req,&flag,&status);
         }
 
     }
