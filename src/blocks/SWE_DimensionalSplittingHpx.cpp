@@ -361,7 +361,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-#pragma omp simd lastprivate(maxEdgeSpeed) //reduction(max:maxEdgeSpeed) //
+#pragma omp simd reduction(max:maxEdgeSpeed) //
 #endif // VECTORIZE
         for (int j=1; j < ny_end; ++j) {
 
@@ -375,7 +375,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
             );
 
             //update the maximum wave speed
-           //maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
+           maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
            //maxTestSpeed = std::max (maxTestSpeed, maxEdgeSpeed);
 
         }
