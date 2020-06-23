@@ -394,7 +394,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-//#pragma omp simd reduction(max:maxEdgeSpeed)
+#pragma omp simd reduction(max:maxEdgeSpeed)
 #endif // VECTORIZE
         for (int j=1; j < ny_end; ++j) {
             float maxEdgeSpeed;
@@ -424,7 +424,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-//#pragma omp simd reduction(max:maxWaveSpeed)
+#pragma omp simd reduction(max:maxWaveSpeed)
 #endif // VECTORIZE
         for (int j=1; j < ny_end; j++) {
             float maxEdgeSpeed;
@@ -491,7 +491,7 @@ void SWE_DimensionalSplittingMpi::updateUnknowns(float dt) {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-//#pragma omp simd
+#pragma omp simd
 #endif // VECTORIZE
 
         for (int j = 1; j < ny_end; j++) {
