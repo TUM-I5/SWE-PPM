@@ -357,12 +357,13 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     for (int i=1; i < nx + 1; i++) {
         const int ny_end1 = ny+2;
+        int j;
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
 #pragma omp simd reduction(max:maxWaveSpeed)
 #endif // VECTORIZE
-        for (int j=1; j < ny_end1; j++) {
+        for (j=1; j < ny_end1; j++) {
 
             solver.computeNetUpdates (
                     h[i][j - 1], h[i][j],
