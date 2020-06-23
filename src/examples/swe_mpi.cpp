@@ -355,6 +355,8 @@ if(write){
     simulation.freeMpiType();
     if (write)
         delete writer;
+
+
     MPI_Finalize();
     return 0;
 }
