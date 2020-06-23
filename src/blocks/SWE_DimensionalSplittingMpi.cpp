@@ -395,7 +395,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-#pragma omp simd reduction(max:maxEdgeSpeed)
+//#pragma omp simd reduction(max:maxEdgeSpeed)
 #endif // VECTORIZE
         for (int j=1; j < ny_end; ++j) {
 
@@ -408,13 +408,12 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
                     huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
                     maxEdgeSpeed
             );
-
+            maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
         }
 
     }
 
-    maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
-    maxEdgeSpeed =0.f;
+
     /***************************************************************************************
      * compute the net-updates for the horizontal edges
      **************************************************************************************/
@@ -425,7 +424,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-#pragma omp simd reduction(max:maxEdgeSpeed)
+//#pragma omp simd reduction(max:maxWaveSpeed)
 #endif // VECTORIZE
         for (int j=1; j < ny_end; ++j) {
 
@@ -439,12 +438,12 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
             );
 
             //update the maximum wave speed
-           // maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
+            maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
             //maxTestSpeed = std::max (maxTestSpeed, maxEdgeSpeed);
 
         }
     }
-    maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
+
     if (maxWaveSpeed > 0.00001) {
 
         maxTimestep = std::min (dx / maxWaveSpeed, dy / maxWaveSpeed);
