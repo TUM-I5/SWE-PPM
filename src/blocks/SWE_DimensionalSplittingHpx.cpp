@@ -361,7 +361,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 #if defined(VECTORIZE)
 
         // iterate over all rows, including ghost layer
-#pragma omp simd reduction(max:maxEdgeSpeed) //lastprivate(maxEdgeSpeed)
+#pragma omp simd //reduction(max:maxEdgeSpeed) //lastprivate(maxEdgeSpeed)
 #endif // VECTORIZE
         for (int j=1; j < ny_end; ++j) {
 
