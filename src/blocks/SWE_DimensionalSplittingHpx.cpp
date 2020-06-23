@@ -376,7 +376,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
             //update the maximum wave speed
            // maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
-           maxTestSpeed = std::max (maxTestSpeed, maxEdgeSpeed);
+           //maxTestSpeed = std::max (maxTestSpeed, maxEdgeSpeed);
 
         }
     }
