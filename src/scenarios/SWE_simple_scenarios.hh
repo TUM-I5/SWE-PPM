@@ -114,7 +114,7 @@ public:
     float getBathymetry(float x, float y) {
        return (std::sqrt((x - 1000.f) * (x - 1000.f) + (y - 1000.f) * (y - 1000.f)) < 300.f)
        // || (std::sqrt((x - 1000.f) * (x - 1000.f) + (y - 500.f) * (y - 500.f)) < 50.f)
-        ? 100.f : -10.f;
+        ? 300.f : -10.f;
        return -10.f;
     };
 
