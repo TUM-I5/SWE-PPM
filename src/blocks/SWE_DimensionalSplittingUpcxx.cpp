@@ -456,13 +456,13 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
         //dataTransmitted[i] = false;
     }
     checkAllGhostlayers();
-
+    CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_EXCHANGE);
     if(!localTimestepping){
         for (int i = 0; i < 4; i++) {
             copyGhostlayer(static_cast<Boundary>(i));
         }
     }
-    CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_EXCHANGE);
+
     iteration++;
 }
 
