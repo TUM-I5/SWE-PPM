@@ -475,14 +475,21 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
     if (!allGhostlayersInSync()) return;
 //maximum (linearized) wave speed within one iteration
     float maxWaveSpeed = (float) 0.;
-
+    float maxEdgeSpeed = 0;
     /***************************************************************************************
      * compute the net-updates for the vertical edges
      **************************************************************************************/
 
     for (int i = 1; i < nx+2; i++) {
-        for (int j=1; j < ny+1; ++j) {
-            float maxEdgeSpeed;
+        const int ny_end = ny+1;
+
+#if defined(VECTORIZE)
+
+        // iterate over all rows, including ghost layer
+#pragma omp simd reduction(max:maxWaveSpeed)
+#endif // VECTORIZE
+        for (int j=1; j < ny_end; ++j) {
+
 
             solver.computeNetUpdates (
                     h[i - 1][j], h[i][j],
@@ -492,19 +499,25 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
                     huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
                     maxEdgeSpeed
             );
-
-            //update the thread-local maximum wave speed
             maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
         }
+
     }
+
 
     /***************************************************************************************
      * compute the net-updates for the horizontal edges
      **************************************************************************************/
 
     for (int i=1; i < nx + 1; i++) {
-        for (int j=1; j < ny + 2; j++) {
-            float maxEdgeSpeed;
+        const int ny_end = ny+2;
+
+#if defined(VECTORIZE)
+
+        // iterate over all rows, including ghost layer
+#pragma omp simd reduction(max:maxWaveSpeed) //
+#endif // VECTORIZE
+        for (int j=1; j < ny_end; ++j) {
 
             solver.computeNetUpdates (
                     h[i][j - 1], h[i][j],
@@ -517,6 +530,8 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
 
             //update the maximum wave speed
             maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
+            //maxTestSpeed = std::max (maxTestSpeed, maxEdgeSpeed);
+
         }
     }
 
@@ -529,6 +544,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
         //might happen in dry cells
         maxTimestep = std::numeric_limits<float>::max ();
     }
+
 
 
     CollectorUpcxx::getInstance().addFlops(2*nx * ny * 135);
@@ -560,7 +576,15 @@ void SWE_DimensionalSplittingUpcxx::updateUnknowns(float dt) {
 //update cell averages with the net-updates
     dt=maxTimestep;
     for (int i = 1; i < nx+1; i++) {
-        for (int j = 1; j < ny + 1; j++) {
+        const int ny_end = ny+1;
+
+#if defined(VECTORIZE)
+
+        // iterate over all rows, including ghost layer
+#pragma omp simd
+#endif // VECTORIZE
+
+        for (int j = 1; j < ny_end; j++) {
             h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
             hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
             hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
@@ -581,5 +605,6 @@ void SWE_DimensionalSplittingUpcxx::updateUnknowns(float dt) {
                 hu[i][j] = hv[i][j] = 0.; //no water, no speed!
         }
     }
+
 }
 
