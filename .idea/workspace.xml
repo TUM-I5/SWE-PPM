@@ -20,7 +20,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BuildChameleon.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/BuildChameleon.cmake" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -313,14 +313,7 @@
       <workItem from="1592393442238" duration="387000" />
       <workItem from="1592401902535" duration="10450000" />
       <workItem from="1592422730430" duration="1414000" />
-      <workItem from="1592992630698" duration="17432000" />
-    </task>
-    <task id="LOCAL-00383" summary="Fixed Bug in Computation for all frameworks">
-      <created>1592423257956</created>
-      <option name="number" value="00383" />
-      <option name="presentableId" value="LOCAL-00383" />
-      <option name="project" value="LOCAL" />
-      <updated>1592423257956</updated>
+      <workItem from="1592992630698" duration="17807000" />
     </task>
     <task id="LOCAL-00384" summary="Fixed Bug in Computation for all frameworks">
       <created>1592423461321</created>
@@ -658,7 +651,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593025221262</updated>
     </task>
-    <option name="localTasksCounter" value="432" />
+    <task id="LOCAL-00432" summary="Added vectorization to chameleon&#10;modified colletor for all frameworks">
+      <created>1593025408612</created>
+      <option name="number" value="00432" />
+      <option name="presentableId" value="LOCAL-00432" />
+      <option name="project" value="LOCAL" />
+      <updated>1593025408612</updated>
+    </task>
+    <option name="localTasksCounter" value="433" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -729,10 +729,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593025221184">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593025408568">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593025221184" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593025408568" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1592917132333" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1592996457298">
       <screen x="0" y="27" width="1920" height="1053" />
