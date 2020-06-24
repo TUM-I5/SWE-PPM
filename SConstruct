@@ -436,7 +436,8 @@ if env['compileMode'] == 'debug':
 elif env['compileMode'] == 'release':
     env.Append(CPPDEFINES=['NDEBUG'])
     if env['compiler'] == 'gnu':
-        env.Append(CCFLAGS=['-O3', '-mtune=native'])
+        #env.Append(CCFLAGS=['-O3', '-mtune=native'])
+        env.Append(CCFLAGS=['-O2'])
     elif env['compiler'] == 'intel':
         env.Append(CCFLAGS=['-O2', '-std=c++0x'])
     # especially for env['compiler'] == 'cray'
