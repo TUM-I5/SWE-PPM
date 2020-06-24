@@ -558,7 +558,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
         // compute max timestep according to cautious CFL-condition
         CollectorUpcxx::getInstance().startCounter(CollectorUpcxx::CTR_REDUCE);
 
-        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, upcxx::fast_op_min).wait();
+        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, upcxx::op_fast_min).wait();
 
         CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_REDUCE);
         maxTimestep = maxTimestepGlobal;
