@@ -217,7 +217,7 @@ public:
     float maxTimestep;
     float maxTimestepLocal; // used for local timestepping
     float currentTimestep = 0;
-    int maxDivisor = 2048; //smallest timestep possible maxTimestepLocal/maxDivisor
+    int maxDivisor = 512; //smallest timestep possible maxTimestepLocal/maxDivisor
     bool localTimestepping; //true to activate localtimestepping
     bool notifiedLastTimestep = false;
     int stepSize; //is used to determine the localstepsize;
