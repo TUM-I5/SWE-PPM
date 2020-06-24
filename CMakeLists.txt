@@ -6,7 +6,7 @@ project(swe_benchmark)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(BUILDS Default Upcxx)
+set(BUILDS Default Mpi)
 
 #set(BUILDS Hpx Mpi)
 
@@ -43,7 +43,7 @@ foreach( build_type ${BUILDS})
     endif()
     #
     target_include_directories(swe_benchmark_${build_type} PUBLIC "${${build_type}_include_directories}" ${NETCDF_INCLUDE_DIRS} )
-    target_compile_options(swe_benchmark_${build_type} PUBLIC "${${build_type}_compile_options}" -O2 -std=c++14 -qopt-report-phase=vec -qopt-report=5 -fmessage-length=0 )
+    target_compile_options(swe_benchmark_${build_type} PUBLIC "${${build_type}_compile_options}" )#-O2 -std=c++14 -qopt-report-phase=vec -qopt-report=5 -fmessage-length=0 )
     #
 
 endforeach(build_type ${BUILDS})
