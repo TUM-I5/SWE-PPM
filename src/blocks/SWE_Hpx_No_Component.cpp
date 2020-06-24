@@ -236,7 +236,8 @@ void SWE_Hpx_No_Component::run() {
     if (localityRank == 0) {
         collector.setMasterSettings(true, outputBaseName + ".log");
     }
-
+    collector.setMasterSettings(localityRank==0, outputBaseName + ".log",localityCount);
+    collector.setRank(localityRank);
 
     for (auto &block: simulationBlocks)fut.push_back(hpx::async(exchangeBathymetry, block.get()));
     hpx::wait_all(fut);
@@ -412,11 +413,11 @@ void SWE_Hpx_No_Component::run() {
     if(localTimestepping){
 
         for (auto &block: simulationBlocks){
-            std::cout << block->myRank<< "|last send\n";
+
             blockFuture.push_back(hpx::async(setGhostLayer, block.get()));
         }
         hpx::wait_all(blockFuture);
-        std::cout << "doneso\n";
+
     }
     for (auto &block: simulationBlocks) {
         collector += block->collector;

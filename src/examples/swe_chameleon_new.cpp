@@ -383,9 +383,9 @@ int main(int argc, char** argv) {
 
     }
 
-    if (localityRank == 0) {
-       collector.setMasterSettings(true, outputBaseName + ".log");
-    }
+
+    collector.setMasterSettings(localityRank == 0, outputBaseName + ".log",totalRanks);
+    collector.setRank(localityRank);
     for (auto &block: simulationBlocks) {
 
         collector += block->collector;

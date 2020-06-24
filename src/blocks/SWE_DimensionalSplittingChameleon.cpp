@@ -508,7 +508,13 @@ void computeNumericalFluxesKernel(SWE_DimensionalSplittingChameleon* block, floa
      **************************************************************************************/
 
     for (int i = 1; i < block->nx+2; i++) {
-        for (int j=1; j < block->ny+1; ++j) {
+        const int ny_end = block->ny+1;
+#if defined(VECTORIZE)
+
+        // iterate over all rows, including ghost layer
+#pragma omp simd reduction(max:maxWaveSpeed)
+#endif // VECTORIZE
+        for (int j=1; j < ny_end; ++j) {
             float maxEdgeSpeed;
 
             localSolver.computeNetUpdates (
@@ -530,7 +536,13 @@ void computeNumericalFluxesKernel(SWE_DimensionalSplittingChameleon* block, floa
      **************************************************************************************/
 
     for (int i=1; i < block->nx + 1; i++) {
-        for (int j=1; j < block->ny + 2; j++) {
+        const int ny_end = block->ny+2;
+#if defined(VECTORIZE)
+
+        // iterate over all rows, including ghost layer
+#pragma omp simd reduction(max:maxWaveSpeed)
+#endif // VECTORIZE
+        for (int j=1; j < ny_end; j++) {
             float maxEdgeSpeed;
 
             localSolver.computeNetUpdates (
@@ -630,7 +642,14 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
 
     float dt=*maxTimestep;
     for (int i = 1; i < block->nx +1; i++) {
-        for (int j = 1; j < block->ny + 1; j++) {
+        const int ny_end = block->ny + 1;
+
+#if defined(VECTORIZE)
+
+        // iterate over all rows, including ghost layer
+#pragma omp simd
+#endif // VECTORIZE
+        for (int j = 1; j < ny_end; j++) {
             block->h[i][j] =  h[i][j] - (dt / block->dx * (block->hNetUpdatesRight[i - 1][j - 1] + block->hNetUpdatesLeft[i][j - 1]) + dt / block->dy * (block->hNetUpdatesAbove[i - 1][j - 1] + block->hNetUpdatesBelow[i - 1][j]));
             block->hu[i][j] = hu[i][j] - (dt / block->dx * (block->huNetUpdatesRight[i - 1][j - 1] + block->huNetUpdatesLeft[i][j - 1]));
             block->hv[i][j]=  hv[i][j] - (dt / block->dy * (block->hvNetUpdatesAbove[i - 1][j - 1] + block->hvNetUpdatesBelow[i - 1][j]));
@@ -658,7 +677,14 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
 //update cell averages with the net-updates
     dt=maxTimestep;
     for (int i = 1; i < nx+1; i++) {
-        for (int j = 1; j < ny + 1; j++) {
+        const int ny_end = ny+1;
+
+#if defined(VECTORIZE)
+
+        // iterate over all rows, including ghost layer
+#pragma omp simd
+#endif // VECTORIZE
+        for (int j = 1; j < ny_end; j++) {
             h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
             hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
             hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);

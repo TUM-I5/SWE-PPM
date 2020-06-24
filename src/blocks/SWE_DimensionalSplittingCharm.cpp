@@ -80,7 +80,6 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 
     }
     collector = new CollectorCharm();
-
     // output at t=0
     writeTimestep();
 

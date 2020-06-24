@@ -380,10 +380,8 @@ int main(int argc, char **argv) {
      * FINALIZE *
      ************/
 
-    if (myUpcxxRank == 0) {
-        CollectorUpcxx::getInstance().setMasterSettings(true, outputBaseName + ".log");
-    }
 
+    CollectorUpcxx::getInstance().setMasterSettings(myUpcxxRank==0, outputBaseName + ".log",totalUpcxxRanks);
     CollectorUpcxx::getInstance().logResults();
     if (write)
         delete writer;
