@@ -278,6 +278,7 @@ int main(int argc, char** argv) {
                 {
 #pragma omp for
                 for (int i = 0; i < simulationBlocks.size(); i++){
+                        std::cout << i << " set" << std::endl;
                         simulationBlocks[i]->setGhostLayer();
                     }
 
