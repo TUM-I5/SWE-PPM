@@ -106,6 +106,7 @@
 #include "tools/Float2DBuffer.hh"
 #include <iostream>
 #include <iomanip>
+#include <math.h>
 template<typename T, typename Buffer = Float2DBuffer>
 class SWE_Block {
 public:
@@ -537,15 +538,17 @@ float SWE_Block<T, Buffer>::getRoundTimestep(float timestep) {
 
     if (stepSizeCounter <= 0) {
 
-        stepSize = 1;
-
-        float maxPossibleTimestep = timestep;
+        //stepSize = 1;
+        int divisor = pow(2,-(ceil(log(timestep)/log(2))));
+        if((float)1.f/divisor > timestep)divisor*=2;
+        stepSize = divisor;
+       /* float maxPossibleTimestep = timestep;
         while( (((float)maxTimestepLocal)/stepSize) > maxPossibleTimestep
         && (((float)maxTimestepLocal)/maxDivisor) <=  (((float)maxTimestepLocal)/stepSize)
         ){
             stepSize*=2;
         }
-
+        if(stepSize != divisor )std::cout << stepSize << "!=" << divisor << std::endl;*/
     }
     //stepSize = 32;
     //currentTimestep +=  (float) maxTimestepLocal / stepSize;
