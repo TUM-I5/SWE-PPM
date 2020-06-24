@@ -673,7 +673,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
 
 }
 void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
-    if (!allGhostlayersInSync()) return;
+  /*  if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
     dt=maxTimestep;
     for (int i = 1; i < nx+1; i++) {
@@ -705,7 +705,7 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
                 hu[i][j] = hv[i][j] = 0.; //no water, no speed!
         }
     }
-    return;
+    return;*/
      if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
 
