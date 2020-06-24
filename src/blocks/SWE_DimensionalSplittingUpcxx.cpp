@@ -456,13 +456,13 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
         //dataTransmitted[i] = false;
     }
     checkAllGhostlayers();
-    CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_EXCHANGE);
+
     if(!localTimestepping){
         for (int i = 0; i < 4; i++) {
             copyGhostlayer(static_cast<Boundary>(i));
         }
     }
-
+    CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_EXCHANGE);
     iteration++;
 }
 
@@ -558,7 +558,7 @@ void SWE_DimensionalSplittingUpcxx::computeNumericalFluxes() {
         // compute max timestep according to cautious CFL-condition
         CollectorUpcxx::getInstance().startCounter(CollectorUpcxx::CTR_REDUCE);
 
-        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, [](float a, float b) { return std::min(a, b); }).wait();
+        maxTimestepGlobal = upcxx::reduce_all(maxTimestep, upcxx::fast_op_min).wait();
 
         CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_REDUCE);
         maxTimestep = maxTimestepGlobal;

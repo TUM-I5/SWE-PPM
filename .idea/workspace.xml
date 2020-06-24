@@ -6,9 +6,9 @@
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -20,7 +20,9 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_Block.hh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingUpcxx.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -310,13 +312,7 @@
       <workItem from="1592393442238" duration="387000" />
       <workItem from="1592401902535" duration="10450000" />
       <workItem from="1592422730430" duration="1414000" />
-    </task>
-    <task id="LOCAL-00366" summary="Fixed Bug in Computation for all frameworks">
-      <created>1592410046040</created>
-      <option name="number" value="00366" />
-      <option name="presentableId" value="LOCAL-00366" />
-      <option name="project" value="LOCAL" />
-      <updated>1592410046040</updated>
+      <workItem from="1592992630698" duration="2535000" />
     </task>
     <task id="LOCAL-00367" summary="Fixed Bug in Computation for all frameworks">
       <created>1592410241140</created>
@@ -654,7 +650,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592927052215</updated>
     </task>
-    <option name="localTasksCounter" value="415" />
+    <task id="LOCAL-00415" summary="Added vectorization to frameworks besides chameleon">
+      <created>1592927462562</created>
+      <option name="number" value="00415" />
+      <option name="presentableId" value="LOCAL-00415" />
+      <option name="project" value="LOCAL" />
+      <updated>1592927462562</updated>
+    </task>
+    <option name="localTasksCounter" value="416" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -724,10 +727,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1592927052168">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1592927462505">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592927052168" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592927462505" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1592917132333" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1592924181765">
       <screen x="0" y="27" width="1920" height="1053" />
@@ -823,10 +826,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586700226128" />
-    <state x="2009" y="27" width="1482" height="964" maximized="true" key="dock-window-1" timestamp="1592411023945">
+    <state x="2115" y="27" width="1439" height="758" maximized="true" key="dock-window-1" timestamp="1592995165641">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2009" y="27" width="1482" height="964" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592411023945" />
+    <state x="2115" y="27" width="1439" height="758" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592995165641" />
     <state x="160" y="0" width="1336" height="1011" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584718094877" />
     <state x="2261" y="27" width="1350" height="1008" maximized="true" key="dock-window-2" timestamp="1586343075915">
       <screen x="1920" y="0" width="1920" height="1080" />
