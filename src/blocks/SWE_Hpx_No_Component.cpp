@@ -233,9 +233,6 @@ void SWE_Hpx_No_Component::run() {
     float maxLocalTimestep;
 
 
-    if (localityRank == 0) {
-        collector.setMasterSettings(true, outputBaseName + ".log");
-    }
     collector.setMasterSettings(localityRank==0, outputBaseName + ".log",localityCount);
     collector.setRank(localityRank);
 
