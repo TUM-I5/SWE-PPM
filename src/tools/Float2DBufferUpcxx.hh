@@ -23,7 +23,7 @@ public:
     Float2DBufferUpcxx(int cols, int rows, bool localTimestepping, Float2DUpcxx &realData) :
             Float2D(cols, rows) {
 
-        if (localTimestepping||!localTimestepping) {
+        if (localTimestepping) {
 
             data = upcxx::new_array<float>(rows * cols);
             rawData = data.local();

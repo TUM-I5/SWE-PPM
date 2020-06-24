@@ -457,11 +457,11 @@ void SWE_DimensionalSplittingUpcxx::setGhostLayer() {
     }
     checkAllGhostlayers();
 
-    if(!localTimestepping){
+    /*if(!localTimestepping){
         for (int i = 0; i < 4; i++) {
             copyGhostlayer(static_cast<Boundary>(i));
         }
-    }
+    }*/
     CollectorUpcxx::getInstance().stopCounter(CollectorUpcxx::CTR_EXCHANGE);
     iteration++;
 }
