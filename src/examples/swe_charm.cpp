@@ -130,7 +130,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
     displacementFilename = args.getArgument<std::string>("displacement-file");
 #endif
     outputBasename = args.getArgument<std::string>("output-basepath");
-    mainCollector.setMasterSettings(true, outputBaseName + ".log",chareCount);
+    mainCollector.setMasterSettings(true, outputBasename + ".log",chareCount);
     mainCollector.setRank(0);
     // Initialize Scenario
 #ifdef ASAGI
