@@ -85,7 +85,7 @@ public:
         std::size_t pos = log_name.find(".log");      // position of "live" in str
 
         std::string stripped_log_name = log_name.substr (0,pos);
-        std::string filename = stripped_log_name+"_timesteps"+std::to_string(rank)+".log";
+        std::string filename = stripped_log_name+"_timesteps_"+std::to_string(rank)+".log";
 
         logfile.open(filename, std::ios_base::out);
         for(auto ts : timesteps){
@@ -107,8 +107,8 @@ public:
         logfile.open(log_name, std::ios_base::app);
         if (!exists) {
 
-            logfile << "PEs"
-                    << "FLOP_COUNT"
+            logfile << "PE_COUNT"
+                    << "," << "FLOP_COUNT"
                     << "," << "FLOPS"
                     << "," << "WALL_TIME"
                     << "," << "COMMUNICATION_TIME"
