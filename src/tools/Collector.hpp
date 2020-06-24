@@ -116,7 +116,7 @@ public:
 
         }
         logfile << totalBlocks
-                << group_flop_ctr
+                << "," <<  group_flop_ctr
                 << "," << ((float) group_flop_ctr / result_ctrs[CTR_WALL])
                 << "," << result_ctrs[CTR_WALL]
                 << "," << result_ctrs[CTR_EXCHANGE]
