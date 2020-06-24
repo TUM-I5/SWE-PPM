@@ -236,7 +236,8 @@ int main(int argc, char **argv) {
     NetCdfWriter *writer;
 if(write){
     BoundarySize boundarySize = {{1, 1, 1, 1}};
-    outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
+    //outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
+    outputFileName = outputBaseName+"_"+std::to_string(myMpiRank);
 #ifdef WRITENETCDF
     // Construct a netCDF writer
     writer = new NetCdfWriter(
