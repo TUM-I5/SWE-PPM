@@ -349,8 +349,9 @@ if(write){
      ************/
 
     if (myMpiRank == 0) {
-        CollectorMpi::getInstance().setMasterSettings(true, outputBaseName + ".log");
+        CollectorMpi::getInstance().setMasterSettings(true, outputBaseName + ".log",totalMpiRanks);
     }
+    CollectorMpi::getInstance().setRank(myMpiRank);
     CollectorMpi::getInstance().logResults();
     simulation.freeMpiType();
     if (write)

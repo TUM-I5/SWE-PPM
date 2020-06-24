@@ -541,7 +541,7 @@ float SWE_Block<T, Buffer>::getRoundTimestep(float timestep) {
 
         float maxPossibleTimestep = timestep;
         while( (((float)maxTimestepLocal)/stepSize) > maxPossibleTimestep
-       // && (((float)maxTimestepLocal)/maxDivisor) <=  (((float)maxTimestepLocal)/stepSize)
+        && (((float)maxTimestepLocal)/maxDivisor) <=  (((float)maxTimestepLocal)/stepSize)
         ){
             stepSize*=2;
         }

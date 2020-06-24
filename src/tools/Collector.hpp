@@ -14,7 +14,8 @@
 #include <algorithm>
 class Collector {
 protected:
-
+    int rank;
+    int totalBlocks;
     double flop_ctr;
     double group_flop_ctr;
     bool is_master;
@@ -41,10 +42,13 @@ public:
 
     Collector() : flop_ctr(0.0f), group_flop_ctr(0.0f), result_ctrs{}, total_ctrs{}, is_master(false),
                   log_name("swe_counter.log") {};
-
-    void setMasterSettings(bool master, std::string log_name) {
+    void setRank(int rank) {
+        Collector::rank = rank;
+    }
+    void setMasterSettings(bool master, std::string log_name,int totalRanks) {
         is_master = master;
         this->log_name = log_name;
+        this->totalBlocks = totalRanks;
     }
     void addTimestep(float timestep){
         timesteps.push_back(timestep);
@@ -81,7 +85,7 @@ public:
         std::size_t pos = log_name.find(".log");      // position of "live" in str
 
         std::string stripped_log_name = log_name.substr (0,pos);
-        std::string filename = stripped_log_name+"_timesteps.log";
+        std::string filename = stripped_log_name+"_timesteps"+std::to_string(rank)+".log";
 
         logfile.open(filename, std::ios_base::out);
         for(auto ts : timesteps){
@@ -102,14 +106,17 @@ public:
 
         logfile.open(log_name, std::ios_base::app);
         if (!exists) {
-            logfile << "FLOP_COUNT"
+
+            logfile << "PEs"
+                    << "FLOP_COUNT"
                     << "," << "FLOPS"
                     << "," << "WALL_TIME"
                     << "," << "COMMUNICATION_TIME"
                     << "," << "REDUCTION_TIME" << std::endl;
 
         }
-        logfile << group_flop_ctr
+        logfile << totalBlocks
+                << group_flop_ctr
                 << "," << ((float) group_flop_ctr / result_ctrs[CTR_WALL])
                 << "," << result_ctrs[CTR_WALL]
                 << "," << result_ctrs[CTR_EXCHANGE]
@@ -119,10 +126,11 @@ public:
 
     void logResults() {
         collect();
+        writeTimestepData();
         if (is_master) {
             printCounter();
             writeLog();
-            writeTimestepData();
+
         }
     }
 
