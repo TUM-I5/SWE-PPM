@@ -114,7 +114,7 @@ public:
     float getBathymetry(float x, float y) {
        return (std::sqrt((x - 1000.f) * (x - 1000.f) + (y - 1000.f) * (y - 1000.f)) < 300.f)
        // || (std::sqrt((x - 1000.f) * (x - 1000.f) + (y - 500.f) * (y - 500.f)) < 50.f)
-        ? -40.f : 10.f;
+        ? 15.f: 10.f;
        return -10.f;
     };
 
@@ -147,7 +147,7 @@ public:
      */
     float getWaterHeight(float x, float y) {
 
-        return (sqrt((x - 500.f) * (x - 500.f) + (y - 500.f) * (y - 500.f)) < 300.f)? 40.f : 20.0f;
+        return (sqrt((x - 500.f) * (x - 500.f) + (y - 500.f) * (y - 500.f)) < 300.f)? 40.f : 15.0f;
     };
 };
 /**
