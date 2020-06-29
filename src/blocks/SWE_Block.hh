@@ -421,7 +421,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
         }
 
 
-#ifdef DEBUG
+#ifndef DEBUG
         printLtsStats();
 #endif
 
