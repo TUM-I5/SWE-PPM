@@ -472,7 +472,7 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
         maxTimestep = maxTimestepGlobal;
 
     }
-    CollectorMpi::getInstance().addTimestep(maxTimestep);
+    //CollectorMpi::getInstance().addTimestep(maxTimestep);
 }
 
 /**

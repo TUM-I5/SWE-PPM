@@ -400,7 +400,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
         maxTimestep = getRoundTimestep(maxTimestep);
     }
 
-    collector.addTimestep(maxTimestep);
+    //collector.addTimestep(maxTimestep);
 
 
 }
