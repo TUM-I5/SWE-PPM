@@ -541,8 +541,15 @@ float SWE_Block<T, Buffer>::getRoundTimestep(float timestep) {
         //stepSize = 1;
         int divisor = pow(2,-(ceil(log(timestep)/log(2))));
         if((float)1.f/divisor > timestep)divisor*=2;
+        if(divisor <= 0){
+            std::cout << timestep << std::endl;
+            divisor = 1;
+
+        }
         stepSize = divisor;
+
         if(stepSize > maxDivisor) stepSize = maxDivisor;
+
        /* float maxPossibleTimestep = timestep;
         while( (((float)maxTimestepLocal)/stepSize) > maxPossibleTimestep
         && (((float)maxTimestepLocal)/maxDivisor) <=  (((float)maxTimestepLocal)/stepSize)
