@@ -319,6 +319,7 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
 
 void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
     if (!allGhostlayersInSync()) return;
+    std::cout << myRank<<" ick arbeite\n";
 //maximum (linearized) wave speed within one iteration
     float maxWaveSpeed = (float) 0.;
     float maxEdgeSpeed = 0;

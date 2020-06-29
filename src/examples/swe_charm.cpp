@@ -120,6 +120,13 @@ swe_charm::swe_charm(CkArgMsg *msg) {
         localTimestepping =  args.getArgument<float>("local-timestepping");
 
     }
+
+    // Spawn one chare per CPU
+    if (args.isSet("chares")) {
+        chareCount = args.getArgument<int>("chares");
+    } else {
+        chareCount = CkNumPes();
+    }
     // Read in command line arguments
     simulationDuration = args.getArgument<float>("simulation-duration");
     checkpointCount = args.getArgument<int>("checkpoint-count");
@@ -130,7 +137,9 @@ swe_charm::swe_charm(CkArgMsg *msg) {
     displacementFilename = args.getArgument<std::string>("displacement-file");
 #endif
     outputBasename = args.getArgument<std::string>("output-basepath");
-    mainCollector.setMasterSettings(true, outputBasename + ".log",chareCount);
+
+
+    mainCollector.setMasterSettings(true, outputBasename + ".log",(int)chareCount);
     mainCollector.setRank(0);
     // Initialize Scenario
 #ifdef ASAGI
@@ -146,12 +155,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
      * INIT WORK CHARES / SIMULATION BLOCKS *
      ****************************************/
 
-    // Spawn one chare per CPU
-    if (args.isSet("chares")) {
-        chareCount = args.getArgument<int>("chares");
-    } else {
-        chareCount = CkNumPes();
-    }
+
     mainProxy = thisProxy;
 
     /*

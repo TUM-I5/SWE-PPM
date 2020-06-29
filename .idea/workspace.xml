@@ -2,13 +2,13 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
-      <config projectName="swe_benchmark" targetName="block_component_component" />
-      <config projectName="swe_benchmark" targetName="no_component_component" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
+      <config projectName="swe_benchmark" targetName="block_component_component" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
+      <config projectName="swe_benchmark" targetName="no_component_component" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -18,9 +18,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Added vectorization to chameleon&#10;modified colletor for all frameworks">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_upcxx.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +77,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -313,14 +315,10 @@
       <workItem from="1592393442238" duration="387000" />
       <workItem from="1592401902535" duration="10450000" />
       <workItem from="1592422730430" duration="1414000" />
-      <workItem from="1592992630698" duration="21040000" />
-    </task>
-    <task id="LOCAL-00390" summary="Added synchronization to chameleon">
-      <created>1592915260400</created>
-      <option name="number" value="00390" />
-      <option name="presentableId" value="LOCAL-00390" />
-      <option name="project" value="LOCAL" />
-      <updated>1592915260400</updated>
+      <workItem from="1592992630698" duration="22193000" />
+      <workItem from="1593099890496" duration="262000" />
+      <workItem from="1593167030232" duration="20000" />
+      <workItem from="1593431338275" duration="764000" />
     </task>
     <task id="LOCAL-00391" summary="Added synchronization to chameleon">
       <created>1592915455601</created>
@@ -658,7 +656,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593028856257</updated>
     </task>
-    <option name="localTasksCounter" value="439" />
+    <task id="LOCAL-00439" summary="Added vectorization to chameleon&#10;modified colletor for all frameworks">
+      <created>1593029527922</created>
+      <option name="number" value="00439" />
+      <option name="presentableId" value="LOCAL-00439" />
+      <option name="project" value="LOCAL" />
+      <updated>1593029527922</updated>
+    </task>
+    <option name="localTasksCounter" value="440" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -725,69 +730,41 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1584535225989">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593030756658">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="693" y="288" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584535225989" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593028856160">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593028856160" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593030756658" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1592917132333" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1592996457298">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592996457298" />
     <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591700492103" />
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1592996277299">
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1593167048080">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592996277299" />
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593167048080" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777664875" />
     <state width="1874" height="731" key="GridCell.Tab.0.bottom" timestamp="1586284750908">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1874" height="731" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586284750908" />
     <state width="1807" height="116" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561529" />
-    <state width="1874" height="354" key="GridCell.Tab.0.bottom/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
     <state width="1874" height="731" key="GridCell.Tab.0.center" timestamp="1586284750907">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1874" height="731" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586284750907" />
     <state width="1807" height="116" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561528" />
-    <state width="1874" height="354" key="GridCell.Tab.0.center/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
     <state width="1874" height="731" key="GridCell.Tab.0.left" timestamp="1586284750907">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1874" height="731" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586284750907" />
     <state width="1807" height="116" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561528" />
-    <state width="1874" height="354" key="GridCell.Tab.0.left/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
     <state width="1874" height="731" key="GridCell.Tab.0.right" timestamp="1586284750908">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state width="1874" height="731" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586284750908" />
     <state width="1807" height="116" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561529" />
-    <state width="1874" height="354" key="GridCell.Tab.0.right/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="354" key="GridCell.Tab.1.bottom" timestamp="1584737631288">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state width="1874" height="354" key="GridCell.Tab.1.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752946" />
-    <state width="1874" height="354" key="GridCell.Tab.1.bottom/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631288" />
-    <state width="1874" height="354" key="GridCell.Tab.1.center" timestamp="1584737631288">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state width="1874" height="354" key="GridCell.Tab.1.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752946" />
-    <state width="1874" height="354" key="GridCell.Tab.1.center/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631288" />
-    <state width="1874" height="354" key="GridCell.Tab.1.left" timestamp="1584737631287">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state width="1874" height="354" key="GridCell.Tab.1.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752945" />
-    <state width="1874" height="354" key="GridCell.Tab.1.left/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631287" />
-    <state width="1874" height="354" key="GridCell.Tab.1.right" timestamp="1584737631288">
-      <screen x="67" y="27" width="1853" height="1053" />
-    </state>
-    <state width="1874" height="354" key="GridCell.Tab.1.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1584734752946" />
-    <state width="1874" height="354" key="GridCell.Tab.1.right/1920.0.1920.1080/67.27.1853.1053@67.27.1853.1053" timestamp="1584737631288" />
     <state x="182" y="92" width="1536" height="894" key="MergeDialog" timestamp="1585569750978">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -828,11 +805,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="761" y="487" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586700226128" />
-    <state x="2115" y="27" width="1439" height="758" maximized="true" key="dock-window-1" timestamp="1593011828075">
+    <state x="2157" y="27" width="1425" height="1038" maximized="true" key="dock-window-1" timestamp="1593432098052">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2115" y="27" width="1439" height="758" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593011828075" />
-    <state x="160" y="0" width="1336" height="1011" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1584718094877" />
+    <state x="2157" y="27" width="1425" height="1038" maximized="true" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593432098052" />
     <state x="2261" y="27" width="1350" height="1008" maximized="true" key="dock-window-2" timestamp="1586343075915">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
