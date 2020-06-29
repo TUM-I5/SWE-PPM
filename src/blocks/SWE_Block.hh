@@ -403,7 +403,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
                 }
             }
         }
-        if(std::fabs(duration-getTotalLocalTimestep()) <= std::numeric_limits<double>::epsilon() || getTotalLocalTimestep()> duration){
+        if(std::fabs(duration-getTotalLocalTimestep()) <= std::numeric_limits<double>::epsilon() || getTotalLocalTimestep()>= duration){
             //notify neighbours that we have finished computation;
             notifiedLastTimestep = true;
         }
@@ -421,7 +421,7 @@ void SWE_Block<T, Buffer>::checkAllGhostlayers() {
         }
 
 
-#ifndef DEBUG
+#ifdef DEBUG
         printLtsStats();
 #endif
 
