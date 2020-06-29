@@ -399,7 +399,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
     if (localTimestepping) {
         maxTimestep = getRoundTimestep(maxTimestep);
     }
-    if(maxTimestep< 0 || maxTimestep > 1  )std::cout << maxTimestep <<" something went wrong!\n";
+    if(maxTimestep<0.f ||maxTimestep > 1.f  )std::cout << maxTimestep <<" something went wrong!\n";
     collector.addTimestep(maxTimestep);
 
 
