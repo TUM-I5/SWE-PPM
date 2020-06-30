@@ -153,7 +153,7 @@ void SWE_DimensionalSplittingChameleon::freeMpiType() {
 }
 int getTag(int rank, int tag){
 
-    return (rank<<10)|tag;
+    return (rank<<15)|tag;
 }
 
 
