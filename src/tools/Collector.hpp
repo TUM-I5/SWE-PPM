@@ -80,7 +80,7 @@ public:
 
     virtual void collect() = 0;
     void writeTimestepData(){
-
+        if(timesteps.size() == 0) return;
         std::ofstream logfile;
         std::size_t pos = log_name.find(".log");      // position of "live" in str
 
