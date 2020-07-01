@@ -152,7 +152,7 @@ void SWE_DimensionalSplittingChameleon::freeMpiType() {
 	MPI_Type_free(&HORIZONTAL_BOUNDARY);
 }
 int getTag(int rank, int tag){
-    return (tak*100000) + rank;
+    return (tag*100000) + rank;
     //return (tag<<17)|rank;
 }
 
