@@ -151,9 +151,11 @@ void SWE_DimensionalSplittingChameleon::connectNeighbourLocalities(int p_neighbo
 void SWE_DimensionalSplittingChameleon::freeMpiType() {
 	MPI_Type_free(&HORIZONTAL_BOUNDARY);
 }
-int getTag(int rank, int tag){
+int getTag(int rank, Boundary tag){
    // return (tag*100000) + rank;
-    return (tag<<15)|rank;
+   //max tag is 32767
+   //return (tag*1000)
+    return (tag*8190 )+ rank;
 }
 
 
