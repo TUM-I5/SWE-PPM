@@ -319,14 +319,14 @@ hpx::future<void> SWE_DimensionalSplittingHpx::setGhostLayer() {
 
 void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
     if (!allGhostlayersInSync()) return;
-    //std::cout << myRank<<" ick arbeite\n";
+
 //maximum (linearized) wave speed within one iteration
     float maxWaveSpeed = (float) 0.;
     float maxEdgeSpeed = 0;
     /***************************************************************************************
      * compute the net-updates for the vertical edges
      **************************************************************************************/
-
+/*
     for (int i = 1; i < nx+2; i++) {
         const int ny_end = ny+1;
 
@@ -349,13 +349,58 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
             maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
         }
 
-    }
+    }*/
 
+    hpx::parallel::for_loop(hpx::parallel::execution::par,
+                                                      1,nx+2,hpx::parallel::reduction_max(maxWaveSpeed),
+
+                                                       [this](int i,float &maxWaveSpeed)
+                                                       {
+                                                            float maxEdgeSpeed;
+                                                           for (int j=1; j < ny+1; ++j) {
+
+
+                                                               solver.computeNetUpdates (
+                                                                       h[i - 1][j], h[i][j],
+                                                                       hu[i - 1][j], hu[i][j],
+                                                                       b[i - 1][j], b[i][j],
+                                                                       hNetUpdatesLeft[i - 1][j - 1], hNetUpdatesRight[i - 1][j - 1],
+                                                                       huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
+                                                                       maxEdgeSpeed
+                                                               );
+                                                               maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
+                                                           }
+                                                          // maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
+                                                       }
+                                                               );
 
     /***************************************************************************************
      * compute the net-updates for the horizontal edges
      **************************************************************************************/
 
+    hpx::parallel::for_loop(hpx::parallel::execution::par,
+                            1,nx+1,hpx::parallel::reduction_max(maxWaveSpeed),
+
+                            [this](int i,float &maxWaveSpeed)
+                            {
+                                float maxEdgeSpeed;
+                                for (int j=1; j < ny+2; ++j) {
+
+                                    solver.computeNetUpdates (
+                                            h[i][j - 1], h[i][j],
+                                            hv[i][j - 1], hv[i][j],
+                                            b[i][j - 1], b[i][j],
+                                            hNetUpdatesBelow[i - 1][j - 1], hNetUpdatesAbove[i - 1][j - 1],
+                                            hvNetUpdatesBelow[i - 1][j - 1], hvNetUpdatesAbove[i - 1][j - 1],
+                                            maxEdgeSpeed
+                                    );
+                                    maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
+                                }
+                               // maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
+                            }
+    );
+
+/*
     for (int i=1; i < nx + 1; i++) {
         const int ny_end = ny+2;
 
@@ -381,7 +426,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
         }
     }
-
+*/
     if (maxWaveSpeed > 0.00001) {
 
         maxTimestep = std::min (dx / maxWaveSpeed, dy / maxWaveSpeed);
@@ -417,7 +462,7 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
     if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
     dt=maxTimestep;
-    for (int i = 1; i < nx+1; i++) {
+   /* for (int i = 1; i < nx+1; i++) {
         const int ny_end = ny+1;
 
 #if defined(VECTORIZE)
@@ -446,6 +491,35 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
             } else if (h[i][j] < 0.1)
                 hu[i][j] = hv[i][j] = 0.; //no water, no speed!
         }
-    }
+    }*/
 
+
+    hpx::parallel::for_loop(hpx::parallel::execution::par,
+                            1,nx+1,
+
+                            [&dt,this](int i)
+                            {
+
+                                for (int j = 1; j < ny+1; j++) {
+                                    h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
+                                    hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
+                                    hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
+
+                                    if (h[i][j] < 0) {
+                                        //TODO: dryTol
+#ifndef NDEBUG
+                                        // Only print this warning when debug is enabled
+				// Otherwise we cannot vectorize this loop
+				if (h[i][j] < -0.1) {
+					std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" << h[i][j] << std::endl;
+					std::cerr << "         b: " << b[i][j] << std::endl;
+				}
+#endif // NDEBUG
+                                        //zero (small) negative depths
+                                        h[i][j] = hu[i][j] = hv[i][j] = 0.;
+                                    } else if (h[i][j] < 0.1)
+                                        hu[i][j] = hv[i][j] = 0.; //no water, no speed!
+                                }
+                            }
+    );
 }
