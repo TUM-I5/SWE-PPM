@@ -155,7 +155,7 @@ int getTag(int rank, int tag){
    // return (tag*100000) + rank;
    //max tag is 32767
    //return (tag*1000)
-    return (tag*6553 )+ rank;
+    return (tag*6553 )+ (rank%511);
 }
 
 
