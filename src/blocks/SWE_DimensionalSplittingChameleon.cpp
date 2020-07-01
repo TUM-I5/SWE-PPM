@@ -153,7 +153,7 @@ void SWE_DimensionalSplittingChameleon::freeMpiType() {
 }
 int getTag(int rank, int tag){
 
-    return (tag<<15)|rank;
+    return (tag<<17)|rank;
 }
 
 
@@ -371,7 +371,8 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
         MPI_Request_free(&req);
 
     }
-
+    printf("%d: send   %d:%d:%d:%d:\n", myRank,getTag(myRank, MPI_TAG_TIMESTEP_LEFT) ,getTag(myRank, MPI_TAG_TIMESTEP_RIGHT),
+            , getTag(myRank, MPI_TAG_TIMESTEP_BOTTOM),getTag(myRank, MPI_TAG_TIMESTEP_TOP));
 
 	assert(h.getRows() == ny + 2);
 	assert(hu.getRows() == ny + 2);

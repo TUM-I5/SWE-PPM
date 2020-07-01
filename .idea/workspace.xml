@@ -318,21 +318,7 @@
       <workItem from="1593167030232" duration="20000" />
       <workItem from="1593431338275" duration="4376000" />
       <workItem from="1593523309193" duration="2068000" />
-      <workItem from="1593596084609" duration="1594000" />
-    </task>
-    <task id="LOCAL-00401" summary="Added synchronization to chameleon">
-      <created>1592916724460</created>
-      <option name="number" value="00401" />
-      <option name="presentableId" value="LOCAL-00401" />
-      <option name="project" value="LOCAL" />
-      <updated>1592916724460</updated>
-    </task>
-    <task id="LOCAL-00402" summary="Added synchronization to chameleon">
-      <created>1592916745771</created>
-      <option name="number" value="00402" />
-      <option name="presentableId" value="LOCAL-00402" />
-      <option name="project" value="LOCAL" />
-      <updated>1592916745771</updated>
+      <workItem from="1593596084609" duration="1917000" />
     </task>
     <task id="LOCAL-00403" summary="Added vectorization to frameworks besides chameleon">
       <created>1592917132392</created>
@@ -663,7 +649,21 @@
       <option name="project" value="LOCAL" />
       <updated>1593596135082</updated>
     </task>
-    <option name="localTasksCounter" value="450" />
+    <task id="LOCAL-00450" summary="Added clause for Collector.hpp">
+      <created>1593599659911</created>
+      <option name="number" value="00450" />
+      <option name="presentableId" value="LOCAL-00450" />
+      <option name="project" value="LOCAL" />
+      <updated>1593599659911</updated>
+    </task>
+    <task id="LOCAL-00451" summary="Added clause for Collector.hpp">
+      <created>1593599704451</created>
+      <option name="number" value="00451" />
+      <option name="presentableId" value="LOCAL-00451" />
+      <option name="project" value="LOCAL" />
+      <updated>1593599704451</updated>
+    </task>
+    <option name="localTasksCounter" value="452" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -730,10 +730,10 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593596134976">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593599704383">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593596134976" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593599704383" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1592917132333" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1592996457298">
       <screen x="0" y="27" width="1920" height="1053" />
