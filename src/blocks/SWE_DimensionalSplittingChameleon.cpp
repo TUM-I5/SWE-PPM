@@ -372,7 +372,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
 
     }
     printf("%d: send   %d:%d %d:%d %d:%d %d:%d \n", myRank,getTag(neighbourRankId[BND_LEFT], MPI_TAG_TIMESTEP_LEFT) ,getTag(neighbourRankId[BND_RIGHT], MPI_TAG_TIMESTEP_RIGHT)
-            , getTag(mneighbourRankId[BND_BOTTOM], MPI_TAG_TIMESTEP_BOTTOM),getTag(neighbourRankId[BND_TOP], MPI_TAG_TIMESTEP_TOP));
+            , getTag(neighbourRankId[BND_BOTTOM], MPI_TAG_TIMESTEP_BOTTOM),getTag(neighbourRankId[BND_TOP], MPI_TAG_TIMESTEP_TOP));
 
 	assert(h.getRows() == ny + 2);
 	assert(hu.getRows() == ny + 2);
