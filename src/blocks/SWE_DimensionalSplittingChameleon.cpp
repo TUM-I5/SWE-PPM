@@ -371,7 +371,7 @@ void SWE_DimensionalSplittingChameleon::setGhostLayer() {
         MPI_Request_free(&req);
 
     }
-    printf("%d: send   %d:%d:%d:%d:\n", myRank,getTag(myRank, MPI_TAG_TIMESTEP_LEFT) ,getTag(myRank, MPI_TAG_TIMESTEP_RIGHT),
+    printf("%d: send   %d:%d:%d:%d:\n", myRank,getTag(myRank, MPI_TAG_TIMESTEP_LEFT) ,getTag(myRank, MPI_TAG_TIMESTEP_RIGHT)
             , getTag(myRank, MPI_TAG_TIMESTEP_BOTTOM),getTag(myRank, MPI_TAG_TIMESTEP_TOP));
 
 	assert(h.getRows() == ny + 2);
