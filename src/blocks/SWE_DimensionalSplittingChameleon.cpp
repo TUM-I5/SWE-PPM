@@ -153,7 +153,7 @@ void SWE_DimensionalSplittingChameleon::freeMpiType() {
 }
 int getTag(int rank, int tag){
 
-    return (rank<<15)|tag;
+    return (tag<<15)|rank;
 }
 
 
@@ -464,8 +464,11 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
     }
 
 	int code = MPI_Waitall(16, recvReqs, stati);
-	if(code != MPI_SUCCESS)
-		printf("%d: No success %d\n", myRank, code);
+	if(code != MPI_SUCCESS){
+        printf("%d: No success %d  %d:%d%d%d\n", myRank, code,getTag(myRank, MPI_TAG_TIMESTEP_RIGHT),getTag(myRank, MPI_TAG_TIMESTEP_LEFT)
+                                                            ,getTag(myRank, MPI_TAG_TIMESTEP_TOP), getTag(myRank, MPI_TAG_TIMESTEP_BOTTOM));
+
+    }
 
     checkAllGhostlayers();
     collector.stopCounter(CollectorChameleon::CTR_EXCHANGE);

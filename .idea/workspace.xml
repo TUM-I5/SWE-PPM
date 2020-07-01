@@ -20,7 +20,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/Collector.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Collector.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingChameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -318,14 +318,7 @@
       <workItem from="1593167030232" duration="20000" />
       <workItem from="1593431338275" duration="4376000" />
       <workItem from="1593523309193" duration="2068000" />
-      <workItem from="1593596084609" duration="37000" />
-    </task>
-    <task id="LOCAL-00400" summary="Added synchronization to chameleon">
-      <created>1592916641764</created>
-      <option name="number" value="00400" />
-      <option name="presentableId" value="LOCAL-00400" />
-      <option name="project" value="LOCAL" />
-      <updated>1592916641765</updated>
+      <workItem from="1593596084609" duration="1594000" />
     </task>
     <task id="LOCAL-00401" summary="Added synchronization to chameleon">
       <created>1592916724460</created>
@@ -663,7 +656,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593524817413</updated>
     </task>
-    <option name="localTasksCounter" value="449" />
+    <task id="LOCAL-00449" summary="Added clause for Collector.hpp">
+      <created>1593596135081</created>
+      <option name="number" value="00449" />
+      <option name="presentableId" value="LOCAL-00449" />
+      <option name="project" value="LOCAL" />
+      <updated>1593596135082</updated>
+    </task>
+    <option name="localTasksCounter" value="450" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -692,7 +692,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="LTS bug chameleon oida" />
     <MESSAGE value="Restart Chameleon" />
     <MESSAGE value="Added timestep for each ghostlayer" />
     <MESSAGE value="Added localtimestepping for main" />
@@ -717,7 +716,8 @@
     <MESSAGE value="Added vectorization to chameleon&#10;modified colletor for all frameworks" />
     <MESSAGE value="Added little debug message" />
     <MESSAGE value="Fixed Chameleon Bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Chameleon Bug" />
+    <MESSAGE value="Added clause for Collector.hpp" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added clause for Collector.hpp" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2224" y="125" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1593012994055">
@@ -730,10 +730,10 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593524817292">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593596134976">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593524817292" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593596134976" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1592917132333" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1592996457298">
       <screen x="0" y="27" width="1920" height="1053" />
