@@ -6,7 +6,7 @@ project(swe_benchmark)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(BUILDS Default Hpx)
+set(BUILDS Hpx Chameleon Upcxx Mpi)
 
 #set(BUILDS Hpx Mpi)
 
@@ -36,15 +36,15 @@ foreach( build_type ${BUILDS})
                 ESSENTIAL
                 SOURCES ${SOURCE_FILES}
                 COMPONENT_DEPENDENCIES iostreams
-                DEPENDENCIES ${NETCDF_LIBRARIES})
+                DEPENDENCIES ${NETCDF_LIBRARIES} -lsvml -limf -lintlc)
     else()
         add_executable(swe_benchmark_${build_type} ${SOURCE_FILES})
-        target_link_libraries(swe_benchmark_${build_type} ${NETCDF_LIBRARIES} "${${build_type}_link_libraries}" )
+        target_link_libraries(swe_benchmark_${build_type} ${NETCDF_LIBRARIES} "${${build_type}_link_libraries}" -lsvml -limf -lintlc)
     endif()
     #
     target_include_directories(swe_benchmark_${build_type} PUBLIC "${${build_type}_include_directories}" ${NETCDF_INCLUDE_DIRS} )
-    target_compile_options(swe_benchmark_${build_type} PUBLIC "${${build_type}_compile_options}" )#-O2 -std=c++14 -qopt-report-phase=vec -qopt-report=5 -fmessage-length=0 )
-    #
+    set (CMAKE_CXX_FLAGS -qopenmp)
+    target_compile_options(swe_benchmark_${build_type} PRIVATE "${${build_type}_compile_options}" -O2 -std=c++14 -qopt-report-phase=vec -qopt-report=5 -fmessage-length=0 -qopenmp )
 
 endforeach(build_type ${BUILDS})
 

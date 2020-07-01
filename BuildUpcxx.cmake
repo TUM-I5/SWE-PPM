@@ -1,6 +1,6 @@
-SET(UPCXX_INSTALL $ENV{UPCXX_PATH})
+SET(UPCXX_DIR $ENV{UPCXX_PATH}/share/cmake/UPCXX/)
+find_package(UPCXX REQUIRED)
 
-include(FindUPCXX.cmake)  #@todo use find_package(UPCXX) instead (only works with UPCXX >= 2019.9)
 set(upcxx_compile_options -DUPCXX)
 
 list(APPEND upcxx_link_libraries  ${UPCXX_LIBRARIES} )

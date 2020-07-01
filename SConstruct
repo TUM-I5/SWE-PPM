@@ -439,7 +439,7 @@ elif env['compileMode'] == 'release':
         #env.Append(CCFLAGS=['-O3', '-mtune=native'])
         env.Append(CCFLAGS=['-O2'])
     elif env['compiler'] == 'intel':
-        env.Append(CCFLAGS=['-O2', '-std=c++0x'])
+        env.Append(CCFLAGS=['-O2'])#, '-std=c++0x'])
     # especially for env['compiler'] == 'cray'
     else:
         env.Append(CCFLAGS=['-O3'])
@@ -463,8 +463,8 @@ if env['countflops']:
 # Vectorization?
 if env['compileMode'] == 'release' and env['vectorize']:
     env.Append(CPPDEFINES=['VECTORIZE'])
-    if env['compiler'] == 'intel' and env['platform'] != 'mic':
-        env.Append(CCFLAGS=['-xHost'])
+    #if env['compiler'] == 'intel' and env['platform'] != 'mic':
+     #   env.Append(CCFLAGS=['-xHost'])
 
 if env['compiler'] == 'intel' and env['showVectorization']:
     #env.Append(CCFLAGS=['-vec-report2', '-opt-report']) 
@@ -506,7 +506,7 @@ if env['parallelization'] == 'hpx':
 
     boostInstallLib = boostInstall+ '/stage/lib/'
     hpxInstallLib = hpxInstall + '/lib/'
-    #hpxInstallLib = hpxInstall + '/lib64/'
+    hpxInstallLib = hpxInstall + '/lib64/'
     #boostInstallLib = boostInstall
     hwInstallLib = hwInstall + '/lib/'
     hpxIncDir=[hpxInstall+'/include',boostInstall, hwInstall+'/include']
