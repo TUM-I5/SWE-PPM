@@ -465,7 +465,7 @@ void SWE_DimensionalSplittingChameleon::receiveGhostLayer() {
 
 	int code = MPI_Waitall(16, recvReqs, stati);
 	if(code != MPI_SUCCESS){
-        printf("%d: No success %d  %d:%d%d%d\n", myRank, code,getTag(myRank, MPI_TAG_TIMESTEP_RIGHT),getTag(myRank, MPI_TAG_TIMESTEP_LEFT)
+        printf("%d: No success %d  %d:%d:%d:%d:\n", myRank, code,getTag(myRank, MPI_TAG_TIMESTEP_RIGHT),getTag(myRank, MPI_TAG_TIMESTEP_LEFT)
                                                             ,getTag(myRank, MPI_TAG_TIMESTEP_TOP), getTag(myRank, MPI_TAG_TIMESTEP_BOTTOM));
 
     }
