@@ -389,73 +389,61 @@ void SWE_DimensionalSplittingMpi::computeNumericalFluxes() {
      **************************************************************************************/
 
     for (int i = 1; i < nx+2; i++) {
-        const int ny_end = ny + 1;
-#pragma omp parallel private(solver)
-        {
-            // x-sweep, compute the actual domain plus ghost rows above and below
-            // iterate over cells on the x-axis, leave out the last column (two cells per computation)
-#pragma omp for reduction(max : maxWaveSpeed) collapse(2)
+        const int ny_end = ny+1;
 
 #if defined(VECTORIZE)
 
-            // iterate over all rows, including ghost layer
+        // iterate over all rows, including ghost layer
 #pragma omp simd reduction(max:maxWaveSpeed)
 #endif // VECTORIZE
-            for (int j = 1; j < ny_end; ++j) {
-                float maxEdgeSpeed;
+        for (int j=1; j < ny_end; ++j) {
+            float maxEdgeSpeed;
 
 
-                solver.computeNetUpdates(
-                        h[i - 1][j], h[i][j],
-                        hu[i - 1][j], hu[i][j],
-                        b[i - 1][j], b[i][j],
-                        hNetUpdatesLeft[i - 1][j - 1], hNetUpdatesRight[i - 1][j - 1],
-                        huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
-                        maxEdgeSpeed
-                );
-                maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
-            }
-
+            solver.computeNetUpdates (
+                    h[i - 1][j], h[i][j],
+                    hu[i - 1][j], hu[i][j],
+                    b[i - 1][j], b[i][j],
+                    hNetUpdatesLeft[i - 1][j - 1], hNetUpdatesRight[i - 1][j - 1],
+                    huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
+                    maxEdgeSpeed
+            );
+            maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
         }
+
     }
+
 
     /***************************************************************************************
      * compute the net-updates for the horizontal edges
      **************************************************************************************/
 
     for (int i=1; i < nx + 1; i++) {
-        const int ny_end = ny + 2;
-#pragma omp parallel private(solver)
-        {
-            // x-sweep, compute the actual domain plus ghost rows above and below
-            // iterate over cells on the x-axis, leave out the last column (two cells per computation)
-#pragma omp for reduction(max : maxWaveSpeed) collapse(2)
+        const int ny_end = ny+2;
+
 #if defined(VECTORIZE)
 
-            // iterate over all rows, including ghost layer
+        // iterate over all rows, including ghost layer
 #pragma omp simd reduction(max:maxWaveSpeed)
 #endif // VECTORIZE
-            for (int j = 1; j < ny_end; j++) {
-                float maxEdgeSpeed;
+        for (int j=1; j < ny_end; j++) {
+            float maxEdgeSpeed;
 
-                solver.computeNetUpdates(
-                        h[i][j - 1], h[i][j],
-                        hv[i][j - 1], hv[i][j],
-                        b[i][j - 1], b[i][j],
-                        hNetUpdatesBelow[i - 1][j - 1], hNetUpdatesAbove[i - 1][j - 1],
-                        hvNetUpdatesBelow[i - 1][j - 1], hvNetUpdatesAbove[i - 1][j - 1],
-                        maxEdgeSpeed
-                );
+            solver.computeNetUpdates (
+                    h[i][j - 1], h[i][j],
+                    hv[i][j - 1], hv[i][j],
+                    b[i][j - 1], b[i][j],
+                    hNetUpdatesBelow[i - 1][j - 1], hNetUpdatesAbove[i - 1][j - 1],
+                    hvNetUpdatesBelow[i - 1][j - 1], hvNetUpdatesAbove[i - 1][j - 1],
+                    maxEdgeSpeed
+            );
 
-                //update the maximum wave speed
-                maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
-                //maxTestSpeed = std::max (maxTestSpeed, maxEdgeSpeed);
+            //update the maximum wave speed
+            maxWaveSpeed = std::max (maxWaveSpeed, maxEdgeSpeed);
+            //maxTestSpeed = std::max (maxTestSpeed, maxEdgeSpeed);
 
-            }
         }
     }
-
-
 
     if (maxWaveSpeed > 0.00001) {
 

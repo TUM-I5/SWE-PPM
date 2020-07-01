@@ -18,10 +18,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Added clause for Collector.hpp">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -307,14 +304,7 @@
       <workItem from="1593431338275" duration="4376000" />
       <workItem from="1593523309193" duration="2068000" />
       <workItem from="1593596084609" duration="6413000" />
-      <workItem from="1593613563432" duration="3532000" />
-    </task>
-    <task id="LOCAL-00416" summary="changed upcxx reduce">
-      <created>1592995184709</created>
-      <option name="number" value="00416" />
-      <option name="presentableId" value="LOCAL-00416" />
-      <option name="project" value="LOCAL" />
-      <updated>1592995184710</updated>
+      <workItem from="1593613563432" duration="3872000" />
     </task>
     <task id="LOCAL-00417" summary="changed upcxx reduce">
       <created>1592995253824</created>
@@ -652,7 +642,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593603784938</updated>
     </task>
-    <option name="localTasksCounter" value="465" />
+    <task id="LOCAL-00465" summary="Added hpx parallel algorithmens">
+      <created>1593621358736</created>
+      <option name="number" value="00465" />
+      <option name="presentableId" value="LOCAL-00465" />
+      <option name="project" value="LOCAL" />
+      <updated>1593621358737</updated>
+    </task>
+    <option name="localTasksCounter" value="466" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -681,7 +678,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Restart Chameleon" />
     <MESSAGE value="Added timestep for each ghostlayer" />
     <MESSAGE value="Added localtimestepping for main" />
     <MESSAGE value="Test on Bug in Chameleon" />
@@ -706,7 +702,8 @@
     <MESSAGE value="Added little debug message" />
     <MESSAGE value="Fixed Chameleon Bug" />
     <MESSAGE value="Added clause for Collector.hpp" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added clause for Collector.hpp" />
+    <MESSAGE value="Added hpx parallel algorithmens" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added hpx parallel algorithmens" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2224" y="125" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1593012994055">
@@ -719,10 +716,10 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593620932389">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593621358608">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593620932389" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593621358608" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1592917132333" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1592996457298">
       <screen x="0" y="27" width="1920" height="1053" />
