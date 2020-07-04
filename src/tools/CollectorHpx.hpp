@@ -23,7 +23,7 @@ public:
 
 class CollectorHpx : public Collector {
 public:
-    CollectorHpx() {};
+    CollectorHpx():Collector() {};
 
     void collect() {
 

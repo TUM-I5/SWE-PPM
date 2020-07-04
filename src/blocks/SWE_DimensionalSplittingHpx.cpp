@@ -436,8 +436,8 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
         //might happen in dry cells
         maxTimestep = std::numeric_limits<float>::max ();
     }
-    if(2*nx*ny*135 <0 ) std::cout << "WTF!\n";
-    collector.addFlops(2*nx * ny * 135);
+    if((double)2.f*nx*ny*135 <0 ) std::cout << "WTF!\n";
+    collector.addFlops((double)2.f*nx * ny * 135);
 
 
 
