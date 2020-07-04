@@ -57,7 +57,8 @@
  * @param l_dy Cell height
  */
 SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float dx, float dy, float originX,
-                                                         float originY, bool localTimestepping, std::string name, bool write) :
+                                                         float originY, bool localTimestepping, std::string name,
+                                                         bool write) :
 /*
  * Important note concerning grid allocations:
  * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -93,28 +94,27 @@ SWE_DimensionalSplittingHpx::SWE_DimensionalSplittingHpx(int nx, int ny, float d
         hNetUpdatesAbove(nx + 1, ny + 2),
 
         hvNetUpdatesBelow(nx + 1, ny + 2),
-        hvNetUpdatesAbove(nx + 1, ny + 2)
-       {
-            if(write){
-                writer = new NetCdfWriter(
-                        name,
-                        b,
-                        {{1, 1, 1, 1}},
-                        nx,
-                        ny,
-                        dx,
-                        dy,
-                        originX,
-                        originY);
+        hvNetUpdatesAbove(nx + 1, ny + 2) {
+    if (write) {
+        writer = new NetCdfWriter(
+                name,
+                b,
+                {{1, 1, 1, 1}},
+                nx,
+                ny,
+                dx,
+                dy,
+                originX,
+                originY);
 
-            }
-       }
+    }
+}
 
 
 void SWE_DimensionalSplittingHpx::writeTimestep(float timestep) {
-            if(write){
-                writer->writeTimeStep(h, hu, hv, timestep);
-            }
+    if (write) {
+        writer->writeTimeStep(h, hu, hv, timestep);
+    }
 
 }
 
@@ -352,41 +352,53 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
     }*/
 
     hpx::parallel::for_loop(hpx::parallel::execution::par,
-                                                      1,nx+2,hpx::parallel::reduction_max(maxWaveSpeed),
+                            1, nx + 2, hpx::parallel::reduction_max(maxWaveSpeed),
 
-                                                       [this](int i,float &maxWaveSpeed)
-                                                       {
-                                                            float maxEdgeSpeed;
-                                                           for (int j=1; j < ny+1; ++j) {
+                            [this](int i, float &maxWaveSpeed) {
+                                const int ny_end = ny + 1;
+                                float maxEdgeSpeed;
+
+#if defined(VECTORIZE)
+
+                                // iterate over all rows, including ghost layer
+#pragma omp simd reduction(max:maxWaveSpeed)
+#endif // VECTORIZE
+                                for (int j = 1; j < ny_end; ++j) {
 
 
-                                                               solver.computeNetUpdates (
-                                                                       h[i - 1][j], h[i][j],
-                                                                       hu[i - 1][j], hu[i][j],
-                                                                       b[i - 1][j], b[i][j],
-                                                                       hNetUpdatesLeft[i - 1][j - 1], hNetUpdatesRight[i - 1][j - 1],
-                                                                       huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
-                                                                       maxEdgeSpeed
-                                                               );
-                                                               maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
-                                                           }
-                                                          // maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
-                                                       }
-                                                               );
+                                    solver.computeNetUpdates(
+                                            h[i - 1][j], h[i][j],
+                                            hu[i - 1][j], hu[i][j],
+                                            b[i - 1][j], b[i][j],
+                                            hNetUpdatesLeft[i - 1][j - 1], hNetUpdatesRight[i - 1][j - 1],
+                                            huNetUpdatesLeft[i - 1][j - 1], huNetUpdatesRight[i - 1][j - 1],
+                                            maxEdgeSpeed
+                                    );
+                                    maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
+                                }
+                            }
+    );
 
     /***************************************************************************************
      * compute the net-updates for the horizontal edges
      **************************************************************************************/
 
     hpx::parallel::for_loop(hpx::parallel::execution::par,
-                            1,nx+1,hpx::parallel::reduction_max(maxWaveSpeed),
+                            1, nx + 1, hpx::parallel::reduction_max(maxWaveSpeed),
 
-                            [this](int i,float &maxWaveSpeed)
-                            {
+                            [this](int i, float &maxWaveSpeed) {
+                                const int ny_end = ny + 2;
                                 float maxEdgeSpeed;
-                                for (int j=1; j < ny+2; ++j) {
 
-                                    solver.computeNetUpdates (
+
+#if defined(VECTORIZE)
+
+                                // iterate over all rows, including ghost layer
+#pragma omp simd reduction(max:maxWaveSpeed) //
+#endif // VECTORIZE
+                                for (int j = 1; j < ny_end; ++j) {
+
+                                    solver.computeNetUpdates(
                                             h[i][j - 1], h[i][j],
                                             hv[i][j - 1], hv[i][j],
                                             b[i][j - 1], b[i][j],
@@ -394,9 +406,12 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
                                             hvNetUpdatesBelow[i - 1][j - 1], hvNetUpdatesAbove[i - 1][j - 1],
                                             maxEdgeSpeed
                                     );
+
+                                    //update the maximum wave speed
                                     maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
+                                    //maxTestSpeed = std::max (maxTestSpeed, maxEdgeSpeed);
+
                                 }
-                               // maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
                             }
     );
 
@@ -429,16 +444,15 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 */
     if (maxWaveSpeed > 0.00001) {
 
-        maxTimestep = std::min (dx / maxWaveSpeed, dy / maxWaveSpeed);
+        maxTimestep = std::min(dx / maxWaveSpeed, dy / maxWaveSpeed);
 
         maxTimestep *= (float) .4; //CFL-number = .5
     } else {
         //might happen in dry cells
-        maxTimestep = std::numeric_limits<float>::max ();
+        maxTimestep = std::numeric_limits<float>::max();
     }
-    if((double)2.f*nx*ny*135 <0 ) std::cout << "WTF!\n";
-    collector.addFlops((double)2.f*nx * ny * 135);
-
+    if ((double) 2.f * nx * ny * 135 < 0) std::cout << "WTF!\n";
+    collector.addFlops((double) 2.f * nx * ny * 135);
 
 
     if (localTimestepping) {
@@ -451,7 +465,6 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 }
 
 
-
 /**
  * Updates the unknowns with the already computed net-updates.
  *
@@ -461,59 +474,61 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
     if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
-    dt=maxTimestep;
-   /* for (int i = 1; i < nx+1; i++) {
-        const int ny_end = ny+1;
+    dt = maxTimestep;
+    /* for (int i = 1; i < nx+1; i++) {
+         const int ny_end = ny+1;
 
-#if defined(VECTORIZE)
+ #if defined(VECTORIZE)
 
-        // iterate over all rows, including ghost layer
-#pragma omp simd
-#endif // VECTORIZE
+         // iterate over all rows, including ghost layer
+ #pragma omp simd
+ #endif // VECTORIZE
 
-        for (int j = 1; j < ny_end; j++) {
-            h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
-            hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
-            hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
+         for (int j = 1; j < ny_end; j++) {
+             h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
+             hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
+             hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
 
-            if (h[i][j] < 0) {
-                //TODO: dryTol
-#ifndef NDEBUG
-                // Only print this warning when debug is enabled
-				// Otherwise we cannot vectorize this loop
-				if (h[i][j] < -0.1) {
-					std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" << h[i][j] << std::endl;
-					std::cerr << "         b: " << b[i][j] << std::endl;
-				}
-#endif // NDEBUG
-                //zero (small) negative depths
-                h[i][j] = hu[i][j] = hv[i][j] = 0.;
-            } else if (h[i][j] < 0.1)
-                hu[i][j] = hv[i][j] = 0.; //no water, no speed!
-        }
-    }*/
+             if (h[i][j] < 0) {
+                 //TODO: dryTol
+ #ifndef NDEBUG
+                 // Only print this warning when debug is enabled
+                 // Otherwise we cannot vectorize this loop
+                 if (h[i][j] < -0.1) {
+                     std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" << h[i][j] << std::endl;
+                     std::cerr << "         b: " << b[i][j] << std::endl;
+                 }
+ #endif // NDEBUG
+                 //zero (small) negative depths
+                 h[i][j] = hu[i][j] = hv[i][j] = 0.;
+             } else if (h[i][j] < 0.1)
+                 hu[i][j] = hv[i][j] = 0.; //no water, no speed!
+         }
+     }*/
 
 
     hpx::parallel::for_loop(hpx::parallel::execution::par,
-                            1,nx+1,
+                            1, nx + 1,
 
-                            [&dt,this](int i)
-                            {
+                            [&dt, this](int i) {
 
-                                for (int j = 1; j < ny+1; j++) {
-                                    h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) + dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
-                                    hu[i][j] -= dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
-                                    hv[i][j] -= dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
+                                for (int j = 1; j < ny + 1; j++) {
+                                    h[i][j] -= dt / dx * (hNetUpdatesRight[i - 1][j - 1] + hNetUpdatesLeft[i][j - 1]) +
+                                               dt / dy * (hNetUpdatesAbove[i - 1][j - 1] + hNetUpdatesBelow[i - 1][j]);
+                                    hu[i][j] -=
+                                            dt / dx * (huNetUpdatesRight[i - 1][j - 1] + huNetUpdatesLeft[i][j - 1]);
+                                    hv[i][j] -=
+                                            dt / dy * (hvNetUpdatesAbove[i - 1][j - 1] + hvNetUpdatesBelow[i - 1][j]);
 
                                     if (h[i][j] < 0) {
                                         //TODO: dryTol
 #ifndef NDEBUG
                                         // Only print this warning when debug is enabled
-				// Otherwise we cannot vectorize this loop
-				if (h[i][j] < -0.1) {
-					std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" << h[i][j] << std::endl;
-					std::cerr << "         b: " << b[i][j] << std::endl;
-				}
+                // Otherwise we cannot vectorize this loop
+                if (h[i][j] < -0.1) {
+                    std::cerr << "Warning, negative height: (i,j)=(" << i << "," << j << ")=" << h[i][j] << std::endl;
+                    std::cerr << "         b: " << b[i][j] << std::endl;
+                }
 #endif // NDEBUG
                                         //zero (small) negative depths
                                         h[i][j] = hu[i][j] = hv[i][j] = 0.;
