@@ -2,11 +2,11 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
     </generated>
@@ -18,8 +18,8 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingMpi.cpp" afterDir="false" />
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Added hpx parallel algorithmens">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -304,14 +304,9 @@
       <workItem from="1593431338275" duration="4376000" />
       <workItem from="1593523309193" duration="2068000" />
       <workItem from="1593596084609" duration="6413000" />
-      <workItem from="1593613563432" duration="3872000" />
-    </task>
-    <task id="LOCAL-00417" summary="changed upcxx reduce">
-      <created>1592995253824</created>
-      <option name="number" value="00417" />
-      <option name="presentableId" value="LOCAL-00417" />
-      <option name="project" value="LOCAL" />
-      <updated>1592995253824</updated>
+      <workItem from="1593613563432" duration="4480000" />
+      <workItem from="1593762458560" duration="748000" />
+      <workItem from="1593860428059" duration="979000" />
     </task>
     <task id="LOCAL-00418" summary="changed upcxx reduce">
       <created>1592995321202</created>
@@ -649,7 +644,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593621358737</updated>
     </task>
-    <option name="localTasksCounter" value="466" />
+    <task id="LOCAL-00466" summary="Added hpx parallel algorithmens">
+      <created>1593621545535</created>
+      <option name="number" value="00466" />
+      <option name="presentableId" value="LOCAL-00466" />
+      <option name="project" value="LOCAL" />
+      <updated>1593621545535</updated>
+    </task>
+    <option name="localTasksCounter" value="467" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -716,20 +718,20 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593621358608">
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1593621551116">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593621358608" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593621551116" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1592917132333" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1592996457298">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592996457298" />
     <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591700492103" />
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1593604563953">
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl" timestamp="1593763208064">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593604563953" />
+    <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593763208064" />
     <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585777664875" />
     <state width="1874" height="731" key="GridCell.Tab.0.bottom" timestamp="1586284750908">
       <screen x="0" y="27" width="1920" height="1053" />
