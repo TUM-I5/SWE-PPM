@@ -48,7 +48,7 @@ module SWE_DimensionalSplittingCharm {
 			while(currentCheckpoint < checkpointCount) {
 
 				serial {
-				  CkPrintf("%d:, Next iteration PE %d \n", thisIndex, CkMyPe());
+				  CkPrintf("%d: Next iteration PE %d \n", thisIndex, CkMyPe());
 					collector->startCounter(Collector::CTR_EXCHANGE);
 
                     sendCopyLayers(firstIteration);
@@ -77,6 +77,7 @@ module SWE_DimensionalSplittingCharm {
 
 				}
 				serial {
+				     CkPrintf("%d: After ghostlayer \n", thisIndex);
 				     checkAllGhostlayers(); // after receiving all Ghostlayers we can processes them
 					// The xSweep will trigger the reduction and accumulate compute time
 					 collector->stopCounter(Collector::CTR_EXCHANGE);
