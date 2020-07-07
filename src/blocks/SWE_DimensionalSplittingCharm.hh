@@ -102,7 +102,7 @@ public:
         PUParray(p, neighbourIndex,4 );
         p|firstIteration;
 
-        p((void *)collector->serialize(collectorSerializer),5);
+        PUParray(p,collector->serialize(collectorSerializer),5);
 
         if (p.isUnpacking()){
             CkPrintf("Unpacking %d %d %f %f\n", nx,ny,dx,dy);
