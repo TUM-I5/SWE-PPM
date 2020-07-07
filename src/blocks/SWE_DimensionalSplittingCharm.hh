@@ -87,7 +87,7 @@ public:
         p|iteration;
         p|timestepCounter;
         p|myRank;
-
+        CkPrintf("receivedGhostlayer %p\n",receivedGhostlayer);
         PUParray(p, receivedGhostlayer,4 );
         PUParray(p, borderTimestep,4 );
         PUParray(p, neighbourRankId,4 );
