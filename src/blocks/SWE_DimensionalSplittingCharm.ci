@@ -136,9 +136,11 @@ module SWE_DimensionalSplittingCharm {
                             collector->serialize(serialize);
 
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
+                        }else{
+                            AtSync();
                         }
 
-                        // AtSync();
+
 
 					}
 
