@@ -169,7 +169,7 @@ public:
             PUParray(p, bufferH.getRawPointer(),size );
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
-        }*/
+        }
         CkPrintf("%d:Done with PUP %d\n",CkMyRank(),p.isUnpacking());
     }
 
