@@ -101,7 +101,7 @@ public:
         p|receiveCounter;
 
         p|firstIteration;
-
+        CkPrintf("collectorSerializer %p\n",collectorSerializer);
         PUParray(p,collector->serialize(collectorSerializer),5);
 /*
         if (p.isUnpacking()){
