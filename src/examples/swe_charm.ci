@@ -13,7 +13,7 @@ mainmodule swe_charm {
 		entry swe_charm(CkArgMsg *msg);
 
 		entry void done(int index,double ctr_flop, double ctr_exchange, double ctr_barrier,double ctr_reduce,double ctr_wall);
-		
+		entry [reductiontarget] void allEnd();
 		entry void exit();
 	};
 };

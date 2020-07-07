@@ -236,13 +236,13 @@ void swe_charm::done(int index, double ctr_flop, double ctr_exchange, double ctr
     double serialized[5] = {ctr_flop, ctr_exchange, ctr_barrier, ctr_reduce, ctr_wall};
     mainCollector += CollectorCharm::deserialize(serialized);
 
-    if (--chareCount == 0) {
-        mainCollector.logResults();
-        exit();
-    }
+
 
 }
-
+void swe_charm::allEnd() {
+    mainCollector.logResults();
+    CkExit();
+}
 void swe_charm::exit() {
     CkExit();
 }

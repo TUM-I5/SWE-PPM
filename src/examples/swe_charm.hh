@@ -13,7 +13,7 @@ public:
     void done(int index, double ctr_flop, double ctr_exchange, double ctr_barrier, double ctr_reduce, double ctr_wall);
 
     void exit();
-
+    void allEnd();
     int chareCount;
     float sumFlops;
     float sumCommTime;
