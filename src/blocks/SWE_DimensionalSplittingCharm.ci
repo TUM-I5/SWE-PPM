@@ -134,11 +134,14 @@ module SWE_DimensionalSplittingCharm {
                             }
                             double serialize[5];
                             collector->serialize(serialize);
-                            CkPrintf("%d: Done!\n",thisIndex);
+                            CkPrintf("%d: Done! at %d \n",thisIndex,CkMyPe());
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
+                            //contribute(CkCallback(CkReductionTarget(Main, report), mainProxy));
+                        }else {
+                             collector->stopCounter(Collector::CTR_WALL);
+                             AtSync();
+
                         }
-                         collector->stopCounter(Collector::CTR_WALL);
-                         AtSync();
 
 					}
 
