@@ -224,6 +224,7 @@ swe_charm::swe_charm(CkArgMsg *msg) {
         blocks[i].insert(nxLocal, nyLocal, dxSimulation, dySimulation, localOriginX, localOriginY,
                          localBlockPositionX[i], localBlockPositionY[i],
                          boundaries, outputFilename, "", "", localTimestepping,write);
+        blocks[i].setRank(i);
 #endif
     }
     blocks.doneInserting();
