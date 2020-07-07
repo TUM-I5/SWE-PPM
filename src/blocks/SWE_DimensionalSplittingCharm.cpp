@@ -101,7 +101,7 @@ void SWE_DimensionalSplittingCharm::ResumeFromSync() {
 
 void SWE_DimensionalSplittingCharm::xSweep() {
     if (!allGhostlayersInSync()) return;
-    if(migrated)CkPrintf("entered xSweep()\n");
+    if(migrated)CkPrintf("%d: entered xSweep()\n",thisIndex);
 //maximum (linearized) wave speed within one iteration
     float maxWaveSpeed = (float) 0.;
     float maxEdgeSpeed = 0;
