@@ -64,7 +64,43 @@ public:
     void computeNumericalFluxes() {}
 
     void pup(PUP::er &p) {
-        p((void *)this,sizeof(SWE_DimensionalSplittingCharm<Float2DNative>));
+       /*Base*/
+        p|nx;
+        p|ny;
+
+        p| dx;
+        p| dy;
+
+        p| originX;    ///< x-coordinate of the origin (left-bottom corner) of the Cartesian grid
+        p| originY;    ///< y-coordinate of the origin (left-bottom corner) of the Cartesian grid
+
+
+        p| duration;
+        p| maxTimestep;
+        p| maxTimestepLocal; // used for local timestepping
+        p| currentTimestep;
+        p|maxDivisor; //smallest timestep possible maxTimestepLocal/maxDivisor
+        p|localTimestepping; //true to activate localtimestepping
+        p|notifiedLastTimestep;
+        p|stepSize; //is used to determine the localstepsize;
+        p|stepSizeCounter; //used to count the steps;
+        p|iteration;
+        p|timestepCounter;
+        p|myRank;
+
+        PUParray(p, receivedGhostlayer,4 );
+        PUParray(p, borderTimestep,4 );
+        PUParray(p, neighbourRankId,4 );
+        PUParray(p, boundaryType,4 );
+        /*derived*/
+        PUParray(p, checkpointInstantOfTime,checkpointCount );
+
+        p|write;
+        p|currentSimulationTime;
+        p|currentCheckpoint;
+        p|receiveCounter;
+        PUParray(p, neighbourIndex,4 );
+        b|firstIteration;
 
         if (p.isUnpacking()){
             CkPrintf("Unpacking %d %d %f %f\n", nx,ny,dx,dy);
@@ -93,7 +129,19 @@ public:
 
             writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
             collector =(CollectorCharm*) malloc(sizeof(CollectorCharm));
-            //@todo movve writer and collector to pup
+            float *checkpointInstantOfTime = new float[checkpointCount];
+
+#if WAVE_PROPAGATION_SOLVER == 0
+            //! Hybrid solver (f-wave + augmented)
+            //solver::Hybrid<float> solver;
+            solver::HLLEFun<float> solver;
+#elif WAVE_PROPAGATION_SOLVER == 1
+            //! F-wave Riemann solver
+    solver::FWave<float> solver;
+#elif WAVE_PROPAGATION_SOLVER==2
+    //! Approximate Augmented Riemann solver
+    solver::AugRie<float> solver;
+#endif
         }
         p((void *)writer,sizeof(NetCdfWriter));
         p((void *)collector,sizeof(CollectorCharm));
