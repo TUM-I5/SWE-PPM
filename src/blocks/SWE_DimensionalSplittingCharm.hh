@@ -63,6 +63,53 @@ public:
     // Unused pure virtual interface methods
     void computeNumericalFluxes() {}
 
+    void pup(PUP::er &p) {
+        PUPbytes(SWE_DimensionalSplittingCharm);
+        if (p.isUnpacking()){
+            CkPrintf("Unpacking %d %d %f %f\n", nx,ny,dx,dy);
+            // For the x-sweep
+            hNetUpdatesLeft = Float2DNative(nx + 2, ny + 2);
+            hNetUpdatesRight = Float2DNative(nx + 2, ny + 2);
+
+            huNetUpdatesLeft = Float2DNative(nx + 2, ny + 2);
+            huNetUpdatesRight = Float2DNative(nx + 2, ny + 2);
+
+            // For the y-sweep
+            hNetUpdatesBelow = Float2DNative(nx + 1, ny + 2);
+            hNetUpdatesAbove = Float2DNative(nx + 1, ny + 2);
+
+            hvNetUpdatesBelow = Float2DNative(nx + 1, ny + 2);
+            hvNetUpdatesAbove = Float2DNative (nx + 1, ny + 2);
+
+            h  = Float2DNative(nx + 2, ny + 2);
+            hu = Float2DNative(nx + 2, ny + 2);
+            hv = Float2DNative(nx + 2, ny + 2);
+            b  = Float2DNative(nx + 2, ny + 2);
+
+            bufferH = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
+            bufferHu = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
+            bufferHv = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
+
+            writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY);
+            collector = new CollectorCharm();
+            //@todo movve writer and collector to pup
+        }
+
+
+        int size = (nx+2)*(ny+2);
+        PUParray(p, h.getRawPointer(),size );
+        PUParray(p, hu.getRawPointer(),size );
+        PUParray(p, hv.getRawPointer(),size );
+        PUParray(p, b.getRawPointer(),size );
+
+        if(localTimestepping){
+            PUParray(p, bufferH.getRawPointer(),size );
+            PUParray(p, bufferHu.getRawPointer(),size );
+            PUParray(p, bufferHv.getRawPointer(),size );
+        }
+
+    }
+
 private:
     void writeTimestep();
 
@@ -118,6 +165,8 @@ private:
     bool firstIteration;
 
     CollectorCharm *collector;
+
+
 };
 
 class copyLayer : public CMessage_copyLayer {
