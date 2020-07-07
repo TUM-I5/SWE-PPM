@@ -66,7 +66,7 @@ swe_charm::swe_charm(CkMigrateMessage *msg) {}
 
 swe_charm::swe_charm(CkArgMsg *msg) {
 
-
+    usesAtSync = true; //enable AtSync()
     /**************
      * INIT INPUT *
      **************/
