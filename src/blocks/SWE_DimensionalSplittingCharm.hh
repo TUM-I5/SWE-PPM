@@ -94,7 +94,7 @@ public:
         PUParray(p, neighbourRankId,4 );
         PUParray(p, boundaryType,4 );
         CkPrintf("checkpointInstantOfTime %p  %d\n",checkpointInstantOfTime,checkpointCount);
-        if(p.isPacking()){
+        if(p.isUnpacking()){
             CkPrintf("Alloca checkpointInstant \n");
             checkpointInstantOfTime = new float[checkpointCount];
         }
