@@ -91,7 +91,7 @@ public:
             bufferHu = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
             bufferHv = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
 
-            writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY);
+            writer = new NetCdfWriter("test", b, boundarySize, nx, ny, dx, dy, originX, originY);
             collector = new CollectorCharm();
             //@todo movve writer and collector to pup
         }
