@@ -143,10 +143,10 @@ public:
     solver::AugRie<float> solver;
 #endif
         }
-       /* p((void *)writer,sizeof(NetCdfWriter));
+      //  p((void *)writer,sizeof(NetCdfWriter));
         p((void *)collector,sizeof(CollectorCharm));
 
-*/
+
         int size = (nx+2)*(ny+2);
         PUParray(p, h.getRawPointer(),size );
         PUParray(p, hu.getRawPointer(),size );
