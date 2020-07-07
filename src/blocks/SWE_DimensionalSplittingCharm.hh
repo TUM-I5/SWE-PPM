@@ -105,7 +105,7 @@ public:
         PUParray(p,collector->serialize(collectorSerializer),5);
 
         if (p.isUnpacking()){
-            CkPrintf("%d:Unpacking %d %d %f %f\n",myRank, nx,ny,dx,dy);
+            CkPrintf("Unpacking %d %d %f %f\n", nx,ny,dx,dy);
             // For the x-sweep
             hNetUpdatesLeft = Float2DNative(nx + 2, ny + 2);
             hNetUpdatesRight = Float2DNative(nx + 2, ny + 2);
