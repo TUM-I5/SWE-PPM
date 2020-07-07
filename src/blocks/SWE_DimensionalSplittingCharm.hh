@@ -108,7 +108,8 @@ public:
 
         p|firstIteration;
         CkPrintf("collectorSerializer %p\n",collectorSerializer);
-        PUParray(p,collector->serialize(collectorSerializer),5);
+        double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer);
+        PUParray(p,serial,5);
 /*
         if (p.isUnpacking()){
             CkPrintf("Unpacking\n");
