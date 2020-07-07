@@ -165,7 +165,7 @@ public:
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
         }
-        CkPrintf("Done with PUP %b",p.isUnpacking());
+        CkPrintf("Done with PUP %d",p.isUnpacking());
     }
 
 private:
