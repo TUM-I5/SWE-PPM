@@ -95,7 +95,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 SWE_DimensionalSplittingCharm::~SWE_DimensionalSplittingCharm() {}
 void SWE_DimensionalSplittingCharm::ResumeFromSync() {
     CkPrintf("I'm chare %d, I moved to PE %d \n", thisIndex, CkMyPe());
-    compute();
+    //compute();
 }
 
 void SWE_DimensionalSplittingCharm::xSweep() {
