@@ -93,7 +93,10 @@ public:
         PUParray(p, neighbourRankId,4 );
         PUParray(p, boundaryType,4 );
         CkPrintf("receivedGhostlayer1 %p  %d\n",receivedGhostlayer,checkpointCount);
-        if(p.isPacking())checkpointInstantOfTime = new float[checkpointCount];
+        if(p.isPacking()){
+            CkPrintf("Alloca checkpointInstant \n");
+            checkpointInstantOfTime = new float[checkpointCount];
+        }
         PUParray(p, checkpointInstantOfTime,checkpointCount );
         CkPrintf("receivedGhostlayer2 %p\n",receivedGhostlayer);
         PUParray(p, neighbourIndex,4 );
