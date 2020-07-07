@@ -65,7 +65,7 @@ public:
 
     void pup(PUP::er &p) {
        /*Base*/
-      /*  p|nx;
+        p|nx;
         p|ny;
 
         p| dx;
@@ -103,7 +103,7 @@ public:
         p|firstIteration;
 
         PUParray(p,collector->serialize(collectorSerializer),5);
-
+/*
         if (p.isUnpacking()){
             CkPrintf("Unpacking\n");
             // For the x-sweep
