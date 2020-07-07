@@ -92,14 +92,14 @@ public:
         PUParray(p, borderTimestep,4 );
         PUParray(p, neighbourRankId,4 );
         PUParray(p, boundaryType,4 );
-
+        if(p.isPacking())checkpointInstantOfTime = new float[checkpointCount];
         PUParray(p, checkpointInstantOfTime,checkpointCount );
-
+        PUParray(p, neighbourIndex,4 );
         p|write;
         p|currentSimulationTime;
         p|currentCheckpoint;
         p|receiveCounter;
-        PUParray(p, neighbourIndex,4 );
+
         p|firstIteration;
 
         PUParray(p,collector->serialize(collectorSerializer),5);
