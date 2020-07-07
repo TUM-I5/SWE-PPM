@@ -65,7 +65,7 @@ public:
 
     void pup(PUP::er &p) {
        /*Base*/
-        p|nx;
+      /*  p|nx;
         p|ny;
 
         p| dx;
@@ -92,7 +92,7 @@ public:
         PUParray(p, borderTimestep,4 );
         PUParray(p, neighbourRankId,4 );
         PUParray(p, boundaryType,4 );
-        /*derived*/
+
         PUParray(p, checkpointInstantOfTime,checkpointCount );
 
         p|write;
@@ -164,7 +164,7 @@ public:
             PUParray(p, bufferH.getRawPointer(),size );
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
-        }
+        }*/
         CkPrintf("%d:Done with PUP %d\n",CkMyRank(),p.isUnpacking());
     }
 
