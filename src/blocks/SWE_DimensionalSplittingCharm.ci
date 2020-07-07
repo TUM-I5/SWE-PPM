@@ -125,6 +125,7 @@ module SWE_DimensionalSplittingCharm {
                         // If there is an iteration to go, propagate copy layers anew
                         if (currentSimulationTime >= simulationDuration) {
 
+
                             collector->stopCounter(Collector::CTR_WALL);
                             if(localTimestepping){
                               sendCopyLayers(firstIteration);
@@ -137,7 +138,7 @@ module SWE_DimensionalSplittingCharm {
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
                         }
 
-                         AtSync();
+                        // AtSync();
 
 					}
 
