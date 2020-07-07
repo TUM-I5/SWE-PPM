@@ -64,7 +64,7 @@ public:
     void computeNumericalFluxes() {}
 
     void pup(PUP::er &p) {
-        p((void *)this,sizeof(SWE_DimensionalSplittingCharm));
+        p((void *)this,sizeof(SWE_DimensionalSplittingCharm<Float2DNative>));
 
         if (p.isUnpacking()){
             CkPrintf("Unpacking %d %d %f %f\n", nx,ny,dx,dy);
