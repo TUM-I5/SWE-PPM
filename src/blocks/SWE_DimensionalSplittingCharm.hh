@@ -91,8 +91,8 @@ public:
             bufferHu = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
             bufferHv = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
 
-            writer = new NetCdfWriter("test", b, boundarySize, nx, ny, dx, dy, originX, originY);
-            collector = new CollectorCharm();
+            writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
+            collector =(CollectorCharm*) malloc(sizeof(CollectorCharm));
             //@todo movve writer and collector to pup
         }
         p((void *)writer,sizeof(NetCdfWriter));
