@@ -134,7 +134,7 @@ module SWE_DimensionalSplittingCharm {
                             }
                             double serialize[5];
                             collector->serialize(serialize);
-
+                            CkPrintf("%d: Done!\n",thisIndex);
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
                         }
                          collector->stopCounter(Collector::CTR_WALL);
