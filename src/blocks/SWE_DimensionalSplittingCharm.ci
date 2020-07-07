@@ -21,7 +21,7 @@ module SWE_DimensionalSplittingCharm {
 							BoundaryType boundaries[4], std::string outputFilename, std::string bathymetryFile, std::string displacementFile,bool localTimestepping,bool write);
 
 		entry void compute() {
-		    if(localTimestepping){
+		    if(localTimestepping && firstIteration){
 
                 //set up max possible timestep in beginning of execution
                 serial{
@@ -40,7 +40,10 @@ module SWE_DimensionalSplittingCharm {
 
 
 				// Start the wall clock
-				collector->startCounter(Collector::CTR_WALL);
+				if(firstIteration){
+				    collector->startCounter(Collector::CTR_WALL);
+				}
+
 			}
 			while(currentCheckpoint < checkpointCount) {
 				serial {
