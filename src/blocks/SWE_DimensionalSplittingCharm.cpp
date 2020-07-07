@@ -8,7 +8,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
                                                              float originY, int posX, int posY,
                                                              BoundaryType boundaries[], std::string outputFilename,
                                                              std::string bathymetryFilename,
-                                                             std::string displacementFilename, bool localTimestepping,bool write) :
+                                                             std::string displacementFilename, bool localTimestepping,bool write,int rank) :
 /*
  * Important note concerning grid allocations:
  * Since index shifts all over the place are bug-prone and maintenance unfriendly,
@@ -46,6 +46,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 
         hvNetUpdatesBelow(nx + 1, ny + 2),
         hvNetUpdatesAbove(nx + 1, ny + 2) {
+            myRank= rank;
     usesAtSync = true;
     currentSimulationTime = 0.;
     currentCheckpoint = 0;
