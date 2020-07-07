@@ -131,7 +131,7 @@ module SWE_DimensionalSplittingCharm {
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
                         }
 					}
-
+                AtSync();
 			}
 		};
 

@@ -300,7 +300,8 @@ if env['parallelization'] == 'hpx':
 ################################
 
 if env['parallelization'] in ['charm', 'ampi']:
-    # Path to the compiler
+    # Path to the compiler#
+    env.Append(CCFLAGS=['-language charm++ -module CommonLBs'])
     charmInstall = os.environ['CHARM_PATH']
     if charmInstall == '':
         print(sys.stderr,
