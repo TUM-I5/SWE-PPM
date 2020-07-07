@@ -64,6 +64,7 @@ public:
     void computeNumericalFluxes() {}
 
     void pup(PUP::er &p) {
+        CkPrintf("%d:Start with PUP %d\n",CkMyRank(),p.isUnpacking());
        /*Base*/
         p|nx;
         p|ny;
