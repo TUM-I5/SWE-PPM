@@ -134,7 +134,7 @@ module SWE_DimensionalSplittingCharm {
                             }
                             double serialize[5];
                             collector->serialize(serialize);
-
+                            CkPrintf("DOOOOOOONE\nnnnnnnn"");
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
                         }else{
                             AtSync();
