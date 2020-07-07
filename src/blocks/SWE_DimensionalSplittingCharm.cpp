@@ -19,6 +19,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
  * array[0][0] is then unused.
  */
 // Initialize grid metadata using the base class constructor
+        usesAtSync = true;
         SWE_Block(nx, ny, dx, dy, originX, originY, localTimestepping),
         write(write),
         // intermediate state Q after x-sweep
