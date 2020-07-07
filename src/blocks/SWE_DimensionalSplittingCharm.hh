@@ -107,6 +107,7 @@ public:
         PUParray(p,serial,5);
 
         if (p.isUnpacking()){
+            migrated = 1;
             CkPrintf("Unpacking\n");
 
             checkpointInstantOfTime = new float[checkpointCount];
@@ -207,6 +208,7 @@ private:
     float currentSimulationTime;
     int currentCheckpoint;
     int receiveCounter = 0;
+    int migrated = 0;
     // Temporary values after x-sweep and before y-sweep
     Float2DNative hStar;
     Float2DNative huStar;

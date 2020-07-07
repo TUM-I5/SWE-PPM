@@ -96,6 +96,7 @@ SWE_DimensionalSplittingCharm::~SWE_DimensionalSplittingCharm() {}
 
 void SWE_DimensionalSplittingCharm::xSweep() {
     if (!allGhostlayersInSync()) return;
+    if(migrated)CkPrintf("entered xSweep()\n");
 //maximum (linearized) wave speed within one iteration
     float maxWaveSpeed = (float) 0.;
     float maxEdgeSpeed = 0;
@@ -180,7 +181,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
         cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
         contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
     }
-
+    if(migrated)CkPrintf("left xSweep()\n");
 }
 
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
