@@ -102,6 +102,8 @@ public:
         PUParray(p, neighbourIndex,4 );
         p|firstIteration;
 
+        p((void *)collector->serialize(collectorSerializer),5);
+
         if (p.isUnpacking()){
             CkPrintf("Unpacking %d %d %f %f\n", nx,ny,dx,dy);
             // For the x-sweep
@@ -127,9 +129,17 @@ public:
             bufferHu = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
             bufferHv = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
 
-            writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
-            collector =(CollectorCharm*) malloc(sizeof(CollectorCharm));
+            //writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
+            collector =new CollectorCharm();
+            collector += CollectorCharm::deserialize(collectorSerializer);
             float *checkpointInstantOfTime = new float[checkpointCount];
+            if(write){
+
+                // Initialize writer
+                BoundarySize boundarySize = {{1, 1, 1, 1}};
+                writer = new NetCdfWriter("migrated"+myRank, b, boundarySize, nx, ny, dx, dy, originX, originY);
+
+            }
 
 #if WAVE_PROPAGATION_SOLVER == 0
             //! Hybrid solver (f-wave + augmented)
@@ -143,10 +153,6 @@ public:
     solver::AugRie<float> solver;
 #endif
         }
-      //  p((void *)writer,sizeof(NetCdfWriter));
-      int size1 = sizeof(CollectorCharm);
-        p((void *)collector,size1);
-
 
         int size = (nx+2)*(ny+2);
         PUParray(p, h.getRawPointer(),size );
@@ -189,6 +195,7 @@ private:
     //! Approximate Augmented Riemann solver
     solver::AugRie<float> solver;
 #endif
+    double collectorSerializer[5];
     float *checkpointInstantOfTime;
     bool write;
     NetCdfWriter *writer;
