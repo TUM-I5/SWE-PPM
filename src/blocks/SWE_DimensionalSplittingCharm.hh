@@ -64,7 +64,8 @@ public:
     void computeNumericalFluxes() {}
 
     void pup(PUP::er &p) {
-        PUPbytes(SWE_DimensionalSplittingCharm);
+        p((void *)this,sizeof(SWE_DimensionalSplittingCharm));
+
         if (p.isUnpacking()){
             CkPrintf("Unpacking %d %d %f %f\n", nx,ny,dx,dy);
             // For the x-sweep
@@ -94,6 +95,8 @@ public:
             collector = new CollectorCharm();
             //@todo movve writer and collector to pup
         }
+        p((void *)writer,sizeof(NetCdfWriter));
+        p((void *)collector,sizeof(CollectorCharm));
 
 
         int size = (nx+2)*(ny+2);
