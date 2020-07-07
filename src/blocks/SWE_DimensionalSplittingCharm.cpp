@@ -8,7 +8,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
                                                              float originY, int posX, int posY,
                                                              BoundaryType boundaries[], std::string outputFilename,
                                                              std::string bathymetryFilename,
-                                                             std::string displacementFilename, bool localTimestepping,bool write,int rank) :
+                                                             std::string displacementFilename, bool localTimestepping,bool write) :
 /*
  * Important note concerning grid allocations:
  * Since index shifts all over the place are bug-prone and maintenance unfriendly,
