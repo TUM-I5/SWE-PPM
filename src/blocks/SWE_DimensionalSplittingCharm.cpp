@@ -96,6 +96,7 @@ SWE_DimensionalSplittingCharm::~SWE_DimensionalSplittingCharm() {}
 void SWE_DimensionalSplittingCharm::ResumeFromSync() {
     CkPrintf("I'm chare %d, I moved to PE %d \n", thisIndex, CkMyPe());
     //compute();
+    thisProxy[thisIndex].compute();
 }
 
 void SWE_DimensionalSplittingCharm::xSweep() {
