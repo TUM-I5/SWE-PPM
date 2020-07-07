@@ -131,7 +131,7 @@ public:
 
             //writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
             collector =new CollectorCharm();
-            collector += CollectorCharm::deserialize(collectorSerializer);
+            *collector += CollectorCharm::deserialize(collectorSerializer);
             float *checkpointInstantOfTime = new float[checkpointCount];
             if(write){
 
