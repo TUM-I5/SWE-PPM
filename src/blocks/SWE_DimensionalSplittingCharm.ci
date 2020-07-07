@@ -45,7 +45,7 @@ module SWE_DimensionalSplittingCharm {
 				}
 
 			}
-			while(currentCheckpoint < checkpointCount) {
+			//while(currentCheckpoint < checkpointCount) {
 
 				serial {
 				  CkPrintf("%d: Next iteration PE %d \n", thisIndex, CkMyPe());
@@ -136,15 +136,14 @@ module SWE_DimensionalSplittingCharm {
                             collector->serialize(serialize);
                             CkPrintf("DOOOOOOONE\nnnnnnnn");
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
-                        }else{
-                            AtSync();
                         }
 
 
 
 					}
 
-			}
+			//}
+            AtSync();
 		};
 
 		// SDAG entry methods
