@@ -143,7 +143,7 @@ public:
     solver::AugRie<float> solver;
 #endif
         }
-        p((void *)writer,sizeof(NetCdfWriter));
+       /* p((void *)writer,sizeof(NetCdfWriter));
         p((void *)collector,sizeof(CollectorCharm));
 
 
@@ -158,7 +158,7 @@ public:
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
         }
-
+*/
     }
 
 private:
