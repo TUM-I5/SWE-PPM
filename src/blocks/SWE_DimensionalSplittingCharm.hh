@@ -144,7 +144,8 @@ public:
 #endif
         }
       //  p((void *)writer,sizeof(NetCdfWriter));
-        p((void *)collector,sizeof(CollectorCharm));
+      int size1 = sizeof(CollectorCharm);
+        p((void *)collector,size1);
 
 
         int size = (nx+2)*(ny+2);
