@@ -64,7 +64,7 @@ public:
     void computeNumericalFluxes() {}
 
     void pup(PUP::er &p) {
-        CkPrintf("%d:Start with PUP %d\n",CkMyRank(),p.isUnpacking());
+        CkPrintf("%d:Start with PUP %d\n",CkMyPe(),p.isUnpacking());
        /*Base*/
         p|nx;
         p|ny;
@@ -171,7 +171,7 @@ public:
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
         }
-        CkPrintf("%d:Done with PUP %d\n",CkMyRank(),p.isUnpacking());
+        CkPrintf("%d:Done with PUP %d\n",CkMyPe(),p.isUnpacking());
     }
 
 private:
