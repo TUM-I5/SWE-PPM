@@ -88,18 +88,13 @@ public:
         p|iteration;
         p|timestepCounter;
         p|myRank;
-        CkPrintf("receivedGhostlayer %p\n",receivedGhostlayer);
+
         PUParray(p, receivedGhostlayer,4 );
         PUParray(p, borderTimestep,4 );
         PUParray(p, neighbourRankId,4 );
         PUParray(p, boundaryType,4 );
-        CkPrintf("checkpointInstantOfTime %p  %d\n",checkpointInstantOfTime,checkpointCount);
-        if(p.isUnpacking()){
-            CkPrintf("Alloca checkpointInstant \n");
-            checkpointInstantOfTime = new float[checkpointCount];
-        }
-        PUParray(p, checkpointInstantOfTime,checkpointCount );
-        CkPrintf("receivedGhostlayer2 %p\n",receivedGhostlayer);
+
+
         PUParray(p, neighbourIndex,4 );
         p|write;
         p|currentSimulationTime;
@@ -107,12 +102,14 @@ public:
         p|receiveCounter;
 
         p|firstIteration;
-        CkPrintf("collectorSerializer %p\n",collectorSerializer);
+
         double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer);
         PUParray(p,serial,5);
-/*
+
         if (p.isUnpacking()){
             CkPrintf("Unpacking\n");
+
+            checkpointInstantOfTime = new float[checkpointCount];
             // For the x-sweep
             hNetUpdatesLeft = Float2DNative(nx + 2, ny + 2);
             hNetUpdatesRight = Float2DNative(nx + 2, ny + 2);
@@ -137,7 +134,7 @@ public:
             bufferHv = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
 
             //writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
-            collector =new CollectorCharm();
+            collector = new CollectorCharm();
             *collector += CollectorCharm::deserialize(collectorSerializer);
             float *checkpointInstantOfTime = new float[checkpointCount];
             if(write){
@@ -161,6 +158,7 @@ public:
 #endif
         }
 
+        PUParray(p, checkpointInstantOfTime,checkpointCount );
         int size = (nx+2)*(ny+2);
         PUParray(p, h.getRawPointer(),size );
         PUParray(p, hu.getRawPointer(),size );
