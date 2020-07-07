@@ -100,7 +100,7 @@ public:
         p|currentCheckpoint;
         p|receiveCounter;
         PUParray(p, neighbourIndex,4 );
-        b|firstIteration;
+        p|firstIteration;
 
         if (p.isUnpacking()){
             CkPrintf("Unpacking %d %d %f %f\n", nx,ny,dx,dy);
