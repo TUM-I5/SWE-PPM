@@ -92,8 +92,10 @@ public:
         PUParray(p, borderTimestep,4 );
         PUParray(p, neighbourRankId,4 );
         PUParray(p, boundaryType,4 );
+        CkPrintf("receivedGhostlayer1 %p\n",receivedGhostlayer);
         if(p.isPacking())checkpointInstantOfTime = new float[checkpointCount];
         PUParray(p, checkpointInstantOfTime,checkpointCount );
+        CkPrintf("receivedGhostlayer2 %p\n",receivedGhostlayer);
         PUParray(p, neighbourIndex,4 );
         p|write;
         p|currentSimulationTime;
