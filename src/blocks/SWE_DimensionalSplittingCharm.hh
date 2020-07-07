@@ -175,6 +175,8 @@ public:
     }
 
 private:
+
+    virtual void ResumeFromSync();
     void writeTimestep();
 
     void sendCopyLayers(bool sendBathymetry = false);
