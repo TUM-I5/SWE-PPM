@@ -45,7 +45,7 @@ module SWE_DimensionalSplittingCharm {
 
 
 			}
-			if( (currentSimulationTime < simulationDuration)) {
+			//while(currentCheckpoint < checkpointCount) {
 
 				serial {
 				  //CkPrintf("%d: Next iteration PE %d  %f\n", thisIndex, CkMyPe(),currentSimulationTime);
@@ -121,13 +121,11 @@ module SWE_DimensionalSplittingCharm {
 
                              collector->startCounter(Collector::CTR_WALL);
                         }
-                          collector->stopCounter(Collector::CTR_WALL);
 
-                        }
-	}else {
+                        // If there is an iteration to go, propagate copy layers anew
+                        if (currentSimulationTime >= simulationDuration) {
 
 
-serial{
                             collector->stopCounter(Collector::CTR_WALL);
                             if(localTimestepping){
                               sendCopyLayers(firstIteration);
@@ -137,19 +135,18 @@ serial{
                             double serialize[5];
                             collector->serialize(serialize);
                             CkPrintf("%d: Done! at %d \n",thisIndex,CkMyPe());
-                           // AtSync();
+                            AtSync();
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
                             contribute(CkCallback(CkReductionTarget(swe_charm, allEnd), mainProxy));
-}
+                        }else {
+                             collector->stopCounter(Collector::CTR_WALL);
+                             AtSync();
 
+                        }
 
-                    }
+					}
 
-            serial{
-            AtSync();
-
-            }
-
+			//}
 
 		};
 
