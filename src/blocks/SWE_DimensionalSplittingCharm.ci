@@ -142,11 +142,12 @@ module SWE_DimensionalSplittingCharm {
                             CkPrintf("%d: After Done! at %d \n",thisIndex,CkMyPe());
                         }else {
                                      collector->stopCounter(Collector::CTR_WALL);
+                                       AtSync();
 
                         }
                             CkPrintf("%d end loop at %d\n", thisIndex, CkMyPe());
 
-                                                 AtSync();
+
 
 
 
