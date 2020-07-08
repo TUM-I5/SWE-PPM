@@ -299,7 +299,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
         }
     }
 
-  //  delete msg;
+     delete msg;
     // Deallocate the message buffer
 }
 
