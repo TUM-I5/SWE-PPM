@@ -111,7 +111,6 @@ void SWE_DimensionalSplittingCharm::ResumeFromSync() {
             sendCopyLayers(firstIteration);
 
         }
-        CkPrintf("%d: Done! at %d \n",thisIndex,CkMyPe());
         double serialize[5];
         collector->serialize(serialize);
 
@@ -314,7 +313,6 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
             borderTimestep[BND_TOP] = msg->timestep;
         }
     }
-    CkPrintf("%d: Try to free %p\n",thisIndex,msg);
      delete msg;
     // Deallocate the message buffer
 }

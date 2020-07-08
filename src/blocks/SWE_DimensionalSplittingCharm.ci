@@ -33,12 +33,10 @@ module SWE_DimensionalSplittingCharm {
                  serial {
                     maxTimestepLocal = maxTimestep;
                     maxTimestepLocal = 1.0f;
-                    CkPrintf("Reduced local Timestep %f\n", maxTimestepLocal);
                  }
             }
             if(currentCheckpoint < checkpointCount) {
 		    serial {
-                CkPrintf("%d iterating at %d\n", thisIndex, CkMyPe());
 
 				// Start the wall clock
 
@@ -49,7 +47,6 @@ module SWE_DimensionalSplittingCharm {
 
 
 				serial {
-				  //CkPrintf("%d: Next iteration PE %d  %f\n", thisIndex, CkMyPe(),currentSimulationTime);
 					collector->startCounter(Collector::CTR_EXCHANGE);
 
                     sendCopyLayers(firstIteration);
@@ -57,7 +54,6 @@ module SWE_DimensionalSplittingCharm {
                     firstIteration = false;
 
 
-    CkPrintf("%d send g at %d\n", thisIndex, CkMyPe());
 				}
 				overlap {
 					when receiveGhostLeft(copyLayer *msg)
@@ -78,7 +74,6 @@ module SWE_DimensionalSplittingCharm {
 
 				}
 				serial {
-				         CkPrintf("%d after g at %d\n", thisIndex, CkMyPe());
 
 				     checkAllGhostlayers(); // after receiving all Ghostlayers we can processes them
 					// The xSweep will trigger the reduction and accumulate compute time
@@ -124,10 +119,7 @@ module SWE_DimensionalSplittingCharm {
 
                              collector->startCounter(Collector::CTR_WALL);
                         }
-
-
                                      collector->stopCounter(Collector::CTR_WALL);
-
 
                         }
 
