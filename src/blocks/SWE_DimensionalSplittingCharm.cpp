@@ -298,7 +298,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
             borderTimestep[BND_TOP] = msg->timestep;
         }
     }
-    CkPrintf("%d: Try to free %f\n",thisIndex,msg);
+    CkPrintf("%d: Try to free %p\n",thisIndex,msg);
      delete msg;
     // Deallocate the message buffer
 }
