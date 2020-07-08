@@ -27,7 +27,7 @@ public:
         if(all){
             for (int i = 0; i < 4; i++) {
 
-                arr[i + 5] =(double)(measure_ctrs[i].time_since_epoch().count());
+                arr[i + 5] =(double)(std::chrono::milliseconds(measure_ctrs[i].time_since_epoch()).count());
             }
         }
 
@@ -46,7 +46,7 @@ public:
 
                 instance.measure_ctrs[i] = std::chrono::steady_clock::time_point(std::chrono::milliseconds((long)arr[i+5]));
                 if(i==CTR_WALL)
-                    std::cout<<  "recv measure_ctr "<< std::chrono::time_point<std::chrono::steady_clock>(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<long>((long)arr[i+5]))).time_since_epoch().count() << std::endl;
+                    std::cout<<  "recv measure_ctr "<< std::chrono::time_point<std::chrono::steady_clock>(std::chrono::duration_cast<std::chrono::milliseconds>(arr[i+5]))).time_since_epoch().count() << std::endl;
 
             }
         }
