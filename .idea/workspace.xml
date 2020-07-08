@@ -19,7 +19,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.hh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -309,21 +308,7 @@
       <workItem from="1593762458560" duration="748000" />
       <workItem from="1593860428059" duration="1962000" />
       <workItem from="1594199318158" duration="13862000" />
-      <workItem from="1594216670511" duration="1184000" />
-    </task>
-    <task id="LOCAL-00522" summary="Added loadbalancer to charm">
-      <created>1594150245561</created>
-      <option name="number" value="00522" />
-      <option name="presentableId" value="LOCAL-00522" />
-      <option name="project" value="LOCAL" />
-      <updated>1594150245561</updated>
-    </task>
-    <task id="LOCAL-00523" summary="Added loadbalancer to charm">
-      <created>1594150944637</created>
-      <option name="number" value="00523" />
-      <option name="presentableId" value="LOCAL-00523" />
-      <option name="project" value="LOCAL" />
-      <updated>1594150944637</updated>
+      <workItem from="1594216670511" duration="1376000" />
     </task>
     <task id="LOCAL-00524" summary="Added loadbalancer to charm">
       <created>1594151046915</created>
@@ -654,7 +639,21 @@
       <option name="project" value="LOCAL" />
       <updated>1594215297798</updated>
     </task>
-    <option name="localTasksCounter" value="571" />
+    <task id="LOCAL-00571" summary="Added loadbalancer to charm">
+      <created>1594217861525</created>
+      <option name="number" value="00571" />
+      <option name="presentableId" value="LOCAL-00571" />
+      <option name="project" value="LOCAL" />
+      <updated>1594217861526</updated>
+    </task>
+    <task id="LOCAL-00572" summary="Added loadbalancer to charm">
+      <created>1594217976127</created>
+      <option name="number" value="00572" />
+      <option name="presentableId" value="LOCAL-00572" />
+      <option name="project" value="LOCAL" />
+      <updated>1594217976127</updated>
+    </task>
+    <option name="localTasksCounter" value="573" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -720,10 +719,10 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1594215297745">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2" timestamp="1594217976067">
+      <screen x="0" y="27" width="1920" height="1053" />
     </state>
-    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593863607277" />
+    <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1594217976067" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594215297745" />
     <state x="72" y="0" width="1536" height="890" maximized="true" key="DiffContextDialog" timestamp="1592996457298">
       <screen x="0" y="27" width="1920" height="1053" />
@@ -755,14 +754,6 @@
     </state>
     <state width="1874" height="731" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586284750908" />
     <state width="1807" height="116" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1585682561529" />
-    <state x="182" y="92" width="1536" height="894" key="MergeDialog" timestamp="1585569750978">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="182" y="92" width="1536" height="894" key="MergeDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569750978" />
-    <state x="665" y="257" width="580" height="564" key="MultipleFileMergeDialog" timestamp="1585569750982">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="665" y="257" width="580" height="564" key="MultipleFileMergeDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569750982" />
     <state x="636" y="268" width="743" height="614" key="RollbackChangesDialog" timestamp="1586087757329">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
@@ -775,10 +766,6 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="733" y="206" width="444" height="665" key="VCS.ChangeListViewerDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1586200396879" />
-    <state x="588" y="308" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1585569817768">
-      <screen x="0" y="27" width="1920" height="1053" />
-    </state>
-    <state x="588" y="308" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1585569817768" />
     <state x="100" y="98" width="1720" height="882" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1591287980046">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>

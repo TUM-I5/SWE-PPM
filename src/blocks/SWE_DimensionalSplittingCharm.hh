@@ -181,7 +181,7 @@ public:
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
         }
-        std::hash<SWE_DimensionalSplittingCharm> charmHash;
+        std::hash<decltype(this)> charmHash;
         //CkPrintf("%d:Done with PUP %d\n", thisIndex, p.isUnpacking());
         CkPrintf("%d: Hash %x\n",thisIndex,charmHash(this));
     }
