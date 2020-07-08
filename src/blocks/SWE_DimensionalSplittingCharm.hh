@@ -75,7 +75,7 @@ public:
         p| originX;
         p| originY;
 
-
+        p|iterations;
         p| duration;
         p| maxTimestep;
         p| maxTimestepLocal; // used for local timestepping
@@ -85,7 +85,7 @@ public:
         p|notifiedLastTimestep;
         p|stepSize; //is used to determine the localstepsize;
         p|stepSizeCounter; //used to count the steps;
-        p|iteration;
+
         p|timestepCounter;
         p|myRank;
 
@@ -213,6 +213,7 @@ private:
     int currentCheckpoint;
     int receiveCounter = 0;
     int migrated = 0;
+    int iterations =0;
     bool ended = false;
     // Temporary values after x-sweep and before y-sweep
     Float2DNative hStar;

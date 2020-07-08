@@ -18,28 +18,34 @@ public:
         }
     };
 
-    double *serialize(double *arr) {
+    double *serialize(double *arr, bool all = false) {
 
         arr[0] = flop_ctr;
         for (int i = 0; i < 4; i++) {
             arr[i + 1] = total_ctrs[i].count();
         }
-        for (int i = 0; i < 4; i++) {
-            arr[i + 5] = std::chrono::duration_cast<std::chrono::milliseconds>(measure_ctrs[i]).count();
+        if(all){
+            for (int i = 0; i < 4; i++) {
+                arr[i + 5] = std::chrono::duration_cast<std::chrono::milliseconds>(measure_ctrs[i]).count();
+            }
         }
+
         return arr;
     }
 
-    static CollectorCharm deserialize(double *arr) {
+    static CollectorCharm deserialize(double *arr,bool all = false) {
 
         CollectorCharm instance;
         instance.flop_ctr = arr[0];
         for (int i = 0; i < 4; i++) {
             instance.total_ctrs[i] = std::chrono::duration<double>(arr[i + 1]);
         }
-        for (int i = 0; i < 4; i++) {
-            instance.measure_ctrs[i] = std::chrono::duration<double>(measure_ctrs[i+5]);
+        if(all){
+            for (int i = 0; i < 4; i++) {
+                instance.measure_ctrs[i] = std::chrono::duration<double>(measure_ctrs[i+5]);
+            }
         }
+
         return instance;
     }
 };

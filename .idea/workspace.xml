@@ -311,21 +311,7 @@
       <workItem from="1593762458560" duration="748000" />
       <workItem from="1593860428059" duration="1962000" />
       <workItem from="1594199318158" duration="13862000" />
-      <workItem from="1594216670511" duration="15414000" />
-    </task>
-    <task id="LOCAL-00578" summary="Added loadbalancer to charm">
-      <created>1594218822294</created>
-      <option name="number" value="00578" />
-      <option name="presentableId" value="LOCAL-00578" />
-      <option name="project" value="LOCAL" />
-      <updated>1594218822294</updated>
-    </task>
-    <task id="LOCAL-00579" summary="Added loadbalancer to charm">
-      <created>1594218856945</created>
-      <option name="number" value="00579" />
-      <option name="presentableId" value="LOCAL-00579" />
-      <option name="project" value="LOCAL" />
-      <updated>1594218856945</updated>
+      <workItem from="1594216670511" duration="15724000" />
     </task>
     <task id="LOCAL-00580" summary="Added loadbalancer to charm">
       <created>1594219011840</created>
@@ -656,7 +642,21 @@
       <option name="project" value="LOCAL" />
       <updated>1594243200503</updated>
     </task>
-    <option name="localTasksCounter" value="627" />
+    <task id="LOCAL-00627" summary="Added loadbalancer to charm">
+      <created>1594244379980</created>
+      <option name="number" value="00627" />
+      <option name="presentableId" value="LOCAL-00627" />
+      <option name="project" value="LOCAL" />
+      <updated>1594244379980</updated>
+    </task>
+    <task id="LOCAL-00628" summary="Added loadbalancer to charm">
+      <created>1594244490671</created>
+      <option name="number" value="00628" />
+      <option name="presentableId" value="LOCAL-00628" />
+      <option name="project" value="LOCAL" />
+      <updated>1594244490671</updated>
+    </task>
+    <option name="localTasksCounter" value="629" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -722,11 +722,11 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1594243200462">
+    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1594244490627">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1594217976067" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594243200462" />
+    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594244490627" />
     <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog" timestamp="1594222236882">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>

@@ -126,10 +126,14 @@ module SWE_DimensionalSplittingCharm {
 
 					}
 					serial{
+					iterations++;
                     if(iterations%5 == 0){
-                     AtSync();
+                        AtSync();
 
+                    }else{
+                        thisProxy[thisIndex].compute();
                     }
+
 					}
 
 
