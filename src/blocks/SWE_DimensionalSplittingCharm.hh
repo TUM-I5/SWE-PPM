@@ -138,7 +138,7 @@ public:
             //writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
             collector = new CollectorCharm();
             *collector += CollectorCharm::deserialize(collectorSerializer,true);
-            CkPrintf(  "Recv measure_ctr %f\n",(double) CollectorCharm::deserialize(collectorSerializer.measure_ctrs[Collector::CTR_WALL].time_since_epoch().count());
+            CkPrintf(  "Recv measure_ctr %f\n",(double) CollectorCharm::deserialize(collectorSerializer,true).measure_ctrs[Collector::CTR_WALL].time_since_epoch().count());
             float *checkpointInstantOfTime = new float[checkpointCount];
             if(write){
 
