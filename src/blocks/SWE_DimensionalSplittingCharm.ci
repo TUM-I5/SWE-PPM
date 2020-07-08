@@ -36,6 +36,7 @@ module SWE_DimensionalSplittingCharm {
                     CkPrintf("Reduced local Timestep %f\n", maxTimestepLocal);
                  }
             }
+            if(currentCheckpoint < checkpointCount) {
 		    serial {
 
 
@@ -45,7 +46,7 @@ module SWE_DimensionalSplittingCharm {
 
 
 			}
-			if(currentCheckpoint < checkpointCount) {
+
 
 				serial {
 				  //CkPrintf("%d: Next iteration PE %d  %f\n", thisIndex, CkMyPe(),currentSimulationTime);
