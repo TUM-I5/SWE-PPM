@@ -57,7 +57,7 @@ module SWE_DimensionalSplittingCharm {
                     firstIteration = false;
 
 
-
+    CkPrintf("%d send g at %d\n", thisIndex, CkMyPe());
 				}
 				overlap {
 					when receiveGhostLeft(copyLayer *msg)
@@ -78,7 +78,8 @@ module SWE_DimensionalSplittingCharm {
 
 				}
 				serial {
-				    // CkPrintf("%d: After ghostlayer \n", thisIndex);
+				         CkPrintf("%d after g at %d\n", thisIndex, CkMyPe());
+
 				     checkAllGhostlayers(); // after receiving all Ghostlayers we can processes them
 					// The xSweep will trigger the reduction and accumulate compute time
 					 collector->stopCounter(Collector::CTR_EXCHANGE);
@@ -143,6 +144,8 @@ module SWE_DimensionalSplittingCharm {
                                      collector->stopCounter(Collector::CTR_WALL);
 
                         }
+                            CkPrintf("%d end loop at %d\n", thisIndex, CkMyPe());
+
                                                  AtSync();
 
 
