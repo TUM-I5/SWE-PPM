@@ -22,6 +22,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 
         SWE_Block(nx, ny, dx, dy, originX, originY, localTimestepping),
         write(write),
+        outputFilename(outputFilename),
         // intermediate state Q after x-sweep
         hStar(nx + 1, ny + 2),
         huStar(nx + 1, ny + 2),

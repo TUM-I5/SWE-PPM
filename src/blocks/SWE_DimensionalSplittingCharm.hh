@@ -8,7 +8,7 @@
 #include <ctime>
 #include <time.h>
 #include "blocks/SWE_Block.hh"
-
+#include <pup_stl.h>
 #ifdef ASAGI
 #include "scenarios/SWE_AsagiScenario.hh"
 #else
@@ -102,7 +102,7 @@ public:
         p|receiveCounter;
 
         p|firstIteration;
-
+        p|outputFilename;
         double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer);
         PUParray(p,serial,5);
 
@@ -142,7 +142,7 @@ public:
 
                 // Initialize writer
                 BoundarySize boundarySize = {{1, 1, 1, 1}};
-                writer = new NetCdfWriter("migrated"+myRank, b, boundarySize, nx, ny, dx, dy, originX, originY);
+                writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY,0 ,true);
 
             }
 
@@ -227,7 +227,7 @@ private:
 
     Float2DNative hvNetUpdatesBelow;
     Float2DNative hvNetUpdatesAbove;
-
+    std::string outputFilename;
     // Interfaces to neighbouring block copy layers, indexed by Boundary
     int neighbourIndex[4];
     bool firstIteration;
