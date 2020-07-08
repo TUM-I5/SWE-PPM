@@ -105,7 +105,7 @@ public:
 
 
         double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer);
-        PUParray(p,serial,5);
+        PUParray(p,serial,9);
 
         if (p.isUnpacking()){
             migrated = 1;
@@ -205,7 +205,7 @@ private:
     //! Approximate Augmented Riemann solver
     solver::AugRie<float> solver;
 #endif
-    double collectorSerializer[5];
+    double collectorSerializer[9];
     float *checkpointInstantOfTime;
     bool write;
     NetCdfWriter *writer;

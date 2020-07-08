@@ -41,7 +41,6 @@ module SWE_DimensionalSplittingCharm {
 				// Start the wall clock
                 if(firstIteration){
                     collector->startCounter(Collector::CTR_WALL);
-
                 }
 
 
@@ -127,8 +126,10 @@ module SWE_DimensionalSplittingCharm {
 
 					}
 					serial{
-
+                    if(iterations%5 == 0){
                      AtSync();
+
+                    }
 					}
 
 
