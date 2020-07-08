@@ -237,6 +237,7 @@ void swe_charm::done(int index, double ctr_flop, double ctr_exchange, double ctr
     mainCollector += CollectorCharm::deserialize(serialized);
 
     if(--chareCount == 0){
+        mainCollector.logResults();
         exit();
     }
 
