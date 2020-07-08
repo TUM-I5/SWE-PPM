@@ -138,7 +138,7 @@ module SWE_DimensionalSplittingCharm {
                             CkPrintf("%d: Done! at %d \n",thisIndex,CkMyPe());
                             //contribute(CkCallback(CkReductionTarget(swe_charm, allEnd), mainProxy));
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
-
+                             CkPrintf("%d: After Done! at %d \n",thisIndex,CkMyPe());
                         }
                          collector->stopCounter(Collector::CTR_WALL);
                          AtSync();
