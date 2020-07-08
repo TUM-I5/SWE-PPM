@@ -180,7 +180,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
         //might happen in dry cells
         maxTimestep = std::numeric_limits<float>::max ();
     }
-    CkPrintf("%d: %d:%d left xSweep() %f %p\n",thisIndex, nx,ny,maxTimestep, &maxTimestep);
+    //CkPrintf("%d: %d:%d left xSweep() %f %p\n",thisIndex, nx,ny,maxTimestep, &maxTimestep);
     collector->addFlops(2*nx * ny * 135);
 
     std::string hString="";
@@ -270,7 +270,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
                 bufferHv[0][i + 1] = msg->hv[i];
                 hString += std::to_string(msg->h[i])+ " ";
             }
-            CkPrintf("%d: right recv %s\n",thisIndex, hString.c_str());
+            //CkPrintf("%d: right recv %s\n",thisIndex, hString.c_str());
             borderTimestep[BND_LEFT] = msg->timestep;
         } else if (msg->boundary == BND_LEFT && boundaryType[BND_RIGHT] == CONNECT && isReceivable(BND_RIGHT)) {
             for (int i = 0; i < ny; i++) {
@@ -281,7 +281,7 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
                 bufferHv[nx + 1][i + 1] = msg->hv[i];
                 hString += std::to_string(msg->h[i])+ " ";
             }
-            CkPrintf("%d: left recv %s\n",thisIndex, hString.c_str());
+            //CkPrintf("%d: left recv %s\n",thisIndex, hString.c_str());
             borderTimestep[BND_RIGHT] = msg->timestep;
         } else if (msg->boundary == BND_TOP && boundaryType[BND_BOTTOM] == CONNECT && isReceivable(BND_BOTTOM)) {
             for (int i = 0; i < nx; i++) {
@@ -350,7 +350,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
         for(int i = startIndex; i< endIndex; i++){
             hString += std::to_string(*(h.getRawPointer()+i))+ " ";
         }
-        CkPrintf("%d: left %s\n",thisIndex, hString.c_str());
+        //CkPrintf("%d: left %s\n",thisIndex, hString.c_str());
     }
 
     if (boundaryType[BND_RIGHT] == CONNECT && isSendable(BND_RIGHT)) {

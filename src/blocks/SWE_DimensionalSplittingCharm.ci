@@ -48,7 +48,7 @@ module SWE_DimensionalSplittingCharm {
 			//while(currentCheckpoint < checkpointCount) {
 
 				serial {
-				  CkPrintf("%d: Next iteration PE %d  %f\n", thisIndex, CkMyPe(),currentSimulationTime);
+				  //CkPrintf("%d: Next iteration PE %d  %f\n", thisIndex, CkMyPe(),currentSimulationTime);
 					collector->startCounter(Collector::CTR_EXCHANGE);
 
                     sendCopyLayers(firstIteration);

@@ -192,7 +192,7 @@ public:
             PUParray(p, bufferHv.getRawPointer(),size );
         }
         //CkPrintf("%d:Done with PUP %d\n", thisIndex, p.isUnpacking());
-        CkPrintf("%d: hash %x\n",thisIndex, std::hash<decltype(this)>()(this));
+        //CkPrintf("%d: hash %x\n",thisIndex, std::hash<decltype(this)>()(this));
     }
 
 private:
