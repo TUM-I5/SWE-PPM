@@ -104,7 +104,7 @@ public:
         p|outputFilename;
 
 
-        double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer);
+        double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer,true);
         PUParray(p,serial,9);
 
         if (p.isUnpacking()){
