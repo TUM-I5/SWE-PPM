@@ -25,7 +25,7 @@ public:
             arr[i + 1] = total_ctrs[i].count();
         }
         for (int i = 0; i < 4; i++) {
-            arr[i + 5] = std::chrono::duration_cast<std::chrono::milliseconds>(measure_ctrs[i]);
+            arr[i + 5] = std::chrono::duration_cast<std::chrono::milliseconds>(measure_ctrs[i]).count();
         }
         return arr;
     }
