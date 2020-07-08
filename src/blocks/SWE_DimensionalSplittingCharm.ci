@@ -38,7 +38,7 @@ module SWE_DimensionalSplittingCharm {
             }
             if(currentCheckpoint < checkpointCount) {
 		    serial {
-
+                CkPrintf("%d iterating at %d\n", thisIndex, CkMyPe());
 
 				// Start the wall clock
 
