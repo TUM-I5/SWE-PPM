@@ -39,8 +39,10 @@ module SWE_DimensionalSplittingCharm {
 		    serial {
 
 				// Start the wall clock
+                if(firstIteration){
+                    collector->startCounter(Collector::CTR_WALL);
 
-                collector->startCounter(Collector::CTR_WALL);
+                }
 
 
 			}
