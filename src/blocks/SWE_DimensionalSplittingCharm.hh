@@ -142,7 +142,7 @@ public:
 
                 // Initialize writer
                 BoundarySize boundarySize = {{1, 1, 1, 1}};
-                writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY,0 ,true);
+                writer = new NetCdfWriter(outputFilename, b, boundarySize, nx, ny, dx, dy, originX, originY);
 
             }
 
