@@ -83,54 +83,58 @@ NetCdfWriter::NetCdfWriter(const std::string &i_baseName,
     std::cout << "     origin(x,y): " << i_originX << ", " << i_originY << std::endl;
 #endif
 
-    //dimensions
-    int l_timeDim, l_xDim, l_yDim;
-    nc_def_dim(dataFile, "time", NC_UNLIMITED, &l_timeDim);
-    nc_def_dim(dataFile, "x", nX, &l_xDim);
-    nc_def_dim(dataFile, "y", nY, &l_yDim);
+    if(append){
 
-    //variables (TODO: add rest of CF-1.5)
-    int l_xVar, l_yVar;
+        //dimensions
+        int l_timeDim, l_xDim, l_yDim;
+        nc_def_dim(dataFile, "time", NC_UNLIMITED, &l_timeDim);
+        nc_def_dim(dataFile, "x", nX, &l_xDim);
+        nc_def_dim(dataFile, "y", nY, &l_yDim);
 
-    nc_def_var(dataFile, "time", NC_FLOAT, 1, &l_timeDim, &timeVar);
-    ncPutAttText(timeVar, "long_name", "Time");
-    ncPutAttText(timeVar, "units",
-                 "seconds since simulation start"); // the word "since" is important for the paraview reader
+        //variables (TODO: add rest of CF-1.5)
+        int l_xVar, l_yVar;
 
-    nc_def_var(dataFile, "x", NC_FLOAT, 1, &l_xDim, &l_xVar);
-    nc_def_var(dataFile, "y", NC_FLOAT, 1, &l_yDim, &l_yVar);
+        nc_def_var(dataFile, "time", NC_FLOAT, 1, &l_timeDim, &timeVar);
+        ncPutAttText(timeVar, "long_name", "Time");
+        ncPutAttText(timeVar, "units",
+                     "seconds since simulation start"); // the word "since" is important for the paraview reader
 
-    //variables, fastest changing index is on the right (C syntax), will be mirrored by the library
-    int dims[] = {l_timeDim, l_yDim, l_xDim};
-    nc_def_var(dataFile, "ah", NC_FLOAT, 3, dims, &hVar);//@todo changed h to ah just for paraview
-    nc_def_var(dataFile, "hu", NC_FLOAT, 3, dims, &huVar);
-    nc_def_var(dataFile, "hv", NC_FLOAT, 3, dims, &hvVar);
-    nc_def_var(dataFile, "b", NC_FLOAT, 2, &dims[1], &bVar);
+        nc_def_var(dataFile, "x", NC_FLOAT, 1, &l_xDim, &l_xVar);
+        nc_def_var(dataFile, "y", NC_FLOAT, 1, &l_yDim, &l_yVar);
 
-    //set attributes to match CF-1.5 convention
-    ncPutAttText(NC_GLOBAL, "Conventions", "CF-1.5");
-    ncPutAttText(NC_GLOBAL, "title", "Computed tsunami solution");
-    ncPutAttText(NC_GLOBAL, "history", "SWE");
-    ncPutAttText(NC_GLOBAL, "institution",
-                 "Technische Universitaet Muenchen, Department of Informatics, Chair of Scientific Computing");
-    ncPutAttText(NC_GLOBAL, "source", "Bathymetry and displacement data.");
-    ncPutAttText(NC_GLOBAL, "references", "http://www5.in.tum.de/SWE");
-    ncPutAttText(NC_GLOBAL, "comment",
-                 "SWE is free software and licensed under the GNU General Public License. Remark: In general this does not hold for the used input data.");;
-    //setup grid size
-    float gridPosition = i_originX + (float) .5 * i_dX;
-    for (size_t i = 0; i < nX; i++) {
+        //variables, fastest changing index is on the right (C syntax), will be mirrored by the library
+        int dims[] = {l_timeDim, l_yDim, l_xDim};
+        nc_def_var(dataFile, "ah", NC_FLOAT, 3, dims, &hVar);//@todo changed h to ah just for paraview
+        nc_def_var(dataFile, "hu", NC_FLOAT, 3, dims, &huVar);
+        nc_def_var(dataFile, "hv", NC_FLOAT, 3, dims, &hvVar);
+        nc_def_var(dataFile, "b", NC_FLOAT, 2, &dims[1], &bVar);
 
-        nc_put_var1_float(dataFile, l_xVar, &i, &gridPosition);
+        //set attributes to match CF-1.5 convention
+        ncPutAttText(NC_GLOBAL, "Conventions", "CF-1.5");
+        ncPutAttText(NC_GLOBAL, "title", "Computed tsunami solution");
+        ncPutAttText(NC_GLOBAL, "history", "SWE");
+        ncPutAttText(NC_GLOBAL, "institution",
+                     "Technische Universitaet Muenchen, Department of Informatics, Chair of Scientific Computing");
+        ncPutAttText(NC_GLOBAL, "source", "Bathymetry and displacement data.");
+        ncPutAttText(NC_GLOBAL, "references", "http://www5.in.tum.de/SWE");
+        ncPutAttText(NC_GLOBAL, "comment",
+                     "SWE is free software and licensed under the GNU General Public License. Remark: In general this does not hold for the used input data.");;
+        //setup grid size
+        float gridPosition = i_originX + (float) .5 * i_dX;
+        for (size_t i = 0; i < nX; i++) {
 
-        gridPosition += i_dX;
-    }
+            nc_put_var1_float(dataFile, l_xVar, &i, &gridPosition);
 
-    gridPosition = i_originY + (float) .5 * i_dY;
-    for (size_t j = 0; j < nY; j++) {
-        nc_put_var1_float(dataFile, l_yVar, &j, &gridPosition);
+            gridPosition += i_dX;
+        }
 
-        gridPosition += i_dY;
+        gridPosition = i_originY + (float) .5 * i_dY;
+        for (size_t j = 0; j < nY; j++) {
+            nc_put_var1_float(dataFile, l_yVar, &j, &gridPosition);
+
+            gridPosition += i_dY;
+        }
+
     }
 
 }
