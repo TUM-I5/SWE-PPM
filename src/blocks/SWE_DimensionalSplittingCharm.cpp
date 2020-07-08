@@ -107,7 +107,7 @@ void SWE_DimensionalSplittingCharm::ResumeFromSync() {
         collector->serialize(serialize);
         CkPrintf("%d: Done! at %d \n",thisIndex,CkMyPe());
         //contribute(CkCallback(CkReductionTarget(swe_charm, allEnd), mainProxy));
-       // mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
+        mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
 
     }else {
         thisProxy[thisIndex].compute();

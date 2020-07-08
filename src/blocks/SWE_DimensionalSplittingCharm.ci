@@ -45,7 +45,7 @@ module SWE_DimensionalSplittingCharm {
 
 
 			}
-			//while(currentCheckpoint < checkpointCount) {
+			if(currentCheckpoint < checkpointCount) {
 
 				serial {
 				  //CkPrintf("%d: Next iteration PE %d  %f\n", thisIndex, CkMyPe(),currentSimulationTime);
@@ -95,8 +95,9 @@ module SWE_DimensionalSplittingCharm {
                     if(allGhostlayersInSync()){
 					    updateUnknowns(maxTimestep);
                     }
-
-
+                }
+                }
+                    serial{
 
                         // Once the simulation state progressed one iteration, increase the simulation time accordingly
                         if((!localTimestepping || hasMaxLocalTimestep()) ){
