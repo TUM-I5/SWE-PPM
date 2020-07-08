@@ -77,7 +77,7 @@ module SWE_DimensionalSplittingCharm {
 
 				}
 				serial {
-				     CkPrintf("%d: After ghostlayer \n", thisIndex);
+				    // CkPrintf("%d: After ghostlayer \n", thisIndex);
 				     checkAllGhostlayers(); // after receiving all Ghostlayers we can processes them
 					// The xSweep will trigger the reduction and accumulate compute time
 					 collector->stopCounter(Collector::CTR_EXCHANGE);
