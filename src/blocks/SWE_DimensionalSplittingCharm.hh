@@ -105,7 +105,7 @@ public:
 
 
         double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer,true);
-        if(p.isUnpacking())std::cout << collector->measure_ctrs[Collector::CTR_WALL].time_since_epoch().count() << std::endl;
+        if(!p.isUnpacking())std::cout << collector->measure_ctrs[Collector::CTR_WALL].time_since_epoch().count() << std::endl;
 
         PUParray(p,serial,9);
 
