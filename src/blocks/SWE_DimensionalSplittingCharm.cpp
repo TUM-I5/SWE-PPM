@@ -193,7 +193,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
         cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
         contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
     }
-    if(migrated)CkPrintf("left xSweep()\n");
+    if(migrated)CkPrintf("left xSweep() %f\n", maxTimestep);
 }
 
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
