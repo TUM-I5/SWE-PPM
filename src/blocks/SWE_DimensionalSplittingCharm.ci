@@ -119,7 +119,7 @@ module SWE_DimensionalSplittingCharm {
 
                              collector->startCounter(Collector::CTR_WALL);
                         }
-                                     collector->stopCounter(Collector::CTR_WALL);
+                         collector->stopCounter(Collector::CTR_WALL);
 
                         }
 
