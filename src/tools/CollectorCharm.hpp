@@ -27,7 +27,7 @@ public:
         if(all){
             for (int i = 0; i < 4; i++) {
 
-                arr[i + 5] = std::chrono::duration<double>(measure_ctrs[i].time_since_epoch());
+                arr[i + 5] = measure_ctrs[i].time_since_epoch();
             }
         }
 
