@@ -172,7 +172,7 @@ public:
         for (int i = 1; i < nx+2; i++) {
 
             for (int j=1; j < ny+2; ++j) {
-                hString += std::to_string(BufferH[i][j])+ " ";
+                hString += std::to_string(bufferH[i][j])+ " ";
             }
         }
         CkPrintf("%d: %s\n",thisIndex, hString.c_str());
