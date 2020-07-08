@@ -168,22 +168,30 @@ public:
         PUParray(p, hv.getRawPointer(),size );
         PUParray(p, b.getRawPointer(),size );
 
-      /*  std::string hString="";
+         std::string hString="";
+        std::string huString="";
+        std::string hvString="";
+        std::string bString="";
+
         for (int i = 1; i < nx+2; i++) {
 
             for (int j=1; j < ny+2; ++j) {
                 hString += std::to_string(bufferH[i][j])+ " ";
+                huString += std::to_string(bufferHu[i][j])+ " ";
+                hvString += std::to_string(bufferHv[i][j])+ " ";
+                bString += std::to_string(b[i][j])+ " ";
             }
         }
-        CkPrintf("%d: %s\n",thisIndex, hString.c_str());*/
+        CkPrintf("%d: h %s\n",thisIndex, hString.c_str());
+        CkPrintf("%d: hu %s\n",thisIndex, huString.c_str());
+        CkPrintf("%d: hv %s\n",thisIndex, hvString.c_str());
+        CkPrintf("%d: b %s\n",thisIndex, bString.c_str());
                 if(localTimestepping){
             PUParray(p, bufferH.getRawPointer(),size );
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
         }
-        std::hash<decltype(this)> charmHash;
         //CkPrintf("%d:Done with PUP %d\n", thisIndex, p.isUnpacking());
-        CkPrintf("%d: Hash %x\n",thisIndex,charmHash(this));
     }
 
 private:
