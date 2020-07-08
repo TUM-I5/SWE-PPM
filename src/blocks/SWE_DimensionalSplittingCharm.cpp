@@ -180,7 +180,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
         //might happen in dry cells
         maxTimestep = std::numeric_limits<float>::max ();
     }
-    CkPrintf("%d: left xSweep() %f %p\n",thisIndex, maxTimestep, &maxTimestep);
+    CkPrintf("%d: %d:%d left xSweep() %f %p\n",thisIndex, nx,ny,maxTimestep, &maxTimestep);
     collector->addFlops(2*nx * ny * 135);
 
     std::string hString="";
