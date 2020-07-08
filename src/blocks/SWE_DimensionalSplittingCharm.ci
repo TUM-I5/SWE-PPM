@@ -96,8 +96,8 @@ module SWE_DimensionalSplittingCharm {
 					    updateUnknowns(maxTimestep);
                     }
                 }
-                }
-                    serial{
+
+
 
                         // Once the simulation state progressed one iteration, increase the simulation time accordingly
                         if((!localTimestepping || hasMaxLocalTimestep()) ){
@@ -143,7 +143,7 @@ module SWE_DimensionalSplittingCharm {
 
 					}
 
-			//}
+			}
 
 		};
 
