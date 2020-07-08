@@ -43,10 +43,10 @@ public:
         }
         if(all){
             for (int i = 0; i < 4; i++) {
-
-                instance.measure_ctrs[i] = std::chrono::steady_clock::time_point(std::chrono::milliseconds((long)arr[i+5]));
                 if(i==CTR_WALL)
                     std::cout<<  "recv measure_ctr "<<arr[i+5] << std::endl;
+                instance.measure_ctrs[i] = std::chrono::steady_clock::time_point(std::chrono::milliseconds((long)arr[i+5]));
+
             }
         }
 
