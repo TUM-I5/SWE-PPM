@@ -104,6 +104,11 @@ void SWE_DimensionalSplittingCharm::ResumeFromSync() {
     //CkPrintf("I'm chare %d, I moved to PE %d \n", thisIndex, CkMyPe());
     //compute();
     if (currentSimulationTime >= simulationDuration) {
+        double serialize[5];
+        collector->serialize(serialize);
+        CkPrintf("%d: Done! at %d \n",thisIndex,CkMyPe());
+
+        mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
         contribute(CkCallback(CkReductionTarget(swe_charm, allEnd), mainProxy));
     }else {
         thisProxy[thisIndex].compute();
