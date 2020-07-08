@@ -43,7 +43,7 @@ public:
         }
         if(all){
             for (int i = 0; i < 4; i++) {
-                instance.measure_ctrs[i] = std::chrono::steady_clock::time_point(std::chrono::duration<double>(measure_ctrs[i+5]));
+                instance.measure_ctrs[i] = std::chrono::steady_clock::time_point(arr[i+5]);
             }
         }
 
