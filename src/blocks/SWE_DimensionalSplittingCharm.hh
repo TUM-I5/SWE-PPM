@@ -139,6 +139,7 @@ public:
             collector = new CollectorCharm();
             *collector += CollectorCharm::deserialize(collectorSerializer,true);
             CkPrintf("%d   %ld\n", thisIndex, (long)(collector->measure_ctrs[Collector::CTR_WALL].time_since_epoch().count()));
+            std::cout << collector->measure_ctrs[Collector::CTR_WALL].time_since_epoch().count() << std::endl;
             float *checkpointInstantOfTime = new float[checkpointCount];
             if(write){
 
