@@ -145,8 +145,10 @@ serial{
 
                     }
 
-
+            serial{
             AtSync();
+
+            }
 
 
 		};
