@@ -26,7 +26,8 @@ public:
         }
         if(all){
             for (int i = 0; i < 4; i++) {
-                arr[i + 5] = std::chrono::duration<double>(-  measure_ctrs[i]).count();
+                std::chrono::duration<double, std::milli> fp_ms = measure_ctrs[i];
+                //arr[i + 5] = std::chrono::duration<double>(-  measure_ctrs[i]).count();
             }
         }
 
