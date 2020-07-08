@@ -298,8 +298,8 @@ void SWE_DimensionalSplittingCharm::processCopyLayer(copyLayer *msg) {
             borderTimestep[BND_TOP] = msg->timestep;
         }
     }
-    msg->
-    delete msg;
+
+  //  delete msg;
     // Deallocate the message buffer
 }
 
