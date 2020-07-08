@@ -123,6 +123,7 @@ module SWE_DimensionalSplittingCharm {
                         }
                           collector->stopCounter(Collector::CTR_WALL);
                                                      AtSync();
+                                                     }
 	}else {
 
 
