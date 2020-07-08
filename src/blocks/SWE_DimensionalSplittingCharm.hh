@@ -93,9 +93,8 @@ public:
         PUParray(p, borderTimestep,4 );
         PUParray(p, neighbourRankId,4 );
         PUParray(p, boundaryType,4 );
-
-
         PUParray(p, neighbourIndex,4 );
+
         p|write;
         p|currentSimulationTime;
         p|currentCheckpoint;
@@ -103,6 +102,8 @@ public:
 
         p|firstIteration;
         p|outputFilename;
+
+
         double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer);
         PUParray(p,serial,5);
 
@@ -160,6 +161,7 @@ public:
         }
 
         PUParray(p, checkpointInstantOfTime,checkpointCount );
+
         int size = (nx+2)*(ny+2);
         PUParray(p, h.getRawPointer(),size );
         PUParray(p, hu.getRawPointer(),size );
@@ -171,7 +173,7 @@ public:
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
         }
-        CkPrintf("%d:Done with PUP %d\n",CkMyPe(),p.isUnpacking());
+        CkPrintf("%d:Done with PUP %d\n", CkMyPe(), p.isUnpacking());
     }
 
 private:
