@@ -64,7 +64,7 @@ public:
     void computeNumericalFluxes() {}
 
     void pup(PUP::er &p) {
-        //CkPrintf("%d:Start with PUP %d\n",CkMyPe(),p.isUnpacking());
+
        /*Base*/
         p|nx;
         p|ny;
@@ -109,7 +109,7 @@ public:
 
         if (p.isUnpacking()){
             migrated = 1;
-            //CkPrintf("Unpacking\n");
+
 
             checkpointInstantOfTime = new float[checkpointCount];
             // For the x-sweep
@@ -168,31 +168,12 @@ public:
         PUParray(p, hv.getRawPointer(),size );
         PUParray(p, b.getRawPointer(),size );
 
-         std::string hString="";
-        std::string huString="";
-        std::string hvString="";
-        std::string bString="";
-
-        for (int i = 1; i < nx+2; i++) {
-
-            for (int j=1; j < ny+2; ++j) {
-                hString += std::to_string(bufferH[i][j])+ " ";
-                huString += std::to_string(bufferHu[i][j])+ " ";
-                hvString += std::to_string(bufferHv[i][j])+ " ";
-                bString += std::to_string(b[i][j])+ " ";
-            }
-        }
-       /* CkPrintf("%d: h %s\n\n\n",thisIndex, hString.c_str());
-        CkPrintf("%d: hu %s\n\n\n",thisIndex, huString.c_str());
-        CkPrintf("%d: hv %s\n\n\n",thisIndex, hvString.c_str());
-        CkPrintf("%d: b %s\n\n\n",thisIndex, bString.c_str());*/
-                if(localTimestepping){
+        if(localTimestepping){
             PUParray(p, bufferH.getRawPointer(),size );
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
         }
-        //CkPrintf("%d:Done with PUP %d\n", thisIndex, p.isUnpacking());
-        //CkPrintf("%d: hash %x\n",thisIndex, std::hash<decltype(this)>()(this));
+
     }
 
 private:
