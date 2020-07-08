@@ -132,8 +132,8 @@ public:
             b  = Float2DNative(nx + 2, ny + 2);
 
             bufferH = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
-            bufferHu = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
-            bufferHv = Float2DBuffer(nx + 2, ny + 2, localTimestepping, h);
+            bufferHu = Float2DBuffer(nx + 2, ny + 2, localTimestepping, hu);
+            bufferHv = Float2DBuffer(nx + 2, ny + 2, localTimestepping, hv);
 
             //writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
             collector = new CollectorCharm();
