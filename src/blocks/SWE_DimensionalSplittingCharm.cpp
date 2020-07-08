@@ -180,7 +180,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
         //might happen in dry cells
         maxTimestep = std::numeric_limits<float>::max ();
     }
-
+    if(migrated)CkPrintf("left xSweep() %f %p\n", maxTimestep, &maxTimestep);
     collector->addFlops(2*nx * ny * 135);
 
     // compute max timestep according to cautious CFL-condition
@@ -193,7 +193,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
         cb(CkReductionTarget(SWE_DimensionalSplittingCharm, reduceWaveSpeed), thisProxy);
         contribute(sizeof(float), &maxTimestep, CkReduction::min_float, cb);
     }
-    if(migrated)CkPrintf("left xSweep() %f %p\n", maxTimestep, &maxTimestep);
+
 }
 
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
