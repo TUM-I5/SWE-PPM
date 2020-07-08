@@ -37,6 +37,7 @@ module SWE_DimensionalSplittingCharm {
             }
             if(currentCheckpoint < checkpointCount) {
 		    serial {
+                                             collector->startCounter(Collector::CTR_WALL);
 
 				// Start the wall clock
                 if(firstIteration){
@@ -120,7 +121,7 @@ module SWE_DimensionalSplittingCharm {
 
                              collector->startCounter(Collector::CTR_WALL);
                         }
-                         //collector->stopCounter(Collector::CTR_WALL);
+                         collector->stopCounter(Collector::CTR_WALL);
 
                         }
 
