@@ -12,7 +12,7 @@
 #ifdef ASAGI
 #include "scenarios/SWE_AsagiScenario.hh"
 #else
-
+#include <functional>
 #include "scenarios/SWE_simple_scenarios.hh"
 
 #endif
@@ -182,6 +182,7 @@ public:
             PUParray(p, bufferHv.getRawPointer(),size );
         }
         //CkPrintf("%d:Done with PUP %d\n", thisIndex, p.isUnpacking());
+        CkPrintf("%d: Hash %x\n",thisIndex,std::hash<SWE_DimensionalSplittingCharm>(this));
     }
 
 private:
