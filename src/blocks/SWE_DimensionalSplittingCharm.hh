@@ -182,10 +182,10 @@ public:
                 bString += std::to_string(b[i][j])+ " ";
             }
         }
-        CkPrintf("%d: h %s\n",thisIndex, hString.c_str());
-        CkPrintf("%d: hu %s\n",thisIndex, huString.c_str());
-        CkPrintf("%d: hv %s\n",thisIndex, hvString.c_str());
-        CkPrintf("%d: b %s\n",thisIndex, bString.c_str());
+        CkPrintf("%d: h %s\n\n\n",thisIndex, hString.c_str());
+        CkPrintf("%d: hu %s\n\n\n",thisIndex, huString.c_str());
+        CkPrintf("%d: hv %s\n\n\n",thisIndex, hvString.c_str());
+        CkPrintf("%d: b %s\n\n\n",thisIndex, bString.c_str());
                 if(localTimestepping){
             PUParray(p, bufferH.getRawPointer(),size );
             PUParray(p, bufferHu.getRawPointer(),size );
