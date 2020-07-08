@@ -183,6 +183,15 @@ void SWE_DimensionalSplittingCharm::xSweep() {
     CkPrintf("%d: left xSweep() %f %p\n",thisIndex, maxTimestep, &maxTimestep);
     collector->addFlops(2*nx * ny * 135);
 
+    std::string hString="";
+    for (int i = 1; i < nx+2; i++) {
+
+        for (int j=1; j < ny+2; ++j) {
+            hString += std::to_string(h[i][j])+ " ";
+        }
+    }
+    CkPrintf("%d: %s\n",thisIndex, hString.c_str());
+
     // compute max timestep according to cautious CFL-condition
     if (localTimestepping) {
         maxTimestep = getRoundTimestep(maxTimestep);
