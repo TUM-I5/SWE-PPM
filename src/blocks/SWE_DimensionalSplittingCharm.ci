@@ -45,7 +45,7 @@ module SWE_DimensionalSplittingCharm {
 
 
 			}
-			//while(currentCheckpoint < checkpointCount) {
+			if( (currentSimulationTime < simulationDuration)) {
 
 				serial {
 				  //CkPrintf("%d: Next iteration PE %d  %f\n", thisIndex, CkMyPe(),currentSimulationTime);
@@ -121,9 +121,7 @@ module SWE_DimensionalSplittingCharm {
 
                              collector->startCounter(Collector::CTR_WALL);
                         }
-
-                        // If there is an iteration to go, propagate copy layers anew
-                        if (currentSimulationTime >= simulationDuration) {
+	}else {
 
 
                             collector->stopCounter(Collector::CTR_WALL);
@@ -146,7 +144,7 @@ module SWE_DimensionalSplittingCharm {
 
 					}
 
-			//}
+
 
 		};
 
