@@ -108,7 +108,7 @@ void SWE_DimensionalSplittingCharm::ResumeFromSync() {
 
 void SWE_DimensionalSplittingCharm::xSweep() {
     if (!allGhostlayersInSync()) return;
-    if(migrated)CkPrintf("%d: entered xSweep()\n",thisIndex);
+    //if(migrated)CkPrintf("%d: entered xSweep()\n",thisIndex);
 //maximum (linearized) wave speed within one iteration
     float maxWaveSpeed = (float) 0.;
     float maxEdgeSpeed = 0;
@@ -180,7 +180,7 @@ void SWE_DimensionalSplittingCharm::xSweep() {
         //might happen in dry cells
         maxTimestep = std::numeric_limits<float>::max ();
     }
-    if(migrated)CkPrintf("%d: left xSweep() %f %p\n",thisIndex, maxTimestep, &maxTimestep);
+    CkPrintf("%d: left xSweep() %f %p\n",thisIndex, maxTimestep, &maxTimestep);
     collector->addFlops(2*nx * ny * 135);
 
     // compute max timestep according to cautious CFL-condition

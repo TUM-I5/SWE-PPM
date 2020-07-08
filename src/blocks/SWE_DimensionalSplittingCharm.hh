@@ -64,7 +64,7 @@ public:
     void computeNumericalFluxes() {}
 
     void pup(PUP::er &p) {
-        CkPrintf("%d:Start with PUP %d\n",CkMyPe(),p.isUnpacking());
+        //CkPrintf("%d:Start with PUP %d\n",CkMyPe(),p.isUnpacking());
        /*Base*/
         p|nx;
         p|ny;
@@ -72,8 +72,8 @@ public:
         p| dx;
         p| dy;
 
-        p| originX;    ///< x-coordinate of the origin (left-bottom corner) of the Cartesian grid
-        p| originY;    ///< y-coordinate of the origin (left-bottom corner) of the Cartesian grid
+        p| originX;
+        p| originY;
 
 
         p| duration;
@@ -168,20 +168,20 @@ public:
         PUParray(p, hv.getRawPointer(),size );
         PUParray(p, b.getRawPointer(),size );
 
-        std::string hString="";
+      /*  std::string hString="";
         for (int i = 1; i < nx+2; i++) {
 
             for (int j=1; j < ny+2; ++j) {
                 hString += std::to_string(bufferH[i][j])+ " ";
             }
         }
-        CkPrintf("%d: %s\n",thisIndex, hString.c_str());
+        CkPrintf("%d: %s\n",thisIndex, hString.c_str());*/
                 if(localTimestepping){
             PUParray(p, bufferH.getRawPointer(),size );
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
         }
-        CkPrintf("%d:Done with PUP %d\n", thisIndex, p.isUnpacking());
+        //CkPrintf("%d:Done with PUP %d\n", thisIndex, p.isUnpacking());
     }
 
 private:
