@@ -37,11 +37,11 @@ module SWE_DimensionalSplittingCharm {
             }
             if(currentCheckpoint < checkpointCount) {
 		    serial {
-                collector->startCounter(Collector::CTR_WALL);
+              //  collector->startCounter(Collector::CTR_WALL);
 
 				// Start the wall clock
                 if(firstIteration){
-                //    collector->startCounter(Collector::CTR_WALL);
+                   collector->startCounter(Collector::CTR_WALL);
                 }
 
 
@@ -108,7 +108,7 @@ module SWE_DimensionalSplittingCharm {
                         // If a checkpoint was reached after the last step, write current state
                         if (  currentSimulationTime >= checkpointInstantOfTime[currentCheckpoint]) {
 
-                             collector->stopCounter(Collector::CTR_WALL);
+                             //collector->stopCounter(Collector::CTR_WALL);
 
                             if(thisIndex == 0) {
                                 CkPrintf("Write timestep (%fs)\n", currentSimulationTime);
@@ -119,9 +119,9 @@ module SWE_DimensionalSplittingCharm {
 
                             // Restart wall clock
 
-                             collector->startCounter(Collector::CTR_WALL);
+                             //collector->startCounter(Collector::CTR_WALL);
                         }
-                            collector->stopCounter(Collector::CTR_WALL);
+                           // collector->stopCounter(Collector::CTR_WALL);
 
                         }
 
