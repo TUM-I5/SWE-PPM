@@ -61,7 +61,11 @@ NetCdfWriter::NetCdfWriter(const std::string &i_baseName,
     int status;
 
     //create a netCDF-file, an existing file will be replaced
-    status = nc_create(fileName.c_str(),append?NC_NOCLOBBER:NC_NETCDF4, &dataFile);
+    if(append){
+        status = nc_open(fileName.c_str(),NC_WRITE, &dataFile);
+    }else{
+        status = nc_create(fileName.c_str(),NC_NETCDF4, &dataFile);
+    }
     //status = nc_create(fileName.c_str(), NC_SHARE, &dataFile);
 
     //check if the netCDF-file creation constructor succeeded.
