@@ -13,7 +13,7 @@
 #include <numeric>
 #include <algorithm>
 class Collector {
-protected:
+//protected:
     int rank;
     int totalBlocks;
     double flop_ctr;
