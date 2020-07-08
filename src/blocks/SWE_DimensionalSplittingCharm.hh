@@ -168,7 +168,15 @@ public:
         PUParray(p, hv.getRawPointer(),size );
         PUParray(p, b.getRawPointer(),size );
 
-        if(localTimestepping){
+        std::string hString="";
+        for (int i = 1; i < nx+2; i++) {
+
+            for (int j=1; j < ny+2; ++j) {
+                hString += std::to_string(h[i][j])+ " ";
+            }
+        }
+        CkPrintf("%s\n", hString);
+                if(localTimestepping){
             PUParray(p, bufferH.getRawPointer(),size );
             PUParray(p, bufferHu.getRawPointer(),size );
             PUParray(p, bufferHv.getRawPointer(),size );
