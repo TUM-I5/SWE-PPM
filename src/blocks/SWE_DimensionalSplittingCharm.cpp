@@ -106,7 +106,7 @@ void SWE_DimensionalSplittingCharm::ResumeFromSync() {
     if (currentSimulationTime >= simulationDuration && !ended ) {
         ended = true;
 
-        //collector->stopCounter(Collector::CTR_WALL);
+        collector->stopCounter(Collector::CTR_WALL);
         if(localTimestepping){
             sendCopyLayers(firstIteration);
 
