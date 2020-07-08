@@ -95,7 +95,7 @@ module SWE_DimensionalSplittingCharm {
                     if(allGhostlayersInSync()){
 					    updateUnknowns(maxTimestep);
                     }
-                }
+
 
 
 
