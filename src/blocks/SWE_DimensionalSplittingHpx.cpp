@@ -461,7 +461,14 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
     //collector.addTimestep(maxTimestep);
 
+      std::string hString="";
+      for (int i = 1; i < nx+2; i++) {
 
+            for (int j=1; j < ny+2; ++j) {
+                hString += std::to_string(h[i][j])+ " ";
+            }
+        }
+        CkPrintf("%d: %s\n",thisIndex, hString.c_str());
 }
 
 
