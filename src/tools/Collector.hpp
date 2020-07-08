@@ -58,7 +58,7 @@ public:
     void startCounter(COUNTERS ctr) {
         measure_ctrs[ctr] = std::chrono::steady_clock::now();
         if(ctr==CTR_WALL)
-        std::cout<<  "Send measure_ctr "<<measure_ctrs[Collector::CTR_WALL].time_since_epoch().count() << std::endl;
+        std::cout<<  "Send measure_ctr "<<(double)measure_ctrs[Collector::CTR_WALL].time_since_epoch().count() << std::endl;
     }
 
     void stopCounter(COUNTERS ctr) {
