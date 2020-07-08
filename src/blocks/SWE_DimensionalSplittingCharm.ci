@@ -123,9 +123,9 @@ module SWE_DimensionalSplittingCharm {
                         }
                           collector->stopCounter(Collector::CTR_WALL);
                                                      AtSync();
-                                                     }
+                        }
 	}else {
-                        serial {
+
 
 
                             collector->stopCounter(Collector::CTR_WALL);
@@ -140,7 +140,7 @@ module SWE_DimensionalSplittingCharm {
                             AtSync();
                             mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
                             contribute(CkCallback(CkReductionTarget(swe_charm, allEnd), mainProxy));
-                        }
+
 
 
                     }
