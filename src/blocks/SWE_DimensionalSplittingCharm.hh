@@ -103,7 +103,7 @@ public:
         p|firstIteration;
         p|outputFilename;
 
-       // CkPrintf(  "Send measure_ctr %ld\n",collector->measure_ctrs[Collector::CTR_WALL].time_since_epoch().count());
+
         double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer,true);
         PUParray(p,serial,9);
 
@@ -138,7 +138,7 @@ public:
             //writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
             collector = new CollectorCharm();
             *collector += CollectorCharm::deserialize(collectorSerializer,true);
-          //  CkPrintf(  "Recv measure_ctr %ld\n",collector->measure_ctrs[Collector::CTR_WALL].time_since_epoch().count());
+
             float *checkpointInstantOfTime = new float[checkpointCount];
             if(write){
 
