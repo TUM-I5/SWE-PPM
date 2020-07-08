@@ -26,7 +26,7 @@ public:
         }
         if(all){
             for (int i = 0; i < 4; i++) {
-                arr[i + 5] = std::chrono::duration<double>(measure_ctrs[i]- std::chrono::steady_clock::time_point(0)).count();
+                arr[i + 5] = std::chrono::duration<double>((2*measure_ctrs[i])-  std::chrono::steady_clock::time_point).count();
             }
         }
 
