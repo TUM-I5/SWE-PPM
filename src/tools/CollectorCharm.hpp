@@ -44,8 +44,7 @@ public:
         if(all){
             for (int i = 0; i < 4; i++) {
 
-                instance.measure_ctrs[i] = std::chrono::steady_clock::time_point(std::chrono::duration_cast<std::chrono::milliseconds>(
-                        std::chrono::duration<double>(arr[i+5])));
+                instance.measure_ctrs[i] = std::chrono::steady_clock::time_point(std::chrono::milliseconds((long)arr[i+5]));
             }
         }
 
