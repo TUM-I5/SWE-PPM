@@ -127,7 +127,7 @@ module SWE_DimensionalSplittingCharm {
 					}
 					serial{
 					iterations++;
-                    if(iterations%5 == 0){
+                    if(iterations%1 == 0){
                         AtSync();
 
                     }else{
