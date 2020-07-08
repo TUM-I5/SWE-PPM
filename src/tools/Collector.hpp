@@ -14,6 +14,7 @@
 #include <algorithm>
 class Collector {
 //protected:
+public:
     int rank;
     int totalBlocks;
     double flop_ctr;
