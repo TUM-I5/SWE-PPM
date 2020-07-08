@@ -102,7 +102,23 @@ SWE_DimensionalSplittingCharm::~SWE_DimensionalSplittingCharm() {
         }
 void SWE_DimensionalSplittingCharm::ResumeFromSync() {
 
+    // If there is an iteration to go, propagate copy layers anew
+    if (currentSimulationTime >= simulationDuration && !ended ) {
+        ended = true;
 
+        collector->stopCounter(Collector::CTR_WALL);
+        if(localTimestepping){
+            sendCopyLayers(firstIteration);
+
+        }
+        CkPrintf("%d: Done! at %d \n",thisIndex,CkMyPe());
+        double serialize[5];
+        collector->serialize(serialize);
+
+
+        mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
+
+    }
     thisProxy[thisIndex].compute();
 
 

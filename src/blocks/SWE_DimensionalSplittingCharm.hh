@@ -99,7 +99,7 @@ public:
         p|currentSimulationTime;
         p|currentCheckpoint;
         p|receiveCounter;
-
+        p|ended;
         p|firstIteration;
         p|outputFilename;
 
@@ -213,6 +213,7 @@ private:
     int currentCheckpoint;
     int receiveCounter = 0;
     int migrated = 0;
+    bool ended = false;
     // Temporary values after x-sweep and before y-sweep
     Float2DNative hStar;
     Float2DNative huStar;
