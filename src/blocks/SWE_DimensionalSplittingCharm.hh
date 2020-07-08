@@ -105,7 +105,6 @@ public:
 
 
         double *serial = p.isUnpacking()?collectorSerializer:collector->serialize(collectorSerializer,true);
-        if(!p.isUnpacking())std::cout << "send " << collector->measure_ctrs[Collector::CTR_WALL].time_since_epoch().count() << std::endl;
         PUParray(p,serial,9);
 
         if (p.isUnpacking()){
@@ -139,8 +138,6 @@ public:
             //writer = (NetCdfWriter*) malloc(sizeof(NetCdfWriter));
             collector = new CollectorCharm();
             *collector += CollectorCharm::deserialize(collectorSerializer,true);
-            collector->measure_ctrs[Collector::CTR_WALL]= CollectorCharm::deserialize(collectorSerializer,true).measure_ctrs[Collector::CTR_WALL];
-            std::cout << "redcv "<< collector->measure_ctrs[Collector::CTR_WALL].time_since_epoch().count() << std::endl;
             float *checkpointInstantOfTime = new float[checkpointCount];
             if(write){
 
