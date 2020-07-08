@@ -175,7 +175,7 @@ public:
                 hString += std::to_string(h[i][j])+ " ";
             }
         }
-        CkPrintf("%s\n", hString);
+        CkPrintf("%s\n", hString.c_str());
                 if(localTimestepping){
             PUParray(p, bufferH.getRawPointer(),size );
             PUParray(p, bufferHu.getRawPointer(),size );
