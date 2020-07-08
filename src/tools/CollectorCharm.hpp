@@ -46,7 +46,7 @@ public:
 
                 instance.measure_ctrs[i] = std::chrono::steady_clock::time_point(std::chrono::milliseconds((long)arr[i+5]));
                 if(i==CTR_WALL)
-                    std::cout<<  "recv measure_ctr "<< std::chrono::time_point<std::chrono::steady_clock>(std::chrono::milliseconds((long)arr[i+5])) << std::endl;
+                    std::cout<<  "recv measure_ctr "<< std::chrono::time_point<std::chrono::steady_clock>(std::chrono::milliseconds((long)arr[i+5])).time_since_epoch().count() << std::endl;
 
             }
         }
