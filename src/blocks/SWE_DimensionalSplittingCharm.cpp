@@ -375,7 +375,7 @@ void SWE_DimensionalSplittingCharm::sendCopyLayers(bool sendBathymetry) {
         for(int i = startIndex; i< endIndex; i++){
             hString += std::to_string(*(h.getRawPointer()+i))+ " ";
         }
-        CkPrintf("%d: right %s\n",thisIndex, hString.c_str());
+       //CkPrintf("%d: right %s\n",thisIndex, hString.c_str());
         thisProxy[neighbourIndex[BND_RIGHT]].receiveGhostLeft(right);
     }
 

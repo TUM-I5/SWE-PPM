@@ -109,7 +109,7 @@ public:
 
         if (p.isUnpacking()){
             migrated = 1;
-            CkPrintf("Unpacking\n");
+            //CkPrintf("Unpacking\n");
 
             checkpointInstantOfTime = new float[checkpointCount];
             // For the x-sweep
