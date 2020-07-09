@@ -235,7 +235,7 @@ void swe_charm::done(int index, double ctr_flop, double ctr_exchange, double ctr
                      double ctr_wall) {
     double serialized[5] = {ctr_flop, ctr_exchange, ctr_barrier, ctr_reduce, ctr_wall};
     mainCollector += CollectorCharm::deserialize(serialized);
-    CkPrintf("%d: wants done \n", index);
+    //CkPrintf("%d: wants done \n", index);
     if(--chareCount == 0){
         mainCollector.logResults();
         exit();

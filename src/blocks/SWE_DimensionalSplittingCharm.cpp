@@ -116,7 +116,7 @@ void SWE_DimensionalSplittingCharm::ResumeFromSync() {
 
 
         mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
-        CkPrintf("%d done!\n", thisIndex);
+        //CkPrintf("%d done!\n", thisIndex);
     }
     thisProxy[thisIndex].compute();
 
