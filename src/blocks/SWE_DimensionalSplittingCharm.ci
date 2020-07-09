@@ -128,9 +128,9 @@ module SWE_DimensionalSplittingCharm {
                     iterations++;
                     if(iterations%5 == 0){
                         //CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
-                        AtSync();
-                        // CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, waitForLb), thisProxy);
-                        // contribute(cb);
+                        //AtSync();
+                         CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, waitForLb), thisProxy);
+                         contribute(cb);
                     }else{
                         //CkPrintf("%d going into Compute %d\n",thisIndex, iterations);
 
