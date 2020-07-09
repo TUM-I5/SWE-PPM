@@ -80,7 +80,7 @@ module SWE_DimensionalSplittingCharm {
 					// The xSweep will trigger the reduction and accumulate compute time
 					 collector->stopCounter(Collector::CTR_EXCHANGE);
 					if(allGhostlayersInSync()){
-					    xSweep();
+                        computeNumericalFluxes();
 					}
 				}
 				if(!localTimestepping){
@@ -128,8 +128,9 @@ module SWE_DimensionalSplittingCharm {
                     iterations++;
                     if(iterations%5 == 0){
                         //CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
-                        AtSync();
-
+                        //AtSync();
+                         CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, waitForLb), thisProxy);
+                         contribute(cb);
                     }else{
                         //CkPrintf("%d going into Compute %d\n",thisIndex, iterations);
 
@@ -151,5 +152,6 @@ module SWE_DimensionalSplittingCharm {
 
 		// entry methods
 		entry [reductiontarget] void reduceWaveSpeed(float maxWaveSpeed);
+		entry [reductiontarget] void waitForLb();
 	};
 };

@@ -123,7 +123,7 @@ void SWE_DimensionalSplittingCharm::ResumeFromSync() {
 
 }
 
-void SWE_DimensionalSplittingCharm::xSweep() {
+void SWE_DimensionalSplittingCharm::computeNumericalFluxes() {
     if (!allGhostlayersInSync()) return;
     //if(migrated)CkPrintf("%d: entered xSweep()\n",thisIndex);
 //maximum (linearized) wave speed within one iteration
@@ -214,17 +214,15 @@ void SWE_DimensionalSplittingCharm::xSweep() {
     }
 
 }
-
+void SWE_DimensionalSplittingCharm::waitForLb() {
+            AtSync();
+        }
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
     maxTimestep = maxWaveSpeed;
 
     reductionTrigger();
 if(!localTimestepping)
     collector->stopCounter(Collector::CTR_REDUCE);
-}
-
-void SWE_DimensionalSplittingCharm::ySweep() {
-
 }
 
 void SWE_DimensionalSplittingCharm::updateUnknowns(float dt) {

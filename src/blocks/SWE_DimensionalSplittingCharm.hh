@@ -61,7 +61,7 @@ public:
     void printFlops(double flop);
 
     // Unused pure virtual interface methods
-    void computeNumericalFluxes() {}
+    void computeNumericalFluxes();
 
     void pup(PUP::er &p) {
 
@@ -185,9 +185,7 @@ private:
 
     void processCopyLayer(copyLayer *msg);
 
-    void xSweep();
-
-    void ySweep();
+    void waitForLb();
 
     void updateUnknowns(float dt);
 
