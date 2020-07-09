@@ -215,6 +215,7 @@ void SWE_DimensionalSplittingCharm::computeNumericalFluxes() {
 
 }
 void SWE_DimensionalSplittingCharm::waitForLb() {
+    iterations=0;
             AtSync();
         }
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
