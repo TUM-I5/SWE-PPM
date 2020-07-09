@@ -48,7 +48,7 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
         hvNetUpdatesBelow(nx + 1, ny + 2),
         hvNetUpdatesAbove(nx + 1, ny + 2) {
            // myRank= rank;
-    usesAtSync = true;
+    //usesAtSync = true;
     currentSimulationTime = 0.;
     currentCheckpoint = 0;
 
