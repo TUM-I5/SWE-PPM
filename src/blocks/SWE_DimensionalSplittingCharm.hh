@@ -57,7 +57,7 @@ public:
 
     // Charm++ entry methods
     void reduceWaveSpeed(float maxWaveSpeed);
-
+    void waitForLb();
     void printFlops(double flop);
 
     // Unused pure virtual interface methods
@@ -185,7 +185,7 @@ private:
 
     void processCopyLayer(copyLayer *msg);
 
-    void waitForLb();
+
 
     void updateUnknowns(float dt);
 
