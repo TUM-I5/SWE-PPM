@@ -240,7 +240,7 @@ void swe_charm::done(int index, double ctr_flop, double ctr_exchange, double ctr
         mainCollector.logResults();
         exit();
     }
-
+    mainProxy[th]
 }
 void swe_charm::allEnd() {
     mainCollector.logResults();
