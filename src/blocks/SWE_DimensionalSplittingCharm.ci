@@ -127,11 +127,11 @@ module SWE_DimensionalSplittingCharm {
 					serial{
                     iterations++;
                     if(iterations%10 == 0){
-                        CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
+                        //CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
                         AtSync();
 
                     }else{
-                        CkPrintf("%d going into Compute %d\n",thisIndex, iterations);
+                        //CkPrintf("%d going into Compute %d\n",thisIndex, iterations);
 
                         thisProxy[thisIndex].compute();
                     }
