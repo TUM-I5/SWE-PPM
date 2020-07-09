@@ -126,7 +126,7 @@ module SWE_DimensionalSplittingCharm {
 					}
 					serial{
                     iterations++;
-                    if(iterations%1 == 0){
+                    if(iterations%10 == 0){
                         //CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
                         AtSync();
 
