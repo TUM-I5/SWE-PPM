@@ -123,15 +123,15 @@ module SWE_DimensionalSplittingCharm {
 					}
 					serial{
 
-                    if(iterations%1 != 0){
+                    if(iterations++%10 == 0){
                         //CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
                         //AtSync();
                          CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, waitForLb), thisProxy);
                          contribute(cb);
                     }else{
                         //CkPrintf("%d going into Compute %d\n",thisIndex, iterations);
-
-                        thisProxy[thisIndex].compute();
+                        ResumeFromSync();
+                        //thisProxy[thisIndex].compute();
                     }
 
 					}
