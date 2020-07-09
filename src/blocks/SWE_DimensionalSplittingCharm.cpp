@@ -215,7 +215,17 @@ void SWE_DimensionalSplittingCharm::computeNumericalFluxes() {
 
 }
 void SWE_DimensionalSplittingCharm::waitForLb() {
-            AtSync();
+    iterations++;
+    if((iterations)%10 == 0){
+        AtSync();
+
+
+    }else{
+        //CkPrintf("%d going into Compute %d\n",thisIndex, iterations);
+        ResumeFromSync();
+
+    }
+
         }
 void SWE_DimensionalSplittingCharm::reduceWaveSpeed(float maxWaveSpeed) {
     maxTimestep = maxWaveSpeed;
