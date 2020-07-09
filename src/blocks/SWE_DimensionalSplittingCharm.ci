@@ -123,7 +123,7 @@ module SWE_DimensionalSplittingCharm {
 					}
 					serial{
                     ResumeFromSync();
-                    if(iterations++%10 == 0){
+                   /* if(iterations++%10 == 0){
                         //CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
                         //AtSync();
                          CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, waitForLb), thisProxy);
@@ -131,23 +131,8 @@ module SWE_DimensionalSplittingCharm {
                     }else{
                         //CkPrintf("%d going into Compute %d\n",thisIndex, iterations);
                         ResumeFromSync();
-                         /*if (currentSimulationTime >= simulationDuration && !ended ) {
-                                ended = true;
 
-                                collector->stopCounter(Collector::CTR_WALL);
-                                if(localTimestepping){
-                                    sendCopyLayers(firstIteration);
-
-                                }
-                                double serialize[5];
-                                collector->serialize(serialize);
-
-
-                                mainProxy.done(thisIndex,serialize[0],serialize[1],serialize[2],serialize[3],serialize[4]);
-                                CkPrintf("%d done!\n", thisIndex);
-                        }
-                        thisProxy[thisIndex].compute();*/
-                    }
+                    }*/
 
 					}
 
