@@ -75,7 +75,7 @@ module SWE_DimensionalSplittingCharm {
 
 				}
 				serial {
-                     iterations++;
+
 				     checkAllGhostlayers(); // after receiving all Ghostlayers we can processes them
 					// The xSweep will trigger the reduction and accumulate compute time
 					 collector->stopCounter(Collector::CTR_EXCHANGE);
@@ -125,11 +125,14 @@ module SWE_DimensionalSplittingCharm {
 
 					}
 					serial{
-
+                    iterations++;
                     if(iterations%10 == 0){
+                        CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
                         AtSync();
 
                     }else{
+                        CkPrintf("%d going into Compute %d\n",thisIndex, iterations);
+
                         thisProxy[thisIndex].compute();
                     }
 

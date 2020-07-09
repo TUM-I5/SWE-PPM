@@ -4,11 +4,11 @@
     <generated>
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -19,6 +19,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingCharm.ci" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -308,14 +309,8 @@
       <workItem from="1593762458560" duration="748000" />
       <workItem from="1593860428059" duration="1962000" />
       <workItem from="1594199318158" duration="13862000" />
-      <workItem from="1594216670511" duration="24450000" />
-    </task>
-    <task id="LOCAL-00659" summary="Added loadbalancer to charm">
-      <created>1594248202414</created>
-      <option name="number" value="00659" />
-      <option name="presentableId" value="LOCAL-00659" />
-      <option name="project" value="LOCAL" />
-      <updated>1594248202414</updated>
+      <workItem from="1594216670511" duration="24503000" />
+      <workItem from="1594301208354" duration="47000" />
     </task>
     <task id="LOCAL-00660" summary="Added loadbalancer to charm">
       <created>1594248567311</created>
@@ -653,7 +648,14 @@
       <option name="project" value="LOCAL" />
       <updated>1594253106606</updated>
     </task>
-    <option name="localTasksCounter" value="708" />
+    <task id="LOCAL-00708" summary="Added loadbalancer to charm">
+      <created>1594253413890</created>
+      <option name="number" value="00708" />
+      <option name="presentableId" value="LOCAL-00708" />
+      <option name="project" value="LOCAL" />
+      <updated>1594253413890</updated>
+    </task>
+    <option name="localTasksCounter" value="709" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -719,11 +721,11 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1594253106569">
+    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1594253413839">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1594217976067" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594253106569" />
+    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594253413839" />
     <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog" timestamp="1594222236882">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
