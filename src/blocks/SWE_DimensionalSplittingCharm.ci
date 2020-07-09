@@ -94,9 +94,6 @@ module SWE_DimensionalSplittingCharm {
 					    updateUnknowns(maxTimestep);
                     }
 
-
-
-
                         // Once the simulation state progressed one iteration, increase the simulation time accordingly
                         if((!localTimestepping || hasMaxLocalTimestep()) ){
                             currentSimulationTime +=localTimestepping?maxTimestepLocal:maxTimestep;
@@ -125,8 +122,8 @@ module SWE_DimensionalSplittingCharm {
 
 					}
 					serial{
-                    iterations++;
-                    if(iterations%1 == 0){
+
+                    if(iterations++%1 == 0){
                         //CkPrintf("%d going into AtSync %d\n",thisIndex, iterations);
                         //AtSync();
                          CkCallback cb(CkReductionTarget(SWE_DimensionalSplittingCharm, waitForLb), thisProxy);
