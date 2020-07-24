@@ -235,15 +235,12 @@ swe_charm::swe_charm(CkArgMsg *msg) {
 void swe_charm::done(int index, double ctr_flop, double ctr_exchange, double ctr_barrier, double ctr_reduce,
                      double ctr_wall) {
     double serialized[5] = {ctr_flop, ctr_exchange, ctr_barrier, ctr_reduce, ctr_wall};
-    if(first){
-        mainCollector.stopCounter(Collector::CTR_WALL);
-        std::cout << "Real WallTime " << mainCollector.total_ctrs[Collector::CTR_WALL].count() << "s\n";
-        first = !first;
-    }
+
     mainCollector += CollectorCharm::deserialize(serialized);
     //CkPrintf("%d: wants done \n", index);
     if(--chareCount == 0){
-
+        mainCollector.stopCounter(Collector::CTR_WALL);
+        std::cout << "Real WallTime " << mainCollector.total_ctrs[Collector::CTR_WALL].count() << "s\n";
         mainCollector.logResults();
         exit();
     }
