@@ -20,7 +20,7 @@ public:
     float sumReductionTime;
     CollectorCharm mainCollector;
 private:
-
+    bool first = true;
 };
 
 #endif // __SWE_CHARM_HH

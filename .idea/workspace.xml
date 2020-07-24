@@ -2,13 +2,13 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
-      <config projectName="swe_benchmark" targetName="block_component_component" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
-      <config projectName="swe_benchmark" targetName="no_component_component" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
+      <config projectName="swe_benchmark" targetName="block_component_component" />
+      <config projectName="swe_benchmark" targetName="no_component_component" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -20,7 +20,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/Collector.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Collector.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_charm.hh" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_charm.hh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +31,6 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -321,6 +321,7 @@
       <workItem from="1594989771999" duration="1749000" />
       <workItem from="1595338227502" duration="631000" />
       <workItem from="1595424975781" duration="1970000" />
+      <workItem from="1595588288031" duration="292000" />
     </task>
     <task id="LOCAL-00697" summary="Added loadbalancer to charm">
       <created>1594251710072</created>
