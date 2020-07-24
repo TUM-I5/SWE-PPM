@@ -37,7 +37,7 @@ public:
 
         }
         for(int i=0; i< 4; i++)  measure_ctrs[i] = other.measure_ctrs[i];
-        total_ctrs[CTR_WALL] = std::max(total_ctrs[CTR_WALL],
+        total_ctrs[CTR_WALL] = std::min(total_ctrs[CTR_WALL],
                                         other.total_ctrs[CTR_WALL]); //so we dont add WALL time together
         timesteps.insert( timesteps.end(), other.timesteps.begin(), other.timesteps.end() );
         return *this;
