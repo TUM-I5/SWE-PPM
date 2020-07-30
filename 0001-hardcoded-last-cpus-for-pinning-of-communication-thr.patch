@@ -1,0 +1,59 @@
+From 0061073ad19924a6e8691e1375cf336a700bdb62 Mon Sep 17 00:00:00 2001
+From: Philipp Samfass <samfass@in.tum.de>
+Date: Wed, 8 Jul 2020 18:41:04 +0200
+Subject: [PATCH] hardcoded last cpus for pinning of communication thread on
+ CoolMUC2
+
+---
+ src/chameleon_version.h | 2 +-
+ src/commthread.cpp      | 7 ++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/src/chameleon_version.h b/src/chameleon_version.h
+index 8385a27..679cbc6 100644
+--- a/src/chameleon_version.h
++++ b/src/chameleon_version.h
+@@ -1,7 +1,7 @@
+ #ifndef CHAMELEON__VERSION_H
+ #define CHAMELEON__VERSION_H
+ 
+-#define CHAMELEON_VERSION_MAJOR 0  
++#define CHAMELEON_VERSION_MAJOR 0
+ #define CHAMELEON_VERSION_MINOR 1
+ #define CHAMELEON_VERSION_BUILD 0
+ 
+diff --git a/src/commthread.cpp b/src/commthread.cpp
+index 64bed15..9b807dc 100644
+--- a/src/commthread.cpp
++++ b/src/commthread.cpp
+@@ -379,6 +379,8 @@ short pin_thread_to_last_core(int n_last_core) {
+     const long n_physical_cores = hwloc_get_nbobjs_by_depth(topology, depth);
+     const long n_logical_cores = sysconf( _SC_NPROCESSORS_ONLN );
+ 
++    RELP("n_physical_cores %d, n_logical_cores %d\n", n_physical_cores, n_logical_cores); 
++
+     hwloc_topology_destroy(topology);
+     
+     // get last hw thread of current cpuset
+@@ -387,7 +389,7 @@ short pin_thread_to_last_core(int n_last_core) {
+ 
+     for (long i = n_logical_cores; i >= 0; i--) {
+         if (CPU_ISSET(i, &current_cpuset)) {
+-            // DBP("Last core/hw thread in cpuset is %ld\n", i);
++            RELP("Last core/hw thread in cpuset is %ld\n", i);
+             max_core_set = i;
+             count_last++;
+             if(count_last >= n_last_core)
+@@ -395,6 +397,9 @@ short pin_thread_to_last_core(int n_last_core) {
+         }
+     }
+ 
++    // Patch for Martin
++    max_core_set = 55;
++
+     // set affinity mask to last core or all hw threads on specific core 
+     CPU_ZERO(&new_cpu_set);
+     if(max_core_set < n_physical_cores) {
+-- 
+2.21.0
+
