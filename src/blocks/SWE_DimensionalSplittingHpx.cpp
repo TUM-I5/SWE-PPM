@@ -326,7 +326,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
     /***************************************************************************************
      * compute the net-updates for the vertical edges
      **************************************************************************************/
-/*
+
     for (int i = 1; i < nx+2; i++) {
         const int ny_end = ny+1;
 
@@ -349,8 +349,8 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
             maxWaveSpeed = std::max(maxWaveSpeed, maxEdgeSpeed);
         }
 
-    }*/
-
+    }
+/*
     hpx::parallel::for_loop(hpx::parallel::execution::par,
                             1, nx + 2, hpx::parallel::reduction_max(maxWaveSpeed),
 
@@ -378,11 +378,11 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
                                 }
                             }
     );
-
+*/
     /***************************************************************************************
      * compute the net-updates for the horizontal edges
      **************************************************************************************/
-
+/*
     hpx::parallel::for_loop(hpx::parallel::execution::par,
                             1, nx + 1, hpx::parallel::reduction_max(maxWaveSpeed),
 
@@ -414,8 +414,8 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
                                 }
                             }
     );
+*/
 
-/*
     for (int i=1; i < nx + 1; i++) {
         const int ny_end = ny+2;
 
@@ -441,7 +441,7 @@ void SWE_DimensionalSplittingHpx::computeNumericalFluxes() {
 
         }
     }
-*/
+
     if (maxWaveSpeed > 0.00001) {
 
         maxTimestep = std::min(dx / maxWaveSpeed, dy / maxWaveSpeed);
@@ -475,7 +475,7 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
     if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
     dt = maxTimestep;
-    /* for (int i = 1; i < nx+1; i++) {
+     for (int i = 1; i < nx+1; i++) {
          const int ny_end = ny+1;
 
  #if defined(VECTORIZE)
@@ -504,9 +504,9 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
              } else if (h[i][j] < 0.1)
                  hu[i][j] = hv[i][j] = 0.; //no water, no speed!
          }
-     }*/
+     }
 
-
+/*
     hpx::parallel::for_loop(hpx::parallel::execution::par,
                             1, nx + 1,
 
@@ -537,4 +537,5 @@ void SWE_DimensionalSplittingHpx::updateUnknowns(float dt) {
                                 }
                             }
     );
+    */
 }
