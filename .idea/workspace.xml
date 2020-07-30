@@ -20,7 +20,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/SWE_DimensionalSplittingHpx.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -335,14 +334,7 @@
       <workItem from="1596052261086" duration="667000" />
       <workItem from="1596065097436" duration="180000" />
       <workItem from="1596099505532" duration="687000" />
-      <workItem from="1596108284460" duration="111000" />
-    </task>
-    <task id="LOCAL-00706" summary="Added loadbalancer to charm">
-      <created>1594252936089</created>
-      <option name="number" value="00706" />
-      <option name="presentableId" value="LOCAL-00706" />
-      <option name="project" value="LOCAL" />
-      <updated>1594252936089</updated>
+      <workItem from="1596108284460" duration="3170000" />
     </task>
     <task id="LOCAL-00707" summary="Added loadbalancer to charm">
       <created>1594253106606</created>
@@ -680,7 +672,14 @@
       <option name="project" value="LOCAL" />
       <updated>1596099593082</updated>
     </task>
-    <option name="localTasksCounter" value="755" />
+    <task id="LOCAL-00755" summary="Added loadbalancer to charm">
+      <created>1596108402866</created>
+      <option name="number" value="00755" />
+      <option name="presentableId" value="LOCAL-00755" />
+      <option name="project" value="LOCAL" />
+      <updated>1596108402867</updated>
+    </task>
+    <option name="localTasksCounter" value="756" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -746,11 +745,11 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1596099593020">
+    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1596108402660">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1596022217280" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1596099593020" />
+    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1596108402660" />
     <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog" timestamp="1594990323397">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
