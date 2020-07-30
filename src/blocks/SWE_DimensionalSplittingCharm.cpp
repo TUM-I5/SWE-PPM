@@ -47,6 +47,8 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
 
         hvNetUpdatesBelow(nx + 1, ny + 2),
         hvNetUpdatesAbove(nx + 1, ny + 2) {
+    char hostname[HOST_NAME_MAX];
+    gethostname(hostname, HOST_NAME_MAX);
     CkPrintf("%i started at %s\n", thisIndex, hostname);
     usesAtSync = true;
     currentSimulationTime = 0.;
@@ -86,8 +88,6 @@ SWE_DimensionalSplittingCharm::SWE_DimensionalSplittingCharm(int nx, int ny, flo
     // output at t=0
     writeTimestep();
 
-    char hostname[HOST_NAME_MAX];
-    gethostname(hostname, HOST_NAME_MAX);
 
     CkPrintf("%i Spawned at %s\n", thisIndex, hostname);
     firstIteration = true;
