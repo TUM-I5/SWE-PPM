@@ -1,6 +1,6 @@
 #!/bin/bash
 #NAME=lts_8192_8192_20
-#SBATCH -o /dss/dsshome1/lxc0E/ga25qic2/jobs/output/lts_8192_8192_20.%j.%N.out
+#SBATCH -o /dss/dsshome1/lxc0E/ga25qic2/jobs_28threshold/output/lts_8192_8192_20.%j.%N.out
 #SBATCH -D /dss/dsshome1/lxc0E/ga25qic2/Codes/swe-benchmark
 #SBATCH -J lts_8192_8192_20_32
 #SBATCH --get-user-env
@@ -17,12 +17,13 @@
 
 module use ~/.modules
 module load slurm_setup
-module load chameleon
+#module load chameleon
 
 source /etc/profile.d/modules.sh
 source ~/Codes/swe-benchmark/jobs/init.sh
 unset KMP_AFFINITY
-export MIN_ABS_LOAD_IMBALANCE_BEFORE_MIGRATION=56
+#export MIN_ABS_LOAD_IMBALANCE_BEFORE_MIGRATION=56
+export MIN_LOCAL_TASKS_IN_QUEUE_BEFORE_MIGRATION=28
 export GASNET_PHYSMEM_MAX='55 GB'
 export TAG_NBITS_TASK_ID=10
 XSIZE=8192

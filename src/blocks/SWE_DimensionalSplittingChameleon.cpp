@@ -620,7 +620,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
  * @param dt time step width used in the update. The timestep has to be equal to maxTimestep calculated by computeNumericalFluxes(),
  * since this is the step width used for the intermediary updates after the x-sweep.
  */
- void updateUnkownsKernel(SWE_DimensionalSplittingChameleon* block, float* maxTimestep, float* h_in,float* hu_in, float* hv_in,
+ void updateUnknownsKernel(SWE_DimensionalSplittingChameleon* block, float* maxTimestep, float* h_in,float* hu_in, float* hv_in,
 
                           float* hNetUpdatesLeft_data, float* hNetUpdatesRight_data,
                           float* hNetUpdatesBelow_data, float* hNetUpdatesAbove_data,
@@ -682,7 +682,7 @@ void SWE_DimensionalSplittingChameleon::computeNumericalFluxes() {
 
 }
 void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
-  /*  if (!allGhostlayersInSync()) return;
+    if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
     dt=maxTimestep;
     for (int i = 1; i < nx+1; i++) {
@@ -714,11 +714,11 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
                 hu[i][j] = hv[i][j] = 0.; //no water, no speed!
         }
     }
-    return;*/
-     if (!allGhostlayersInSync()) return;
+    return;
+    // if (!allGhostlayersInSync()) return;
 //update cell averages with the net-updates
 
-    chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[16];
+/*    chameleon_map_data_entry_t* args = new chameleon_map_data_entry_t[16];
     args[0] = chameleon_map_data_entry_create(this, sizeof(SWE_DimensionalSplittingChameleon), CHAM_OMP_TGT_MAPTYPE_TO);
     args[1] = chameleon_map_data_entry_create(&(this->maxTimestep), sizeof(float), CHAM_OMP_TGT_MAPTYPE_TO);
     args[2] = chameleon_map_data_entry_create(this->getWaterHeight().getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2),CHAM_OMP_TGT_MAPTYPE_TO);
@@ -741,9 +741,10 @@ void SWE_DimensionalSplittingChameleon::updateUnknowns (float dt) {
     args[15] = chameleon_map_data_entry_create(this->hv.getRawPointer(), sizeof(float)*(nx + 2)*(ny + 2), CHAM_OMP_TGT_MAPTYPE_FROM);
 
     cham_migratable_task_t *cur_task = chameleon_create_task(
-            (void *)&updateUnkownsKernel,
+            (void *)&updateUnknownsKernel,
             16, // number of args
             args);
-    int32_t res = chameleon_add_task(cur_task);
+    int32_t res = chameleon_add_task(cur_task); */
+    //updateUnknownsKernel(args[0], args[1], args[2], args[3], args[4], args[5], args[6], );
 }
 

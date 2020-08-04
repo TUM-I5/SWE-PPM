@@ -21,7 +21,8 @@ module load chameleon
 source /etc/profile.d/modules.sh
 source ~/Codes/swe-benchmark/jobs/init.sh
 unset KMP_AFFINITY
-export MIN_ABS_LOAD_IMBALANCE_BEFORE_MIGRATION=56
+#export MIN_ABS_LOAD_IMBALANCE_BEFORE_MIGRATION=56
+export MIN_LOCAL_TASKS_IN_QUEUE_BEFORE_MIGRATION=56
 export GASNET_PHYSMEM_MAX='55 GB'
 export TAG_NBITS_TASK_ID=10
 XSIZE=8192

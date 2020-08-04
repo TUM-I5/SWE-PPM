@@ -328,7 +328,7 @@ int main(int argc, char** argv) {
                     for (int i = 0; i < simulationBlocks.size(); i++){
                         simulationBlocks[i]->updateUnknowns(timestep);
                     }
-                    chameleon_distributed_taskwait(0);
+                    //chameleon_distributed_taskwait(0);
                 }
 
                 collector.stopCounter(CollectorChameleon::CTR_WALL);
@@ -377,8 +377,11 @@ int main(int argc, char** argv) {
         MPI_Test(&req,&flag,&status);
 
         while(!flag){
+            //chameleon_distributed_taskwait(0);
+#pragma omp parallel
+{
             chameleon_distributed_taskwait(0);
-            chameleon_distributed_taskwait(0);
+}
             MPI_Test(&req,&flag,&status);
         }
 
