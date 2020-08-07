@@ -1,12 +1,12 @@
 #!/bin/bash
 #NAME=lts_8192_8192_20
-#SBATCH -o /dss/dsshome1/lxc0E/ga25qic2/jobs/output/lts_8192_8192_20.%j.%N.out
+#SBATCH -o /dss/dsshome1/lxc0E/ga25qic2/jobs_mpioverdecomp/output/lts_8192_8192_20.%j.%N.out
 #SBATCH -D /dss/dsshome1/lxc0E/ga25qic2/Codes/swe-benchmark
-#SBATCH -J lts_8192_8192_20_1
+#SBATCH -J lts_8192_8192_20_2
 #SBATCH --get-user-env
 #SBATCH --clusters=cm2_tiny
 #SBATCH --partition=cm2_tiny
-#SBATCH --nodes=1
+#SBATCH --nodes=2
 #SBATCH --cpus-per-task=28
 #SBATCH --ntasks-per-node=1
 #SBATCH --get-user-env
@@ -34,7 +34,7 @@ OUTPUT="${HOME}/jobs/output/${NAME}"
 PARSTRING="-x $XSIZE -y $YSIZE -t ${TIME}  -l 1 -n $CP -o ${OUTPUT}"
 PARSTRING_HPX="--resolution-horizontal $XSIZE --resolution-vertical $YSIZE -e $TIME -n $CP --local-timestepping 1 -o $OUTPUT"
 CORESIZE=28
-for NODECOUNT in 1
+for NODECOUNT in 2
 do
 
 MAX=3
@@ -48,9 +48,9 @@ echo "##########################################################################
 #mpirun -n $NODECOUNT  ~/swe-benchmark/build/swe_benchmark_hpx ${PARSTRING_HPX}_hpx_128 --blocks 128
 
 export SLURM_CPUS_PER_TASK=56
-#I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/swe_benchmark_chameleon ${PARSTRING}_chameleon_32 --blocks 32
-I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/swe_benchmark_chameleon ${PARSTRING}_chameleon_64 --blocks 64
-I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/swe_benchmark_chameleon ${PARSTRING}_chameleon_128 --blocks 128
+#I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/build/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_32 --blocks 32
+I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/build/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_64 --blocks 64
+I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/build/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_128 --blocks 128
 
 done 
 done 
