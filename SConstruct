@@ -315,6 +315,10 @@ if env['parallelization'] in ['charm', 'ampi']:
     def modifyTargets(target, source, env):
         target.append('${SOURCE.basename}.def.h')
         return target, source
+    
+    env.Append(CPPPATH='blocks')
+    #env.Append(CPPPATH='examples')
+    
     buildString = "cd ${SOURCE.dir};" +charmInstall + '/bin/charmc ' + '${SOURCE.file}'
     charmBuilder = Builder(action=buildString,
                            suffix='.decl.h',
@@ -322,9 +326,10 @@ if env['parallelization'] in ['charm', 'ampi']:
 
     env.Append(BUILDERS={'charmBuilder': charmBuilder})
 
-    env.charmBuilder("src/blocks/SWE_DimensionalSplittingCharm.ci")
 
-    ################################
+    env.charmBuilder(["src/blocks/SWE_DimensionalSplittingCharm.ci","src/examples/swe_charm.ci"])
+
+################################
 # Chameleon specific
 ################################
 
