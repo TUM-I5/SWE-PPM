@@ -17,7 +17,7 @@ class Collector {
 public:
     int rank;
     int totalBlocks;
-    double flop_ctr;
+    std::atomic<uint64_t> flop_ctr;
     double group_flop_ctr;
     bool is_master;
     std::string log_name;
@@ -43,6 +43,19 @@ public:
         return *this;
     }
 
+    Collector(Collector &other) :
+        rank(other.rank),
+        totalBlocks(other.totalBlocks),
+        flop_ctr(other.flop_ctr.load()),
+        group_flop_ctr(other.group_flop_ctr),
+        is_master(other.is_master),
+        log_name(log_name),
+        total_ctrs(other.total_ctrs),
+        measure_ctrs(other.measure_ctrs),
+        timesteps(other.timesteps) {
+
+    }
+
     Collector() : flop_ctr(0.0f), group_flop_ctr(0.0f), result_ctrs{}, total_ctrs{}, is_master(false),
                   log_name("swe_counter.log") {};
     void setRank(int rank) {
@@ -66,7 +79,7 @@ public:
     }
 
     void addFlops(float flops) {
-        flop_ctr += flops;
+        flop_ctr += static_cast<uint64_t>(flops);
     }
 
     void printCounter() {

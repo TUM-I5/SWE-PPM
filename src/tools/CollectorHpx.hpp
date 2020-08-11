@@ -27,7 +27,7 @@ public:
 
     void collect() {
 
-        group_flop_ctr = hpx::all_reduce("flop_reduce", flop_ctr, std::plus<double>{}).get();
+        group_flop_ctr = hpx::all_reduce("flop_reduce", static_cast<double>(flop_ctr), std::plus<double>{}).get();
         result_ctrs[CTR_EXCHANGE] = hpx::all_reduce("exchange_reduce", total_ctrs[CTR_EXCHANGE].count(),
                                                     std::plus<double>{}).get();
         result_ctrs[CTR_REDUCE] = hpx::all_reduce("reduction_reduce", total_ctrs[CTR_REDUCE].count(),

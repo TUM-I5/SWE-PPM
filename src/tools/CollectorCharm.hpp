@@ -12,7 +12,7 @@ public:
     CollectorCharm() {};
 
     void collect() {
-        group_flop_ctr = flop_ctr;
+        group_flop_ctr = static_cast<double>(flop_ctr);
         for (int i = 0; i < 4; i++) {
             result_ctrs[i] = total_ctrs[i].count();
         }
@@ -31,7 +31,7 @@ public:
     }
     double *serialize(double *arr, bool all = false) {
 
-        arr[0] = flop_ctr;
+        arr[0] = static_cast<double>(flop_ctr);
         for (int i = 0; i < 4; i++) {
             arr[i + 1] = total_ctrs[i].count();
         }
@@ -48,7 +48,7 @@ public:
     static CollectorCharm deserialize(double *arr,bool all = false) {
 
         CollectorCharm instance;
-        instance.flop_ctr = arr[0];
+        instance.flop_ctr = static_cast<uint64_t>(arr[0]);
         for (int i = 0; i < 4; i++) {
             instance.total_ctrs[i] = std::chrono::duration<double>(arr[i + 1]);
         }

@@ -29,7 +29,7 @@ public:
 
 
     void collect() {
-        group_flop_ctr = upcxx::reduce_all(flop_ctr, upcxx::op_fast_add).wait();
+        group_flop_ctr = upcxx::reduce_all(static_cast<double>(flop_ctr), upcxx::op_fast_add).wait();
         result_ctrs[CTR_EXCHANGE] = upcxx::reduce_all(total_ctrs[CTR_EXCHANGE].count(), upcxx::op_fast_add).wait();
         result_ctrs[CTR_REDUCE] = upcxx::reduce_all(total_ctrs[CTR_REDUCE].count(), upcxx::op_fast_add).wait();
         result_ctrs[CTR_WALL] = upcxx::reduce_all(total_ctrs[CTR_WALL].count(), upcxx::op_fast_max).wait();
