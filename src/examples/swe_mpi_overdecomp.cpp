@@ -268,26 +268,22 @@ int main(int argc, char** argv) {
                 collector.startCounter(CollectorChameleon::CTR_WALL);
 #pragma omp parallel
                 {
-#pragma omp for
+#pragma omp for nowait()
                 for (int i = 0; i < simulationBlocks.size(); i++){
                        // std::cout << i << " set" << std::endl;
+#pragma omp task out(simulationBlocks[i])
                         simulationBlocks[i]->setGhostLayer();
                     }
 
-                }
-#pragma omp parallel
-                {
-#pragma omp for
+#pragma omp for nowait()
                     for (int i = 0; i < simulationBlocks.size(); i++){
+#pragma omp task out(simulationBlocks[i])
                         simulationBlocks[i]->receiveGhostLayer();
                     }
 
-                }
-
-#pragma omp parallel
-                {
-#pragma omp for
+#pragma omp for nowait()
                     for (int i = 0; i < simulationBlocks.size(); i++){
+#pragma omp task inout(simulationBlocks[i])
                         simulationBlocks[i]->computeNumericalFluxes();
                     }
                 }
@@ -315,8 +311,9 @@ int main(int argc, char** argv) {
 
 #pragma omp parallel
                 {
-#pragma omp for
+#pragma omp for nowait()
                     for (int i = 0; i < simulationBlocks.size(); i++){
+#pragma omp task inout(simulationBlocks[i])
                         simulationBlocks[i]->updateUnknowns(timestep);
                     }
                 }
