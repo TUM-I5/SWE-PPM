@@ -266,11 +266,12 @@ int main(int argc, char** argv) {
     for (int i = 0; i < numberOfCheckPoints; i++) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
+            collector.startCounter(CollectorChameleon::CTR_WALL);
+            #pragma omp parallel
+            {
             do {
 
-                collector.startCounter(CollectorChameleon::CTR_WALL);
-#pragma omp parallel
-                {
+
 #pragma omp for nowait
                 for (int i = 0; i < simulationBlocks.size(); i++){
                        // std::cout << i << " set" << std::endl;
@@ -324,9 +325,8 @@ int main(int argc, char** argv) {
 #pragma omp task depend(inout:blockProxyPtrs[i])
                         simulationBlocks[i]->updateUnknowns(timestep);
                     }
-                }
+                
 
-                collector.stopCounter(CollectorChameleon::CTR_WALL);
 
                 if (localTimestepping) {
                     //if each block got the maxLocalTimestep the timestep is finished
@@ -340,6 +340,9 @@ int main(int argc, char** argv) {
 
             } while (localTimestepping && !synchronizedTimestep);
             // update simulation time with time step width.
+            }
+            collector.stopCounter(CollectorChameleon::CTR_WALL);
+
             t += localTimestepping ? maxLocalTimestep : timestep;
             if(localTimestepping){
                 for (auto &block: simulationBlocks)block->resetStepSizeCounter();
