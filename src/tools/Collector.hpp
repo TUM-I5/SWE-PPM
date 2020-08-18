@@ -12,6 +12,8 @@
 #include <vector>
 #include <numeric>
 #include <algorithm>
+#include <atomic>
+
 class Collector {
 //protected:
 public:

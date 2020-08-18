@@ -268,22 +268,27 @@ int main(int argc, char** argv) {
                 collector.startCounter(CollectorChameleon::CTR_WALL);
 #pragma omp parallel
                 {
-#pragma omp for nowait()
+#pragma omp for nowait
                 for (int i = 0; i < simulationBlocks.size(); i++){
                        // std::cout << i << " set" << std::endl;
-#pragma omp task out(simulationBlocks[i])
+		        auto *block_ptr = simulationBlocks[i].get();
+#pragma omp task depend(out:block_ptr)
                         simulationBlocks[i]->setGhostLayer();
                     }
+                  #pragma omp taskwait
+                    
 
-#pragma omp for nowait()
+#pragma omp for nowait
                     for (int i = 0; i < simulationBlocks.size(); i++){
-#pragma omp task out(simulationBlocks[i])
+		        auto *block_ptr = simulationBlocks[i].get();
+#pragma omp task depend(out:block_ptr)
                         simulationBlocks[i]->receiveGhostLayer();
                     }
 
-#pragma omp for nowait()
+#pragma omp for nowait
                     for (int i = 0; i < simulationBlocks.size(); i++){
-#pragma omp task inout(simulationBlocks[i])
+		        auto *block_ptr = simulationBlocks[i].get();
+#pragma omp task depend(inout:block_ptr)
                         simulationBlocks[i]->computeNumericalFluxes();
                     }
                 }
@@ -311,9 +316,10 @@ int main(int argc, char** argv) {
 
 #pragma omp parallel
                 {
-#pragma omp for nowait()
+#pragma omp for nowait
                     for (int i = 0; i < simulationBlocks.size(); i++){
-#pragma omp task inout(simulationBlocks[i])
+		        auto *block_ptr = simulationBlocks[i].get();
+#pragma omp task depend(inout:block_ptr)
                         simulationBlocks[i]->updateUnknowns(timestep);
                     }
                 }

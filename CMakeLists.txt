@@ -45,7 +45,7 @@ foreach( build_type ${BUILDS})
     #
     target_include_directories(swe_benchmark_${build_type} PUBLIC "${${build_type}_include_directories}" ${NETCDF_INCLUDE_DIRS} )
     set (CMAKE_CXX_FLAGS -qopenmp)
-    target_compile_options(swe_benchmark_${build_type} PRIVATE "${${build_type}_compile_options}" -O2 -std=c++14 -qopt-report-phase=vec -qopt-report=5 -fmessage-length=0 -qopenmp )
+    target_compile_options(swe_benchmark_${build_type} PRIVATE "${${build_type}_compile_options}" -g -O2 -std=c++14 -qopt-report-phase=vec -qopt-report=5 -fmessage-length=0 -qopenmp )
 
 endforeach(build_type ${BUILDS})
 
