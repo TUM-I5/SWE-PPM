@@ -291,31 +291,34 @@ int main(int argc, char** argv) {
 #pragma omp task depend(inout:blockProxyPtrs[i])
                         simulationBlocks[i]->computeNumericalFluxes();
                     }
-                }
-
-
+                
                 if (!localTimestepping) {
-                    collector.startCounter(CollectorChameleon::CTR_REDUCE);
-                    timesteps.clear();
-                    for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
-
-                    float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
-                    MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
-
-                    for (auto &block: simulationBlocks)block->maxTimestep = timestep;
-                    collector.stopCounter(CollectorChameleon::CTR_REDUCE);
-                    //std::cout << "timestep " << timestep << std::endl;
-                }else {
-                    for (auto &block: simulationBlocks){
-                        if(block->allGhostlayersInSync()){
-                            block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
-                        }
-                    }
-
+#pragma omp barrier
                 }
 
-#pragma omp parallel
+#pragma omp master 
                 {
+                    if (!localTimestepping) {
+                        collector.startCounter(CollectorChameleon::CTR_REDUCE);
+                        timesteps.clear();
+                        for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
+
+                        float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
+                        MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+
+                        for (auto &block: simulationBlocks)block->maxTimestep = timestep;
+                        collector.stopCounter(CollectorChameleon::CTR_REDUCE);
+                        //std::cout << "timestep " << timestep << std::endl;
+                    } else {
+                        for (auto &block: simulationBlocks){
+                            if(block->allGhostlayersInSync()){
+                                block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                            }
+                        }
+
+                    }
+                }
+
 #pragma omp for nowait
                     for (int i = 0; i < simulationBlocks.size(); i++){
 #pragma omp task depend(inout:blockProxyPtrs[i])
