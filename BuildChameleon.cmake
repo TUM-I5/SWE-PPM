@@ -1,4 +1,5 @@
 find_package(MPI REQUIRED)
+
 find_library(CHAMELEON_LIB chameleon HINTS "$ENV{CHAM_PATH}/lib")
 
 list(APPEND chameleon_include_directories $ENV{CHAM_PATH}/include)

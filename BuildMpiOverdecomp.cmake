@@ -1,4 +1,5 @@
 find_package(MPI REQUIRED)
+
 list(APPEND mpi_include_directories ${MPI_CXX_INCLUDE_PATH})
 list(APPEND mpi_compile_options ${MPI_CXX_COMPILE_FLAGS})
 list(APPEND mpi_link_libraries ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS})
