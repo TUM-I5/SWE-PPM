@@ -86,14 +86,16 @@ foreach( build_type ${BUILDS})
 
     target_include_directories(swe_benchmark_${build_type} PUBLIC "${${build_type}_include_directories}" ${NETCDF_INCLUDE_DIRS} )
     if(OpenMP_FOUND)
-    target_compile_options(swe_benchmark_${build_type} PRIVATE 
-        $<$<CXX_COMPILER_ID:Intel>: -qopenmp>
-        $<$<CXX_COMPILER_ID:GNU>: -fopenmp>
-    )
-    target_link_libraries(swe_benchmark_${build_type} PRIVATE 
-        $<$<CXX_COMPILER_ID:Intel>: -qopenmp>
-        $<$<CXX_COMPILER_ID:GNU>: -fopenmp>
-    )
+       target_compile_options(swe_benchmark_${build_type} PRIVATE 
+          $<$<CXX_COMPILER_ID:Intel>: -qopenmp>
+          $<$<CXX_COMPILER_ID:GNU>: -fopenmp>
+       )
+ 
+      if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+        target_link_libraries(swe_benchmark_${build_type} PRIVATE -fopenmp )
+      elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "Intel")
+        target_link_libraries(swe_benchmark_${build_type} PRIVATE -qopenmp )	    
+      endif()
     endif()
     target_compile_options(swe_benchmark_${build_type} PRIVATE "${${build_type}_compile_options}" -g -O2 -std=c++14 -fmessage-length=0  )
 
