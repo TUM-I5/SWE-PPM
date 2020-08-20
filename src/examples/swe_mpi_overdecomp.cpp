@@ -270,26 +270,30 @@ int main(int argc, char** argv) {
             #pragma omp parallel
             {
             do {
+            //#pragma omp parallel
+            //{
+                  //#pragma omp taskwait
+                  //#pragma omp barrier
 
-
-#pragma omp for nowait
+#pragma omp for 
                 for (int i = 0; i < simulationBlocks.size(); i++){
                        // std::cout << i << " set" << std::endl;
-#pragma omp task depend(out:blockProxyPtrs[i])
+//#pragma omp task depend(out:blockProxyPtrs[i])
                         simulationBlocks[i]->setGhostLayer();
                     }
-                  #pragma omp taskwait
-                    
+ //                 #pragma omp taskwait
+ //                 #pragma omp barrier                   
 
-#pragma omp for nowait
+		//nowait (?)
+#pragma omp for 
                     for (int i = 0; i < simulationBlocks.size(); i++){
-#pragma omp task depend(out:blockProxyPtrs[i])
+//#pragma omp task depend(inout:blockProxyPtrs[i])
                         simulationBlocks[i]->receiveGhostLayer();
                     }
-
+//todo: nowait?
 #pragma omp for nowait
                     for (int i = 0; i < simulationBlocks.size(); i++){
-#pragma omp task depend(inout:blockProxyPtrs[i])
+#pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
                         simulationBlocks[i]->computeNumericalFluxes();
                     }
                 
@@ -297,8 +301,8 @@ int main(int argc, char** argv) {
 #pragma omp barrier
                 }
 
-#pragma omp master 
-                {
+//#pragma omp master 
+//                {
                     if (!localTimestepping) {
                         collector.startCounter(CollectorChameleon::CTR_REDUCE);
                         timesteps.clear();
@@ -311,23 +315,28 @@ int main(int argc, char** argv) {
                         collector.stopCounter(CollectorChameleon::CTR_REDUCE);
                         //std::cout << "timestep " << timestep << std::endl;
                     } else {
-                        for (auto &block: simulationBlocks){
-                            if(block->allGhostlayersInSync()){
-                                block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                       // for (auto &block: simulationBlocks){
+                       //todo: nowait ?
+                       #pragma omp for
+                       for (int i = 0; i < simulationBlocks.size(); i++){
+   #pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
+                            if(simulationBlocks[i]->allGhostlayersInSync()){
+                                simulationBlocks[i]->maxTimestep = simulationBlocks[i]->getRoundTimestep(simulationBlocks[i]->maxTimestep);
                             }
                         }
 
                     }
-                }
+                //}
 
-#pragma omp for nowait
+#pragma omp for  
                     for (int i = 0; i < simulationBlocks.size(); i++){
-#pragma omp task depend(inout:blockProxyPtrs[i])
+#pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
                         simulationBlocks[i]->updateUnknowns(timestep);
                     }
                 
 
-
+#pragma omp master 
+{
                 if (localTimestepping) {
                     //if each block got the maxLocalTimestep the timestep is finished
                     synchronizedTimestep = true;
@@ -337,7 +346,10 @@ int main(int argc, char** argv) {
                         }
                     }
                 }
-
+}
+        //Todo: can we get rid of this?
+            #pragma omp barrier  
+             // }
             } while (localTimestepping && !synchronizedTimestep);
             // update simulation time with time step width.
             }

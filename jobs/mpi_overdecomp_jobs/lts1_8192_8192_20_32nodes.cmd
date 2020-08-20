@@ -1,6 +1,6 @@
 #!/bin/bash
-#NAME=lts_8192_8192_20
-#SBATCH -o /dss/dsshome1/lxc0E/ga25qic2/jobs_mpioverdecomp/output/lts_8192_8192_20.%j.%N.out
+#NAME=lts_8192_8192_20_32
+#SBATCH -o /dss/dsshome1/lxc0E/ga25qic2/jobs_mpioverdecomp_tasking/output/lts_8192_8192_20.%j.%N.out
 #SBATCH -D /dss/dsshome1/lxc0E/ga25qic2/Codes/swe-benchmark
 #SBATCH -J lts_8192_8192_20_32
 #SBATCH --get-user-env
@@ -31,7 +31,7 @@ YSIZE=8192
 NAME=lts_8192_8192_20
 TIME=20
 CP=20
-OUTPUT="${HOME}/jobs/output/${NAME}"
+OUTPUT="${HOME}/jobs_mpioverdecomp_tasking/output/${NAME}"
 PARSTRING="-x $XSIZE -y $YSIZE -t ${TIME}  -l 1 -n $CP -o ${OUTPUT}"
 PARSTRING_HPX="--resolution-horizontal $XSIZE --resolution-vertical $YSIZE -e $TIME -n $CP --local-timestepping 1 -o $OUTPUT"
 CORESIZE=28

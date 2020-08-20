@@ -1,8 +1,8 @@
 #!/bin/bash
-#NAME=lts_8192_8192_20
+#NAME=lts_8192_8192_20_16
 #SBATCH -o /dss/dsshome1/lxc0E/ga25qic2/jobs_mpioverdecomp/output/lts_8192_8192_20.%j.%N.out
 #SBATCH -D /dss/dsshome1/lxc0E/ga25qic2/Codes/swe-benchmark
-#SBATCH -J lts_8192_8192_20
+#SBATCH -J lts_8192_8192_20_16
 #SBATCH --get-user-env
 #SBATCH --clusters=cm2
 #SBATCH --qos=cm2_std
@@ -28,7 +28,7 @@ export GASNET_PHYSMEM_MAX='55 GB'
 export TAG_NBITS_TASK_ID=10
 XSIZE=8192
 YSIZE=8192
-NAME=lts_8192_8192_20
+NAME=lts_8192_8192_20_16
 TIME=20
 CP=20
 OUTPUT="${HOME}/jobs/output/${NAME}"
@@ -49,9 +49,9 @@ echo "##########################################################################
 #mpirun -n $NODECOUNT  ~/swe-benchmark/build/swe_benchmark_hpx ${PARSTRING_HPX}_hpx_128 --blocks 128
 
 export SLURM_CPUS_PER_TASK=56
-#I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_32 --blocks 32
-I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/build/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_64 --blocks 64
-I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/build/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_128 --blocks 128
+#I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=28 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_32 --blocks 32
+I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=28 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/build/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_64 --blocks 64
+I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=28 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -n $NODECOUNT  ~/Codes/swe-benchmark/build/swe_benchmark_mpioverdecomp ${PARSTRING}_chameleon_128 --blocks 128
 
 done 
 done 
