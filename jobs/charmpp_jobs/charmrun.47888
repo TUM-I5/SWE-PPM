@@ -1,0 +1,79 @@
+#!/bin/sh
+Echo() {
+  echo 'Charmrun remote shell(127.0.0.1.0)>' $*
+}
+Exit() {
+  if [ $1 -ne 0 ]
+  then
+    Echo Exiting with error code $1
+  fi
+  exit $1
+}
+Find() {
+  loc=''
+  for dir in `echo $PATH | sed -e 's/:/ /g'`
+  do
+    test -f "$dir/$1" && loc="$dir/$1"
+  done
+  if [ "x$loc" = x ]
+  then
+    Echo $1 not found in your PATH "($PATH)"--
+    Echo set your path in your ~/.charmrunrc
+    Exit 1
+  fi
+}
+test -f "$HOME/.charmrunrc" && . "$HOME/.charmrunrc"
+NETMAGIC="15120";export NETMAGIC
+CmiMyNode=$OMPI_COMM_WORLD_RANK
+test -z "$CmiMyNode" && CmiMyNode=$MPIRUN_RANK
+test -z "$CmiMyNode" && CmiMyNode=$PMI_RANK
+test -z "$CmiMyNode" && CmiMyNode=$PMI_ID
+test -z "$CmiMyNode" && CmiMyNode=$MP_CHILD
+test -z "$CmiMyNode" && CmiMyNode=$SLURM_PROCID
+test -z "$CmiMyNode" && (Echo Could not detect rank from environment ; Exit 1)
+export CmiMyNode
+NETSTART="$CmiMyNode 10.4.14.55 42199 15120 0";export NETSTART
+CmiMyNodeSize='1'; export CmiMyNodeSize
+CmiMyForks='0'; export CmiMyForks
+CmiNumNodes=$OMPI_COMM_WORLD_SIZE
+test -z "$CmiNumNodes" && CmiNumNodes=$MPIRUN_NPROCS
+test -z "$CmiNumNodes" && CmiNumNodes=$PMI_SIZE
+test -z "$CmiNumNodes" && CmiNumNodes=$MP_PROCS
+test -z "$CmiNumNodes" && CmiNumNodes=$SLURM_NTASKS
+test -z "$CmiNumNodes" && CmiNumNodes=$SLURM_NPROCS
+test -z "$CmiNumNodes" && (Echo Could not detect node count from environment ; Exit 1)
+export CmiNumNodes
+GFORTRAN_UNBUFFERED_ALL=YES; export GFORTRAN_UNBUFFERED_ALL
+PATH="$PATH:/bin:/usr/bin:/usr/X/bin:/usr/X11/bin:/usr/local/bin:/usr/X11R6/bin:/usr/openwin/bin"
+if test ! -x "/dss/dsshome1/lxc03/di73gub/swe-benchmark/build/SWE_intel_release_charm_augrie_vec"
+then
+  Echo 'Cannot locate this node-program: /dss/dsshome1/lxc03/di73gub/swe-benchmark/build/SWE_intel_release_charm_augrie_vec'
+  Exit 1
+fi
+cd "/dss/dsshome1/lxc03/di73gub/swe-benchmark/jobs/charmpp_jobs"
+if test $? = 1
+then
+  Echo 'Cannot propagate this current directory:'
+  Echo '/dss/dsshome1/lxc03/di73gub/swe-benchmark/jobs/charmpp_jobs'
+  Exit 1
+fi
+rm -f /tmp/charmrun_err.$$
+(command -v setarch >/dev/null 2>&1 && SETARCH="setarch `uname -m` -R " || SETARCH=
+${SETARCH}"/dss/dsshome1/lxc03/di73gub/swe-benchmark/build/SWE_intel_release_charm_augrie_vec"  -x 8192 -y 8192 -t 1 -n 1 -o bla -c 512
+res=$?
+if [ $res -eq 127 ]
+then
+  ( 
+    "/dss/dsshome1/lxc03/di73gub/swe-benchmark/build/SWE_intel_release_charm_augrie_vec" 
+    ldd "/dss/dsshome1/lxc03/di73gub/swe-benchmark/build/SWE_intel_release_charm_augrie_vec"
+  ) > /tmp/charmrun_err.$$ 2>&1 
+fi
+) < /dev/null 1> /dev/null 2> /dev/null
+sleep 1
+if [ -r /tmp/charmrun_err.$$ ]
+then
+  cat /tmp/charmrun_err.$$ 
+  rm -f /tmp/charmrun_err.$$ 
+  Exit 1
+fi
+Exit 0
