@@ -257,86 +257,73 @@ int main(int argc, char** argv) {
         }
     }
 
-    auto blockProxies = std::make_unique<int[]>(simulationBlocks.size());
-    int *blockProxyPtrs = blockProxies.get();
-
     CollectorChameleon collector;
     // loop over the count of requested
 
     for (int i = 0; i < numberOfCheckPoints; i++) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
-            collector.startCounter(CollectorChameleon::CTR_WALL);
-            #pragma omp parallel
-            {
             do {
-            //#pragma omp parallel
-            //{
-                  //#pragma omp taskwait
-                  //#pragma omp barrier
 
-#pragma omp for 
+                collector.startCounter(CollectorChameleon::CTR_WALL);
+#pragma omp parallel
+                {
+#pragma omp for
                 for (int i = 0; i < simulationBlocks.size(); i++){
                        // std::cout << i << " set" << std::endl;
-//#pragma omp task depend(out:blockProxyPtrs[i])
                         simulationBlocks[i]->setGhostLayer();
                     }
- //                 #pragma omp taskwait
- //                 #pragma omp barrier                   
 
-		//nowait (?)
-#pragma omp for 
+                }
+#pragma omp parallel
+                {
+#pragma omp for
                     for (int i = 0; i < simulationBlocks.size(); i++){
-//#pragma omp task depend(inout:blockProxyPtrs[i])
                         simulationBlocks[i]->receiveGhostLayer();
                     }
-//todo: nowait?
-#pragma omp for nowait
-                    for (int i = 0; i < simulationBlocks.size(); i++){
-#pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
-                        simulationBlocks[i]->computeNumericalFluxes();
-                    }
-                
-                if (!localTimestepping) {
-#pragma omp barrier
+
                 }
 
-//#pragma omp master 
-//                {
-                    if (!localTimestepping) {
-                        collector.startCounter(CollectorChameleon::CTR_REDUCE);
-                        timesteps.clear();
-                        for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
-
-                        float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
-                        MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
-
-                        for (auto &block: simulationBlocks)block->maxTimestep = timestep;
-                        collector.stopCounter(CollectorChameleon::CTR_REDUCE);
-                        //std::cout << "timestep " << timestep << std::endl;
-                    } else {
-                       // for (auto &block: simulationBlocks){
-                       //todo: nowait ?
-                       #pragma omp for
-                       for (int i = 0; i < simulationBlocks.size(); i++){
-   #pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
-                            if(simulationBlocks[i]->allGhostlayersInSync()){
-                                simulationBlocks[i]->maxTimestep = simulationBlocks[i]->getRoundTimestep(simulationBlocks[i]->maxTimestep);
-                            }
-                        }
-
-                    }
-                //}
-
-#pragma omp for  
+#pragma omp parallel
+                {
+#pragma omp for
                     for (int i = 0; i < simulationBlocks.size(); i++){
-#pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
+			#pragma omp task
+                        simulationBlocks[i]->computeNumericalFluxes();
+                    }
+                }
+
+
+                if (!localTimestepping) {
+                    collector.startCounter(CollectorChameleon::CTR_REDUCE);
+                    timesteps.clear();
+                    for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
+
+                    float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
+                    MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+
+                    for (auto &block: simulationBlocks)block->maxTimestep = timestep;
+                    collector.stopCounter(CollectorChameleon::CTR_REDUCE);
+                    //std::cout << "timestep " << timestep << std::endl;
+                }else {
+                    for (auto &block: simulationBlocks){
+                        if(block->allGhostlayersInSync()){
+                            block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
+                        }
+                    }
+
+                }
+
+#pragma omp parallel
+                {
+#pragma omp for 
+                    for (int i = 0; i < simulationBlocks.size(); i++){
                         simulationBlocks[i]->updateUnknowns(timestep);
                     }
-                
+                }
 
-#pragma omp master 
-{
+                collector.stopCounter(CollectorChameleon::CTR_WALL);
+
                 if (localTimestepping) {
                     //if each block got the maxLocalTimestep the timestep is finished
                     synchronizedTimestep = true;
@@ -346,15 +333,9 @@ int main(int argc, char** argv) {
                         }
                     }
                 }
-}
-        //Todo: can we get rid of this?
-            #pragma omp barrier  
-             // }
+
             } while (localTimestepping && !synchronizedTimestep);
             // update simulation time with time step width.
-            }
-            collector.stopCounter(CollectorChameleon::CTR_WALL);
-
             t += localTimestepping ? maxLocalTimestep : timestep;
             if(localTimestepping){
                 for (auto &block: simulationBlocks)block->resetStepSizeCounter();

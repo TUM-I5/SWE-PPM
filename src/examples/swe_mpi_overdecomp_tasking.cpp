@@ -16,7 +16,6 @@
 #include <iostream>
 #include "tools/args.hh"
 #include <limits.h>
-#include "chameleon.h"
 #include "tools/CollectorChameleon.hpp"
 #include <unistd.h>
 #ifdef WRITENETCDF
@@ -34,7 +33,7 @@
 #include "scenarios/SWE_simple_scenarios.hh"
 
 #endif
-#include "blocks/SWE_DimensionalSplittingChameleon.hh"
+#include "blocks/SWE_DimensionalSplittingMPIOverdecomp.hh"
 
 
 
@@ -90,7 +89,7 @@ int main(int argc, char** argv) {
     std::string outputBaseName = args.getArgument<std::string>("output-basepath");
     bool write = false;
     float localTimestepping = 0.f;
-    std::vector<std::shared_ptr<SWE_DimensionalSplittingChameleon>> simulationBlocks;
+    std::vector<std::shared_ptr<SWE_DimensionalSplittingMPIOverdecomp>> simulationBlocks;
     int ranksPerLocality = 1;
     if (args.isSet("local-timestepping") && args.getArgument<float>("local-timestepping") > 0 ) {
         localTimestepping =  args.getArgument<float>("local-timestepping");
@@ -180,8 +179,8 @@ int main(int argc, char** argv) {
         std::string outputFileName = generateBaseFileName(outputBaseName, localBlockPositionX, localBlockPositionY);
 
 
-        simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingChameleon>(
-                new SWE_DimensionalSplittingChameleon(nxLocal, nyLocal, dxSimulation, dySimulation,
+        simulationBlocks.push_back(std::shared_ptr<SWE_DimensionalSplittingMPIOverdecomp>(
+                new SWE_DimensionalSplittingMPIOverdecomp(nxLocal, nyLocal, dxSimulation, dySimulation,
                                                 localOriginX, localOriginY, localTimestepping, outputFileName,write)));
 
         //simulationBlocks[i - startPoint]->initScenario(scenario, boundaries.data());
@@ -196,7 +195,7 @@ int main(int argc, char** argv) {
 
         int refinedNeighbours[4];
         int realNeighbours[4];
-        std::array<std::shared_ptr<SWE_DimensionalSplittingChameleon>, 4> neighbourBlocks;
+        std::array<std::shared_ptr<SWE_DimensionalSplittingMPIOverdecomp>, 4> neighbourBlocks;
         std::array<BoundaryType, 4> boundaries;
 
         for (int j = 0; j < 4; j++) {
@@ -224,13 +223,6 @@ int main(int argc, char** argv) {
        //std::cout << myRank <<"| " << realNeighbours[0] << " " << realNeighbours[1] << " " << realNeighbours[2] << " " << realNeighbours[3] << std::endl;
 
     }
-
-#pragma omp parallel
-    {
-        chameleon_thread_init();
-    }
-    chameleon_determine_base_addresses((void *)&main);
-
 
     for (auto &block: simulationBlocks)block->sendBathymetry();
     for (auto &block: simulationBlocks)block->recvBathymetry();
@@ -265,74 +257,86 @@ int main(int argc, char** argv) {
         }
     }
 
+    auto blockProxies = std::make_unique<int[]>(simulationBlocks.size());
+    int *blockProxyPtrs = blockProxies.get();
+
     CollectorChameleon collector;
     // loop over the count of requested
 
     for (int i = 0; i < numberOfCheckPoints; i++) {
         // Simulate until the checkpoint is reached
         while (t < checkpointInstantOfTime[i]) {
+            collector.startCounter(CollectorChameleon::CTR_WALL);
+            #pragma omp parallel
+            {
             do {
+            //#pragma omp parallel
+            //{
+                  //#pragma omp taskwait
+                  //#pragma omp barrier
 
-                collector.startCounter(CollectorChameleon::CTR_WALL);
-#pragma omp parallel
-                {
-#pragma omp for
+#pragma omp for 
                 for (int i = 0; i < simulationBlocks.size(); i++){
                        // std::cout << i << " set" << std::endl;
+//#pragma omp task depend(out:blockProxyPtrs[i])
                         simulationBlocks[i]->setGhostLayer();
                     }
+ //                 #pragma omp taskwait
+ //                 #pragma omp barrier                   
 
-                }
-#pragma omp parallel
-                {
-#pragma omp for
-                    for (int i = 0; i < simulationBlocks.size(); i++){
-                        simulationBlocks[i]->receiveGhostLayer();
-                    }
-
-                }
-
-#pragma omp parallel
-                {
-#pragma omp for
-                    for (int i = 0; i < simulationBlocks.size(); i++){
-                        simulationBlocks[i]->computeNumericalFluxes();
-                    }
-                    chameleon_distributed_taskwait(0);
-                }
-
-
-                if (!localTimestepping) {
-                    collector.startCounter(CollectorChameleon::CTR_REDUCE);
-                    timesteps.clear();
-                    for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
-
-                    float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
-                    MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
-
-                    for (auto &block: simulationBlocks)block->maxTimestep = timestep;
-                    collector.stopCounter(CollectorChameleon::CTR_REDUCE);
-                    //std::cout << "timestep " << timestep << std::endl;
-                }else {
-                    for (auto &block: simulationBlocks){
-                        if(block->allGhostlayersInSync()){
-                            block->maxTimestep = block->getRoundTimestep(block->maxTimestep);
-                        }
-                    }
-
-                }
-
-#pragma omp parallel
-                {
+		//nowait (?)
 #pragma omp for 
                     for (int i = 0; i < simulationBlocks.size(); i++){
-                        simulationBlocks[i]->updateUnknowns(timestep);
+//#pragma omp task depend(inout:blockProxyPtrs[i])
+                        simulationBlocks[i]->receiveGhostLayer();
                     }
-                    //chameleon_distributed_taskwait(0);
+//todo: nowait?
+#pragma omp for nowait
+                    for (int i = 0; i < simulationBlocks.size(); i++){
+#pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
+                        simulationBlocks[i]->computeNumericalFluxes();
+                    }
+                
+                if (!localTimestepping) {
+#pragma omp barrier
                 }
 
-                collector.stopCounter(CollectorChameleon::CTR_WALL);
+//#pragma omp master 
+//                {
+                    if (!localTimestepping) {
+                        collector.startCounter(CollectorChameleon::CTR_REDUCE);
+                        timesteps.clear();
+                        for (auto &block: simulationBlocks)timesteps.push_back(block->maxTimestep);
 
+                        float minTimestep = *std::min_element(timesteps.begin(), timesteps.end());
+                        MPI_Allreduce(&minTimestep, &timestep, 1, MPI_FLOAT, MPI_MIN, MPI_COMM_WORLD);
+
+                        for (auto &block: simulationBlocks)block->maxTimestep = timestep;
+                        collector.stopCounter(CollectorChameleon::CTR_REDUCE);
+                        //std::cout << "timestep " << timestep << std::endl;
+                    } else {
+                       // for (auto &block: simulationBlocks){
+                       //todo: nowait ?
+                       #pragma omp for
+                       for (int i = 0; i < simulationBlocks.size(); i++){
+   #pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
+                            if(simulationBlocks[i]->allGhostlayersInSync()){
+                                simulationBlocks[i]->maxTimestep = simulationBlocks[i]->getRoundTimestep(simulationBlocks[i]->maxTimestep);
+                            }
+                        }
+
+                    }
+                //}
+
+#pragma omp for  
+                    for (int i = 0; i < simulationBlocks.size(); i++){
+#pragma omp task depend(inout:blockProxyPtrs[i]) firstprivate(i) 
+                        simulationBlocks[i]->updateUnknowns(timestep);
+                    }
+                
+
+#pragma omp master 
+{
                 if (localTimestepping) {
                     //if each block got the maxLocalTimestep the timestep is finished
                     synchronizedTimestep = true;
@@ -342,9 +346,15 @@ int main(int argc, char** argv) {
                         }
                     }
                 }
-
+}
+        //Todo: can we get rid of this?
+            #pragma omp barrier  
+             // }
             } while (localTimestepping && !synchronizedTimestep);
             // update simulation time with time step width.
+            }
+            collector.stopCounter(CollectorChameleon::CTR_WALL);
+
             t += localTimestepping ? maxLocalTimestep : timestep;
             if(localTimestepping){
                 for (auto &block: simulationBlocks)block->resetStepSizeCounter();
@@ -370,21 +380,6 @@ int main(int argc, char** argv) {
         for (int i = 0; i < simulationBlocks.size(); i++){
             simulationBlocks[i]->receiveGhostLayer();
         }
-        MPI_Request req;
-        MPI_Ibarrier(MPI_COMM_WORLD,&req);
-        MPI_Status status;
-        int flag=0;
-        MPI_Test(&req,&flag,&status);
-
-        while(!flag){
-            //chameleon_distributed_taskwait(0);
-#pragma omp parallel
-{
-            chameleon_distributed_taskwait(0);
-}
-            MPI_Test(&req,&flag,&status);
-        }
-
     }
 
 
@@ -402,12 +397,6 @@ int main(int argc, char** argv) {
         }
 
     collector.logResults();
-#pragma omp parallel
-    {
-        chameleon_thread_finalize();
-    }
-     chameleon_finalize();
-
 
     MPI_Finalize();
 
