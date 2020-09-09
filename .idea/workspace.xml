@@ -2,12 +2,13 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
+      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_chameleon" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_hpx" />
+      <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_mpi" />
       <config projectName="swe_benchmark" targetName="swe_benchmark_default" />
       <config projectName="swe_benchmark" targetName="block_component_component" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_gpi" />
-      <config projectName="swe_benchmark" targetName="swe_benchmark_upcxx" />
       <config projectName="swe_benchmark" targetName="no_component_component" />
     </generated>
   </component>
@@ -18,8 +19,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Added loadbalancer to charm">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tools/Collector.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Collector.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +63,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/swe-benchmark-chameleon/src/blocks/SWE_DimensionalSplittingCharm.ci" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -334,14 +337,11 @@
       <workItem from="1596052261086" duration="667000" />
       <workItem from="1596065097436" duration="180000" />
       <workItem from="1596099505532" duration="687000" />
-      <workItem from="1596108284460" duration="3170000" />
-    </task>
-    <task id="LOCAL-00707" summary="Added loadbalancer to charm">
-      <created>1594253106606</created>
-      <option name="number" value="00707" />
-      <option name="presentableId" value="LOCAL-00707" />
-      <option name="project" value="LOCAL" />
-      <updated>1594253106606</updated>
+      <workItem from="1596108284460" duration="5025000" />
+      <workItem from="1596137098169" duration="1179000" />
+      <workItem from="1597567669701" duration="10000" />
+      <workItem from="1598956779782" duration="1538000" />
+      <workItem from="1599639842068" duration="3338000" />
     </task>
     <task id="LOCAL-00708" summary="Added loadbalancer to charm">
       <created>1594253413890</created>
@@ -679,7 +679,14 @@
       <option name="project" value="LOCAL" />
       <updated>1596108402867</updated>
     </task>
-    <option name="localTasksCounter" value="756" />
+    <task id="LOCAL-00756" summary="Added loadbalancer to charm">
+      <created>1596113481716</created>
+      <option name="number" value="00756" />
+      <option name="presentableId" value="LOCAL-00756" />
+      <option name="project" value="LOCAL" />
+      <updated>1596113481716</updated>
+    </task>
+    <option name="localTasksCounter" value="757" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -745,21 +752,24 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1596108402660">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1599641489021">
+      <screen x="67" y="0" width="1853" height="1080" />
     </state>
+    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599641489021" />
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1596022217280" />
-    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1596108402660" />
-    <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog" timestamp="1594990323397">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1596113509436" />
+    <state x="228" y="125" width="1483" height="890" key="DiffContextDialog" timestamp="1599642772133">
+      <screen x="67" y="0" width="1853" height="1080" />
     </state>
+    <state x="228" y="125" width="1483" height="890" key="DiffContextDialog/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599642772133" />
     <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592996457298" />
     <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594990323397" />
-    <state x="2696" y="310" width="474" height="484" key="FileChooserDialogImpl" timestamp="1594989944710">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="816" y="310" width="474" height="484" key="FileChooserDialogImpl" timestamp="1599639849139">
+      <screen x="67" y="0" width="1853" height="1080" />
     </state>
+    <state x="816" y="310" key="FileChooserDialogImpl/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599639849139" />
     <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593763208064" />
-    <state x="2696" y="310" width="474" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594989944710" />
+    <state x="2696" y="310" width="474" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1598962524967" />
     <state x="816" y="329" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1594739225279" />
     <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1594218855380">
       <screen x="1920" y="0" width="1920" height="1080" />
