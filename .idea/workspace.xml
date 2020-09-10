@@ -19,64 +19,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/0001-hardcoded-last-cpus-for-pinning-of-communication-thr.patch" beforeDir="false" afterPath="$PROJECT_DIR$/patches/0001-hardcoded-last-cpus-for-pinning-of-communication-thr.patch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CudaTool.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SWE OpenGL.vcxproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SWE OpenGL.vcxproj.filters" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SWE OpenGL.vcxproj.user" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SWE for Windows.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SWE for Windows.vcxproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SWE for Windows.vcxproj.filters" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SWE for Windows.vcxproj.user" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/buildAll.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/charm_migration_counter.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/charm_migration_counter.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts1_2048_2048_80.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts1_2048_2048_80.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts1_4096_4096_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts1_4096_4096_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts1_8192_8192_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts1_8192_8192_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts1_8192_8192_20_big.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts1_8192_8192_20_big.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts1_8192_8192_20_small.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts1_8192_8192_20_small.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts1_charm_8192.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts1_charm_8192.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts2_8192_8192_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts2_8192_8192_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts2_charm_8192.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts2_charm_8192.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts3_8192_8192_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts3_8192_8192_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts_2048_2048_80.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts_2048_2048_80.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts_4096_4096_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts_4096_4096_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts_8192_8192_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts_8192_8192_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts_8192_8192_20_big.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts_8192_8192_20_big.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/gts_charm_8192.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/gts_charm_8192.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts1_2048_2048_80.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts1_2048_2048_80.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts1_4096_4096_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts1_4096_4096_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts1_8192_8192_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts1_8192_8192_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts1_8192_8192_20_big.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts1_8192_8192_20_big.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts1_8192_8192_20_small.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts1_8192_8192_20_small.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts1_charm_8192.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts1_charm_8192.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts2_8192_8192_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts2_8192_8192_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts2_8192_8192_20_small.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts2_8192_8192_20_small.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts2_charm_8192.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts2_charm_8192.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts3_8192_8192_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts3_8192_8192_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts3_charm_8192.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts3_charm_8192.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts_2048_2048_80.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts_2048_2048_80.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts_4096_4096_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts_4096_4096_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts_8192_8192_20.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts_8192_8192_20.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts_8192_8192_20_big.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts_8192_8192_20_big.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/lts_charm_8192.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/lts_charm_8192.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/multi_node_weak_scaling.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/multi_node_weak_scaling.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/multi_node_weak_scaling_gcc.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/multi_node_weak_scaling_gcc.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/multi_node_ws.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/multi_node_ws.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jobs/martin_jobs/upcxx_all.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/jobs/cm2_jobs/upcxx_all.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block_common.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Block_common.hh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_Hpx_No_Component.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WaveAccumulationBlock.hh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlock.hh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlockSIMD.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/blocks/SWE_WavePropagationBlockSIMD.hh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_mpi_legacy.cpp" beforeDir="false" />
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Cleaned up repository a bit">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BuildChameleon.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/BuildChameleon.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/paraview/netcdf_swe.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -400,14 +347,7 @@
       <workItem from="1598956779782" duration="1538000" />
       <workItem from="1599639842068" duration="3983000" />
       <workItem from="1599651808259" duration="630000" />
-      <workItem from="1599668721481" duration="8087000" />
-    </task>
-    <task id="LOCAL-00710" summary="Added loadbalancer to charm">
-      <created>1594301613166</created>
-      <option name="number" value="00710" />
-      <option name="presentableId" value="LOCAL-00710" />
-      <option name="project" value="LOCAL" />
-      <updated>1594301613166</updated>
+      <workItem from="1599668721481" duration="8496000" />
     </task>
     <task id="LOCAL-00711" summary="Added loadbalancer to charm">
       <created>1594301946991</created>
@@ -745,7 +685,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599727445227</updated>
     </task>
-    <option name="localTasksCounter" value="759" />
+    <task id="LOCAL-00759" summary="Cleaned up repository a bit">
+      <created>1599727950695</created>
+      <option name="number" value="00759" />
+      <option name="presentableId" value="LOCAL-00759" />
+      <option name="project" value="LOCAL" />
+      <updated>1599727950695</updated>
+    </task>
+    <option name="localTasksCounter" value="760" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -774,7 +721,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="experimental addon to charm map" />
     <MESSAGE value="changed from get to put" />
     <MESSAGE value="added experimental swe_chameleon_new.cpp" />
     <MESSAGE value="&#10;Finally fixed lts (bless)" />
@@ -799,7 +745,8 @@
     <MESSAGE value="Added loadbalancer to charm" />
     <MESSAGE value="Unnecessary change" />
     <MESSAGE value="Added Readme and fixed some CMake stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Readme and fixed some CMake stuff" />
+    <MESSAGE value="Cleaned up repository a bit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up repository a bit" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2224" y="125" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1593012994055">
@@ -811,10 +758,10 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1599727445152">
+    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1599727987164">
       <screen x="67" y="0" width="1853" height="1080" />
     </state>
-    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599727445152" />
+    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599727987164" />
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1596022217280" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1596113509436" />
     <state x="228" y="125" width="1483" height="890" key="DiffContextDialog" timestamp="1599642772133">
@@ -830,9 +777,10 @@
     <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593763208064" />
     <state x="2696" y="310" width="474" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1598962524967" />
     <state x="816" y="329" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1594739225279" />
-    <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1594218855380">
-      <screen x="1920" y="0" width="1920" height="1080" />
+    <state x="634" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1599728006672">
+      <screen x="67" y="0" width="1853" height="1080" />
     </state>
+    <state x="634" y="288" key="Vcs.Push.Dialog.v2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599728006672" />
     <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594218855380" />
     <state x="100" y="98" width="1720" height="882" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1591287980046">
       <screen x="0" y="27" width="1920" height="1053" />
