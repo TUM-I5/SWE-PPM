@@ -50,7 +50,7 @@ Unfortunately Charm++ still requires the old scons build system.
 1. Set environment variable \
 `export CHARM_PATH=\path\to\charm`
 2. Compile using scons \
-`scons writeNetCDF=True compiler=intel openmp=false parallelization=charm asagi=false copyenv=true vectorize=true`
+`scons writeNetCDF=True compiler=intel solver=hybrid openmp=false parallelization=charm asagi=false copyenv=true vectorize=true`
 
 Execution
 ------------
@@ -61,7 +61,7 @@ The examples execute the compiled scenario with a **2048x2048 cell resolution**,
 - UPC++: \
 `$UPCXX_PATH/bin/upcxx-run -np 56 ./build/swe_benchmark_upcxx --simulation-duration 80 --checkpoint-count 20 --resolution-horizontal 2048 --resolution-vertical 2048 --output-basepath ./output/upcxx_gts --local-timestepping 0 --write 1`
 - Charm++:\
-`$CHARM_PATH/bin/charmrun +p56 ./build/swe_benchmark_charm --simulation-duration 80 --checkpoint-count 20 --resolution-horizontal 2048 --resolution-vertical 2048 --output-basepath ./output/charm_gts --local-timestepping 0 --write 1 --chares 56`
+`$CHARM_PATH/bin/charmrun +p56 ./build/SWE_intel_release_charm_hybrid_vec --simulation-duration 80 --checkpoint-count 20 --resolution-horizontal 2048 --resolution-vertical 2048 --output-basepath ./output/charm_gts --local-timestepping 0 --write 1 --chares 56`
 - Chameleon: \
 `I_MPI_PIN=1 I_MPI_PIN_DOMAIN=auto OMP_NUM_THREADS=27 OMP_PLACES=cores OMP_PROC_BIND=close mpirun -np 56 ./build/swe_benchmark_upcxx --simulation-duration 80 --checkpoint-count 20 --resolution-horizontal 2048 --resolution-vertical 2048 --output-basepath ./output/chameleon_gts --local-timestepping 0 --write 1 --blocks 28`
 - HPX: \
