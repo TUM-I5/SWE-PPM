@@ -21,9 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Cleaned up repository a bit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BuildChameleon.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/BuildChameleon.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/paraview/netcdf_swe.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/examples/swe_chameleon_new.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/examples/swe_chameleon.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -347,14 +344,7 @@
       <workItem from="1598956779782" duration="1538000" />
       <workItem from="1599639842068" duration="3983000" />
       <workItem from="1599651808259" duration="630000" />
-      <workItem from="1599668721481" duration="8496000" />
-    </task>
-    <task id="LOCAL-00711" summary="Added loadbalancer to charm">
-      <created>1594301946991</created>
-      <option name="number" value="00711" />
-      <option name="presentableId" value="LOCAL-00711" />
-      <option name="project" value="LOCAL" />
-      <updated>1594301946991</updated>
+      <workItem from="1599668721481" duration="9131000" />
     </task>
     <task id="LOCAL-00712" summary="Added loadbalancer to charm">
       <created>1594302061089</created>
@@ -692,7 +682,14 @@
       <option name="project" value="LOCAL" />
       <updated>1599727950695</updated>
     </task>
-    <option name="localTasksCounter" value="760" />
+    <task id="LOCAL-00760" summary="Cleaned up repository a bit">
+      <created>1599728226287</created>
+      <option name="number" value="00760" />
+      <option name="presentableId" value="LOCAL-00760" />
+      <option name="project" value="LOCAL" />
+      <updated>1599728226288</updated>
+    </task>
+    <option name="localTasksCounter" value="761" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -711,11 +708,41 @@
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
+        <entry key="1">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:/home/martin/CLionProjects/swe-benchmark/src/blocks" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State />
           </value>
         </entry>
+      </map>
+    </option>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="1" value="TOOL_WINDOW" />
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
@@ -758,10 +785,10 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1599727987164">
+    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1599728826543">
       <screen x="67" y="0" width="1853" height="1080" />
     </state>
-    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599727987164" />
+    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599728826543" />
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1596022217280" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1596113509436" />
     <state x="228" y="125" width="1483" height="890" key="DiffContextDialog" timestamp="1599642772133">
@@ -777,10 +804,14 @@
     <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593763208064" />
     <state x="2696" y="310" width="474" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1598962524967" />
     <state x="816" y="329" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1594739225279" />
-    <state x="634" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1599728006672">
+    <state x="795" y="453" width="319" height="171" key="VCS.ChangelistChooser" timestamp="1599728850578">
       <screen x="67" y="0" width="1853" height="1080" />
     </state>
-    <state x="634" y="288" key="Vcs.Push.Dialog.v2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599728006672" />
+    <state x="795" y="453" width="319" height="171" key="VCS.ChangelistChooser/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599728850578" />
+    <state x="634" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2" timestamp="1599728246491">
+      <screen x="67" y="0" width="1853" height="1080" />
+    </state>
+    <state x="634" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599728246491" />
     <state x="2508" y="288" width="800" height="528" key="Vcs.Push.Dialog.v2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594218855380" />
     <state x="100" y="98" width="1720" height="882" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1591287980046">
       <screen x="0" y="27" width="1920" height="1053" />
