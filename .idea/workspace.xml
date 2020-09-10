@@ -19,10 +19,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="Added loadbalancer to charm">
+    <list default="true" id="c49f39c6-cc22-4eeb-a98c-b30cc0c60de6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/Collector.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/Collector.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/submodules/swe_solvers" beforeDir="false" afterPath="$PROJECT_DIR$/submodules/swe_solvers" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BuildChameleon.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/BuildChameleon.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +64,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/Uni/IDP/autosegmentation" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -341,14 +342,9 @@
       <workItem from="1596137098169" duration="1179000" />
       <workItem from="1597567669701" duration="10000" />
       <workItem from="1598956779782" duration="1538000" />
-      <workItem from="1599639842068" duration="3338000" />
-    </task>
-    <task id="LOCAL-00708" summary="Added loadbalancer to charm">
-      <created>1594253413890</created>
-      <option name="number" value="00708" />
-      <option name="presentableId" value="LOCAL-00708" />
-      <option name="project" value="LOCAL" />
-      <updated>1594253413890</updated>
+      <workItem from="1599639842068" duration="3983000" />
+      <workItem from="1599651808259" duration="630000" />
+      <workItem from="1599668721481" duration="7683000" />
     </task>
     <task id="LOCAL-00709" summary="Added loadbalancer to charm">
       <created>1594301301703</created>
@@ -686,7 +682,14 @@
       <option name="project" value="LOCAL" />
       <updated>1596113481716</updated>
     </task>
-    <option name="localTasksCounter" value="757" />
+    <task id="LOCAL-00757" summary="Unnecessary change">
+      <created>1599644229164</created>
+      <option name="number" value="00757" />
+      <option name="presentableId" value="LOCAL-00757" />
+      <option name="project" value="LOCAL" />
+      <updated>1599644229164</updated>
+    </task>
+    <option name="localTasksCounter" value="758" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -715,7 +718,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added localtimestepping for main" />
     <MESSAGE value="Test on Bug in Chameleon" />
     <MESSAGE value="experimental addon to charm map" />
     <MESSAGE value="changed from get to put" />
@@ -740,7 +742,8 @@
     <MESSAGE value="Added clause for Collector.hpp" />
     <MESSAGE value="Added hpx parallel algorithmens" />
     <MESSAGE value="Added loadbalancer to charm" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added loadbalancer to charm" />
+    <MESSAGE value="Unnecessary change" />
+    <option name="LAST_COMMIT_MESSAGE" value="Unnecessary change" />
   </component>
   <component name="WindowStateProjectService">
     <state x="2224" y="125" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1593012994055">
@@ -752,10 +755,10 @@
     </state>
     <state x="801" y="291" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593009143686" />
     <state x="2721" y="271" width="374" height="562" key="#com.intellij.ide.util.MemberChooser/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1591735010380" />
-    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1599641489021">
+    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2" timestamp="1599644229052">
       <screen x="67" y="0" width="1853" height="1080" />
     </state>
-    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599641489021" />
+    <state x="606" y="149" width="912" height="807" key="CommitChangelistDialog2/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599644229052" />
     <state x="554" y="116" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1596022217280" />
     <state x="2478" y="149" width="912" height="807" key="CommitChangelistDialog2/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1596113509436" />
     <state x="228" y="125" width="1483" height="890" key="DiffContextDialog" timestamp="1599642772133">
@@ -764,10 +767,10 @@
     <state x="228" y="125" width="1483" height="890" key="DiffContextDialog/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599642772133" />
     <state x="72" y="0" width="1526" height="891" maximized="true" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1592996457298" />
     <state x="2087" y="125" width="1536" height="890" key="DiffContextDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1594990323397" />
-    <state x="816" y="310" width="474" height="484" key="FileChooserDialogImpl" timestamp="1599639849139">
+    <state x="816" y="310" width="424" height="484" key="FileChooserDialogImpl" timestamp="1599652612074">
       <screen x="67" y="0" width="1853" height="1080" />
     </state>
-    <state x="816" y="310" key="FileChooserDialogImpl/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599639849139" />
+    <state x="816" y="310" width="424" height="484" key="FileChooserDialogImpl/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599652612074" />
     <state x="776" y="329" width="575" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1593763208064" />
     <state x="2696" y="310" width="474" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1598962524967" />
     <state x="816" y="329" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1594739225279" />
@@ -783,6 +786,10 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="100" y="98" width="1720" height="882" key="com.intellij.history.integration.ui.views.FileHistoryDialog/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1591805820128" />
+    <state x="570" y="152" width="770" height="773" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1599726204011">
+      <screen x="67" y="0" width="1853" height="1080" />
+    </state>
+    <state x="570" y="152" width="770" height="773" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.1080.1920.1080/67.0.1853.1080@67.0.1853.1080" timestamp="1599726204011" />
     <state x="761" y="487" width="448" height="170" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1594387702042">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
