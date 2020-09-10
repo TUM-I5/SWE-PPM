@@ -37,7 +37,7 @@ Chameleon: \
 HPX: \
 `export HPX_PATH=\path\to\hpx`\
 3. Specify cmake targets and compile options\
-    `cmake \-DBUILD_SWE_MPI=On \-DBUILD_SWE_UPCXX=On \-DBUILD_SWE_CHAMELEON=On \-DBUILD_SWE_HPX=On  ..`\
+    `cmake -DBUILD_SWE_MPIOVERDECOMP=On\ -DBUILD_SWE_MPIOVERDECOMPTASKING=On\ \-DBUILD_SWE_MPI=On \-DBUILD_SWE_UPCXX=On \-DBUILD_SWE_CHAMELEON=On \-DBUILD_SWE_HPX=On  ..`\
     For a complete list of configurable options call \
      `cmake -LAH ..`
 4. Compile targets\
