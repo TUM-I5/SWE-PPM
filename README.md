@@ -22,8 +22,8 @@ Getting SWE-PPM
 ------------------
 1. Clone the repository with following command: \
 `git clone --recursive`
-2. Checkout the *SC\_PAW-ATM\_Workshop\_submission* : \
-`git checkout tags/SC_PAW-ATM_Workshop_submission -b master`
+2. Checkout the *sc_paw-atm_workshop* : \
+`git checkout tags/sc_paw-atm_workshop  -b master`
 
 Installation
 ------------
