@@ -17,6 +17,7 @@ System Requirements
 - Charm++ (https://github.com/UIUC-PPL/charm)
 - UPC++ >= 2020.3.0 (https://bitbucket.org/berkeleylab/upcxx)
 - ASAGI (only required for usage with geographic scenarios) (https://github.com/TUM-I5/ASAGI)
+- Chameleon (https://github.com/chameleon-hpc/chameleon)
 
 Getting SWE-PPM
 ------------------
